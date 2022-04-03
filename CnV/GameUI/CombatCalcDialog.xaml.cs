@@ -20,6 +20,7 @@ using Windows.Foundation.Collections;
 
 namespace CnV
 {
+	using static Troops;
 	public sealed partial class CombatCalcDialog:DialogG,INotifyPropertyChanged
 	{
 		protected override string title => "Combat Calc"; 
@@ -27,6 +28,9 @@ namespace CnV
 		internal CombatTroopItem [] attackers;
 		internal CombatTroopItem [] defenders;
 		internal float winRatio;
+		internal string winRatioS => $"Attack Ratio: {winRatio}";
+		internal int wallLevel;
+		internal int attackType = (int)ArmyType.assault;
 		internal City city => City.GetBuild();
 
 		public CombatCalcDialog()
@@ -48,7 +52,9 @@ namespace CnV
 				attackers[i] = new() { city = city,type=(byte)i,count=0 };
 				defenders[i] = new() { city = city,type=(byte)i,count=0 };
 				
-			}	
+			}
+			defenders[ttTriari].towerVis = defenders[ttRanger].towerVis = defenders[ttPriest].towerVis = defenders[ttBallista].towerVis =
+				defenders[ttScout].towerVis = Visibility.Visible;
 			OnPropertyChanged();
 
 		}
@@ -75,7 +81,19 @@ namespace CnV
 
 		private void CalcClick(object sender,RoutedEventArgs e)
 		{
-
+			var rv = CombatCalc.Go((ArmyType)attackType,new(attackers.Where(i => i.count > 0).Select(i => new TroopTypeCount(i.type,i.count))),
+new(defenders.Where(i => i.count > 0).Select(i => new TroopTypeCount(i.type,i.count))),
+			defenders.Select(a => (ushort)a.towerSlots).ToArray(),
+			wallLevel:(byte)wallLevel,0,0,0,0);
+			for(var  i = ttZero;i<Troops.ttCount;++i)
+			{
+				attackers[i].surviving=rv.survivingOff.GetCount(i);
+				defenders[i].surviving=rv.survivingDef.GetCount(i);
+				attackers[i].OnPropertyChanged();
+				defenders[i].OnPropertyChanged();
+			}
+			winRatio = rv.winRatio;
+			OnPropertyChanged();
 		}
 	}
 	internal class CombatTroopItem:INotifyPropertyChanged
@@ -85,42 +103,17 @@ namespace CnV
 		internal TType type;
 		internal uint count;
 		internal uint surviving;
+		internal int towerSlots;
+		internal Visibility towerVis = Visibility.Collapsed;
+
 		internal TroopTypeCount tt => new(type,count);
 		internal ImageSource image => Troops.Image(type);
 		internal TroopInfo info => TroopInfo.all[type];
-		internal bool isEnabled => city.CanRecruit(type);
-		internal void Recruit(object sender,RoutedEventArgs e)
-		{
+		internal string survivingS => $"=> {surviving.Format()}";
 
-			Note.Show("Recruit");
-			new CnVEventRecruit(city.c,tt).EnqueueAsap();
-			count =0;
-			OnPropertyChanged();
-		}
 
-		internal string ResRequiredS(int id)
-		{
-			return ((int)(count.Max(1)*info.resResquired[id])).Format();
-		}
-		internal void SetMax(object sender,RoutedEventArgs e)
-		{
-			var res = city.SampleResources();
-			var req = info.resResquired;
-			var m = 1<<24;
-			
-			for(int i=0;i<4;++i)
-			{
-				if(req.r[i] > 0)
-					m = m.Min(res[i] / req.r[i]);
-			}
-			if(req.gold > 0)
-				m = m.Min(city.player.gold / req.gold);
 
-			count = (uint)m;
-			OnPropertyChanged();
-		}
 
-		public string recruitTime => city.CanRecruit(type) ? tt.RecruitTimeRequired(city).Format() : string.Empty;
 		public event PropertyChangedEventHandler? PropertyChanged;
 		public void OnPropertyChanged(string? member = null)
 		{
@@ -128,12 +121,7 @@ namespace CnV
 				AppS.QueueOnUIThread(() => PropertyChanged?.Invoke(this,new(member)));
 		}
 
-		internal void CountChanged(NumberBox sender,NumberBoxValueChangedEventArgs args)
-		{
-			App.FilterNans(sender,args);
-			OnPropertyChanged();
-		}
-
+	
 	}
 
 }
