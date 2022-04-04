@@ -106,8 +106,8 @@ namespace CnV
 		
 			AAnalytics.initialized = true;
 			//await Task.WhenAll(
-			Analytics.SetEnabledAsync(true);
-			Crashes.SetEnabledAsync(true);
+//			Analytics.SetEnabledAsync(true);
+	//		Crashes.SetEnabledAsync(true);
 
 								
 

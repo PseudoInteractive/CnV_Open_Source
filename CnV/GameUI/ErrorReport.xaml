@@ -1,0 +1,20 @@
+﻿<ContentDialog
+    x:Class="CnV.ErrorReport"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:CnV.GameUI"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+	Title="Send Stuff"
+	
+	PrimaryButtonText="Submit"
+	SecondaryButtonText="Cancel"
+	>
+
+	<Grid Width="600"
+	Height="600">
+		<TextBox  x:Name="notes" Header="Notes" x:FieldModifier="internal" TextWrapping="Wrap" VerticalAlignment="Stretch" Margin="4" AcceptsReturn="True"  />
+
+    </Grid>
+</ContentDialog>

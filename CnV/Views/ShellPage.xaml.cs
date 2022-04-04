@@ -15,6 +15,10 @@ namespace CnV.Views
 {
 	using Microsoft.AppCenter;
 	using Microsoft.UI.Xaml.Data;
+
+	using Windows.Storage;
+	using Windows.Storage.Pickers;
+	using Windows.Storage.Search;
 	// using PInvoke
 
 	//	using System.Diagnostics;
@@ -476,8 +480,8 @@ namespace CnV.Views
 
 
 
-		//		TabPage.mainTabs.SizeChanged += ((o,args) => ShellPage.updateHtmlOffsets.SizeChanged());
-		//		chatTabs.SizeChanged+=((o,args) => ShellPage.updateHtmlOffsets.SizeChanged());
+				//		TabPage.mainTabs.SizeChanged += ((o,args) => ShellPage.updateHtmlOffsets.SizeChanged());
+				//		chatTabs.SizeChanged+=((o,args) => ShellPage.updateHtmlOffsets.SizeChanged());
 
 				var okay = await signinTask;
 				if(okay)
@@ -502,7 +506,7 @@ namespace CnV.Views
 					{
 						var okay3 = await APlayFab.Init();
 						Assert(okay3);
-						
+
 
 
 					}
@@ -544,6 +548,8 @@ namespace CnV.Views
 				FindName(nameof(cityStats));
 				KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Left,NavStack.BackInvoked,
 																VirtualKeyModifiers.Menu));
+				KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F1, (_,m)=> { m.Handled=true; ErrorReport(); },
+																VirtualKeyModifiers.Menu));
 				// KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.GoBack,NavStack.BackInvoked));
 
 				KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Right,NavStack.ForwardInvoked,
@@ -556,6 +562,7 @@ namespace CnV.Views
 																		LayoutAccelerator_Invoked,
 																		VirtualKeyModifiers.Control));
 				}
+				
 
 				KeyboardAccelerators.Add(BuildKeyboardAccelerator(key: VirtualKey.Enter,modifiers:
 																VirtualKeyModifiers.Menu,OnKeyboardAcceleratorInvoked: (_,a) =>
@@ -567,7 +574,7 @@ namespace CnV.Views
 
 
 				//AppS.SetState(AppS.State.active);
-				
+
 				TabPage.ShowTabs();
 
 				await Task.Delay(500);
@@ -582,6 +589,23 @@ namespace CnV.Views
 			//{
 			//	DGame.Startup();
 			//});
+		}
+
+
+		internal async static void ErrorReport()
+		{
+			
+
+
+			{
+				var dialog = new ErrorReport();
+				var a = await dialog.ShowAsync2();
+				if(a == ContentDialogResult.Primary)
+				{
+					AAnalytics.ErrorReport(dialog.notes.Text);
+					AppS.MessageBox("Error Report Sent");
+				}
+			};
 		}
 
 
@@ -828,8 +852,7 @@ namespace CnV.Views
 																	VirtualKeyModifiers modifiers =
 																			VirtualKeyModifiers.None)
 		{
-			var keyboardAccelerator = new KeyboardAccelerator() { Key = key };
-			keyboardAccelerator.Modifiers =  modifiers;
+			var keyboardAccelerator = new KeyboardAccelerator() { Key = key,Modifiers = modifiers };
 			keyboardAccelerator.Invoked   += OnKeyboardAcceleratorInvoked;
 			return keyboardAccelerator;
 		}
@@ -1597,7 +1620,7 @@ namespace CnV.Views
 
 		private void TimeForwardClick(object sender,RoutedEventArgs e)
 		{
-			CnVServer.GoToTime(CnVServer.simTime + TimeSpanS.FromMinutes(gotoTimeOffset.Value));
+			CnVServer.RunAtStepEnd( ()=> CnVServer.SetTargetTime(CnVServer.simTime + TimeSpanS.FromMinutes(gotoTimeOffset.Value)) );
 		}
 
 		private void TimeTogglePlay(object sender,RoutedEventArgs e)
@@ -1699,6 +1722,73 @@ namespace CnV.Views
 		{
 			//Note.Show("ManipulationCompleted");
 			updateHtmlOffsets.UserUpdated();
+		}
+
+		private void SendError(object sender,RoutedEventArgs e)
+		{
+			ErrorReport();
+		}
+
+		private async void SaveTimeline(object sender,RoutedEventArgs e)
+		{
+			try
+			{
+				FileSavePicker savePicker = new FileSavePicker();
+				savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+				// Dropdown of file types the user can save the file as
+				savePicker.FileTypeChoices.Add("CnV server timeline",new List<string>() { ".mpk" });
+				// Default file name if the user does not type one in or select a file to replace
+				savePicker.SuggestedFileName = "timeline";
+
+				WinRT.Interop.InitializeWithWindow.Initialize(savePicker,WinRT.Interop.WindowNative.GetWindowHandle(AppS.window));
+				StorageFile file = await savePicker.PickSaveFileAsync();
+				if(file != null)
+				{
+					// Prevent updates to the remote version of the file until we finish making changes and call CompleteUpdatesAsync.
+					var path = file.Path;
+					DataFiles.SaveBinary(path,Sim.PersistEvents());
+					Note.Show("Saved timeline");
+				}
+				else
+				{
+				}
+			}
+			catch(Exception _ex)
+			{
+				LogEx(_ex);
+
+			}
+		}
+
+		private async void LoadTimeline(object sender,RoutedEventArgs e)
+		{
+			try
+			{
+				FileOpenPicker savePicker = new FileOpenPicker();
+				savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+				// Dropdown of file types the user can save the file as
+				savePicker.FileTypeFilter.Add( ".mpk" );
+				// Default file name if the user does not type one in or select a file to replace
+			
+				WinRT.Interop.InitializeWithWindow.Initialize(savePicker,WinRT.Interop.WindowNative.GetWindowHandle(AppS.window));
+				StorageFile file = await savePicker.PickSingleFileAsync();
+				if(file != null)
+				{
+					// Prevent updates to the remote version of the file until we finish making changes and call CompleteUpdatesAsync.
+					var path = file.Path;
+					
+					Note.Show("Load timeline");
+					Sim.ResetSim(eventStream:DataFiles.LoadBinary(path));
+				}
+				else
+				{
+				}
+			}
+			catch(Exception _ex)
+			{
+				LogEx(_ex);
+
+			}
 		}
 
 		//private void GotoTimeOffset(object sender,RoutedEventArgs e)

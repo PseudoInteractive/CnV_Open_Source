@@ -427,14 +427,17 @@ namespace CnV
 		//public void OnPropertyChanged() =>
 		//		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
 
+
+		// called from Sim
 		public void UpdateUI()
 		{
 			try
 			{
+				
 				//	var i = CityStats.instance;
 				
-				if(City.GetBuild().IsInvalid())
-					return;
+				//if(City.GetBuild().IsInvalid())
+				//	return;
 				// building counts
 
 		

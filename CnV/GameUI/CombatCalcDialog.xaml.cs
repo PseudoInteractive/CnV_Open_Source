@@ -85,7 +85,7 @@ namespace CnV
 			var rv = CombatCalc.Go((ArmyType)attackType,new(attackers.Where(i => i.count > 0).Select(i => new TroopTypeCount(i.type,i.count))),
 new(defenders.Where(i => i.count > 0).Select(i => new TroopTypeCount(i.type,i.count))),
 			defenders.Select(a => (ushort)a.towerSlots).ToArray(),
-			wallLevel:(byte)wallLevel,(uint)City.GetBuild().cid, nightProtectionAttenuator:1.0f - nightProtection*0.01f);
+			wallLevel:(byte)wallLevel,(uint)City.GetBuild().cid + Sim.simTime.seconds*1111u, nightProtectionAttenuator:1.0f - nightProtection*0.01f);
 			for(var  i = ttZero;i<Troops.ttCount;++i)
 			{
 				attackers[i].surviving=rv.survivingOff.GetCount(i);

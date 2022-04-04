@@ -186,9 +186,28 @@
 				</AppBarButton>
 			<AppBarSeparator/>
 
+					<AppBarButton 
+					             Icon="Send"
+					             
+					              Click="SendError"
+					              ToolTipService.ToolTip="Send an error Report"  />
+			
 					<AppBarButton Label="Settings" Icon="Setting"  Click="ShowSettings" />
 
 		</CommandBar.PrimaryCommands>
+		<CommandBar.SecondaryCommands>
+					<AppBarButton 
+					             Icon="Save"
+					             Label="Save timeline.."
+					              Click="SaveTimeline"
+					              ToolTipService.ToolTip="Backs up event timeline"  />
+					<AppBarButton 
+					             Icon="OpenFile"
+					             
+					              Click="LoadTimeline"
+						 Label="Load timeline.."
+					              ToolTipService.ToolTip="Restores a saved timeline"  />
+				</CommandBar.SecondaryCommands>
 	</CommandBar>
 
 
