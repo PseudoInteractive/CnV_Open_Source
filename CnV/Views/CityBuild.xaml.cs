@@ -445,6 +445,8 @@ namespace CnV
 
 		}
 
+		
+
 		private static async void BuildMenu_Closed(object sender, object e)
 		{
 			try
@@ -1235,7 +1237,7 @@ namespace CnV
 		//	Assert(object.ReferenceEquals(args.Parameter, City.GetBuild()));
 
 			buildFlyout.Hide();
-			await ShareString.Show(City.build).ConfigureAwait(false);
+			await ShareString.Show(City.build,SetupFlags.none).ConfigureAwait(false);
 		}
 
 
@@ -1259,6 +1261,7 @@ namespace CnV
 				if(rv == ContentDialogResult.Primary)
 				{
 					var city = City.Get(cid);
+					Assert(false);
 					await CnVServer.ExecuteScriptAsync("misccommand", "abandoncity", cid);
 					city.pid = 0; //
 					if(myCities.Length > 1)
@@ -1284,7 +1287,7 @@ namespace CnV
 		{
 			if(PropertyChanged is not null) PropertyChanged(this,new PropertyChangedEventArgs(member));
 		}
-		public void CityChanged()
+		private void CityChanged(Spot arg1,Spot arg2) 
 		{
 			AppS.QueueOnUIThread(
 				()=>

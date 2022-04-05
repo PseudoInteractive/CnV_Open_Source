@@ -459,8 +459,15 @@ namespace CnV.Views
 				AppS.SetState(AppS.State.setup);
 
 				Log("Game Create!");
-				GameClient.Create(_canvas);
-
+				try
+				{
+					GameClient.Create(_canvas);
+				}
+				catch(Exception ex)
+				{
+					LogEx(ex);
+					await AppS.Fatal(ex.ToString());
+				}
 
 
 				// Links will not work until after the game is set up
@@ -583,7 +590,7 @@ namespace CnV.Views
 			catch(Exception ex)
 			{
 				LogEx(ex);
-				await AppS.Fatal(ex.Message);
+				await AppS.Fatal(ex.ToString());
 			}
 			//Task.Delay(5000).ContinueWith((_) =>
 			//{
@@ -1620,7 +1627,8 @@ namespace CnV.Views
 
 		private void TimeForwardClick(object sender,RoutedEventArgs e)
 		{
-			CnVServer.RunAtStepEnd( ()=> CnVServer.SetTargetTime(CnVServer.simTime + TimeSpanS.FromMinutes(gotoTimeOffset.Value)) );
+			var dt = TimeSpanS.FromMinutes(gotoTimeOffset.Value);
+			CnVServer.RunAtStepEnd( ()=> CnVServer.SetTargetTime(CnVServer.simTime +dt) );
 		}
 
 		private void TimeTogglePlay(object sender,RoutedEventArgs e)
@@ -1676,7 +1684,7 @@ namespace CnV.Views
 									City[] l;
 									if(selectedCityList == null || selectedCityList.id == -1) // "all"
 									{
-										l = City.myCities;
+										l = City.subCities;
 									}
 									else
 									{
@@ -1789,6 +1797,11 @@ namespace CnV.Views
 				LogEx(_ex);
 
 			}
+		}
+
+		private void FormAlliance(object sender,RoutedEventArgs e)
+		{
+			CreateAlliance.ShowInstance();
 		}
 
 		//private void GotoTimeOffset(object sender,RoutedEventArgs e)

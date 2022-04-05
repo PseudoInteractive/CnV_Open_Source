@@ -22,7 +22,7 @@ namespace CnV.Views
 			   {
 				   bossGrid.ItemsSource = null;
 				   bossGrid.ItemsSource = Boss.all;
-				   cities.Set( City.myCities.Where(c => c.testContinentAndTagFilter && c.homeTroopsAttack > 50 * 1000.0f).
+				   cities.Set( City.subCities.Where(c => c.testContinentAndTagFilter && c.homeTroopsAttack > 50 * 1000.0f).
 					   OrderBy((c) => -c.homeTroopsAttack) );
 				   cities.NotifyReset();
 			   }

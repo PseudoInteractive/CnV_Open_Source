@@ -29,11 +29,12 @@ namespace CnV.Views
 	[Flags]
 	public enum SetupFlags:byte
 	{
-
+		none=0<<1,
 		name = 1<<0,
 		layout = 1<<1,
 		trade = 1<<2,
 		tags = 1<<3,
+		suggestAutobuild = 1<<4,
 		all = 255,
 
 
@@ -156,7 +157,7 @@ namespace CnV.Views
 		}
 
 
-		static public Task Show(int cid,SetupFlags flags = SetupFlags.all)
+		static public Task Show(int cid,SetupFlags flags)
 		{
 			return AppS.DispatchOnUIThreadExclusive(cid,async () =>
 			{
@@ -166,7 +167,7 @@ namespace CnV.Views
 			);
 		}
 		//		public static Nito.AsyncEx.AsyncLock showLock = new ();
-		public static Task ShowNoLock(int cid,SetupFlags flags = SetupFlags.all)
+		public static Task ShowNoLock(int cid,SetupFlags flags)
 		{
 			Log("enter2");
 			Assert(AppS.uiSema.CurrentCount == 0);
@@ -176,7 +177,7 @@ namespace CnV.Views
 			var me = Touch(); // loads async
 			return me.ShowNoLockInternal(cid,flags);
 		}
-		async Task<bool> ShowNoLockInternal(int cid,SetupFlags flags = SetupFlags.all)
+		async Task<bool> ShowNoLockInternal(int cid,SetupFlags flags)
 		{
 			try
 			{
@@ -223,6 +224,12 @@ namespace CnV.Views
 				   SetCheckboxesFromTags(city.tags);
 				   //Bindings.Update();
 				   OnPropertyChanged();
+
+					   if(flags.HasFlag(SetupFlags.layout))
+						   LayoutBlade.IsOpen=true;
+					   if(flags.HasFlag(SetupFlags.name))
+						   NameBlade.IsOpen=true;
+
 				   var rv = await base.Show(false);
 				   if(rv)
 				   {
@@ -307,7 +314,7 @@ namespace CnV.Views
 						   city.BuildStageDirty();
 
 						   city.OnPropertyChanged();
-						   if(autobuild && LayoutBlade.IsOpen && city.isLayoutCustom && nameWasNull )
+						   if(autobuild && LayoutBlade.IsOpen && city.isLayoutCustom && flags.HasFlag(SetupFlags.suggestAutobuild) )
 							   await DoTheStuff.Go(city,false,false);
 							if(cid == City.build)
 							{
@@ -643,7 +650,7 @@ namespace CnV.Views
 			var isStorage = item.Text == "Storage";
 			var isHub = item.Text == "Hub";
 			var isNormal = item.Text == "Normal";
-			
+			var player = city.player;
 			//var type = cityType.SelectedIndex;
 			{
 				if(isNormal || isStorage)
@@ -651,7 +658,7 @@ namespace CnV.Views
 						var closestScore = float.MaxValue;
 
 						// normal or storage
-						foreach(var v in City.myCities)
+						foreach(var v in player.myCities)
 						{
 							if(v.cont != city.cont || v._cityName == null)
 								continue;
@@ -701,7 +708,7 @@ namespace CnV.Views
 			for(int uid = 1;;++uid)
 			{
 				var name = name0 + format(uid) + name1;
-				if(!City.myCities.Any((v) => v._cityName == name && v != city))
+				if(!player.myCities.Any((v) => v._cityName == name && v != city))
 				{
 					cityName.Text = name;
 					break;

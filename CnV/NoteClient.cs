@@ -290,7 +290,7 @@ namespace CnV
 				}
 				await Task.Delay(1000);
 			}
-			await ShareString.Show(cid);
+			await ShareString.Show(cid,SetupFlags.layout|SetupFlags.suggestAutobuild);
 		}
 
 		//public static void Focus(this Telerik.UI.Xaml.Controls.Grid.SfDataGrid ob)

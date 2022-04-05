@@ -517,7 +517,7 @@ namespace CnV.Views
 				using var _ = await TouchLists();
 				WritebackAttacks();
 				DoRefresh();
-				City.UpdateSenatorInfo();
+				//City.UpdateSenatorInfo();
 
 			}
 			else

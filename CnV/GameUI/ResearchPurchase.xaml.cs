@@ -23,6 +23,7 @@ namespace CnV
 	
 	public sealed partial class ResearchPurchase:DialogG, INotifyPropertyChanged
 	{
+		public static Player player => Player.active;
 		
 		public static ResearchPurchase? instance;
 		internal TechTreeStep r;
@@ -42,7 +43,7 @@ namespace CnV
 		}
 		private string Req(int r)
 		{
-			var have = Player.me.RefinesOrGold(r);
+			var have = player.RefinesOrGold(r);
 			return $"{have.Format()}, require {this.r.R(r).Format()}";
 		}
 
@@ -61,7 +62,7 @@ namespace CnV
 		bool hasEnough { get {
 				for(int r=0;r<5;++r)
 				{
-					if(Player.me.RefinesOrGold(r) < this.r.R(r) )
+					if(player.RefinesOrGold(r) < this.r.R(r) )
 						return false;
 				}
 				return true;
@@ -69,7 +70,7 @@ namespace CnV
 		private void DoResarch(object sender,RoutedEventArgs e)
 		{
 			Assert(hasEnough);
-			new CnVEventResearch(r.id).EnqueueAsap();
+			new CnVEventResearch(player.id,r.id).EnqueueAsap();
 			Done();
 		}
 

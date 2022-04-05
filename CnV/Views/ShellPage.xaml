@@ -207,6 +207,11 @@
 					              Click="LoadTimeline"
 						 Label="Load timeline.."
 					              ToolTipService.ToolTip="Restores a saved timeline"  />
+					<AppBarButton 
+					             Icon="VideoChat"
+					             
+					              Click="FormAlliance"
+						 Label="Form Alliance.." />
 				</CommandBar.SecondaryCommands>
 	</CommandBar>
 

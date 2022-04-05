@@ -120,7 +120,7 @@ namespace CnV.Views
 					//                supportGrid.ItemsSource = null;
 					{
 
-						foreach (var city in City.myCities)
+						foreach (var city in City.subCities)
 						{
 							if (city == target)
 								continue;

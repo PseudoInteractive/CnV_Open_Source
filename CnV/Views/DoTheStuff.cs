@@ -53,11 +53,17 @@ public static class DoTheStuff
 			}
 			var bc = city.UpdateBuildStage();
 
-			if(allowRename && (city.buildStage == City.BuildStage._new|| (city.autobuildCabinLevel==0&&(await AppS.DoYesNoBox("Autobuild Off?","Maybe you want Setup?")==1))))
+			//if(allowSetLayout && (city.buildStage == City.BuildStage._new|| (city.autobuild==0&&(await AppS.DoYesNoBox("Autobuild Off?","Maybe you want Setup?")==1))))
+			//{
+			//	await ShareString.ShowNoLock(cid, SetupFlags.suggestAutobuild).ConfigureAwait(false);
+			//	return true;
+			//}
+			if(allowSetLayout && !city.isLayoutCustom &&(await AppS.DoYesNoBox("No layouT","Maybe you want Setup?")==1))
 			{
-				await ShareString.ShowNoLock(cid).ConfigureAwait(false);
+				await ShareString.ShowNoLock(cid, SetupFlags.suggestAutobuild|SetupFlags.layout).ConfigureAwait(false);
 				return true;
 			}
+
 
 			Assert(city.isBuild);
 

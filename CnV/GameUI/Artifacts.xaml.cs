@@ -155,7 +155,7 @@ namespace CnV
 			var art = Artifacts.instance ?? new Artifacts();
 			if(art.selectedTitle == -1)
 			{
-				art.selectedTitle = (Player.me.title.rank-2).Max(0);
+				art.selectedTitle = (Player.active.title.rank-2).Max(0);
 			}
 			art.Show(false);
 			art.UpdateItems();

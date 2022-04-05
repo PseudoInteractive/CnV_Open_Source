@@ -37,8 +37,8 @@
 							IsTextScaleFactorEnabled="False"
 							SelectionUnit="Row"
 							Tag="Raid"
-							
-					
+							FontStretch="Condensed"
+					   ShowGroupDropArea="True"
 							>
 
 
@@ -101,6 +101,10 @@
 												TextAlignment="Right"
 												DisplayNumberFormat="N0"
 												 />
+				<sf:GridTextColumn MappingName="player"
+										   TextAlignment="Center"
+								   
+										    />	
 				<sf:GridTextColumn MappingName="remarks"
 										   TextAlignment="Left"
 										   IsHidden="True" />
@@ -133,7 +137,9 @@
 											
                                              />
 				</sf:SfDataGrid.Columns>
-
+			<sf:SfDataGrid.GroupColumnDescriptions>
+				<sf:GroupColumnDescription ColumnName="player" />
+			</sf:SfDataGrid.GroupColumnDescriptions>
 			</sf:SfDataGrid>
 		<StackPanel Grid.Row="0">
 			<tk:WrapPanel Orientation="Horizontal"

@@ -1061,11 +1061,11 @@ namespace CnV
 									//  Log(e.Value);
 									break;
 								}
-							case "snd":
-								{
-									UpdateSenatorInfo();
-									break;
-								}
+							//case "snd":
+							//	{
+							//		UpdateSenatorInfo();
+							//		break;
+							//	}
 							case "OGT":
 								{
 									// Log(e.Value);

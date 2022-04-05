@@ -618,7 +618,7 @@ namespace CnV
 		{
 			get {
 				using var sb = new PooledStringBuilder();
-				sb.s.Append(  $"{CnV.Resources.goldGlyph} {Player.me.gold.Format()}\n  +{city.stats.goldProduction.Format()}/h\nRes+Incomming:" );
+				sb.s.Append(  $"{CnV.Resources.goldGlyph} {Player.active.gold.Format()}\n  +{city.stats.goldProduction.Format()}/h\nRes+Incomming:" );
 				var peakRes = city.sampleResources+city.incomingRes;
 				var store = city.stats.storage;
 				for(int i=0;i<4;++i)
@@ -734,7 +734,7 @@ namespace CnV
 		{
 			Assert(instance is null);
 			instance = this;
-			City.buildCityChanged+=Invalidate;
+			City.buildCityChanged+= (_,_)=>Invalidate();
 			
 			
 
@@ -1287,7 +1287,7 @@ namespace CnV
 					if(id >= 0)
 					{
 						const int toUse = 1;
-						var needed = toUse- Player.me.ArtifactCount(artifact);
+						var needed = toUse- Player.active.ArtifactCount(artifact);
 						if(needed > 0)
 						{
 							(new CnVEventPurchaseArtifacts() { artifact =(ushort)artifact,count = (ushort)needed }).EnqueueAsap();

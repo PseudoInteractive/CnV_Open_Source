@@ -32,9 +32,8 @@
 							FontSize="{StaticResource SmallFontSize}"
 							SelectionUnit="Row"
 							ShowToolTip="True"
-							
+							FontStretch="Condensed"
 							Loaded="DataGridLoaded"
-							ScrollViewer.CanContentRenderOutsideBounds="True"
 							
 							>
 	
@@ -149,6 +148,10 @@
 												
 												ColumnWidthMode="Auto"
 												 />
+				<sf:GridTextColumn MappingName="player"
+										   TextAlignment="Center"
+								   
+										    />
 				<sf:GridTextColumn MappingName="remarks"
 										   TextAlignment="Left"
 										   ColumnWidthMode="Auto"
@@ -174,7 +177,9 @@
 										   ColumnWidthMode="Auto"
 											HeaderText="mnO" />
 			</sf:SfDataGrid.Columns>
-
+			<sf:SfDataGrid.GroupColumnDescriptions>
+				<sf:GroupColumnDescription ColumnName="player" />
+			</sf:SfDataGrid.GroupColumnDescriptions>
 		</sf:SfDataGrid>
 	
 

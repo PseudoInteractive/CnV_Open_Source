@@ -52,7 +52,7 @@ namespace CnV
 				}
 			AUtil.UnsafeCopy(CityView.baseAnimationOffsets, CityViewS.animationOffsets);
 
-			City.buildCityChanged += ()
+			City.buildCityChanged += (_,_)
 											=>
 									{
 										AUtil.UnsafeCopy(CityView.baseAnimationOffsets, CityViewS.animationOffsets);

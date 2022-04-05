@@ -144,9 +144,9 @@ using Game;
 															sb.AppendLine(Alliance.IdToName(player.allianceId));
 														
 
-														if(city.senatorInfo.Length != 0)
+														//if(city.senatorInfo.Length != 0)
 														{
-															sb.AppendLine(city.GetSenatorInfo());
+															sb.Append(city.GetSenatorInfo());
 														}
 														if(city.incoming.Any())
 														{

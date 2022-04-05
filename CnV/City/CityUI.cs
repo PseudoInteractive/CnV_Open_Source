@@ -71,7 +71,7 @@ public static partial class CityUI
 
 	internal static void Refresh()
 	{
-		Player.me.OnPropertyChanged();
+		Player.active.OnPropertyChanged();
 		CityStats.Invalidate();
 		PlayerStats.Changed();
 	}
@@ -130,7 +130,9 @@ public static partial class CityUI
 				}
 
 
-				aSetup.AddItem("Setup...",    (_, _) => CityUI.InfoClick(cid));
+				aSetup.AddItem("Setup...",    (_, _) => CityUI.SetupClick(cid,SetupFlags.suggestAutobuild | SetupFlags.layout));
+				aSetup.AddItem("Settings...",    (_, _) => CityUI.SetupClick(cid,SetupFlags.none));
+				aSetup.AddItem("Name...",    (_, _) => CityUI.SetupClick(cid,SetupFlags.name));
 				aSetup.AddItem("Find Hub",    (_, _) => CityUI.SetClosestHub(cid));
 				aSetup.AddItem("Set Recruit", (_, _) => CitySettings.SetRecruitFromTag(cid));
 				//aSetup.AddItem("Change...",   (_, _) => ShareString.Show(cid, default));
@@ -502,18 +504,19 @@ public static partial class CityUI
 	}
 
 	
-	public static async void InfoClick(int _intialCid)
+	public static async void SetupClick(int _intialCid, SetupFlags flags)
 	{
 		var cids =Spot.GetSelectedForContextMenu(_intialCid);
 		foreach(var cid in cids)
 		{
 			var _cid = cid;
-			await ShareString.Show(_cid);
+			await ShareString.Show(_cid,flags);
 			{
 				break;
 			}
 		}
 	}
+	
 	public static void DefendMe(this Spot me)
 	{
 		var cids = GetSelectedForContextMenu(me.cid, false);

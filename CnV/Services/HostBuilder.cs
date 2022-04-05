@@ -15,7 +15,7 @@ namespace CnV;
 
     partial class AppS
     {
-        public static async Task StartHost( Func<Task> OnReady )
+        public static async Task StartHost( Func<Task> OnReady,string args )
         {
             var host = new HostBuilder()
                 .ConfigureLogging((hostContext, config) =>
@@ -31,7 +31,7 @@ namespace CnV;
                 {
                     config.AddJsonFile("appsettings.json", optional: true);
                     config.AddJsonFile($"appsettings.{hostContext.HostingEnvironment.EnvironmentName}.json", optional: true);
-                //    config.AddCommandLine(args);
+                    config.AddCommandLine(new[] { args }); // todo: parse these
                 })
                 .ConfigureServices((hostContext, services) =>
                 {
@@ -52,7 +52,7 @@ namespace CnV;
                     // instrumentation key is read automatically from appsettings.json
                     services.AddApplicationInsightsTelemetryWorkerService();
                 })
-                .UseConsoleLifetime()
+                
                 .Build();
 
             using (host)
@@ -103,6 +103,8 @@ public class TimedHostedService : IHostedService, IDisposable
 
         public TimedHostedService(ILogger<TimedHostedService> logger, TelemetryClient tc)
         {
+		Assert(tc.IsEnabled() == true);
+			
             _logger = logger;
             this.tc = tc;
 			AAnalytics.tc = tc;

@@ -187,7 +187,7 @@ namespace CnV.Views
 					//await RaidOverview.Send();
 				//	if (City.build != 0)
 				//		await GetCity.Post(City.build);
-					foreach(var c in City.myCities)
+					foreach(var c in City.subCities)
 					{
 						if(c.testContinentAndTagFilter)
 							c.OnPropertyChanged();

@@ -28,7 +28,19 @@ namespace CnV
 		{
 			instance = this;
 			this.InitializeComponent();
-			Player.me.PropertyChanged += (a,b)=> Changed();
+
+			City.buildCityChanged += (oldCity,newCity) =>
+				{
+					oldCity.player.PropertyChanged-= PlayerChanged;
+					newCity.player.PropertyChanged+= PlayerChanged;
+					Changed();
+				};
+		}
+
+		private void PlayerChanged(object? sender,PropertyChangedEventArgs e)
+		{
+			Changed();
+
 		}
 
 		public event PropertyChangedEventHandler? PropertyChanged;
@@ -46,17 +58,18 @@ namespace CnV
 			}
 		}
 
-		public string zirconiaS => Player.me.zirconia.Format();
-		public string manaS => Player.me.sampleMana.Format();
-		public string goldS => Player.me.SampleGold().Format();
-		public string RefineS(int id) => Player.me.data.refines[id].Format();
+		public static Player player => Player.active;
+		public string zirconiaS => player.zirconia.Format();
+		public string manaS => player.sampleMana.Format();
+		public string goldS => player.SampleGold().Format();
+		public string RefineS(int id) => player.data.refines[id].Format();
 		internal static void GoldChanged()	=> Changed(nameof(goldS));
 		internal static void ManaChanged()	=> Changed(nameof(manaS));
 
 		internal static void ZirconiaChanged() => Changed(nameof(zirconiaS));
 		internal static void RefinesChanged() => Changed(nameof(RefineS));
 
-		public string title => Title.TADesc(Player.me.TALevel);
+		public string title => Title.TADesc(player.TALevel);
 
 		private void AllTapped(object sender,TappedRoutedEventArgs e) =>
 			ResContextRequest(sender as UIElement,null);
@@ -66,7 +79,7 @@ namespace CnV
 		private void IronTapped(object sender,TappedRoutedEventArgs e)=> CityUI.Show( Artifact.ArtifactType.crucible, sender);
 		private void FoodTapped(object sender,TappedRoutedEventArgs e)=> CityUI.Show( Artifact.ArtifactType.Hoe, sender);
 		private void GoldTapped(object sender,TappedRoutedEventArgs e)=> CityUI.Show( Artifact.ArtifactType.chest, sender);
-		private void TitleTapped(object sender,TappedRoutedEventArgs e)=> ResearchPurchase.ShowInstance( ResearchItems.GetTA(Player.me.TALevel-1) );
+		private void TitleTapped(object sender,TappedRoutedEventArgs e)=> ResearchPurchase.ShowInstance( ResearchItems.GetTA(player.TALevel-1) );
 		private void ResContextRequest(UIElement sender,ContextRequestedEventArgs? args )
 		{
 			if(args is  not null)

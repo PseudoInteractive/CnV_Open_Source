@@ -90,7 +90,7 @@ namespace CnV
 			var t = quest;
 			var s = t.step;
 			Assert(t.canClaim);
-			new CnVEventResearch(s.id).EnqueueAsap();
+			new CnVEventResearch(Player.active.id,s.id).EnqueueAsap();
 			Done();
 		}
 

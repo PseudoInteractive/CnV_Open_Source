@@ -47,7 +47,6 @@ namespace CnVDiscord
 
 		public async Task<bool> Initialize()
 		{
-			return false; // TODO DON"T check this in
 #if CNV
 			try
 			{

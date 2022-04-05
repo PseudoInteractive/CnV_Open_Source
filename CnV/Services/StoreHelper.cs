@@ -18,8 +18,8 @@ namespace CnV.Services
 		// Downloads and installs package updates in separate steps.
 		public async void DownloadAndInstallAllUpdatesAsync()
 		{
-			if (System.Diagnostics.Debugger.IsAttached)
-				return;
+		//	if (System.Diagnostics.Debugger.IsAttached)
+		//		return;
 			try
 			{
 				if (context == null)

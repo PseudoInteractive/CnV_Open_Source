@@ -133,7 +133,7 @@ namespace CnV.Views
 
 			var tab = this;
 
-			var spots = !showAll ? new[] { _spot } : City.myCities;
+			var spots = !showAll ? new[] { _spot } : City.subCities;
 
 			//		var orders = new List<Reinforcement>();
 

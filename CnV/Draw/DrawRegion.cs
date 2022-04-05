@@ -1079,7 +1079,7 @@ internal partial class GameClient
 									if(!outgoingVisible)
 										continue;
 								}
-								var list = City.myCities; //defenders ? Spot.defendersI : Spot.defendersO;
+								var list = City.subCities; //defenders ? Spot.defendersI : Spot.defendersO;
 								bool noneIsAll = list.Length <= Settings.showAttacksLimit;
 								bool showAll = list.Length <= Settings.showAttacksLimit0 ||(isIncoming ? Settings.incomingAlwaysVisible : Settings.attacksAlwaysVisible);
 								foreach(var city in list)
@@ -1241,7 +1241,7 @@ internal partial class GameClient
 							{
 								var isIncoming = (iOrO == 0);
 								
-								var list = City.myCities; //defenders ? Spot.defendersI : Spot.defendersO;
+								var list = City.subCities; //defenders ? Spot.defendersI : Spot.defendersO;
 								bool showAll = !tradePartlyVisible;
 								foreach(var city in list)
 								{
