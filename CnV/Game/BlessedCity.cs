@@ -49,24 +49,24 @@ namespace CnV
 			try
 			{
 				var cities = new List<BlessedCity>();
-				using var data = await Post.SendForJson("overview/bleover.php");
-				foreach (var city in data.RootElement.GetProperty("a").EnumerateArray())
-				{
-					var bc = new BlessedCity();
-					var cid = city[10].GetInt32();
+			//	using var data = await Post.SendForJson("overview/bleover.php");
+			//	foreach (var city in data.RootElement.GetProperty("a").EnumerateArray())
+			//	{
+			//		var bc = new BlessedCity();
+			//		var cid = city[10].GetInt32();
 
-					bc.spot = Spot.GetOrAdd(cid);
-				//	bc.spot._cityName = city[0].GetString();
-			//		bc.spot.pid = Player.NameToId(city[2].GetString());
-					bc.virtue = city[3].GetString();
-					bc.level = city[4].GetAsInt();
-					bc.blessedUntil = city[5].GetString().ParseDateTime(true);
-					bc.wood = city[6].GetInt32();
-					bc.stone = city[7].GetInt32();
-					bc.pri = city[8].GetInt32();
-					bc.notes = city[9].GetString();
-					cities.Add(bc);
-				}
+			//		bc.spot = Spot.GetOrAdd(cid);
+			//	//	bc.spot._cityName = city[0].GetString();
+			////		bc.spot.pid = Player.NameToId(city[2].GetString());
+			//		bc.virtue = city[3].GetString();
+			//		bc.level = city[4].GetAsInt();
+			//		bc.blessedUntil = city[5].GetString().ParseDateTime(true);
+			//		bc.wood = city[6].GetInt32();
+			//		bc.stone = city[7].GetInt32();
+			//		bc.pri = city[8].GetInt32();
+			//		bc.notes = city[9].GetString();
+			//		cities.Add(bc);
+			//	}
 
 				all = cities;
 

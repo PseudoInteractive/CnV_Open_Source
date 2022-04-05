@@ -35,7 +35,7 @@ namespace CnV
 			art.Show(true);
 		}
 
-		private void Button_Click(object sender,RoutedEventArgs e)
+		private async void Button_Click(object sender,RoutedEventArgs e)
 		{
 			var name = this.name.Text;
 			var abbreviation = this.abbreviation.Text;
@@ -53,7 +53,7 @@ namespace CnV
 			alliance.Upsert();
 			Hide(true);
 			AppS.MessageBox(title:$"Founded {name}",hero:"UI/menues/newsletter/misc_newsletter_img_alliance.png", lightDismiss:false);
-
+			await Alliance.UpdateAll();
 
 		}
 	}

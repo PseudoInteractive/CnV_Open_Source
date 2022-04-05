@@ -1,0 +1,18 @@
+﻿<cnv:DialogG
+    x:Class="CnV.JoinAlliance"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cnv="using:CnV"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+	<Grid>
+		<StackPanel Width="400">
+			<ComboBox IsTextSearchEnabled="True" Header="Alliance" x:Name="alliance" FontSize="24" />
+			<ComboBox  Header="Title" x:Name="allianceTitle" ItemsSource="{x:Bind cnv:Alliance.allianceTitleS}" FontSize="24" />
+
+			<Button HorizontalAlignment="Right" Content="Join" Click="Button_Click" />
+		</StackPanel>
+	</Grid>
+</cnv:DialogG>

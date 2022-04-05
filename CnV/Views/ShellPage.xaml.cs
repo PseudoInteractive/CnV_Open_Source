@@ -539,18 +539,19 @@ namespace CnV.Views
 				}
 
 				await CnVClient.InitializeGame();
+		//		Player.activePlayerChanged += (p0,p1) => AppS.UpdateAppTitle();
 				while(!Sim.isPastWarmup)
 				{
 					await Task.Delay(250);
 				}
-				AppS.QueueOnUIThread(() =>
-				{
+				//AppS.QueueOnUIThread(() =>
+				//{
 					AppS.UpdateAppTitle();
 
 
-					//							AppS.appWindow.SetIcon(new IconId(0));
-					//	AppS.MessageBox($"Welcome {Player.me.shortName}.");
-				});
+				//	//							AppS.appWindow.SetIcon(new IconId(0));
+				//	//	AppS.MessageBox($"Welcome {Player.me.shortName}.");
+				//});
 				FindName(nameof(playerStats));
 				FindName(nameof(cityStats));
 				KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Left,NavStack.BackInvoked,
@@ -1802,6 +1803,11 @@ namespace CnV.Views
 		private void FormAlliance(object sender,RoutedEventArgs e)
 		{
 			CreateAlliance.ShowInstance();
+		}
+
+		private void JoinAlliance(object sender,RoutedEventArgs e)
+		{
+			CnV.JoinAlliance.ShowInstance();
 		}
 
 		//private void GotoTimeOffset(object sender,RoutedEventArgs e)

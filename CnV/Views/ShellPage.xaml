@@ -208,10 +208,15 @@
 						 Label="Load timeline.."
 					              ToolTipService.ToolTip="Restores a saved timeline"  />
 					<AppBarButton 
-					             Icon="VideoChat"
+					             Icon="Admin"
 					             
 					              Click="FormAlliance"
 						 Label="Form Alliance.." />
+					<AppBarButton 
+					             Icon="Comment"
+					             
+					              Click="JoinAlliance"
+						 Label="Join Alliance.." />
 				</CommandBar.SecondaryCommands>
 	</CommandBar>
 

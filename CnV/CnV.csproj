@@ -137,6 +137,7 @@
     <Compile Include="GameUI\CreateAlliance.xaml.cs" />
     <Compile Include="GameUI\DialogG.cs" />
     <Compile Include="GameUI\ErrorReport.xaml.cs" />
+    <Compile Include="GameUI\JoinAlliance.xaml.cs" />
     <Compile Include="GameUI\MessageBox.xaml.cs" />
     <Compile Include="GameUI\QuestList.xaml.cs" />
     <Compile Include="GameUI\RecruitDialog.xaml.cs" />
@@ -393,6 +394,9 @@
     <Page Include="GameUI\ErrorReport.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="GameUI\JoinAlliance.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="GameUI\MessageBox.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -617,6 +621,7 @@
 	<None Remove="GameUI\CombatCalcDialog.xaml" />
 	<None Remove="GameUI\CreateAlliance.xaml" />
 	<None Remove="GameUI\ErrorReport.xaml" />
+	<None Remove="GameUI\JoinAlliance.xaml" />
 	<None Remove="GameUI\MessageBox.xaml" />
 	<None Remove="GameUI\QuestList.xaml" />
 	<None Remove="GameUI\RecruitDialog.xaml" />
