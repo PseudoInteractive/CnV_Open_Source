@@ -76,6 +76,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.5.0" />
     <PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.5.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.WorkerService" Version="2.21.0-beta1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="7.0.0-preview.2.22152.2" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0-preview.2.22152.2" />
     <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.Primitives" Version="7.0.0-preview.2.22152.2" />
     <PackageReference Include="Microsoft.Identity.Client" Version="4.42.1" />
@@ -105,8 +108,8 @@
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.1" />
 	<PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
     <PackageReference Include="PlayFabAllSDK" Version="1.108.220118" />
-    <PackageReference Include="Syncfusion.Grid.WinUI" Version="19.4.0.56" />
-    <PackageReference Include="Syncfusion.Licensing" Version="19.4.0.56" />
+    <PackageReference Include="Syncfusion.Grid.WinUI" Version="20.1.0.47" />
+    <PackageReference Include="Syncfusion.Licensing" Version="20.1.0.47" />
 	<PackageReference Include="SharpDX" Version="4.2.0" />
     <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
     <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
@@ -146,6 +149,7 @@
     <Compile Include="GameUI\TradeSettingsDialog.xaml.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Services\CnVSignin.cs" />
+    <Compile Include="Services\HostBuilder.cs" />
     <Compile Include="Views\CanvasMouse.cs" />
     <Compile Include="Views\CanvasUI.cs" />
     <Compile Include="Views\CityStats.xaml.cs" />
@@ -692,6 +696,8 @@
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
     <AppxPackageDir>S:\Source\cnv\appx\</AppxPackageDir>
+    <ApplicationInsightsResourceId>/subscriptions/2a698fb0-55b8-4561-b722-2015b2c78d9c/resourceGroups/appcenter-export-Alliances/providers/microsoft.insights/components/AppCenterExport-Alliances</ApplicationInsightsResourceId>
+    <UserSecretsId>390b80fc-ab7a-4c55-9a54-5947221eec7e</UserSecretsId>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Optimize>False</Optimize>

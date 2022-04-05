@@ -399,93 +399,99 @@ namespace CnV
 		{
 			try
 			{
-				Assert(AppS.state == AppS.State.loading);
-				AppS.SetState(AppS.State.init);
-
-				//	CnVFont = new FontFamily("{StaticResource CnvIcons}");
-
-				//	Windows.UI.ViewManagement.ApplicationView.PreferredLaunchWindowingMode =Windows.UI.ViewManagement.ApplicationViewWindowingMode.Maximized;// new Size(bounds.Width, bounds.Height);
-				//				Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TryEnterViewModeAsync(Windows.UI.ViewManagement.ApplicationViewMode.CompactOverlay);
-
-				FocusVisualKind = FocusVisualKind.Reveal;
-
-				window = new();
-				AppS.globalQueue = window.DispatcherQueue;
-				//	window.
-
-
-
-
-				//var view = DisplayInformation.GetForCurrentView();
-				var uwpArgs = AppInstance.GetActivatedEventArgs(); //args.UWPLaunchActivatedEventArgs;
-				if(uwpArgs.Kind == Windows.ApplicationModel.Activation.ActivationKind.Protocol)
+				await AppS.StartHost(async () =>
 				{
-					var eventArgs = uwpArgs as ProtocolActivatedEventArgs;
-					Log("Args!! " + eventArgs.Uri);
-					var s = System.Web.HttpUtility.ParseQueryString(eventArgs.Uri.Query);
 
-					Debug.Log(s);
-					// format $"cnv:launch?w={world}&s=1&n=1"
-					// are / chars inserted?
-					//  if (s.Length >= 3)
+					Assert(AppS.state == AppS.State.loading);
+					AppS.SetState(AppS.State.init);
+
+					//	CnVFont = new FontFamily("{StaticResource CnvIcons}");
+
+					//	Windows.UI.ViewManagement.ApplicationView.PreferredLaunchWindowingMode =Windows.UI.ViewManagement.ApplicationViewWindowingMode.Maximized;// new Size(bounds.Width, bounds.Height);
+					//				Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TryEnterViewModeAsync(Windows.UI.ViewManagement.ApplicationViewMode.CompactOverlay);
+
+					FocusVisualKind = FocusVisualKind.Reveal;
+
+					window = new();
+					AppS.globalQueue = window.DispatcherQueue;
+					//	window.
+
+
+
+
+					//var view = DisplayInformation.GetForCurrentView();
+					var uwpArgs = AppInstance.GetActivatedEventArgs(); //args.UWPLaunchActivatedEventArgs;
+					if(uwpArgs.Kind == Windows.ApplicationModel.Activation.ActivationKind.Protocol)
 					{
-						//if (AMath.TryParseInt(s["s"], out int _s))
-						//	CnVServer.subId = _s;
+						var eventArgs = uwpArgs as ProtocolActivatedEventArgs;
+						Log("Args!! " + eventArgs.Uri);
+						var s = System.Web.HttpUtility.ParseQueryString(eventArgs.Uri.Query);
 
-						////var n = s["p"];
-						////if (n != null)
-						////	Player.subOwner = n;
+						Debug.Log(s);
+						// format $"cnv:launch?w={world}&s=1&n=1"
+						// are / chars inserted?
+						//  if (s.Length >= 3)
+						{
+							//if (AMath.TryParseInt(s["s"], out int _s))
+							//	CnVServer.subId = _s;
 
-						//if (AMath.TryParseInt(s["w"], out int _w))
-						//	CnVServer.world = _w;
+							////var n = s["p"];
+							////if (n != null)
+							////	Player.subOwner = n;
 
-						//						if(AMath.TryParseInt(s["n"],out int _n)) // new instance
-						//							key = "cotgaMulti" + DateTimeOffset.UtcNow.UtcTicks;
+							//if (AMath.TryParseInt(s["w"], out int _w))
+							//	CnVServer.world = _w;
 
+							//						if(AMath.TryParseInt(s["n"],out int _n)) // new instance
+							//							key = "cotgaMulti" + DateTimeOffset.UtcNow.UtcTicks;
+
+						}
 					}
-				}
 
-				//// Get the screen resolution (APIs available from 14393 onward).
-				//var resolution = new Size(view.ScreenWidthInRawPixels, view.ScreenHeightInRawPixels);
-				//// Calculate the screen size in effective pixels. 
-				//// Note the height of the Windows Taskbar is ignored here since the app will only be given the maxium available size.
-				//var scale = view.ResolutionScale == ResolutionScale.Invalid ? 1 : view.RawPixelsPerViewPixel;
-				//var bounds = new Size(resolution.Width / scale, resolution.Height / scale);
+					//// Get the screen resolution (APIs available from 14393 onward).
+					//var resolution = new Size(view.ScreenWidthInRawPixels, view.ScreenHeightInRawPixels);
+					//// Calculate the screen size in effective pixels. 
+					//// Note the height of the Windows Taskbar is ignored here since the app will only be given the maxium available size.
+					//var scale = view.ResolutionScale == ResolutionScale.Invalid ? 1 : view.RawPixelsPerViewPixel;
+					//var bounds = new Size(resolution.Width / scale, resolution.Height / scale);
 
-				{
-					IntPtr hWnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
-					WindowId myWndId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
-					AppS.appWindow= AppWindow.GetFromWindowId(myWndId);
-				}
-				AppS.appWindow.Title = "Conquest and Virtue Alpha sign in to Discord";
-				AppS.appWindow.SetIcon("assets\\cnvIcon.ico");
-				//				
-				//				window.SetTitleBar
-				//ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
-				//		window.ExtendsContentIntoTitleBar = true;
-				//	window.ExtendsContentIntoTitleBar = true;
-				//App.globalDispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
+					{
+						IntPtr hWnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
+						WindowId myWndId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
+						AppS.appWindow= AppWindow.GetFromWindowId(myWndId);
+					}
+					AppS.appWindow.Title = "Conquest and Virtue Alpha sign in to Discord";
+					AppS.appWindow.SetIcon("assets\\cnvIcon.ico");
+					//				
+					//				window.SetTitleBar
+					//ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
+					//		window.ExtendsContentIntoTitleBar = true;
+					//	window.ExtendsContentIntoTitleBar = true;
+					//App.globalDispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
 
-				//	keyQueue = globalQueue.CreateTimer();
-				//CoreApplication.EnablePrelaunch(false);
-				//if (uwpArgs.Kind == Windows.ApplicationModel.Activation.ActivationKind.Launch)
-				//{
-				//	// do this asynchronously
-				
-				//}
+					//	keyQueue = globalQueue.CreateTimer();
+					//CoreApplication.EnablePrelaunch(false);
+					//if (uwpArgs.Kind == Windows.ApplicationModel.Activation.ActivationKind.Launch)
+					//{
+					//	// do this asynchronously
 
+					//}
 
 
-				// if (!args.PrelaunchActivated)
 
-				await OnLaunchedOrActivated(args.UWPLaunchActivatedEventArgs);
-				if(uwpArgs.Kind == Windows.ApplicationModel.Activation.ActivationKind.Launch)
+					// if (!args.PrelaunchActivated)
+
+					await OnLaunchedOrActivated(args.UWPLaunchActivatedEventArgs);
+					if(uwpArgs.Kind == Windows.ApplicationModel.Activation.ActivationKind.Launch)
 						AppS.QueueOnUIThread(Services.StoreHelper.instance.DownloadAndInstallAllUpdatesAsync);
+				});
+
 			}
 			catch(Exception e)
 			{
 				Log(e);
 			}
+		
 		}
 
 		//private bool Window_Closing() //object sender,WindowClosingEventArgs e)
@@ -604,6 +610,7 @@ namespace CnV
 				SystemInformation.Instance.TrackAppUse(args);
 				// can this be async?
 
+				Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("NjA1NzY5QDMyMzAyZTMxMmUzMGZSTWpQWEpTL3N6TUVVcUlaTitqTTBoRTltdS9PenVzWGNMVnZkWlM1QVk9;NRAiBiAaIQQuGjN/V0Z+XU9EaFtFVmJLYVB3WmpQdldgdVRMZVVbQX9PIiBoS35RdEVnWXtccHZUQ2VcVUx/;NjA1NzcxQDMyMzAyZTMxMmUzMEE5QXBhZnJQaUpncnlwNEMvS2tkOThkL3lBaVFXZkQ4SXpqWlFsNkdObEk9;NjA1NzcyQDMyMzAyZTMxMmUzMENLK01WZjViM0xXU0svRU1STnFteXNhVm9NcHMydXFjN21Hc0FwcnhOaEE9");
 
 				if(!wasRunning)
 				{
@@ -656,7 +663,8 @@ namespace CnV
 				// will navigate to the first page
 				//	await HandleActivationAsync(activationArgs);
 				//  _lastActivationArgs = activationArgs;
-				Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("NTUwMDAxQDMxMzkyZTM0MmUzMFJnano4Uk4veXEvQmczQ2M5eWZQQ1JUT0UyVVJwamhxcEZjRWEvL3V4ZkE9;NTUwMDAyQDMxMzkyZTM0MmUzMENITkt6cXZtZ2oxZkFTa09HMmkxRXlFaVRhQjRUN1dUQzc2VHNDeXU4TWc9");
+				
+	//				("NTUwMDAxQDMxMzkyZTM0MmUzMFJnano4Uk4veXEvQmczQ2M5eWZQQ1JUT0UyVVJwamhxcEZjRWEvL3V4ZkE9;NTUwMDAyQDMxMzkyZTM0MmUzMENITkt6cXZtZ2oxZkFTa09HMmkxRXlFaVRhQjRUN1dUQzc2VHNDeXU4TWc9");
 				if(isInteractive)
 				{
 					var activation = args;
