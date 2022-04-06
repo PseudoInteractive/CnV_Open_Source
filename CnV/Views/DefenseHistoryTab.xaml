@@ -24,7 +24,6 @@ Loaded="DataGridLoaded"
                         
 					    FontSize="{StaticResource MediumFontSize}"
                          
-                        ItemsSource="{x:Bind history, Mode=OneWay}"
                         RowHeight="{StaticResource ShortGridRowHeight}"
                         
                         SelectionMode="Single"
@@ -32,14 +31,14 @@ Loaded="DataGridLoaded"
 >
             <sf:SfDataGrid.Columns>
                 <sf:GridTimeColumn 
-                                       MappingName="time"
+                                       MappingName="arrival"
                                        HeaderText="Time"
                                        DisplayTimeFormat="0:dd',' HH':'mm':'ss"
                                        
                                        
                                        />
                 <sf:GridTextColumn 
-                                       MappingName="Type"
+                                       MappingName="type"
                                         />
                 <sf:GridTextColumn 
                                        TextAlignment="Left"
@@ -75,11 +74,7 @@ Loaded="DataGridLoaded"
                                             MappingName="aTsKill"
                                             DisplayNumberFormat="N0"
                                              />
-				<sf:GridNumericColumn 
-                                            MappingName="approxKill"
-					                        HeaderText="aprxKill"
-                                            DisplayNumberFormat="N0"
-                                             />
+
 				<sf:GridTextColumn 
                                        TextAlignment="Left"
                                        HeaderText="defCN"
@@ -129,6 +124,7 @@ Loaded="DataGridLoaded"
                                        HeaderText="defAli"
                                                 MappingName="targetAllianceName"
                                        IsHidden="True" />
+				
             </sf:SfDataGrid.Columns>
             <!--<sf:SfDataGrid.AggregateDescriptors>
                 <telerikCore:PropertyAggregateDescriptor MappingName="SE"

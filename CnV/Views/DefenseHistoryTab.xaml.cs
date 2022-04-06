@@ -11,17 +11,16 @@ namespace CnV.Views
 	public sealed partial class DefenseHistoryTab : UserTab
     {
 		public override  TabPage defaultPage => TabPage.secondaryTabs;
-		public ArmyArray history { get; set; } = ArmyArray.Empty;
-        public void SetHistory( ArmyArray _history)
+		//public ArmyArray history { get; set; } = ArmyArray.Empty;
+        public void UpdateDataGrid()
         {
-            history = _history;
 			var sel = IncomingTab.selected;
 			if (sel == null)
-				historyGrid.ItemsSource = history;
+				historyGrid.ItemsSource = BattleReport.all;
 			else
 			{
 				var cid = sel.cid;
-				historyGrid.ItemsSource = history.Where( s => s.targetCid == cid).ToArray() ;
+				historyGrid.ItemsSource = BattleReport.all.Where( s => s.targetCid == cid).ToArray() ;
 			}
 		}
 
@@ -41,7 +40,7 @@ namespace CnV.Views
             instance = this;
 
             InitializeComponent();
-			SetupDataGrid(historyGrid);
+			SetupDataGrid(historyGrid,false );
 			//            historyGrid.ContextFlyout = cityMenuFlyout;
 
 		}
@@ -50,11 +49,7 @@ namespace CnV.Views
          //   historyGrid.ItemsSource = Array.Empty<Army>();
             if (visible)
             {
-				if (!IncomingOverview.updateInProgress)
-				{
-
-					IncomingOverview.Process(Settings.fetchFullHistory); // Todo: throttle
-				}
+				UpdateDataGrid();
 			}
 			return base.VisibilityChanged(visible, longTerm: longTerm);
         }

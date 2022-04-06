@@ -282,8 +282,8 @@ public static partial class ADataGrid
 			//				grid.AllowFrozenGroupHeaders = false;
 			grid.ColumnWidthMode = Syncfusion.UI.Xaml.Grids.ColumnWidthMode.AutoLastColumnFill;
 			grid.CellToolTipOpening += UserTab.CellToolTipOpening;
-			//if (sourceType is not null || grid.ItemsSource is not null)
-			//	grid.SourceType = sourceType ?? UserTab.GetContainerType(grid.ItemsSource);
+			//if(sourceType is not null) //  || grid.ItemsSource is not null)
+		//		grid.SourceType = sourceType;// ?? UserTab.GetContainerType(grid.ItemsSource);
 			//grid.UseSystemFocusVisuals = true;
 			grid.ShowSortNumbers = true;
 			
