@@ -31,13 +31,13 @@ Loaded="DataGridLoaded"
 >
             <sf:SfDataGrid.Columns>
                 <sf:GridTimeColumn 
-                                       MappingName="arrival"
+                                       MappingName="Arrival"
                                        HeaderText="Time"
                                        DisplayTimeFormat="MM'/'dd HH':'mm':'ss"
                                        
                                        
                                        />
-                <sf:GridTextColumn 
+				<sf:GridHyperlinkColumn 
                                        MappingName="type"
                                         />
 				<sf:GridNumericColumn  

@@ -94,7 +94,7 @@
 							/>
 
 				<Slider Style="{StaticResource VerticalSlider}"  Header="Game Text" Value="{x:Bind cnv:Settings.fontScale, Mode=TwoWay}" 	ToolTipService.ToolTip="The size of all text in region and city view" />
-				<Slider Style="{StaticResource VerticalSlider}"  Header="Dpi Scale" Value="{x:Bind cnv:Settings.dpiScale, Mode=TwoWay}" Maximum="2" ToolTipService.ToolTip="Scales all overlay layout, including text and lines" />
+				<Slider Style="{StaticResource VerticalSlider}"  Header="Dpi Scale" Value="{x:Bind cnv:Settings.dpiAdjust, Mode=TwoWay}" Maximum="2" ToolTipService.ToolTip="Scales all overlay layout, including text and lines" />
 				<Slider Style="{StaticResource VerticalSlider}"  Header="Label Text" Value="{x:Bind cnv:Settings.regionLabelScale, Mode=TwoWay}" 	ToolTipService.ToolTip="The size of labels in region view" />
 				<Slider Style="{StaticResource VerticalSlider}"  Header="Building Text" Value="{x:Bind cnv:Settings.buildingLabelScale, Mode=TwoWay}" 	ToolTipService.ToolTip="The size of labels in City view" />
 				<Slider Style="{StaticResource VerticalSlider}"  Header="Hide Size" Value="{x:Bind cnv:Settings.fontCullScale, Mode=TwoWay}" ToolTipService.ToolTip="Text smaller than this will not be drawn" />

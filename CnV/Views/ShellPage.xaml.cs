@@ -286,7 +286,7 @@ namespace CnV.Views
 				gameUIFrame = _gameUIFrame;
 				rootGrid = _rootGrid;
 				instance = this;
-
+				View.dipToNative = XamlRoot.RasterizationScale;
 				//var ps = new PlayerStats();
 				//Header = ps;
 

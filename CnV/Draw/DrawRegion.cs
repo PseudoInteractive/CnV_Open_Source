@@ -288,8 +288,8 @@ internal partial class GameClient
 			pixelScaleInverse = 1.0f*projectionOffsetGainY*viewW.Z;
 			pixelScale       = 1.0f/pixelScaleInverse;
 
-			dipScaleInverse = (float)(pixelScaleInverse*dipToNative*Settings.dpiScale);
-			dipScale       = 1.0f/dipScaleInverse;
+			dipScaleInverse = (float)(pixelScaleInverse*dipToNative*Settings.dpiAdjust);
+		//	dipScale       = 1.0f/dipScaleInverse;
 
 			//halfSquareOffset = new System.Numerics.Vector2(pixelScale * 0.5f, pixelScale * .5f);
 			var bonusLayerScale = (2 * Settings.iconScale)*MathF.Sqrt(pixelScale / 64.0f).DipToWorld();
@@ -1665,8 +1665,7 @@ internal partial class GameClient
 			
 			if(underMouse!= priorUnderMouse)
 			{
-				//         Spot.viewHover = 0; // clear
-				ToolTips.actionToolTip = underMouse?.WorldToolTip();
+				ToolTips.actionToolTip = underMouse;
 				ToolTipWindow.TipChanged();
 			}
 			Assert(underMouse is null == ToolTips.actionToolTip is null);

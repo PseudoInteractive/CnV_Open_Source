@@ -110,16 +110,17 @@ using Game;
 							ref string toolTip = ref ToolTips.spotToolTip;
 						toolTip = null;
 
-
 							lastCanvasC = cid;
 							var packedId = World.GetWorldId(c);
 							var data = World.GetTile(World.rawPrior1!=null ? World.rawPrior1 : World.tileData,packedId);
+
 							switch(data.type)
 							{
 								case World.TileType.typeCity:
 									{
 										Spot.viewHover = (WorldC)cid;
 										var city = City.GetOrAddCity(cid);
+										
 										if(city != null)
 										{
 											if(data.player == 0)
@@ -342,6 +343,10 @@ using Game;
 									}
 								}
 							}
+							
+						if(toolTip != null)
+								ToolTips.spot = City.Get(cid);;
+
 							//{
 							//	StringBuilder sb = new(toolTip);
 							//	var info = TileData.instance.GetSpotinfo(c.x,c.y,sb);

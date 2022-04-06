@@ -54,7 +54,7 @@
 			</Grid.ColumnDefinitions>
 			<!-- Overlay grid for sizing -->
 
-			<Canvas x:Name="toolTipHolder" Grid.Column="2" Width="170" IsHitTestVisible="False" IsTabStop="False" Background="{x:Null}" 
+			<Canvas x:Name="toolTipHolder" Grid.Column="2" Width="140" IsHitTestVisible="False" IsTabStop="False" Background="{x:Null}" 
 		HorizontalAlignment="Right" x:FieldModifier="public" VerticalAlignment="Stretch" />
 
 			<CommandBar Grid.ColumnSpan="3"   DefaultLabelPosition="Collapsed" IsSticky="True" IsTabStop="True" Margin="0" Padding="0" MinHeight="22"  

@@ -20,25 +20,16 @@ using Windows.Foundation.Collections;
 
 namespace CnV
 {
-	public sealed partial class ToolTipWindow:DialogG
+	public sealed partial class ToolTipWindow:UserControl
 	{
-		protected override string title => "tmi";
 		public static ToolTip tooltip;
-		public static ToolTipWindow instance;
+		public static ToolTipWindow content;
 		
 		public ToolTipWindow()
 		{
 			this.InitializeComponent();
-			instance = this;
 		}
-		const int width = 64+28;
-		public static void ShowInstance()
-		{
-			var rv = instance ?? new ToolTipWindow();
-			Canvas.SetLeft(rv, (AGame.clientSpan.X-width));
-			rv.Show(true);
-			
-		}
+		//const int width = 64+28;
 		public static void TipChanged()
 		{
 			AppS.QueueOnUIThread( () =>
@@ -49,15 +40,30 @@ namespace CnV
 					
 					ToolTipService.SetToolTip(ShellPage.instance.toolTipHolder,tooltip);
 					tooltip.Placement = PlacementMode.Bottom;
+					content = new ToolTipWindow();
+					tooltip.Content = content;
 				//	tooltip.Placement = PlacementMode.Mouse;
 				//	tooltip.VerticalOffset =32;
 			//		tooltip.HorizontalOffset =-32;
 				}
-				var str = ToolTips.toolTip;
-				tooltip.Content = str;
+				string str;
+				ImageSource i0;
+				if(ToolTips.actionToolTip is not null)
+				{
+					(str,i0) = ToolTips.actionToolTip.WorldToolTip();
+				}
+				else
+				{
+					str = ToolTips.spotToolTip;
+					i0 = ToolTips.spot?.avatarImage;
+	//				i1=  null;
+				}
+				
 				if(!str.IsNullOrEmpty())
 				{
-					
+					content.t.Text = str;
+					content.i0.Source = i0;
+					//content.i1.Source = i0 == i1 ? null : i1;
 					//tooltip.PlacementTarget =ShellPage.instance.commandBar;
 					//tooltip.Placement = PlacementMode.Mouse;
 					

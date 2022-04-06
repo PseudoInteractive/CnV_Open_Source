@@ -1139,7 +1139,7 @@ namespace CnV
 		}
 
 
-		internal string toolTip => army.WorldToolTip();
+		internal string toolTip => army.WorldToolTip().tip;
 
 		public CommandItem(Army army)
 		{
