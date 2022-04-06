@@ -29,6 +29,7 @@ namespace CnV
 		internal City city;
 		internal City target;
 		internal ArmyType type;
+		internal int armyType { get => (int)type; set => type=(ArmyType)(value); }
 		
 		internal readonly int[] splitsItems = Enumerable.Range(1,16).ToArray();
 
@@ -52,6 +53,8 @@ namespace CnV
 		}
 
 		bool isRaid => type==ArmyType.raid; 
+
+
 		public static void ShowInstance(City city,City target,bool isSettle,bool viaWater=false, ArmyType type = ArmyType.defense)
 		{
 			var rv = instance ?? new SendTroops();
@@ -64,8 +67,8 @@ namespace CnV
 			if(isSettle)
 				rv.troopItems[Troops.ttMagistra].count = 1;
 
-			rv.raidPanel.Visibility = rv.isRaid ? Visibility.Visible : Visibility.Collapsed; 
-
+			rv.raidPanel.Visibility = rv.isRaid ? Visibility.Visible : Visibility.Collapsed;
+			rv.OnPropertyChanged();
 			rv.Show(false);
 			
 		}
@@ -148,7 +151,7 @@ namespace CnV
 				var flags = (byte)(isRaid ? ((repeatCheckBox.IsChecked.Value ? Army.flagRepeating : Army.flagNone)
 									)
 									| Army.FlagSplits((int)splitsCombo.SelectedItem) : Army.flagNone);
-				Dungeon.ArmySend(ts,flags,city,target.cid,type,transport);
+				Army.Send(ts,flags,city,target.cid,type,transport);
 				Done();
 			}
 			else

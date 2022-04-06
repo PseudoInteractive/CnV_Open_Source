@@ -81,7 +81,7 @@ public static partial class CityUI
 		var aSetup  = AApp.AddSubMenu(flyout, "Setup..");
 		var aMisc   = flyout.AddSubMenu("Misc..");
 		var aExport = new MenuFlyoutSubItem();// flyout.AddSubMenu("Import/Export..");
-		var aWar    = new MenuFlyoutSubItem();//AApp.AddSubMenu(flyout, "War..");
+		var aWar    = AApp.AddSubMenu(flyout, "War..");
 		if (me.isCityOrCastle)
 		{
 			// Look - its my city!
@@ -160,6 +160,7 @@ public static partial class CityUI
 			{
 				var sel = Spot.GetSelectedForContextMenu(cid, false);
 				{
+					aWar.AddItem("Attack",(_,_) => SendTroops.ShowInstance(GetBuild(),City.Get(cid),isSettle: false,viaWater: false,type: ArmyType.assault));
 					var multiString = sel.Count > 1 ? $" _x {sel.Count} selected" : "";
 					aWar.AddItem("Cancel Attacks..", me.CancelAttacks);
 					var afly = aWar.AddSubMenu("Attack Planner");

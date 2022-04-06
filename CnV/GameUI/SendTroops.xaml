@@ -19,6 +19,7 @@
 			<Button Style="{StaticResource ButtonMedium}" Content="Total" Click="MaxClick" Margin="0,2,8,2" />
 			<Button Style="{StaticResource ButtonMedium}" Content="Home" Click="HomeClick" Margin="8,2" />
 			<Button Style="{StaticResource ButtonMedium}" Content="Zero" Click="ClearClick" Margin="8,2"  />
+			<ComboBox SelectedIndex="{x:Bind armyType, Mode=TwoWay}" ItemsSource="{x:Bind cnv:Army.typeStrings}" />
 			<StackPanel Orientation="Horizontal" Padding="0" x:Name="raidPanel" >
 				<TextBlock Text="Splits" Margin="12,2,0,2" VerticalAlignment="Center" />
 				<ComboBox x:Name="splitsCombo" ItemsSource="{x:Bind splitsItems}" SelectedIndex="0" Margin="12,2" VerticalAlignment="Center" />
