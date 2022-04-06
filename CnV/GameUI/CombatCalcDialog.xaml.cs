@@ -82,18 +82,21 @@ namespace CnV
 
 		private void CalcClick(object sender,RoutedEventArgs e)
 		{
-			var rv = CombatCalc.Go((ArmyType)attackType,new(attackers.Where(i => i.count > 0).Select(i => new TroopTypeCount(i.type,i.count))),
-new(defenders.Where(i => i.count > 0).Select(i => new TroopTypeCount(i.type,i.count))),
-			defenders.Select(a => (ushort)a.towerSlots).ToArray(),
+			var b = new BattleReport();
+			b.attacker = new ArmyResult(new Army(default,default,default,default,default,(ArmyType)attackType,new(attackers.Where(i => i.count > 0).Select(i => new TroopTypeCount(i.type,i.count))),
+				false));
+			b.defenders = new[] { new ArmyResult(new TroopTypeCounts(defenders.Where(i => i.count > 0).Select(i => new TroopTypeCount(i.type,i.count)))) };
+
+			var rv = CombatCalc.Go(b,defenders.Select(a => (ushort)a.towerSlots).ToArray(),
 			wallLevel:(byte)wallLevel,(uint)City.GetBuild().cid + Sim.simTime.seconds*1111u, nightProtectionAttenuator:1.0f - nightProtection*0.01f);
 			for(var  i = ttZero;i<Troops.ttCount;++i)
 			{
-				attackers[i].surviving=rv.survivingOff.GetCount(i);
-				defenders[i].surviving=rv.survivingDef.GetCount(i);
+				attackers[i].surviving=b.attacker.survived.GetCount(i);
+				defenders[i].surviving=b.target.survived.GetCount(i);
 				attackers[i].OnPropertyChanged();
 				defenders[i].OnPropertyChanged();
 			}
-			winRatio = rv.winRatio;
+			winRatio = rv;
 			OnPropertyChanged();
 		}
 	}

@@ -17,19 +17,15 @@ namespace CnV.Styles
 			protected override Style SelectStyleCore(object item, DependencyObject container)
 		{
 			//		var cell = (item as DataGridCellInfo);
-			var report = item as ArmyReport;
-			if(report.isPending)
-				return noKillsStyle;
-			if(report.isSieging)
-				return report.claim > 0 ? attackerWinStyle : tieStyle;
+			var report = item as BattleReport;
 
 			var dKill = report.dTsKill;
 			var aKill = report.aTsKill;
 			if(dKill < 1000 && aKill < 1000)
-				return report.isScout ? attackerWinStyle : noKillsStyle;
-			if(dKill > aKill * 3 / 2)
+				return report.attacker.army.isScout ? attackerWinStyle : noKillsStyle;
+			if(report.attackRatio < 0.75f )
 				return defenderWinStyle;
-			if(aKill > dKill * 3 / 2)
+			if(report.attackRatio > 1.25f )
 				return attackerWinStyle;
 			return tieStyle;
 		}

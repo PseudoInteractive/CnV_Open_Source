@@ -59,18 +59,18 @@ namespace CnV.Views
 			{
 				try
 				{
-					var report = (item as ArmyReport);
+					var report = (item as BattleReport);
 					if(report is null)
 						return null;
 					return report.type switch
 					{
 
 						ArmyType.assault => assaultStyle,
-						ArmyType.siege when report.isSieging => siegingStyle,
+						ArmyType.siege when report.attackArmy.isSieging => siegingStyle,
 						ArmyType.siege => siegeStyle,
 						ArmyType.plunder => plunderStyle,
-						ArmyType.scout => scoutStyle
-
+						ArmyType.scout => scoutStyle,
+						_=>pendingStyle
 					};
 				}
 				catch(Exception _ex)
