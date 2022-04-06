@@ -53,11 +53,7 @@ namespace CnV;
 						{
 							switch (e.Column.HeaderText)
 							{
-								case nameof(i.typeS):
-									
-										CnVServer.ShowReport(i.id);
-									
-									break;
+								
 								case nameof(Reinforcement.retUri):
 							{
 								Note.Show($"Returning {i}");
@@ -102,7 +98,51 @@ namespace CnV;
 
 						break;
 					}
+					case  BattleReport i:
+					{
+						if (i.ProcessTap(e.Column.MappingName) == false)
+						{
+							switch (e.Column.MappingName)
+							{
+								case nameof(i.type):
+									
+									CnVServer.ShowReport(i);
+									
+									break;
+							
+								case nameof(i.tXY):
+								case nameof(i.targetCN):
+									Spot.ProcessCoordClick(i.targetCid, false, AppS.keyModifiers, false);
+									break;
+								case nameof(i.sXY):
+								case nameof(i.sourceCN):
+									Spot.ProcessCoordClick(i.sourceCid, false, AppS.keyModifiers, false);
+									break;
+								case nameof(i.tPlayer):
+									CnVServer.ShowPlayer(i.tPlayer);
+									break;
+								case nameof(i.sPlayer):
+									CnVServer.ShowPlayer(i.sPlayer);
+									break;
+								//case nameof(i.atkCN): Spot.ProcessCoordClick(i.atkCid, false); break;
+								//case nameof(i.defC):
+								//case nameof(i.defCN): Spot.ProcessCoordClick(i.defCid,false); break;
+								case nameof(i.sourceAllianceName):
+									CnVServer.ShowAlliance(i.sourceAllianceName);
+									break;
+								case nameof(i.targetAllianceName):
+									CnVServer.ShowAlliance(i.targetAllianceName);
+									break;
+									//case nameof(i.aPlyr): CnVServer.ShowPlayer(i.aPlyr);break;
+									//case nameof(i.dPlyr): CnVServer.ShowPlayer(i.dPlyr); break;
 
+									break;
+
+							}
+						}
+
+						break;
+					}
 
 					case  Dungeon d:
 					{

@@ -92,7 +92,7 @@ namespace CnV
 			for(var  i = ttZero;i<Troops.ttCount;++i)
 			{
 				attackers[i].surviving=b.attacker.survived.GetCount(i);
-				defenders[i].surviving=b.target.survived.GetCount(i);
+				defenders[i].surviving=b.GetTarget().survived.GetCount(i);
 				attackers[i].OnPropertyChanged();
 				defenders[i].OnPropertyChanged();
 			}

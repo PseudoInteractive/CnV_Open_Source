@@ -33,12 +33,15 @@ Loaded="DataGridLoaded"
                 <sf:GridTimeColumn 
                                        MappingName="arrival"
                                        HeaderText="Time"
-                                       DisplayTimeFormat="0:dd',' HH':'mm':'ss"
+                                       DisplayTimeFormat="MM'/'dd HH':'mm':'ss"
                                        
                                        
                                        />
                 <sf:GridTextColumn 
                                        MappingName="type"
+                                        />
+				<sf:GridNumericColumn  
+                                       MappingName="attackRatio"
                                         />
                 <sf:GridTextColumn 
                                        TextAlignment="Left"
@@ -89,7 +92,7 @@ Loaded="DataGridLoaded"
                                             TextAlignment="Right"
                                              />
                 <sf:GridNumericColumn 
-                                            MappingName="Cont"
+                                            MappingName="cont"
                                             TextAlignment="Center"
                                              />
                 <sf:GridCheckBoxColumn  
@@ -123,7 +126,7 @@ Loaded="DataGridLoaded"
                                        TextAlignment="Left"
                                        HeaderText="defAli"
                                                 MappingName="targetAllianceName"
-                                       IsHidden="True" />
+                                        />
 				
             </sf:SfDataGrid.Columns>
             <!--<sf:SfDataGrid.AggregateDescriptors>

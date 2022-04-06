@@ -44,13 +44,13 @@
                         >
             <sf:SfDataGrid.Columns>
                 <sf:GridTimeColumn 
-                                       MappingName="time"
+                                       MappingName="arrival"
                                        HeaderText="Time"
                                        DisplayTimeFormat="0:dd',' HH':'mm':'ss"
                                        
                                        />
                 <sf:GridTextColumn 
-                                       MappingName="Type"
+                                       MappingName="type"
                                        
                                        />
                 <sf:GridTextColumn 
