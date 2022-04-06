@@ -370,7 +370,7 @@ namespace CnV.Views
 				var ts = supporter.tSend /  (def.Count);
 				var cid = d.cid;
 				await Post.SendRein(supporter.cid, cid, ts, departAt, _arriveAt, hours, supporter.split, text);
-				Trace($"Sent {ts} from {supporter.cid.AsCity()} to {cid.AsCity()} @{_arriveAt.ToString()}");
+				Log($"Sent {ts} from {supporter.cid.AsCity()} to {cid.AsCity()} @{_arriveAt.ToString()}");
 				await Task.Delay(500);
 			}
 			IncomingOverview.ProcessTask();

@@ -115,8 +115,8 @@ public class TimedHostedService : IHostedService, IDisposable
         {
             _logger.LogInformation("Timed Background Service is starting.");
 
-            _timer = new Timer(DoWork, null, TimeSpan.Zero,
-                TimeSpan.FromSeconds(15));
+         //   _timer = new Timer(DoWork, null, TimeSpan.Zero,
+          //      TimeSpan.FromSeconds(15));
 
             return Task.CompletedTask;
         }

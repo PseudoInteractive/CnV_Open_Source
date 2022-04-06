@@ -286,7 +286,7 @@ namespace CnV
 					break;
 				if( i > 5)
 				{
-					Trace("City not here");
+					Log("City not here");
 				}
 				await Task.Delay(1000);
 			}

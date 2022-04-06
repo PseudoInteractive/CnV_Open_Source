@@ -91,7 +91,7 @@ namespace CnV.Views
 			updating = true;
 			try
 			{
-				Trace($"Update {DateTime.Now}");
+				Log($"Update {DateTime.Now}");
 
 				await TradeOverview.UpdateTradeStuffIfNeeded();
 
@@ -325,7 +325,7 @@ namespace CnV.Views
 				var secret = $"JJx452Tdd{pid}sRAssa";
 				var reqF = $"{{\"a\":{s.res.wood},\"b\":{s.res.stone},\"c\":{s.res.iron},\"d\":{s.res.food},\"cid\":{s.city.cid},\"rcid\":{target.cid},\"t\":\"{(viaWater ? 2 : 1)}\"}}"; // t==1 is land, t==2 is water
 				int count = AppS.IsKeyPressedShiftAndControl() ? 8 : 1;
-				Trace(count.ToString());
+				Log(count.ToString());
 				string res = string.Empty;
 				var asDonation = this.SendAsDontation.IsOn;
 				if(asDonation)

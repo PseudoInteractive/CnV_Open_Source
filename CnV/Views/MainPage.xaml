@@ -137,9 +137,6 @@
 											
                                              />
 				</sf:SfDataGrid.Columns>
-			<sf:SfDataGrid.GroupColumnDescriptions>
-				<sf:GroupColumnDescription ColumnName="player" />
-			</sf:SfDataGrid.GroupColumnDescriptions>
 			</sf:SfDataGrid>
 		<StackPanel Grid.Row="0">
 			<tk:WrapPanel Orientation="Horizontal"

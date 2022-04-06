@@ -54,15 +54,7 @@ namespace CnV
 					return;
 				}
 				Hide(true);
-				Player p = Player.active;
-				var title = (AllianceTitle)allianceTitle.SelectedIndex;
-				var entity = new PlayerEntity(p.pid,p.id,World.id) { allianceId =sel.id,allianceTitle=(AllianceTitleAzure)title };
-				PlayerEntity.table.UpsertAsync(entity);
-				// Do we need a delay in here?
-
-				new CnVEventAlliance(p.id,sel.id,title).EnqueueAsap();
-				await Task.Delay(1000);
-				CnVChatClient.UpdatePlayerAlliance(p);
+				await Go(Player.active,sel.id,(AllianceTitle)allianceTitle.SelectedIndex);
 
 			}
 			catch(Exception _ex)
@@ -72,6 +64,19 @@ namespace CnV
 			}
 
 
+		}
+
+		internal static  async Task Go(Player p,AllianceId sel,AllianceTitle title)
+		{
+		
+			
+			var entity = new PlayerEntity(p.pid,p.id,World.id) { allianceId =sel,allianceTitle=(AllianceTitleAzure)title };
+			PlayerEntity.table.UpsertAsync(entity);
+			// Do we need a delay in here?
+
+			new CnVEventAlliance(p.id,sel,title).EnqueueAsap();
+			await Task.Delay(1000);
+			CnVChatClient.UpdatePlayerAlliance(p);
 		}
 	}
 }

@@ -50,10 +50,11 @@ namespace CnV
 				return;
 			}
 			var alliance = new Alliance(name,abbreviation,(AllianceId)Alliance.all.Count,0ul);
-			alliance.Upsert();
+			await alliance.Upsert();
 			Hide(true);
 			AppS.MessageBox(title:$"Founded {name}",hero:"UI/menues/newsletter/misc_newsletter_img_alliance.png", lightDismiss:false);
 			await Alliance.UpdateAll();
+			await JoinAlliance.Go(Player.active,alliance.id,AllianceTitle.leader);
 
 		}
 	}

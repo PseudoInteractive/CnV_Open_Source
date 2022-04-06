@@ -177,9 +177,7 @@
 										   ColumnWidthMode="Auto"
 											HeaderText="mnO" />
 			</sf:SfDataGrid.Columns>
-			<sf:SfDataGrid.GroupColumnDescriptions>
-				<sf:GroupColumnDescription ColumnName="player" />
-			</sf:SfDataGrid.GroupColumnDescriptions>
+			
 		</sf:SfDataGrid>
 	
 
