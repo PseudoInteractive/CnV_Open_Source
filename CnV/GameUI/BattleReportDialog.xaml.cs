@@ -25,7 +25,7 @@ namespace CnV
 	{
 		protected override string title => "Battle Report";
 		internal BattleReport b;
-		internal string attackType => $"↓ {b.attackArmy.typeS} ratio: {b.attackRatio:P} ↓";
+		internal string attackType => $"↓ {b.attackArmy.typeS} ratio: {b.attackRatio:P}";
 
 		public BattleReportDialog(BattleReport _b)
 		{

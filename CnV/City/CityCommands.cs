@@ -93,7 +93,7 @@ public partial class City
 
 														//if(city.senatorInfo.Length != 0)
 														{
-															sb.Append(city.GetSenatorInfo());
+															city.GetSenatorInfo(sb);
 														}
 														if(city.incoming.Any())
 														{
