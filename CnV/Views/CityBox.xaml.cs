@@ -23,7 +23,7 @@ using CnV;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
-namespace CnV.Views
+namespace CnV
 {
 	using Game;
 
@@ -51,7 +51,7 @@ namespace CnV.Views
 		public static readonly DependencyProperty LabelProperty = DependencyProperty.Register(
   "Label",
   typeof(string),
-  typeof(CityControl),
+  typeof(CityBox),
   new PropertyMetadata(null)
 );
 
@@ -78,7 +78,7 @@ namespace CnV.Views
 		private void TextBlock_Tapped(object sender,TappedRoutedEventArgs e)
 		{
 			var image = sender as FrameworkElement;
-			var cc = image.FindParent<CityControl>();
+			var cc = image.FindParent<CityBox>();
 			if(cc?.city != null)
 				CityUI.ShowCity(cc.city.cid,false,false,false);
 
@@ -87,7 +87,7 @@ namespace CnV.Views
 		private void Image_Tapped(object sender,TappedRoutedEventArgs e)
 		{
 			var image = sender as FrameworkElement;
-			var cc = image.FindParent<CityControl>();
+			var cc = image.FindParent<CityBox>();
 			if(cc?.city!=null)
 				Spot.ProcessCoordClick(cc.city.cid,false,AppS.keyModifiers,false);
 
@@ -96,7 +96,7 @@ namespace CnV.Views
 		private void Image_RightTapped(object sender,RightTappedRoutedEventArgs e)
 		{
 			var image = sender as FrameworkElement;
-			var cc = image.FindParent<CityControl>();
+			var cc = image.FindParent<CityBox>();
 			if(cc?.city != null)
 				cc.city.ShowContextMenu(image,e.GetPosition(image));
 		}

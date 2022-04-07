@@ -33,13 +33,13 @@ namespace CnV
 		static readonly Color attackColor = Color.White;
 		static Color ShadowColor(float alpha, bool highlight = false) => new Color(highlight ? 16 : 0, highlight ? 0 : 0, highlight ? 0 : 8, (int)(220 * alpha));
 		static readonly Color returnColor = new Color(60, 30, 200, 255);
-		static readonly Color defenseColor = new Color(60, 0, 255, 255);
-		static readonly Color defenseArrivedColor = new Color(60, 30, 255, 255);
-		static readonly Color artColor = Color.DarkBlue;
+		static readonly Color defenseColor = new Color(00, 255, 225, 225);
+		static readonly Color defenseArrivedColor = new Color(90, 250, 225, 255);
+		static readonly Color artColor = Color.Yellow;
 		static readonly Color senatorColor = Color.OrangeRed;
-		static readonly Color attackingColor = Color.PaleVioletRed;
+		static readonly Color attackingColor = new Color(r:139,g:0,b:0,alpha:255);
 		static readonly Color siegeColor = Color.DarkOrange;
-		static readonly Color assaultColor = CColor(55, 94, 190, 242);
+		static readonly Color assaultColor = new Color(r:189,g:20,b:20,alpha:255);
 		static readonly Color tradeColor = Color.DarkGreen;
 		static readonly Color tradeColorHover = Color.Green;
 
@@ -47,7 +47,7 @@ namespace CnV
 		static readonly Color tradeColorHover1 = Color.Red;
 
 		static readonly Color defaultAttackColor = Color.Maroon; // (0xFF8B008B);// Color.DarkMagenta;
-		static readonly Color raidColor          = Color.Yellow;
+		static readonly Color raidColor          = Color.Blue;
 		//        static readonly Color shadowColor = new Color(128, 0, 0, 0);
 		static readonly Color      selectColor = new Color(20, 255, 255, 160);
 		static readonly Color      buildColor  = Color.DarkRed;

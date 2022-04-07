@@ -8,7 +8,7 @@ namespace CnV.Views
 {
 	using Game;
 
-	public sealed partial class DefenseHistoryTab : UserTab
+	public sealed partial class HitHistoryTab : UserTab
     {
 		public override  TabPage defaultPage => TabPage.secondaryTabs;
 		//public ArmyArray history { get; set; } = ArmyArray.Empty;
@@ -24,7 +24,7 @@ namespace CnV.Views
 			}
 		}
 
-        public static DefenseHistoryTab instance;
+        public static HitHistoryTab instance;
         public static xDataGrid HistoryGrid => instance.historyGrid;
         //        public static Army showingRowDetails;
 
@@ -34,7 +34,7 @@ namespace CnV.Views
         //    Assert(rv != null);
         //    return rv;
         //}
-        public DefenseHistoryTab()
+        public HitHistoryTab()
         {
             Assert(instance == null);
             instance = this;

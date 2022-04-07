@@ -111,7 +111,7 @@ namespace CnV.Views
 				instance.armyGrid.ItemsSource = sel.incoming;
 				if (Settings.fetchFullHistory)
 				{
-					var tab = HitTab.instance;
+					var tab = HitHistoryTab.instance;
 					if (!instance.isFocused)
 					{
 						tab.ShowOrAdd(true, onlyIfClosed: true);

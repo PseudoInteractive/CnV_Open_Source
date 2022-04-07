@@ -134,6 +134,7 @@
     <Compile Include="GameUI\ArtifactDialogue.xaml.cs" />
     <Compile Include="GameUI\Artifacts.xaml.cs" />
     <Compile Include="GameUI\AutobuildDialog.xaml.cs" />
+    <Compile Include="GameUI\BattleReportDialog.xaml.cs" />
     <Compile Include="GameUI\CombatCalcDialog.xaml.cs" />
     <Compile Include="GameUI\CreateAlliance.xaml.cs" />
     <Compile Include="GameUI\DialogG.cs" />
@@ -309,17 +310,14 @@
     <Compile Include="Views\DateTimePicker.xaml.cs">
       <DependentUpon>DateTimePicker.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\DefenseHistoryTab.xaml.cs">
-      <DependentUpon>DefenseHistoryTab.xaml</DependentUpon>
+    <Compile Include="Views\HitHistory.xaml.cs">
+      <DependentUpon>HitHistory.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Fixes.xaml.cs">
       <DependentUpon>Fixes.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\HeatTab.xaml.cs">
       <DependentUpon>HeatTab.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\HitTab.xaml.cs">
-      <DependentUpon>HitTab.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\IncomingTab.xaml.cs">
       <DependentUpon>IncomingTab.xaml</DependentUpon>
@@ -384,6 +382,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="GameUI\AutobuildDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GameUI\BattleReportDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="GameUI\CombatCalcDialog.xaml">
@@ -525,7 +526,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\DefenseHistoryTab.xaml">
+    <Page Include="Views\HitHistory.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -540,10 +541,6 @@
     <Page Include="Views\HeatTab.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\HitTab.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\IncomingTab.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -619,6 +616,7 @@
 	<None Remove="GameUI\ArtifactDialogue.xaml" />
 	<None Remove="GameUI\Artifacts.xaml" />
 	<None Remove="GameUI\AutobuildDialog.xaml" />
+	<None Remove="GameUI\BattleReportDialog.xaml" />
 	<None Remove="GameUI\CombatCalcDialog.xaml" />
 	<None Remove="GameUI\CreateAlliance.xaml" />
 	<None Remove="GameUI\ErrorReport.xaml" />

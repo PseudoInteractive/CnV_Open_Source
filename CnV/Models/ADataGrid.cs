@@ -253,7 +253,7 @@ public static partial class ADataGrid
 
 			grid.RowHeight = Settings.mediumGridRowHeight;
 		//	grid.FontSize = Settings.smallFontSize;
-			grid.FontStretch = Windows.UI.Text.FontStretch.Condensed;
+			
 			grid.FontWeight=Microsoft.UI.Text.FontWeights.Normal;
 			grid.SelectionMode = GridSelectionMode.Extended;
 			grid.GridLinesVisibility = GridLinesVisibility.Both;
@@ -263,15 +263,17 @@ public static partial class ADataGrid
 			grid.AllowResizingColumns = true;
 			grid.CanMaintainScrollPosition=true;
 			grid.ShowToolTip=true;
+			
 			grid.AllowEditing=false;
 			grid.AllowDraggingColumns=true;
 			grid.AllowSorting=true;
 			grid.AllowTriStateSorting=true;
-			grid.FontStretch = Windows.UI.Text.FontStretch.Condensed;
+//			grid.FontStretch = Windows.UI.Text.FontStretch.Condensed;
 			grid.ExpanderColumnWidth = 32;
 			if (tab is not null && grid.IsCityGrid())
 				grid.SelectionChanged += tab.SpotSelectionChanged;
 			grid.FontSize = Settings.smallFontSize;
+			grid.FontStretch = Windows.UI.Text.FontStretch.Condensed;
 			grid.GridContextFlyoutOpening += UserTab.ContextFlyoutOpening;
 			grid.RecordContextFlyout = new();
 			grid.RecordContextFlyout.SetXamlRoot(grid);

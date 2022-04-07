@@ -231,7 +231,7 @@ namespace CnV.Views
 
 						if(Settings.fetchFullHistory)
 						{
-							var tab = DefenseHistoryTab.instance;
+							var tab = HitHistoryTab.instance;
 							if(!tab.isFocused)
 							{
 								tab.ShowOrAdd(true, onlyIfClosed: true);

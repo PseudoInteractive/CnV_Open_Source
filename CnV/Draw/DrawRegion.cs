@@ -1130,14 +1130,19 @@ internal partial class GameClient
 											{
 												++incAttacks;
 												incTs += i.ts;
-												if(i.hasArt)
-												{
-													hasArt = true;
-													c = assaultColor;
-												}
-												else if(i.hasSenator)
+												
+												if(i.hasSenator)
 												{
 													c = senatorColor; ;
+												}
+												else if(i.hasArt)
+												{
+													hasArt = true;
+													c = artColor;
+												}
+												else if(i.isSiege)
+												{
+													c = siegeColor;
 												}
 												else
 												{
