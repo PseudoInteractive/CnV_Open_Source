@@ -11,7 +11,7 @@
     xmlns:winui="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d"
  >
-	<winui:Grid x:Name="chatGrid"    >
+	<Grid x:Name="chatGrid"    >
 		<Grid.RowDefinitions>
 			<RowDefinition Height="*"/>
 			<RowDefinition Height="Auto"/>
@@ -37,12 +37,12 @@ sent or received, and those values are bound in the DataTemplate.-->
 						<RowDefinition Height="Auto"/>
 					</Grid.RowDefinitions>
 					<TextBlock Text="{x:Bind arrivedString,Mode=OneTime}" VerticalAlignment="Center" Foreground="Gray" FontSize="{StaticResource ChatFontSize}" Margin="0,0,2,0" Padding="0,0,2,0" Tag="{Binding ElementName=message}" x:Phase="0"  />
-					<winui:HyperlinkButton x:Name="sender" Grid.Column="2" 
+					<HyperlinkButton x:Name="sender" Grid.Column="2" 
 					                       Foreground="{Binding Converter={StaticResource hyperlinkColorConverter}, Mode=OneTime}" 
 					                       VerticalAlignment="Center" HorizontalAlignment="Center" Content="{x:Bind player, Mode=OneTime}" 
 					                       x:Phase="0"  Tapped ="HyperlinkButton_Tapped" 
 					                       RightTapped="HyperlinkButton_RightTapped" FontSize="{ThemeResource ChatFontSize}"  Margin="2,0,4,0" Padding="2,0,4,0"  />
-					<winui:Image Grid.Column="1" Stretch="Fill" x:Phase="1" MaxHeight="{StaticResource ChatImageHeight}"  Source="{x:Bind avatar}" Margin="2,0,2,0" VerticalAlignment="Center"/>
+					<Image Grid.Column="1" Stretch="Fill"  MaxHeight="{StaticResource ChatImageHeight}"  Source="{x:Bind avatar}" Margin="2,0,2,0" VerticalAlignment="Center"/>
 					<tk:MarkdownTextBlock Grid.Column="3" x:Name="message" Text="{x:Bind text,Mode=OneTime}"  FontSize="{StaticResource ChatFontSize}" Margin="0,0,0,0"  Padding="0,0,0,0"    
                                              InlineCodeBackground="Black" x:Phase="2" VerticalAlignment="Center" TableCellPadding="0,0,0,0" IsTextSelectionEnabled="True"
                                               TextWrapping="Wrap" LinkClicked="{x:Bind cnv:Note.MarkDownLinkClicked}"  />
@@ -62,21 +62,21 @@ sent or received, and those values are bound in the DataTemplate.-->
 			<TextBox x:Name="input" x:FieldModifier="public" Grid.Column="2" HorizontalAlignment="Stretch"  
 			         Canvas.ZIndex="99" VerticalAlignment="Center" KeyDown="input_KeyDown" PlaceholderText="Please enter message" IsTabStop="True"  Margin="4"  GotFocus="input_GotFocus" PointerEntered="inputPointerOver"  IsSpellCheckEnabled="True" IsTextPredictionEnabled="True" PreventKeyboardDisplayOnProgrammaticFocus="True" TextWrapping="Wrap" FontSize="{ThemeResource ChatFontSize}"  />
 		</Grid>
-		<winui:ListView x:Name="listView" x:FieldModifier="public" Margin="0" Padding="0" ItemTemplate="{StaticResource MessageViewTemplate}" SelectionMode="Extended"
+		<ListView x:Name="listView" x:FieldModifier="public" Margin="0" Padding="0" ItemTemplate="{StaticResource MessageViewTemplate}" SelectionMode="Extended"
                    ItemsSource="{x:Bind items,Mode=OneWay}"   >
 
 
 			<!-- The ItemsStackPanel must be edited to update the following two properties -->
 			<!-- These properties allow the list to grow from the bottom -->
-			<winui:ListView.ItemsPanel>
-				<winui:ItemsPanelTemplate>
+			<ListView.ItemsPanel>
+				<ItemsPanelTemplate>
 					<ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView" 
 									
                             VerticalAlignment="Bottom"/>
-				</winui:ItemsPanelTemplate>
-			</winui:ListView.ItemsPanel>
+				</ItemsPanelTemplate>
+			</ListView.ItemsPanel>
 			<!-- This setter property is created so ListViewItems correctly align to the left or right. -->
-			<winui:ListView.ItemContainerStyle>
+			<ListView.ItemContainerStyle>
 				<Style TargetType="ListViewItem">
 					<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
 					<Setter Property="Padding" Value="4,1,1,2" />
@@ -84,8 +84,8 @@ sent or received, and those values are bound in the DataTemplate.-->
 					<Setter Property="VerticalContentAlignment" Value="Center"/>
 
 				</Style>
-			</winui:ListView.ItemContainerStyle>
-		</winui:ListView>
+			</ListView.ItemContainerStyle>
+		</ListView>
 
-	</winui:Grid>
+	</Grid>
 </local:UserTab>

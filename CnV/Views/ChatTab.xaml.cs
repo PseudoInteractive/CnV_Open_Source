@@ -61,14 +61,14 @@ namespace CnV.Views
 #else
 		public string arrivedString => time.ToString("HH':'mm':'ss");
 #endif
-		public BitmapImage avatar { get; set; }
+		public ImageSource avatar { get; set; }
 
 
 		public string text { get; set; } = string.Empty;
 		const int maxMessageLength = 32 * 1024;
-		static BitmapImage GetAvatar(string player)
+		static ImageSource GetAvatar(string player)
 		{
-			return Player.FromNameOrNull(player)?.avatarBrush;
+			return Player.FromNameOrNull(player)?.avatarImage;
 		}
 		public ChatEntry(string _player, string _a, DateTimeOffset _time = default)
 		{
@@ -127,7 +127,7 @@ namespace CnV.Views
 		// public static ChatTab whisper = new ChatTab() { Tag = nameof(whisper) };
 			debug = new ChatTab() { Tag = nameof(debug) };
 
-			all = (new ChatTab[] { alliance, world, officer }).ToImmutableArray();
+			all = (new ChatTab[] { }).ToImmutableArray();
 		}
 		public string whisperTarget; // null if no target
 		public DateTimeOffset lastRead;

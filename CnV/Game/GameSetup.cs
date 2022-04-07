@@ -44,7 +44,7 @@ namespace CnV
 				//var timeOffsetSecondsRounded = Math.Round(timeOffset / (1000.0 * 60*30)) * 60 * 30.0f; // round to nearest half hour
 			//	CnVServer.gameTOffset = TimeSpan.FromHours(World.timeZoneOffsetHours);
 			//	CnVServer.gameTOffsetSeconds = CnVServer.gameTOffset.TotalSeconds.RoundToInt();
-				Player.myIds.Add(Player.myId);
+				Player.myIds = new[] { Player.myId };
 
 				var t1 = Task.Run(() => TileData.Ctor(false));
 				

@@ -24,10 +24,10 @@ namespace CnVDiscord
 	using CnVChat;
 	using Microsoft.UI.Xaml.Media.Imaging;
 
-	class CnVChatClient:ICnVChatClient
+	internal class CnVChatClient:ICnVChatClient
 	{
 		public static CnVChatClient? instance;
-
+		internal static bool initialized = false;
 		private static CancellationTokenSource shutdownCancellation = new CancellationTokenSource();
 		private static ChannelBase channel;
 		public ICnVChatClientConnection connection;
@@ -51,33 +51,41 @@ namespace CnVDiscord
 			try
 			{
 				Assert(channel == null);
-
+				Assert(initialized==false);
 				// NOTE: Currently, CompositeResolver doesn't work on Unity IL2CPP build. Use StaticCompositeResolver instead of it.
 
 
 				//var resolver = CompositeResolver.Create(StandardResolver.Instance
 				//	//		,GeneratedResolver.Instance);
 				//);
-				
-			//	MessagePackSerializer.DefaultOptions = MessagePackSerializer.DefaultOptions.WithResolver(resolver);
-			var handler = new SocketsHttpHandler
-			{
-				PooledConnectionIdleTimeout = Timeout.InfiniteTimeSpan,
-				KeepAlivePingDelay = TimeSpan.FromSeconds(60),
-				KeepAlivePingTimeout = TimeSpan.FromSeconds(30),
-				EnableMultipleHttp2Connections = true
-			};
+
+				//	MessagePackSerializer.DefaultOptions = MessagePackSerializer.DefaultOptions.WithResolver(resolver);
+				var handler = new SocketsHttpHandler
+				{
+					PooledConnectionIdleTimeout = Timeout.InfiniteTimeSpan,
+					KeepAlivePingDelay = TimeSpan.FromSeconds(60),
+					KeepAlivePingTimeout = TimeSpan.FromSeconds(30),
+					EnableMultipleHttp2Connections = true
+				};
 				// Connect to the server using gRPC channel.
 				channel = GrpcChannel.ForAddress("https://localhost:5001",new GrpcChannelOptions()
 				{
 					HttpHandler = handler
 				});
-				
-				connection = await StreamingHubClient.ConnectAsync<ICnVChatClientConnection,ICnVChatClient>(channel,this, cancellationToken: shutdownCancellation.Token);
+
+				connection = await StreamingHubClient.ConnectAsync<ICnVChatClientConnection,ICnVChatClient>(channel,this,cancellationToken: shutdownCancellation.Token);
 				if(connection == null)
 					return false;
+				while(!Sim.isPastWarmup)
+				{
+					await Task.Delay(300);
+				}
+
 				await Alliance.alliancesFetchedTask.WaitAsync(false);
 				var me = Player.me;
+				
+				 Player.fromDiscordId = Player.all.Where(i=>i.discordId!=0).ToDictionary(i=>i.discordId );
+
 				var channels = await connection.JoinAsync(new(){ playerId=me.pid,world=CnVServer.worldId,alliance=me.allianceId,allianceTitle=me.allianceTitle}); // Todo store role somewhere
 				Log("Got Channels " + channels.Length);
 				AppS.DispatchOnUIThread(async () =>
@@ -93,6 +101,7 @@ namespace CnVDiscord
 							{ channelId = c.Id, lastRecieved = 0 }); // todo:  Lastrecieved
 					}
 				});
+				initialized=true;
 			}
 			catch (Exception e)
 			{
@@ -105,9 +114,37 @@ namespace CnVDiscord
 
 		public static Task UpdatePlayerAlliance(Player me)
 		{
-			return instance.connection?.UpdatePlayerAsync(new(){ playerId=me.pid,world=CnVServer.worldId,alliance=me.allianceId,allianceTitle=me.allianceTitle}); 
+			Assert(initialized);
+			if(initialized)
+				return instance.UpdatePlayerAsync(new() { playerId=me.pid,world=CnVServer.worldId,alliance=me.allianceId,allianceTitle=me.allianceTitle });
+			else
+				return Task.CompletedTask;
 		}
+			/// <summary>
+		/// A property of an 
+		/// existing player is changed (alliance, role, etc)
+		/// This is called to update the player immediately in Discord
+		/// Functionally this is equivalent to to the default implementation
+		/// (which is not used, it is for reference only)
+		/// However the presentation is different (you don't see "Avatar" signed out ... "Avatar" signed in)
+		/// Only changed values should be non null in the changed parameter
+		/// </summary>
+		/// <param name="memberId"></param>
+		/// <param name="world"></param>
+		/// <returns></returns>
+		async Task UpdatePlayerAsync(ICnVChatClientConnection.JoinOrUpdateAsyncArgs changed)
+		{
+			// Equivalent functionality
+			// Todo: store connected channels
+			if (initialized)
+			{
 
+				await connection?.LeaveAsync();
+				await connection?.JoinAsync(changed);
+			}
+			// Todo:   ConnectChannelAsync() for each channel previously connected
+			// 
+		}
 		public void OnReceiveMessages( ICnVChatClient.OnReceiveMessagesArgs messageArgs)
 		{
 			Log("Got Messages " + messageArgs.discordMessages.Length);
@@ -117,7 +154,7 @@ namespace CnVDiscord
 				{
 					var message = CnVJsonMessagePackDiscordMessage.Get(messageArgs.discordMessages[i]);
 					var senderOverrides = messageArgs.senderOverrides;
-					if(!Player.fromDiscordUserName.TryGetValue(message.Author.Username,out var player))
+					if(!Player.fromDiscordId.TryGetValue(message.Author.Id,out var player))
 					{
 						player = null;
 					}
@@ -142,20 +179,20 @@ namespace CnVDiscord
 				if(!Player.fromDiscordId.TryGetValue(senderOverride,out var p))
 					p = Player.me;
 				var name = p.name; // todo: use clients
-				if (p.avatarBrush is null && p.avatarUrl is not null )
-				{
-					var url = p.avatarUrl;
+				//if (p.avatarBrush is null && p.avatarUrl is not null )
+				//{
+				//	var url = p.avatarUrl;
 					
 
-					var _name = name; 
+				//	var _name = name; 
 					
-					await AppS.DispatchOnUIThreadTask( () =>
-						{
-							p.avatarBrush= new BitmapImage(new Uri(url));
-							return Task.CompletedTask;
-						})
-						;
-				}
+				//	await AppS.DispatchOnUIThreadTask( () =>
+				//		{
+				//			p.avatarBrush= new BitmapImage(new Uri(url));
+				//			return Task.CompletedTask;
+				//		})
+				//		;
+				//}
 //				var avatarUrl = $"![Helpers Image]({p.avatarUrl})";
 
 				var content = message.Content;
