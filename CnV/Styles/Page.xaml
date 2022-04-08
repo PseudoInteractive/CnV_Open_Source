@@ -109,9 +109,9 @@
 			</Style>
 
 			<Style  TargetType="ToolTip" BasedOn="{StaticResource BaseControlStyle}">
-				<Setter Property="MaxHeight" Value="400" />
-				<Setter Property="MaxWidth" Value="200" />
-				<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+				<Setter Property="MaxHeight" Value="700" />
+				<Setter Property="MaxWidth" Value="300" />
+				<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 			</Style>
 
 

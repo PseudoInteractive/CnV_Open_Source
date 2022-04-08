@@ -84,19 +84,20 @@ public partial class City
 														using var psb = new PooledStringBuilder();
 														var sb = psb.s;
 														//	var notes = city.remarks.IsNullOrEmpty() ? "" : city.remarks.Substring(0, city.remarks.Length.Min(40)) + "\n";
-														sb.AppendLine(player.shortName);
-														sb.AppendLine(city.nameAndRemarks);
-														sb.AppendFormat("pts:{0:N0}\n",city.points);
+														sb.Append(player.shortName)
+															.AppendLinePre(city.nameAndRemarks)
+														.AppendFormat("\npts:{0:N0}",city.points);
 														if(player.allianceId!= 0)
-															sb.AppendLine(Alliance.IdToName(player.allianceId));
+															sb.AppendLinePre(Alliance.IdToName(player.allianceId));
 														
 
 														//if(city.senatorInfo.Length != 0)
 														{
 															city.GetSenatorInfo(sb);
 														}
-														if(city.incoming.Any())
+														if(city.incoming.Any(i=>i.isAttack))
 														{
+															sb.AppendFormat("\n{0} incoming attacks",city.incoming.Count(i=>i.isAttack));
 
 															var incAttacks = 0;
 															var incTs = 0u;
@@ -108,26 +109,23 @@ public partial class City
 																	incTs += i.ts;
 																	if(incAttacks<=3)
 																	{
-																		sb.AppendLine(i.troopInfo); // only show first two
+																		sb.AppendLinePre(i.troops.Format('\n')); // only show first two
 																	}
 																	else if(incAttacks ==4)
 																	{
-																		sb.AppendLine("..");
+																		sb.AppendLinePre("..");
 																	}
 																}
 															}
-															sb.AppendFormat("{0} incoming attacks",incAttacks);
 															if(incTs > 0)
-																sb.AppendFormat(" ({0} total TS)\n",incTs);
-															else
-																sb.Append('\n');
+																sb.AppendFormat("\n({0} total TS)",incTs);
 
 															if(city.claim != 0)
-																sb.AppendFormat("{0}% Claim\n",city.claim);
+																sb.AppendFormat("\n{0}% Claim",city.claim);
 
-															sb.AppendFormat("{0} total def\n",city.tsDefMax);
+															sb.AppendFormat("\n{0} total def",city.tsDefMax);
 
-															sb.AppendLine(city.GetDefString("\n"));
+															sb.Append(city.GetDefString('\n'));
 
 														}
 													{
@@ -135,25 +133,25 @@ public partial class City
 														if(!outgoingStatus.IsNone())
 														{
 															if(outgoingStatus.IsSeiging())
-																sb.Append("Sieging\n");
+																sb.Append("\nSieging");
 															else if(outgoingStatus.IsSending())
-																sb.Append("Attack Sent\n");
+																sb.Append("\nAttack Sent");
 															else
-																sb.Append("Attack Scheduled\n");
+																sb.Append("\nAttack Scheduled");
 														}
 													}
 													{
 														var reinf = city.reinforcementsIn;
 														if(reinf.Any())
 														{
-															sb.AppendFormat("{0} def\n",city.tsDefMax);
+															sb.AppendFormat("\n{0} def",city.tsDefMax);
 															int counter = 0;
 															foreach(var i in reinf)
 															{
-																sb.AppendLine(i.troops.Format(header: $"From {City.GetOrAddCity(i.sourceCid).nameAndRemarks}:",separator: '\n'));
+																sb.Append(i.troops.Format(header: $"\nFrom {City.GetOrAddCity(i.sourceCid).nameAndRemarks}:",separator: '\n'));
 																if(++counter >= 4)
 																{
-																	sb.AppendLine("...");
+																	sb.AppendLinePre("...");
 																	break;
 																}
 															}
@@ -161,21 +159,21 @@ public partial class City
 														}
 													}
 														if(!city.notes.IsNullOrEmpty())
-															sb.AppendLine(city.notes.AsSpan().Wrap(20));
+															sb.AppendLinePre(city.notes.AsSpan().Wrap(20));
 														if(city.hasAcademy.GetValueOrDefault())
-															sb.AppendLine("Has Academy");
+															sb.AppendLinePre("Has Academy");
 														if(NearRes.IsVisible())
 														{
-															sb.AppendLine($"Carts:{AUtil.FormaRatio((city.cartsHome, city.carts))}");
+															sb.AppendLinePre($"Carts:{AUtil.FormaRatio((city.cartsHome, city.carts))}");
 															if(city.ships > 0)
-																sb.AppendLine($"Ships:{AUtil.FormatRatio(city.shipsHome,city.ships)}");
+																sb.AppendLinePre($"Ships:{AUtil.FormatRatio(city.shipsHome,city.ships)}");
 															var res = city.sampleResources;
-																sb.AppendLine($"Wood:{res[0].Format()}, Stone:{ res[1].Format()}");
-																sb.AppendLine($"Iron:{res[2].Format()}, Food:{ res[3].Format()}");
+																sb.AppendLinePre($"Wood:{res[0].Format()}, Stone:{ res[1].Format()}");
+																sb.AppendLinePre($"Iron:{res[2].Format()}, Food:{ res[3].Format()}");
 														}
-														sb.Append($"{c.y / 100}{c.x / 100} ({c.x}:{c.y})\n");
+														sb.Append($"\n{c.y / 100}{c.x / 100} ({c.x}:{c.y})");
 
-														sb.Append(city.GetTroopsString("\n"));
+														sb.AppendLinePre(city.GetTroopsString("\n"));
 
 														return sb.ToString();
 

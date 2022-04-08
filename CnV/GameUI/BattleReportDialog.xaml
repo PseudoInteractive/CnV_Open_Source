@@ -40,20 +40,24 @@
 		<cnv:CityBox Grid.Row="1" City="{x:Bind b.targetCity}" Margin="2,8" />
 		<cnv:CityBox Grid.Row="1" Grid.Column="1" City="{x:Bind b.sourceCity}" Margin="2,8" HorizontalAlignment="Left" />
 
-		<TextBlock Grid.Row="3" Grid.Column="1" Text="{x:Bind b.aTroops}" Margin="16,4" Style="{StaticResource TextBlockLarge}"/>
-		<TextBlock Grid.Row="3"  Text="{x:Bind b.dTroops}" Margin="16,4"  Style="{StaticResource TextBlockLarge}"/>
-
 		<TextBlock  Grid.Row="2"  Grid.Column="1" Text="{x:Bind attackType}"  Margin="8"  Style="{StaticResource TextBlockLarge}"/>
 		<TextBlock  Grid.Row="2"   Text="{x:Bind wallInfo}"  Margin="8"  Style="{StaticResource TextBlockLarge}" />
 
-		<TextBlock  Grid.Row="4" Grid.Column="1"  Text="ꁊ Kills"  Margin="8" HorizontalAlignment="Left" Style="{StaticResource TextBlockLarge}" />
+		<TextBlock Grid.Row="3" Grid.Column="1" Text="{x:Bind b.aTroops}" Margin="16,4" Style="{StaticResource TextBlockLarge}"/>
+		<TextBlock Grid.Row="3"  Text="{x:Bind b.dTroops}" Margin="16,4"  Style="{StaticResource TextBlockLarge}"/>
+
+
+		<TextBlock  Grid.Row="4" Grid.ColumnSpan="2"  Text="ꁊ Kills"  Margin="8" HorizontalAlignment="Left" Style="{StaticResource TextBlockLarge}" />
 
 
 		<TextBlock Grid.Row="5" Grid.Column="1"  Text="{x:Bind b.aTroopsKilled}" Margin="16,4"  Style="{StaticResource TextBlockLarge}" />
 		<TextBlock Grid.Row="5" Text="{x:Bind b.dTroopsKilled}" Margin="16,4"  Style="{StaticResource TextBlockLarge}"/>
 
-		<TextBlock Grid.Row="6" Grid.Column="1"  Text="{x:Bind b.attacker.refineRes.Format()}" Margin="16,4"  Style="{StaticResource TextBlockMedium}" />
-		<TextBlock Grid.Row="6" Text="{x:Bind b.defenders[0].refineRes.Format()}" Margin="16,4"  Style="{StaticResource TextBlockMedium}"/>
+		<TextBlock Grid.Row="6" Grid.Column="1"  Text="{x:Bind b.plunderS}" Margin="16,4"  Style="{StaticResource TextBlockMedium}" TextWrapping="Wrap"  />
+
+
+		<TextBlock Grid.Row="7" Grid.Column="1"  Text="{x:Bind b.attacker.refinesS}" Margin="16,4"  Style="{StaticResource TextBlockMedium}" TextWrapping="Wrap" />
+		<TextBlock Grid.Row="7" Text="{x:Bind b.defenders[0].refinesS}" Margin="16,4"  Style="{StaticResource TextBlockMedium}" TextWrapping="Wrap"/>
 
 		
 		
