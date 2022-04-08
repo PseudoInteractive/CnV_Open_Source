@@ -21,6 +21,9 @@
 			<RowDefinition Height="auto"/>
 			<RowDefinition Height="auto"/>
 			<RowDefinition Height="auto"/>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="auto"/>
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="*"/>
@@ -37,21 +40,23 @@
 		<cnv:CityBox Grid.Row="1" City="{x:Bind b.targetCity}" Margin="2,8" />
 		<cnv:CityBox Grid.Row="1" Grid.Column="1" City="{x:Bind b.sourceCity}" Margin="2,8" HorizontalAlignment="Left" />
 
-		<TextBlock Grid.Row="2" Text="{x:Bind b.aTroops}" Margin="16,4" />
-		<TextBlock Grid.Row="2" Grid.Column="1" Text="{x:Bind b.dTroops}" Margin="16,4" />
+		<TextBlock Grid.Row="3" Grid.Column="1" Text="{x:Bind b.aTroops}" Margin="16,4" Style="{StaticResource TextBlockLarge}"/>
+		<TextBlock Grid.Row="3"  Text="{x:Bind b.dTroops}" Margin="16,4"  Style="{StaticResource TextBlockLarge}"/>
 
-		<TextBlock  Grid.Row="3" Grid.ColumnSpan="2"  HorizontalAlignment="Center" Text="{x:Bind attackType}" FontSize="18" Margin="8"  />
+		<TextBlock  Grid.Row="2"  Grid.Column="1" Text="{x:Bind attackType}"  Margin="8"  Style="{StaticResource TextBlockLarge}"/>
+		<TextBlock  Grid.Row="2"   Text="{x:Bind wallInfo}"  Margin="8"  Style="{StaticResource TextBlockLarge}" />
 
-		<TextBlock Grid.Row="4" Text="{x:Bind b.aTroopsSurvived}" Margin="16,4" />
-		<TextBlock Grid.Row="4" Grid.Column="1" Text="{x:Bind b.dTroopsSurvived}" Margin="16,4" />
+		<TextBlock  Grid.Row="4" Grid.Column="1"  Text="ꁊ Kills"  Margin="8" HorizontalAlignment="Left" Style="{StaticResource TextBlockLarge}" />
+
+
+		<TextBlock Grid.Row="5" Grid.Column="1"  Text="{x:Bind b.aTroopsKilled}" Margin="16,4"  Style="{StaticResource TextBlockLarge}" />
+		<TextBlock Grid.Row="5" Text="{x:Bind b.dTroopsKilled}" Margin="16,4"  Style="{StaticResource TextBlockLarge}"/>
+
+		<TextBlock Grid.Row="6" Grid.Column="1"  Text="{x:Bind b.attacker.refineRes.Format()}" Margin="16,4"  Style="{StaticResource TextBlockMedium}" />
+		<TextBlock Grid.Row="6" Text="{x:Bind b.defenders[0].refineRes.Format()}" Margin="16,4"  Style="{StaticResource TextBlockMedium}"/>
+
 		
-		<StackPanel  Grid.Row="5" Grid.ColumnSpan="2"  HorizontalAlignment="Stretch">
-			<NumberBox Grid.Row="1" Text="{x:Bind b.wallLevel}" IsEnabled="false" Description="Wall Level" HorizontalAlignment="Left" Style="{StaticResource NumberBoxSmall}" SpinButtonPlacementMode="Hidden" />
-			<NumberBox    Style="{StaticResource NumberBoxSmall}" SpinButtonPlacementMode="Hidden"
-                                          Width="110" IsEnabled="false"
-                                        Value="{x:Bind b.nightProtection}"  Margin="4,0,4,0" VerticalAlignment="Center" 
-                                         Description="Night Protection" />
-		</StackPanel>
+		
 	
 
 	</Grid>
