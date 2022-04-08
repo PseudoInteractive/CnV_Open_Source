@@ -75,7 +75,7 @@ namespace CnV.Views
 		}
 		public static void AllianceSuggest_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
 		{
-			Suggest_TextChanged(sender, args, Alliance.all.Select(p => p.Value.name));
+			Suggest_TextChanged(sender, args, Alliance.all.Select(p => p.name));
 
 		}
 

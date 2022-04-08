@@ -12,16 +12,18 @@ namespace CnV.Views
     {
 		public override  TabPage defaultPage => TabPage.secondaryTabs;
 		//public ArmyArray history { get; set; } = ArmyArray.Empty;
-        public void UpdateDataGrid()
-        {
-			var sel = IncomingTab.selected;
-			if (sel == null)
-				historyGrid.ItemsSource = BattleReport.all;
-			else
-			{
-				var cid = sel.cid;
-				historyGrid.ItemsSource = BattleReport.all.Where( s => s.targetCid == cid).ToArray() ;
-			}
+		public void UpdateDataGrid()
+		{
+			
+				var sel = IncomingTab.selected ?? OutgoingTab.selected;
+				if(sel == null)
+					historyGrid.ItemsSource = BattleReport.all;
+				else
+				{
+					var cid = sel.cid;
+					historyGrid.ItemsSource = BattleReport.all.Where(s => s.targetCid == cid).ToArray();
+				}
+			
 		}
 
         public static HitHistoryTab instance;
@@ -49,7 +51,7 @@ namespace CnV.Views
          //   historyGrid.ItemsSource = Array.Empty<Army>();
             if (visible)
             {
-				UpdateDataGrid();
+				AppS.QueueOnUIThread(UpdateDataGrid);
 			}
 			return base.VisibilityChanged(visible, longTerm: longTerm);
         }

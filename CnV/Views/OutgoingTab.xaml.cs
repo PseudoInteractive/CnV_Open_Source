@@ -43,20 +43,14 @@ namespace CnV.Views
 
 
 
-		public static Spot selected => instance.attackerGrid.SelectedItem as Spot;
-		//private void gridPointerPress(object sender, PointerRoutedEventArgs e)
-  //      {
-  //     //     (var hit, var column, var pointerPoint,_) = Spot.HitTest(sender, e);
-  //          //if (hit != null)
-  //          //    defenderGrid.ShowRowDetailsForItem(hit);
-
-  //          Spot.GridPressed(sender, e);
-  //      }
-        //private void gridPointerMoved(object sender, PointerRoutedEventArgs e)
-        //{
-        //    Spot.ProcessPointerMoved(sender, e);
-        //}
- 
+		public static Spot selected 
+		{
+			get {
+				if(!instance.isFocused)
+					return null;
+				return  instance.attackerGrid.CurrentItem as Spot;
+			}
+		}
 
 
 		NotifyCollection<City> attackerSource = new();

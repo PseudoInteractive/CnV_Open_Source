@@ -49,7 +49,8 @@ namespace CnV
 				AppS.MessageBox("Name must be >= 1 character");
 				return;
 			}
-			var alliance = new Alliance(name,abbreviation,(AllianceId)Alliance.all.Count,0ul);
+			// Todo: Interlock this
+			var alliance = new Alliance(name,abbreviation,(AllianceId)Alliance.all.Length,0ul);
 			await alliance.Upsert();
 			Hide(true);
 			AppS.MessageBox(title:$"Founded {name}",hero:"UI/menues/newsletter/misc_newsletter_img_alliance.png", lightDismiss:false);

@@ -445,7 +445,7 @@
 
 
 					</tk:WrapPanel>
-                    <NumberBox x:Name="gotoTimeOffset" Value ="60" Description="Step time offset" 
+                    <NumberBox x:Name="gotoTimeOffset" Value ="60" Description="Step time offset"  SmallChange="5"
                                ToolTipService.ToolTip="Minutes added when forward or back is pressed"
                                ValueChanged="{x:Bind cnv:App.FilterNans}" />
 				</StackPanel>

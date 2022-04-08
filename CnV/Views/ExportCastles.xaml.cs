@@ -83,19 +83,19 @@ namespace CnV.Views
 						  case 0:
 						  case 1: alliances.Add(Alliance.MyId); break;
 						  case 2:
-							  alliances.AddRange(from a in Alliance.all.Keys where Alliance.GetDiplomacy(a) == Diplomacy.enemy select a);
+							  alliances.AddRange(from a in Alliance.all.Select(a=>a.id) where Alliance.GetDiplomacy(a) == Diplomacy.enemy select a);
 							  break;
 						  case 3:
-							  alliances.AddRange(from a in Alliance.all.Keys where a != 0 && a != Alliance.myId select a);
+							  alliances.AddRange(from a in Alliance.all.Select(a=>a.id) where a != 0 && a != Alliance.myId select a);
 							  break;
 						  case 4:
-							  alliances.AddRange(from a in Alliance.all.Keys where Alliance.GetDiplomacy(a) == Diplomacy.allied select a);
+							  alliances.AddRange(from a in Alliance.all.Select(a=>a.id) where Alliance.GetDiplomacy(a) == Diplomacy.allied select a);
 							  break;
 						  case 5:
 							  alliances.Add(0);
 							  break;
 						  default:
-							  alliances.AddRange(Alliance.all.Keys);
+							  alliances.AddRange(Alliance.all.Select(a=>a.id)); // include lawless?
 							  break;
 					  }
 				  }
@@ -112,7 +112,7 @@ namespace CnV.Views
 				
 				  foreach (var alliance in alliances)
 				   {
-					  var allianceName = Alliance.all[alliance].name;
+					  var allianceName = Alliance.Get(alliance).name;
 					
 					   sb.AppendLine(allianceName);
 					   foreach (var p in Player.all)

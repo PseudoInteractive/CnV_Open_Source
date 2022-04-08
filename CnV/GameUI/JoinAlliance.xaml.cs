@@ -35,7 +35,7 @@ namespace CnV
 		{
 			var art = instance ?? new JoinAlliance();
 			var p = Player.active;
-			art.alliance.ItemsSource = Alliance.all.Values.ToArray();
+			art.alliance.ItemsSource = Alliance.all;
 			if(p.alliance.isValid)
 				art.alliance.SelectedItem =p.alliance;
 			art.allianceTitle.SelectedIndex = (int) p.allianceTitle;

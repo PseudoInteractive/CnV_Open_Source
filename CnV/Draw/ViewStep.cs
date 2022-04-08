@@ -21,13 +21,13 @@ using static GameClient;
 	const float viewControlTightnessDecay = 4;
 	// Velocity
 	// public static Vector3 viewVW = default;
-
+	internal static double simT;
 
 	internal static void StepViewToPresent()
 	{
 		{
 			int splits = (timeSinceLastFrame*targetStepsPerSecond).RoundToInt().Max(1);
-			var dt = (float)(timeSinceLastFrame / splits);
+			var dt = (float)(timeSinceLastFrame.Min(1) / splits);
 			for(int step = 0;step<splits;++step)
 			{
 				var viewVW0 = viewVW;

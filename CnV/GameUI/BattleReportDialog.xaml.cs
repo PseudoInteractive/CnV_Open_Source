@@ -25,7 +25,15 @@ namespace CnV
 	{
 		protected override string title => "Battle Report";
 		internal BattleReport b;
-		internal string attackType => $"{ttGlyphSword} {b.attackArmy.typeS}, ratio: {b.attackRatio:P}";
+		internal string attackType
+		{
+			get {
+				if(b.attackArmy.type is (ArmyType.siege))
+					return $"{ttGlyphSiege} Siege claim {b.claim}% ({(b.claim - b.attackArmy.claim).FormatWithSign()})\nattack ratio: {b.attackRatio:P}";
+				else
+					return 	$"{ttGlyphSword} {b.attackArmy.typeS}, ratio: {b.attackRatio:P}";
+			}
+		}
 		internal string wallInfo => $"{ttGlyphWall} {b.wallLevel}";
 
 		public BattleReportDialog(BattleReport _b)

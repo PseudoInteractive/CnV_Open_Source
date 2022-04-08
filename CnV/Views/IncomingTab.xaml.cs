@@ -121,15 +121,13 @@ namespace CnV.Views
 		}
 
 
+		// we want current not selected
 		public static Spot selected
 		{
 			get {
 				if(!instance.isFocused)
 					return null;
-				var items = instance.defenderGrid.SelectedItems;
-				if(items.Count == 1)
-					return items[0] as Spot;
-				return null;
+				return instance.defenderGrid.CurrentItem as Spot;
 			}
 		}
 		public void NotifyIncomingUpdated()
