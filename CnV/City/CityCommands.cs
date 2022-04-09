@@ -79,7 +79,13 @@ public partial class City
 	{
 		get {
 			var city = this;
-																//if (spot is City city)
+			if(isShrine)
+				return "Shrine\n(To be named)";
+			else if(isPortal)
+				return "Moon Gate";
+			else if(isDungeon)
+				return Cavern.Get(cid).ToString();
+													//if (spot is City city)
 													{
 														using var psb = new PooledStringBuilder();
 														var sb = psb.s;

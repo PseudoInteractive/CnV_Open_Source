@@ -137,10 +137,10 @@ using Game;
 									}
 								case World.TileType.typeShrine:
 									if(WorldViewSettings.shrines.isOn)
-										toolTip = $"Shrine\n{(data.data == 255 ? "Unlit" : ((Faith)data.data-1).AsString())}";
+										toolTip = $"Shrine\n(To be named)";
 									break;
-								case World.TileType.typePortal:
-									toolTip = $"Moongate\n{(data.data == 0 ? "Inactive" : "Active")}";
+								case World.TileType.typeMoongate:
+									toolTip = $"Moon Gate";
 									break;
 							default:
 								if(data.isDungeon)
@@ -214,7 +214,7 @@ using Game;
 										case World.TileType.typeShrine:
 											toolTip += "\nWas unlit";
 											break;
-										case World.TileType.typePortal:
+										case World.TileType.typeMoongate:
 											if(data.player == 0)
 												toolTip += "\nWas active";
 											else
