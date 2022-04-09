@@ -140,7 +140,7 @@ using Game;
 										toolTip = $"Shrine\n{(data.data == 255 ? "Unlit" : ((Faith)data.data-1).AsString())}";
 									break;
 								case World.TileType.typePortal:
-									toolTip = $"Portal\n{(data.data == 0 ? "Inactive" : "Active")}";
+									toolTip = $"Moongate\n{(data.data == 0 ? "Inactive" : "Active")}";
 									break;
 							default:
 								if(data.isDungeon)

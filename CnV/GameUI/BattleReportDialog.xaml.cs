@@ -36,6 +36,7 @@ namespace CnV
 		}
 		internal string wallInfo => $"{ttGlyphWall} {b.wallLevel}";
 
+		internal string scoutedResources => b.scoutRecord is not null ? b.scoutRecord.resources.Format(" ","Scouted resources\n") : null;
 		public BattleReportDialog(BattleReport _b)
 		{
 			this.b = _b;

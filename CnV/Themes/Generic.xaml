@@ -25,7 +25,8 @@
 							</Grid.ColumnDefinitions>
 							<Image x:Name="image"
                               Source="{TemplateBinding Image}"
-								  Margin="2"
+							  Margin="2"
+							   MinWidth="{TemplateBinding MinWidth}"
 								Stretch="None"
 							   VerticalAlignment="Center"
 							   HorizontalAlignment="Center"

@@ -565,149 +565,149 @@ namespace CnV
 
 		private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-		private void UpdateCityLists(object sender, RoutedEventArgs e)
-		{
-			AppS.QueueOnUIThreadIdle( async () =>
-			   {
-				   var pid = Player.myId;
-				   using var work = new WorkScope("update citylists");
-				   var cityListCount = CityList.all.Length;
-				   string sli = null;
-				   var cgs = new List<string>();
-				   var newCities = CityList.FindNewCities();
-				   if (newCities == null)
-				   {
-					   newCities = new CityList(CityList.sNewCities);
-					   CityList.all = CityList.all.ArrayAppend(newCities);
+		//private void UpdateCityLists(object sender, RoutedEventArgs e)
+		//{
+		//	AppS.QueueOnUIThreadIdle( async () =>
+		//	   {
+		//		   var pid = Player.myId;
+		//		   using var work = new WorkScope("update citylists");
+		//		   var cityListCount = CityList.all.Length;
+		//		   string sli = null;
+		//		   var cgs = new List<string>();
+		//		   var newCities = CityList.FindNewCities();
+		//		   if (newCities == null)
+		//		   {
+		//			   newCities = new CityList(CityList.sNewCities);
+		//			   CityList.all = CityList.all.ArrayAppend(newCities);
 
-				   }
-				   else
-				   {
-					   newCities.cities.Clear();
-				   }
-				   var global = new List<CityList.GroupDef>();
-				   var perContinent = new List<CityList.GroupDef>();
+		//		   }
+		//		   else
+		//		   {
+		//			   newCities.cities.Clear();
+		//		   }
+		//		   var global = new List<CityList.GroupDef>();
+		//		   var perContinent = new List<CityList.GroupDef>();
 				   
-				   if(Settings.cityListGalleys)
-					   global.Add(CityList.gdGalley);
-				   if (Settings.cityListStingers)
-					   global.Add(CityList.gdStinger);
-				   if (Settings.cityListOffense)
-					   perContinent.Add(CityList.gdOffense);
-				   if (Settings.cityListDefense)
-					   perContinent.Add(CityList.gdDefense);
-				   if (Settings.cityListShippers)
-					   global.Add(CityList.gdShipper);
-				   if (Settings.cityListWarship)
-					   global.Add(CityList.gdWarship);
-				   global.Add(CityList.gdHubs);
-				   global.Add(CityList.gdLeaveMe);
-				   perContinent.Add(CityList.gdStorage);
+		//		   if(Settings.cityListGalleys)
+		//			   global.Add(CityList.gdGalley);
+		//		   if (Settings.cityListStingers)
+		//			   global.Add(CityList.gdStinger);
+		//		   if (Settings.cityListOffense)
+		//			   perContinent.Add(CityList.gdOffense);
+		//		   if (Settings.cityListDefense)
+		//			   perContinent.Add(CityList.gdDefense);
+		//		   if (Settings.cityListShippers)
+		//			   global.Add(CityList.gdShipper);
+		//		   if (Settings.cityListWarship)
+		//			   global.Add(CityList.gdWarship);
+		//		   global.Add(CityList.gdHubs);
+		//		   global.Add(CityList.gdLeaveMe);
+		//		   perContinent.Add(CityList.gdStorage);
 
-				   Dictionary<int, List<CityList>  > priorCityLists = new();
-				   HashSet<CityList> processed = new();
+		//		   Dictionary<int, List<CityList>  > priorCityLists = new();
+		//		   HashSet<CityList> processed = new();
 
-				   foreach (var city in City.myCities)
-				   {
-					   var cid = city.cid;
-					   Debug.Assert(city is City);
-					   List<CityList> prior = new();
-					   foreach (var l in CityList.all)
-					   {
-						   if (l.isUnassigned)
-							   continue;
-						   if (l.cities.Contains(cid))
-						   {
-							   prior.Add(l);
-						   }
+		//		   foreach (var city in City.myCities)
+		//		   {
+		//			   var cid = city.cid;
+		//			   Debug.Assert(city is City);
+		//			   List<CityList> prior = new();
+		//			   foreach (var l in CityList.all)
+		//			   {
+		//				   if (l.isUnassigned)
+		//					   continue;
+		//				   if (l.cities.Contains(cid))
+		//				   {
+		//					   prior.Add(l);
+		//				   }
 
-					   }
-					   priorCityLists.Add(cid, prior);
-				   }
+		//			   }
+		//			   priorCityLists.Add(cid, prior);
+		//		   }
 
 
-				   foreach (var city in City.myCities)
-				   {
+		//		   foreach (var city in City.myCities)
+		//		   {
 
-					   var remarks = city.remarks.ToLower();
-					   foreach (var t in perContinent)
-					   {
-						   if (remarks.ContainsAny( t.tags))
-						   {
-							   var cl = CityList.GetForContinentAndTag(city.cont,t.name, processed);
-							   cl.cities.Add(city.cid);
-						   }
-					   }
-					   foreach (var t in global )
-					   {
-						   if (remarks.ContainsAny(t.tags))
-						   {
-							   var cl = CityList.GetOrAdd(t.name, processed);
-							   cl.cities.Add(city.cid);
-						   }
-					   }
+		//			   var remarks = city.remarks.ToLower();
+		//			   foreach (var t in perContinent)
+		//			   {
+		//				   if (remarks.ContainsAny( t.tags))
+		//				   {
+		//					   var cl = CityList.GetForContinentAndTag(city.cont,t.name, processed);
+		//					   cl.cities.Add(city.cid);
+		//				   }
+		//			   }
+		//			   foreach (var t in global )
+		//			   {
+		//				   if (remarks.ContainsAny(t.tags))
+		//				   {
+		//					   var cl = CityList.GetOrAdd(t.name, processed);
+		//					   cl.cities.Add(city.cid);
+		//				   }
+		//			   }
 
-					   {
-						   var cl = CityList.GetForContinent(city.cont, processed);
-						   cl.cities.Add(city.cid);
-					   }
-					   if (city.IsNew())
-					   {
-						   newCities.cities.Add(city.cid);
-					   }
-				   }
-				   var addedCityLists = CityList.all.Length - cityListCount;
+		//			   {
+		//				   var cl = CityList.GetForContinent(city.cont, processed);
+		//				   cl.cities.Add(city.cid);
+		//			   }
+		//			   if (city.IsNew())
+		//			   {
+		//				   newCities.cities.Add(city.cid);
+		//			   }
+		//		   }
+		//		   var addedCityLists = CityList.all.Length - cityListCount;
 
-				   if (addedCityLists > 0)
-				   {
-					   var cityList = new List<string>();
-					   foreach (var l in CityList.all)
-					   {
-						   if (l.id == 0)
-							   continue;
-						   cityList.Add(l.id.ToString() + l.name);
-					   }
-					   sli = ("a=" + HttpUtility.UrlEncode(JsonSerializer.Serialize(cityList, JSON.jsonSerializerOptions)));
-					   //                await Post.Send("includes/sLi.php",);
-				   }
-				   {
-					   HashSet<CityList> temp = new ();
+		//		   if (addedCityLists > 0)
+		//		   {
+		//			   var cityList = new List<string>();
+		//			   foreach (var l in CityList.all)
+		//			   {
+		//				   if (l.id == 0)
+		//					   continue;
+		//				   cityList.Add(l.id.ToString() + l.name);
+		//			   }
+		//			   sli = ("a=" + HttpUtility.UrlEncode(JsonSerializer.Serialize(cityList, JSON.jsonSerializerOptions)));
+		//			   //                await Post.Send("includes/sLi.php",);
+		//		   }
+		//		   {
+		//			   HashSet<CityList> temp = new ();
 
-					   foreach (var city in City.myCities)
-					   {
-						   var cid = city.cid;
-						   // enumerate all city
-						   temp.Clear();
+		//			   foreach (var city in City.myCities)
+		//			   {
+		//				   var cid = city.cid;
+		//				   // enumerate all city
+		//				   temp.Clear();
 
-						   foreach (var l in CityList.all)
-						   {
-							   if (l.isUnassigned)
-								   continue;
-							   if (l.cities.Contains(cid))
-							   {
-								   temp.Add(l);
-							   }
+		//				   foreach (var l in CityList.all)
+		//				   {
+		//					   if (l.isUnassigned)
+		//						   continue;
+		//					   if (l.cities.Contains(cid))
+		//					   {
+		//						   temp.Add(l);
+		//					   }
 
-							   //                  await Post.Send("includes/cgS.php",  );
-						   }
-						   if (temp.SetEquals(priorCityLists[cid]))
-							   continue;
+		//					   //                  await Post.Send("includes/cgS.php",  );
+		//				   }
+		//				   if (temp.SetEquals(priorCityLists[cid]))
+		//					   continue;
 
-						   var strs = temp.Select(a => a.id.ToString()).ToArray();
-						   cgs.Add($"a={HttpUtility.UrlEncode(JsonSerializer.Serialize(strs, JSON.jsonSerializerOptions))}&cid={cid}");
-					   }
-				   }
-				   if (sli != null)
-					   await Post.Get("includes/sLi.php", sli, pid);
-				   Note.Show($"Adding {addedCityLists} citylists, updating {cgs.Count} cities...");
-				   foreach (var it in cgs)
-					   await Post.Get("includes/cgS.php", it, pid);
-				   Note.Show($"Added {addedCityLists} citylists, updated {cgs.Count} cities");
-				   //   CnVServer.GetCitylistOverview();
-				   //			   Note.Show($"Successfully added continent citylists :)");
-			   });
-			HideMe();
-		}
+		//				   var strs = temp.Select(a => a.id.ToString()).ToArray();
+		//				   cgs.Add($"a={HttpUtility.UrlEncode(JsonSerializer.Serialize(strs, JSON.jsonSerializerOptions))}&cid={cid}");
+		//			   }
+		//		   }
+		//		   if (sli != null)
+		//			   await Post.Get("includes/sLi.php", sli, pid);
+		//		   Note.Show($"Adding {addedCityLists} citylists, updating {cgs.Count} cities...");
+		//		   foreach (var it in cgs)
+		//			   await Post.Get("includes/cgS.php", it, pid);
+		//		   Note.Show($"Added {addedCityLists} citylists, updated {cgs.Count} cities");
+		//		   //   CnVServer.GetCitylistOverview();
+		//		   //			   Note.Show($"Successfully added continent citylists :)");
+		//	   });
+		//	HideMe();
+		//}
 
 		private void TipsRestore(object sender, RoutedEventArgs e)
 		{

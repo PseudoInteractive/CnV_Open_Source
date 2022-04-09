@@ -5,12 +5,12 @@
     xmlns:cnv="using:CnV"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	MaxHeight="700"
-	
+	MaxHeight="600"
+	BorderBrush="AliceBlue"
 	xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
 	xmlns:tkui="using:CommunityToolkit.WinUI.UI"
     mc:Ignorable="d">
-
+	<ScrollViewer BorderThickness="1" CornerRadius="2" Margin="2" BorderBrush="{StaticResource SystemControlBackgroundAccentRevealBorderBrush}" >
 	<Grid Width="600"  >
 		
 
@@ -29,8 +29,8 @@
 			<ColumnDefinition Width="*"/>
 			<ColumnDefinition Width="*"/>
 		</Grid.ColumnDefinitions>
-		<Image Source="{x:Bind b.targetPlayer.avatarImage}" Stretch="None" HorizontalAlignment="Left" />
-		<Image Grid.Column="1" Source="{x:Bind b.sourcePlayer.avatarImage}" Stretch="None" HorizontalAlignment="Left" />
+		<Image Source="{x:Bind b.targetPlayer.avatarImage}" Stretch="None" HorizontalAlignment="Center" />
+		<Image Grid.Column="1" Source="{x:Bind b.sourcePlayer.avatarImage}" Stretch="None" HorizontalAlignment="Center" />
 
 		
 		<Image Source="ms-appx:///Content/Art/Region/ui/icon_player_own_support_inc.png" Stretch="None" HorizontalAlignment="Left" VerticalAlignment="Top" />
@@ -43,25 +43,37 @@
 		<TextBlock  Grid.Row="2"  Grid.Column="1" Text="{x:Bind attackType}"  Margin="8"  Style="{StaticResource TextBlockLarge}"/>
 		<TextBlock  Grid.Row="2"   Text="{x:Bind wallInfo}"  Margin="8"  Style="{StaticResource TextBlockLarge}" />
 
-		<TextBlock Grid.Row="3" Grid.Column="1" Text="{x:Bind b.aTroops}" Margin="16,4" Style="{StaticResource TextBlockLarge}"/>
-		<TextBlock Grid.Row="3"  Text="{x:Bind b.dTroops}" Margin="16,4"  Style="{StaticResource TextBlockLarge}"/>
+		<TextBlock Grid.Row="3" Grid.Column="1" Text="{x:Bind b.aTroops}" Margin="8,4" Style="{StaticResource TextBlockLarge}"/>
+		<TextBlock Grid.Row="3"  Text="{x:Bind b.dTroops}" Margin="8,4"  Style="{StaticResource TextBlockLarge}"/>
 
 
 		<TextBlock  Grid.Row="4" Grid.ColumnSpan="2"  Text="ꁊ Kills"  Margin="8" HorizontalAlignment="Left" Style="{StaticResource TextBlockLarge}" />
 
 
-		<TextBlock Grid.Row="5" Grid.Column="1"  Text="{x:Bind b.aTroopsKilled}" Margin="16,4"  Style="{StaticResource TextBlockLarge}" />
-		<TextBlock Grid.Row="5" Text="{x:Bind b.dTroopsKilled}" Margin="16,4"  Style="{StaticResource TextBlockLarge}"/>
+		<TextBlock Grid.Row="5" Grid.Column="1"  Text="{x:Bind b.aTroopsKilled}" Margin="8,4"  Style="{StaticResource TextBlockLarge}" />
+		<TextBlock Grid.Row="5" Text="{x:Bind b.dTroopsKilled}" Margin="8,4"  Style="{StaticResource TextBlockLarge}"/>
 
-		<TextBlock Grid.Row="6" Grid.Column="1"  Text="{x:Bind b.plunderS}" Margin="16,4"  Style="{StaticResource TextBlockMedium}" TextWrapping="Wrap"  />
+		<TextBlock Grid.Row="6" Grid.Column="1"  Text="{x:Bind b.plunderS}" Visibility="{x:Bind b.plunderVisibility}" Margin="8,4"  Style="{StaticResource TextBlockMedium}" TextWrapping="Wrap"  />
 
 
-		<TextBlock Grid.Row="7" Grid.Column="1"  Text="{x:Bind b.attacker.refinesS}" Margin="16,4"  Style="{StaticResource TextBlockMedium}" TextWrapping="Wrap" />
-		<TextBlock Grid.Row="7" Text="{x:Bind b.defenders[0].refinesS}" Margin="16,4"  Style="{StaticResource TextBlockMedium}" TextWrapping="Wrap"/>
+		<TextBlock Grid.Row="7" Grid.Column="1"  Text="{x:Bind b.attacker.refinesS}" Margin="8,4"  Style="{StaticResource TextBlockMedium}" TextWrapping="Wrap" />
+		<TextBlock Grid.Row="7" Text="{x:Bind b.defenders[0].refinesS}" Margin="8,4"  Style="{StaticResource TextBlockMedium}" TextWrapping="Wrap"/>
 
-		
-		
-	
+		<StackPanel Visibility="{x:Bind b.scoutVisibility}"  Grid.Row="8" Grid.ColumnSpan="2" >
+			<TextBlock Text="Scouted buildings:"  />
+			<GridView ItemsSource="{x:Bind b.scoutBuildings}">
+				<GridView.ItemTemplate>
+						<DataTemplate x:DataType="cnv:BuildingRecord" >
+						<cnv:IconText Image="{x:Bind image}" MinWidth="34" Width="64"  Text="{x:Bind levels}" ToolTipService.ToolTip="{x:Bind cnv:BuildingDef.FromId(id) }" />
+					</DataTemplate>
+				</GridView.ItemTemplate>
+			</GridView>
+			<TextBlock Text="{x:Bind scoutedResources}"  />
+			
+
+		</StackPanel>
+
 
 	</Grid>
+	</ScrollViewer>
 </cnv:DialogG>

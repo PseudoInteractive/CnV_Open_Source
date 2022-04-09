@@ -1676,8 +1676,9 @@ namespace CnV.Views
 
 		public static void CityListNotifyChange(bool itemsChanged)
 		{
-
-			AppS.QueueOnUIThread(async () =>
+			if(!Sim.isPastWarmup)
+				return;
+			AppS.QueueOnUIThread( () =>
 								{
 									//               Log("CityListChange");
 

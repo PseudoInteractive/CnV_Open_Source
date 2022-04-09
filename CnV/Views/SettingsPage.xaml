@@ -337,11 +337,11 @@
 			<StackPanel Orientation="Vertical"
 						   Margin="4" BorderThickness="1" BorderBrush="{ThemeResource SystemControlBackgroundAccentRevealBorderBrush}">
 				
-					<Button Content="Update Citylists"
+					<!--<Button Content="Update Citylists"
 						Click="UpdateCityLists"
 						Style="{ThemeResource ButtonRevealStyle}"
 						Margin="8"
-						MinWidth="120" />
+						MinWidth="120" />-->
 				<wct:WrapPanel Orientation="Horizontal"
 						   Margin="4">
 

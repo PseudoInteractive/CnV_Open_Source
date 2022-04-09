@@ -28,7 +28,7 @@ public static partial class CityUI
 	{
 		try
 		{
-			if( City.gridCitySource.Count==0 || CityStats.instance is null || City.GetBuild().IsInvalid())
+			if( Sim.isWarmup || City.gridCitySource.Count==0 || CityStats.instance is null || City.GetBuild().IsInvalid())
 			{
 				return;// await Task.Delay(1000).ConfigureAwait(false);
 			};

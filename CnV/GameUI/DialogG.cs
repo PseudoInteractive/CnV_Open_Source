@@ -51,10 +51,10 @@ namespace CnV
 			IsTabStop=true;
 		//	ManipulationMode = ManipulationModes.TranslateX|ManipulationModes.TranslateY;
 			IsExpanded=true;
-			
 			var brush =   AppS.Brush( (Windows.UI.Color)App.instance.Resources["SystemAccentColorDark3"]);
 			Background = brush;
-			
+			//var shadow = App.instance.Resources["Shadow8"] as AttachedDropShadow;
+			//Effects.SetShadow(this,shadow);
 			MaxHeight = Settings.canvasHeight;
 			var grid = new Grid() {Padding=new(),Margin=new()  };
 			TitleGrid = grid.Children;
@@ -94,6 +94,7 @@ namespace CnV
 			//grid.Tapped +=Grid_Tapped;
 			
 			
+		//	Canvas.SetZIndex(this,101);
 			Canvas.SetLeft(this,260);
 		//	this.ManipulationDelta+=this.OnManipulationDelta;
 			headerB.ManipulationMode= ManipulationModes.TranslateX|ManipulationModes.TranslateY;
