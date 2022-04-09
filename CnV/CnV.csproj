@@ -90,10 +90,10 @@
     <PackageReference Include="Azure.Storage.Blobs" Version="12.11.0" />
     <PackageReference Include="CommunityToolkit.WinUI.Notifications" Version="7.1.2" />
     <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
-    <PackageReference Include="DSharpPlus" Version="4.2.0-nightly-01107" />
-    <PackageReference Include="DSharpPlus.CommandsNext" Version="4.2.0-nightly-01107" />
-    <PackageReference Include="DSharpPlus.Interactivity" Version="4.2.0-nightly-01107" />
-    <PackageReference Include="DSharpPlus.SlashCommands" Version="4.2.0-nightly-01107" />
+    <PackageReference Include="DSharpPlus" Version="4.2.0-nightly-01109" />
+    <PackageReference Include="DSharpPlus.CommandsNext" Version="4.2.0-nightly-01109" />
+    <PackageReference Include="DSharpPlus.Interactivity" Version="4.2.0-nightly-01109" />
+    <PackageReference Include="DSharpPlus.SlashCommands" Version="4.2.0-nightly-01109" />
     <PackageReference Include="Enums.NET" Version="4.0.0" />
     <PackageReference Include="Grpc.Net.Client" Version="2.41.0-pre1" />
     <PackageReference Include="Grpc.Net.Client" Version="2.44.0" />

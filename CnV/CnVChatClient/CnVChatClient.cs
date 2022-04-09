@@ -44,7 +44,19 @@ namespace CnVDiscord
 				return; 
 			#endif
 		}
+		public static async Task ShutDown()
+		{
+			if(!initialized)
+				return;
+			initialized=false;
+			if(instance?.connection is var c)
+			{
+				instance.connection = null;
+				await c.LeaveAsync();
 
+				await c.DisposeAsync();
+			}
+		}
 		public async Task<bool> Initialize()
 		{
 #if CNV
@@ -84,7 +96,7 @@ namespace CnVDiscord
 				await Alliance.alliancesFetchedTask.WaitAsync(false);
 				var me = Player.me;
 				
-				 Player.fromDiscordId = Player.all.Where(i=>i.discordId!=0).ToDictionary(i=>i.discordId );
+				
 
 				var channels = await connection.JoinAsync(new(){ playerId=me.pid,world=CnVServer.worldId,alliance=me.allianceId,allianceTitle=me.allianceTitle}); // Todo store role somewhere
 				Log("Got Channels " + channels.Length);
@@ -92,6 +104,8 @@ namespace CnVDiscord
 				{
 					foreach (var channel in channels)
 					{
+						if(connection is null)
+							break;
 						Log( channel );
 						var c = CnVJsonMessagePackDiscordChannel.Get(channel);
 						// Todo:  Create channel
@@ -148,21 +162,30 @@ namespace CnVDiscord
 		public void OnReceiveMessages( ICnVChatClient.OnReceiveMessagesArgs messageArgs)
 		{
 			Log("Got Messages " + messageArgs.discordMessages.Length);
-			AppS.DispatchOnUIThread(async () =>
+			AppS.DispatchOnUIThread(() =>
 			{
 				for(int i = 0;i<messageArgs.discordMessages.Length;++i)
 				{
 					var message = CnVJsonMessagePackDiscordMessage.Get(messageArgs.discordMessages[i]);
 					var senderOverrides = messageArgs.senderOverrides;
-					if(!Player.fromDiscordId.TryGetValue(message.Author.Id,out var player))
+					var authorId = senderOverrides is not null ? senderOverrides[i] : message.Author.Id;
+					string name;
+					if(Player.fromDiscordId.TryGetValue(authorId,out var player))
 					{
-						player = null;
+						name = player.name;
+						
 					}
 					else
 					{
-						Log($"Missing discordName: {message.Author.Username} {message.Author.Id} HasOverride:{senderOverrides != null} ");
+						// Search for a long name from the short name
+						name = message.Author.Username;
+						var longer = Player.all.FirstOrDefault(a=>a.shortName == name);
+						if(longer is not null)
+							name = longer.name;
+						Log($"Missing discordName: {message.Author.Username} {message.Author.Id} {authorId} HasOverride:{senderOverrides != null} ");
+
 					}
-					await AddMessage( (senderOverrides!=null? senderOverrides[i] : (player is not null ? player.discordId : message.Author.Id)),message, false, true);
+					AddMessage( name,message, false, true);
 				}
 			});
 		}
@@ -172,13 +195,13 @@ namespace CnVDiscord
 		}
 		static readonly Regex regexMention = new Regex(@"\<@(\w+)\>", RegexOptions.CultureInvariant | RegexOptions.Compiled);
 
-		public static async Task AddMessage(ulong senderOverride,DiscordMessage message, bool isNew, bool notify)
+		public static void AddMessage(string name,DiscordMessage message, bool isNew, bool notify)
 		{
 			try
 			{
-				if(!Player.fromDiscordId.TryGetValue(senderOverride,out var p))
-					p = Player.me;
-				var name = p.name; // todo: use clients
+				//if(!Player.fromDiscordId.TryGetValue(senderOverride,out var p))
+				//	p = Player.me;
+				//var name = p.name; // todo: use clients
 				//if (p.avatarBrush is null && p.avatarUrl is not null )
 				//{
 				//	var url = p.avatarUrl;

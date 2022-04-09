@@ -99,7 +99,7 @@ public class TimedHostedService : IHostedService, IDisposable
         private readonly ILogger _logger;
         private Timer _timer;
         private TelemetryClient tc;
-        private static HttpClient httpClient = new HttpClient();
+     //   private static HttpClient httpClient = new HttpClient();
 
         public TimedHostedService(ILogger<TimedHostedService> logger, TelemetryClient tc)
         {

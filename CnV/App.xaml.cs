@@ -513,13 +513,13 @@ namespace CnV
 
 		//}
 
-		private static void Window_Closed(object sender,WindowEventArgs args)
-		{
+		//private static void Window_Closed(object sender,WindowEventArgs args)
+		//{
 
-			Log($"WindowClosed!  {isForeground} {args.Handled}");
-			//			//	Assert(state == State.closed);
-			//			SwitchToBackground();
-		}
+		//	Log($"WindowClosed!  {isForeground} {args.Handled}");
+		//	//			//	Assert(state == State.closed);
+		//	//			SwitchToBackground();
+		//}
 
 		private void Content_PreviewKeyUp(object sender,Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
 		{
@@ -603,7 +603,7 @@ namespace CnV
 				{
 					//	var window = Window.Current;
 					window.VisibilityChanged += Window_VisibilityChanged;
-					window.Closed            += Window_Closed;
+					//window.Closed            += Window_Closed;
 					AppS.appWindow.Closing+=AppWindow_Closing;
 					//		window.WantClose+=Window_Closing;
 					//window.Activated+=Window_Activated;
@@ -779,21 +779,26 @@ namespace CnV
 
 				if(AppS.state <  AppS.State.closing)
 				{
-					Microsoft.Xna.Framework.GamePlatform.isExiting=true;
 					AppS.SetState(AppS.State.closing);
+
+					Microsoft.Xna.Framework.GamePlatform.isExiting=true;
+					
 					window.VisibilityChanged -= Window_VisibilityChanged;
 					args.Cancel = true;
 					// Cancel sim thread
 					CnVServer.simCancelTokenSource.Cancel();
-
+					var t1 = CnVDiscord.CnVChatClient.ShutDown();
 					var t0 = BackgroundTask.dispatcherQueueController.ShutdownQueueAsync();
 
 					await SwitchToBackground();
-					window.VisibilityChanged -= Window_VisibilityChanged;
-					window.Closed -= Window_Closed;
+//					window.VisibilityChanged -= Window_VisibilityChanged;
+//					window.Closed -= Window_Closed;
 					Assert(AppS.state == AppS.State.closing);
 					AppS.SetState(AppS.State.closed);
+					var t2 = AAnalytics.Flush();
 					await t0;
+					await t1;
+					await t2;
 					// Wait for sim thread to save
 					Log($"Await Sim");
 					while(Sim.isSimRunning)

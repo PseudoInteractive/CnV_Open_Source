@@ -129,10 +129,7 @@ namespace CnV
 			AppS.QueueIdleTask(IncomingOverview.ProcessTask,1000);
 			AppS.QueueIdleTask(OutgoingOverview.ProcessTask,1000);
 
-			Task.Run(async () =>
-			{
-				await CnVChatClient.Setup();
-			});
+			Task.Run(  CnVChatClient.Setup );
 
 				//CnVServer.SetStayAlive(Settings.stayAlive);
 				//{
