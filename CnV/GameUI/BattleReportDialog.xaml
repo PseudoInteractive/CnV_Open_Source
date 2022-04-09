@@ -6,15 +6,16 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	MaxHeight="600"
-	BorderBrush="AliceBlue"
 	xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
 	xmlns:tkui="using:CommunityToolkit.WinUI.UI"
     mc:Ignorable="d">
-	<ScrollViewer BorderThickness="1" CornerRadius="2" Margin="2" BorderBrush="{StaticResource SystemControlBackgroundAccentRevealBorderBrush}" >
+	<ScrollViewer BorderThickness="1" CornerRadius="2" Margin="2" BorderBrush="{StaticResource SystemControlBackgroundAccentRevealBorderBrush}" tkui:Effects.Shadow="{StaticResource Shadow8}"
+ >
 	<Grid Width="600"  >
 		
 
 		<Grid.RowDefinitions>
+			<RowDefinition Height="auto"/>
 			<RowDefinition Height="auto"/>
 			<RowDefinition Height="auto"/>
 			<RowDefinition Height="auto"/>
@@ -72,8 +73,19 @@
 			
 
 		</StackPanel>
+			<StackPanel  Grid.Row="9" Grid.ColumnSpan="2" >
+				<TextBlock Text="Building Damage:"  />
+				<GridView ItemsSource="{x:Bind b.buildingDamage}">
+					<GridView.ItemTemplate>
+						<DataTemplate x:DataType="cnv:BuildingRecord" >
+							<cnv:IconText Image="{x:Bind image}" MinWidth="34" Width="64"  Text="{x:Bind levels}" ToolTipService.ToolTip="{x:Bind cnv:BuildingDef.FromId(id) }" />
+						</DataTemplate>
+					</GridView.ItemTemplate>
+				</GridView>
 
 
-	</Grid>
+			</StackPanel>
+
+		</Grid>
 	</ScrollViewer>
 </cnv:DialogG>
