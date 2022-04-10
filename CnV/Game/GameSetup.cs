@@ -58,7 +58,7 @@ namespace CnV
 
 				AppS.SetState( AppS.State.active );
 
-				
+				SocketClient.Init();
 
 				await CnVServer.StartSim();
 
