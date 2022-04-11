@@ -271,41 +271,41 @@ namespace CnV
 								// upgrade of downgrade. same building
 								if(next.bl != cur.bl)
 								{
-									float blendOp = 0;
+									//float blendOp = 0;
 									var blendT = (dt*(1.0f/3.0f)).Frac();
 									var blendT4 = blendT*4;
 									if(blendT < 0.25f)
 									{
 										var t = (blendT4);
 										bl = cur.bl; // fade next number
-										fontAlpha *= t.SCurve(0,1);
-										blendOp = 0;//.SCurve(0,1);
+										fontAlpha *= t.Bezier(0f,1f,1f);
+									//	blendOp = 0;//.SCurve(0,1);
 									}
 									else if(blendT < 0.5f)
 									{
 										var t = (blendT4 - 1);
-										blendOp = 0;
+									//	blendOp = 0;
 										// fade out number
 										bl = cur.bl; // fade next number
-										fontAlpha*= t.SCurve(1,0);
+										fontAlpha*= t.Bezier(1,1,0);
 
 									}
 									else if(blendT < 0.75f) // fade out hammer
 									{
 										var t = (blendT4 -2); // fade in new number
-										blendOp = t.SCurve(0,1);
+									//	blendOp = t.SCurve(0,1);
 										// fade in last number
 										bl = next.bl;
-										fontAlpha*= t.SCurve(0,1);
+										fontAlpha*= t.Bezier(0,1,1);
 									}
 									else
 									{
 										// fade in number
 										var t = (blendT4 - 3); // fade in new number
 															   // fade out number
-										blendOp =t.SCurve(1,0);
+									//	blendOp =t.SCurve(1,0);
 										bl = next.bl;
-										fontAlpha *= t.SCurve(1,0);// prior number out	
+										fontAlpha *= t.Bezier(1,1,0);// prior number out	
 									}
 									////fontAlpha = (cityAlpha*fontA*255f).TruncateToInt();
 									//if(blendOp > 0)

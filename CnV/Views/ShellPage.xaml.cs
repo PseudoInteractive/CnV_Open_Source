@@ -347,7 +347,7 @@ namespace CnV.Views
 				Canvas.SetZIndex(CityBuild.instance,13);
 				var c = CreateCanvasControl();
 
-				var cachePlayerTask = Task.Run(PlayerGameEntity.UpdateCache);
+//				var cachePlayerTask = Task.Run(PlayerGameEntity.UpdateCache);
 				// canvas.ContextFlyout = CityFlyout;
 
 				//	grid.Children.Add(c.canvas);
@@ -507,7 +507,7 @@ namespace CnV.Views
 					}
 #endif
 
-					await PlayerTables.InitializeAndUpdateCurrentPlayer(cachePlayerTask,azureId: CnVSignin.azureId,discordId: CnVSignin.discordId,discordUserName: CnVSignin.name,avatarUrlHash: CnVSignin.avatarUrlHash);
+					await PlayerTables.InitializeAndUpdateCurrentPlayer(azureId: CnVSignin.azureId,discordId: CnVSignin.discordId,discordUserName: CnVSignin.name,avatarUrlHash: CnVSignin.avatarUrlHash);
 					//if (okay2)
 					try
 					{
@@ -1622,8 +1622,8 @@ namespace CnV.Views
 		private async void TimeResetClick(object sender,RoutedEventArgs e)
 		{
 			if (await AppS.DoYesNoBox("Rewind","This takes you back to the start, are you sure?").ConfigureAwait(false) != 1)
-			return;
-			Sim.ResetSim(null);
+				return;
+			Sim.ResetSim(AppS.isSinglePlayer ? Sim.serverStartTime : null);
 		}
 
 		private void TimeForwardClick(object sender,RoutedEventArgs e)

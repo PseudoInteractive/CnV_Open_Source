@@ -94,11 +94,11 @@ namespace CnV
 		{
 			Done();
 			var viaWater = this.viaWater; // fetch before lock
-			using(var locker = Sim.eventQLock.Enter)
+//			using(var locker = Sim.eventQLock.Enter)
 			{
 				var trade = new TradeOrder(source: source.c,target: destination.c,departure: Sim.simTime,viaWater: viaWater,isTempleTrade: false,resources: res);
 
-				new CnVEventTrade(source.c,trade: trade).EnqueueAlreadyLocked();
+				new CnVEventTrade(source.c,trade: trade).EnqueueAsap();
 			}
 
 			

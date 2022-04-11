@@ -24,7 +24,7 @@
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
 	  
-    <Configurations>Debug;Release</Configurations>
+    <Configurations>Debug;Release;SinglePlayer</Configurations>
   </PropertyGroup>
   <ItemGroup>
     <Content Remove="Content\**" />
@@ -712,6 +712,13 @@
     <Optimize>False</Optimize>
     <WarningLevel>4</WarningLevel>
     <DefineConstants>$(DefineConstants);CNV;CNVCLIENT;APPCENTER</DefineConstants>
+    <Deterministic>True</Deterministic>
+    <FileAlignment>4096</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='SinglePlayer|x64'">
+    <Optimize>False</Optimize>
+    <WarningLevel>4</WarningLevel>
+    <DefineConstants>$(DefineConstants);CNV;CNVCLIENT;APPCENTER;DEBUG</DefineConstants>
     <Deterministic>True</Deterministic>
     <FileAlignment>4096</FileAlignment>
   </PropertyGroup>
