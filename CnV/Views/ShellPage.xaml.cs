@@ -473,7 +473,7 @@ namespace CnV.Views
 				// Links will not work until after the game is set up
 				try
 				{
-					if(SystemInformation.Instance.IsAppUpdated && !CnVServer.isSub)
+					if(SystemInformation.Instance.IsAppUpdated && !Sim.isSub)
 					{
 						AppS.DispatchOnUIThread(Settings.ShowWhatsNew);
 					}
@@ -949,7 +949,7 @@ namespace CnV.Views
 
 			City.gridCitySource.ClearHash();
 
-			CnVServer.CityRefresh();
+			Sim.CityRefresh();
 			//	instance.UpdateWebViewScale();
 			return Task.CompletedTask;
 		}
@@ -1616,7 +1616,7 @@ namespace CnV.Views
 		private void TimeBackClick(object sender,RoutedEventArgs e)
 		{
 		
-			Sim.ResetSim(CnVServer.simTime - TimeSpanS.FromMinutes(gotoTimeOffset.Value));
+			Sim.ResetSim(Sim.simTime - TimeSpanS.FromMinutes(gotoTimeOffset.Value));
 		}
 
 		private async void TimeResetClick(object sender,RoutedEventArgs e)
@@ -1629,7 +1629,7 @@ namespace CnV.Views
 		private void TimeForwardClick(object sender,RoutedEventArgs e)
 		{
 			var dt = TimeSpanS.FromMinutes(gotoTimeOffset.Value);
-			CnVServer.RunAtStepEnd( ()=> CnVServer.SetTargetTime(CnVServer.simTime +dt) );
+			Sim.RunAtStepEnd( ()=> Sim.SetTargetTime(Sim.simTime +dt) );
 		}
 
 		private void TimeTogglePlay(object sender,RoutedEventArgs e)
@@ -1646,7 +1646,7 @@ namespace CnV.Views
 
 		private void TimeToggleClearFuture(object sender,RoutedEventArgs e)
 		{
-			CnVServer.ClearFutureEvents();
+			Sim.ClearFutureEvents();
 		}
 
 		

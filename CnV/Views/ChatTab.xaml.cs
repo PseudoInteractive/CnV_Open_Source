@@ -274,7 +274,7 @@ namespace CnV.Views
 					//  var str = $"{Tick.MSS()}:{s}";
 					//  instance.logEntries
 
-					debug.Post(new ChatEntry(null, s, CnVServer.serverTime), true);
+					debug.Post(new ChatEntry(null, s, Sim.serverTime), true);
 				}
 				catch (Exception e)
 				{
@@ -308,7 +308,7 @@ namespace CnV.Views
 		{
 			var chatEntry = sender as HyperlinkButton;
 			if (chatEntry != null)
-				CnVServer.ShowPlayer(chatEntry.Content.ToString());
+				Sim.ShowPlayer(chatEntry.Content.ToString());
 		}
 		private void HyperlinkButton_Tapped(object sender, TappedRoutedEventArgs e)
 		{
@@ -427,7 +427,7 @@ namespace CnV.Views
 								int cotgId = isWhisperChannel ? 1 : chatToId.IndexOf(s);
 								if ( cotgId >= 0)
 								{
-									CnVServer.SendChat(cotgId + 1, str);
+									Sim.SendChat(cotgId + 1, str);
 								}
 
 							}
@@ -497,7 +497,7 @@ namespace CnV.Views
 			}
 			else
 			{
-				ch.time = CnVServer.serverTime;
+				ch.time = Sim.serverTime;
 			}
 
 			return ch;
@@ -546,7 +546,7 @@ namespace CnV.Views
 						}
 						int c = batch.Count-1;
 						var epsilon = TimeSpan.FromSeconds(10);
-						var lastTime = CnVServer.serverTime + epsilon;
+						var lastTime = Sim.serverTime + epsilon;
 						for (; c >= 0;--c)
 						{
 							while( lastTime < batch[c].time )

@@ -99,7 +99,7 @@ namespace CnV.Views
 				if (title != null)
 					instance.Title = title;
 				if (recentTimes.Count == 0)
-					AddRecentTime(CnVServer.simDateTime);
+					AddRecentTime(Sim.simDateTime);
 				if (_time != null)
 				{
 					dateTime = _time.Value;
@@ -152,7 +152,7 @@ namespace CnV.Views
 
 		private void NowClick(object sender, RoutedEventArgs e)
 		{
-			dateTime = CnVServer.serverTime;
+			dateTime = Sim.serverTime;
 			TimeToUI();
 //			Log(dateTime);
 		}

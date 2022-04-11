@@ -21,7 +21,7 @@ namespace CnV
 			try
 			{
 
-			if (Settings.musicVolume > 0 && !CnVServer.isSub)
+			if (Settings.musicVolume > 0 && !Sim.isSub)
 			{
 				if (music == null)
 				{

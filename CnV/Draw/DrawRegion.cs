@@ -206,7 +206,7 @@ internal partial class GameClient
 #endif
 
 		//parallaxZ0 = 1024 * 64.0f / cameraZoomLag;
-		var isFocused = CnVServer.isInitialized&&AppS.isForeground;
+		var isFocused = Sim.isInitialized&&AppS.isForeground;
 
 		try
 		{
@@ -229,7 +229,7 @@ internal partial class GameClient
 			//                cameraZoomLag += (cameraZoom
 			// smooth ease towards target
 
-			var serverNow = CnVServer.simTime + ISmallTime.FromMinutes(eventTimeOffsetLag);
+			var serverNow = Sim.simTime + ISmallTime.FromMinutes(eventTimeOffsetLag);
 
 			// not too high or we lose float precision
 			// not too low or people will see when when wraps
@@ -429,7 +429,7 @@ internal partial class GameClient
 				//			else
 				{
 					///				var xc = lightWC.WorldToCamera().CameraToScreen();
-					var t = (float)CnVServer.simDateTime.TimeOfDay.TotalDays;
+					var t = (float)Sim.simDateTime.TimeOfDay.TotalDays;
 
 					float shrink = 1.0f/(64*4)*viewW.Z;
 
@@ -2478,7 +2478,7 @@ internal partial class GameClient
 	{
 		if(!AppS.isForeground)
 			return false;
-		if(!CnVServer.isInitialized)
+		if(!Sim.isInitialized)
 			return false;
 		if(faulted)
 			return false;

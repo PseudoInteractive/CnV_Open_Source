@@ -155,7 +155,7 @@ namespace CnV
 								// update on screen
 								AppS.QueueOnUIThreadIdle( () =>
 								{
-									ShellPage.instance.inAppNotes.Add( CnVServer.serverTime.ToString("HH':'mm':'ss") + "\t" + s );
+									ShellPage.instance.inAppNotes.Add( Sim.serverTime.ToString("HH':'mm':'ss") + "\t" + s );
 								});
 								//if(noteDelay < 30 )
 								//{
@@ -251,10 +251,10 @@ namespace CnV
 							Spot.ProcessCoordClick(paths[2].FromCoordinate(), false, AppS.keyModifiers, false);
 							break;
 						case "p": // player
-							CnVServer.ShowPlayer(paths[2]);
+							Sim.ShowPlayer(paths[2]);
 							break;
 						case "a": // Alliance
-							CnVServer.ShowAlliance(paths[2]);
+							Sim.ShowAlliance(paths[2]);
 							break;
 						case "r": // Report
 							Assert(false);

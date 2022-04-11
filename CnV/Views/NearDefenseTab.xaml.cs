@@ -338,7 +338,7 @@ namespace CnV.Views
 
                 departAt = city.GetRaidReturnTime() + TimeSpan.FromSeconds(15);
                 var canArriveAt = departAt+ (TimeSpan)(supporter.travel );
-                if (_arriveAt > CnVServer.serverTime && _arriveAt < canArriveAt)
+                if (_arriveAt > Sim.serverTime && _arriveAt < canArriveAt)
                 {
 					var result = await AppS.DispatchOnUIThreadTask(async () =>
 					{

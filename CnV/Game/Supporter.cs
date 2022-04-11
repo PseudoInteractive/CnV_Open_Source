@@ -32,13 +32,13 @@ namespace CnV
         
 
        
-        public DateTimeOffset eta { get => CnVServer.serverTime + (TimeSpan)(travel);
+        public DateTimeOffset eta { get => Sim.serverTime + (TimeSpan)(travel);
 			set {
 				NearDefenseTab.instance.arriveAt = new ServerTime(value);
 				NearDefenseTab.instance.OnPropertyChanged(string.Empty);
 			}
 		}
-        public DateTimeOffset etaWings { get => CnVServer.serverTime + 0.5f * (TimeSpan)(travel); 
+        public DateTimeOffset etaWings { get => Sim.serverTime + 0.5f * (TimeSpan)(travel); 
 			set
 			{
 					NearDefenseTab.instance.arriveAt = new ServerTime(value);

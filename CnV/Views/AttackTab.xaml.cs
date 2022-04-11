@@ -190,7 +190,7 @@ namespace CnV.Views
 				{
 					if (attackStrings.TryGetValue(atk.cid, out var script))
 					{
-						await CnVServer.OpenAttackSender(script);
+						await Sim.OpenAttackSender(script);
 
 					}
 					else
@@ -2096,7 +2096,7 @@ namespace CnV.Views
 				var commands = playerCommands[city.pid];
 			//	CnVServer.view.InvokeScriptAsync("sendmail",new string[] { city.playerName,Settings.attackPlanName + " " + plan.attackTime.FormatDateForFileName(),playerCommands[city.pid].Replace("<","&lt;").Replace(">","&gt;").Replace("\n","&#10;&#13;") });
 
-				CnVServer.ExecuteScriptAsync("sendmail",city.playerName,Settings.attackPlanName + " " + plan.attackTime.FormatDateForFileName(),
+				Sim.ExecuteScriptAsync("sendmail",city.playerName,Settings.attackPlanName + " " + plan.attackTime.FormatDateForFileName(),
 	playerCommands[city.pid].Replace("<","&lt;").Replace(">","&gt;").Replace("\n","<br />"));//.Replace("\n", "&#10;&#10;") });
 
 

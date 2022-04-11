@@ -152,7 +152,7 @@ public static partial class CityUI
 			{
 				if ( me.cityName == null)
 				{
-					CnVServer.FetchCity(cid);
+					Sim.FetchCity(cid);
 				}
 
 			}
@@ -197,7 +197,7 @@ public static partial class CityUI
 
 																foreach (var id in sel)
 																{
-																	await CnVServer.AddToAttackSender(id);
+																	await Sim.AddToAttackSender(id);
 																}
 															}
 								);
@@ -280,7 +280,7 @@ public static partial class CityUI
 
 		public static void DecayQuery(WorldC cid)
 	{
-		CnVServer.gStCB(cid.cid, DecayQueryCB, AMath.random.Next());
+		Sim.gStCB(cid.cid, DecayQueryCB, AMath.random.Next());
 	}
 
 	public static void ScrollMeIntoView(this City city) => ScrollIntoView(city.cid);
@@ -599,7 +599,7 @@ public static partial class CityUI
 		try
 		{
 			Note.Show($"Registering claim on {cid.ToStringCoords()}");
-			var client = CnVServer.genericClient;
+			var client = Sim.genericClient;
 
 
 			var message = new DGame.Message() { username = "Cord Claim", content = $"{cid.ToStringCoords()} claimed by {Player.myName}", avatar_url = "" };

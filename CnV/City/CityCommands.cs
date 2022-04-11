@@ -52,7 +52,7 @@ public static partial class CityUI
 			// if (CnVServer.IsWorldView())
 			//	cityId.BringCidIntoWorldView(lazyMove, false);
 
-			CnVServer.FetchCity(cityId);
+			Sim.FetchCity(cityId);
 			//             if( City.IsMine(cityId)  )
 			//                 Raiding.UpdateTSHome();
 
@@ -212,7 +212,7 @@ public partial class City
 				try
 				{
 					DateTimeOffset? time = null;
-					var ogaStr = await CnVServer.ExecuteScriptAsync("getOGA()");
+					var ogaStr = await Sim.ExecuteScriptAsync("getOGA()");
 					using var jsDoc = JsonDocument.Parse(ogaStr.Replace("\\\"", "\"").Trim('"'));
 					foreach(var i in jsDoc.RootElement.EnumerateArray())
 					{
@@ -227,7 +227,7 @@ public partial class City
 							if(id == -1)
 								continue;
 							timing = timing.Substring(id + 9);
-							var t = CnVServer.serverTime;
+							var t = Sim.serverTime;
 							;
 							var today = timing.StartsWith("Today");
 							var tomorrow = timing.StartsWith("Tomorrow");

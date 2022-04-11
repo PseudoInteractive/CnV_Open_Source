@@ -30,6 +30,9 @@ namespace CnV
 		private static BackgroundTask reinforcementsTask;
 		private static BackgroundTask senInfoTask;
 
+
+		
+
 		public static async Task InitializeGame()
 	{
 
@@ -59,8 +62,12 @@ namespace CnV
 				AppS.SetState( AppS.State.active );
 
 				SocketClient.Init();
+				while(Sim.simPhase == Sim.SimPhase.init)
+				{
+					await Task.Delay(500);
 
-				await CnVServer.StartSim();
+				}
+//				await Sim.StartSim();
 
 				//	var str = timeOffsetSecondsRounded >= 0 ? " +" : " ";
 				//	str += $"{gameTOffset.Hours:D2}:{gameTOffset.Minutes:D2}";
@@ -158,7 +165,7 @@ namespace CnV
 				//	GCSettings.LatencyMode = GCLatencyMode.SustainedLowLatency;
 			//	reinforcementsTask = new(interval:64.0f,()=> ReinforcementsOverview.instance.Post(),initialDelay:4.0f );
 			//	senInfoTask        = new( interval: 68f, City.UpdateSenatorInfo, 3.0f);
-				CnVServer.isInitialized      = true;
+				Sim.isInitialized      = true;
 				
 				AppS.DispatchOnUIThread( ShellPage.SetupNonCoreInput );
 			

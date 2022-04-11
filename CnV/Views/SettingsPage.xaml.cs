@@ -872,7 +872,7 @@ namespace CnV
 			AppS.HideFlyout(sender);
 			HideMe();
 			var cont = exportRanksCont.Value.RoundToInt().ContinentToXY().ContinentXYToContinentId();
-			var t1 = CnVServer.serverTime;
+			var t1 = Sim.serverTime;
 			Blobs.AllianceStats(t1 - TimeSpan.FromDays(exportRanksDays.Value), t1, cont, exportRanksCities.Value.RoundToInt() );
 		}
 
@@ -883,7 +883,7 @@ namespace CnV
 			HideMe();
 			var cont = Settings.exportContinent.ContinentToXY().ContinentXYToContinentId();
 			var tsMin = exportTSMinTS.Value.RoundToInt();
-			var t1 = CnVServer.serverTime;
+			var t1 = Sim.serverTime;
 			Blobs.PlayerStats(t1-TimeSpan.FromDays(exportTSDays.Value), t1,cont,tsMin,
 				this.exportTSScore.IsChecked.GetValueOrDefault(),
 				this.exportTSCities.IsChecked.GetValueOrDefault(),

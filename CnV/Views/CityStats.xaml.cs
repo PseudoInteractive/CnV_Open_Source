@@ -457,7 +457,7 @@ namespace CnV
 							Changed();
 						}
 						var bdd = !hasBeenDisplayed ? GetBuildingCounts(city) : default;
-						var t = CnVServer.simTime;
+						var t = Sim.simTime;
 #if DEBUG
 						ShellPage.instance.timeDisplay.Text = $"{t.FormatWithYear()} Frame {GameClient.renderFrame/60}";
 #else
@@ -975,7 +975,7 @@ namespace CnV
 				var q = city.buildQueue;
 				TimeSpanS dt;
 				if(q.Any() && q[0]== op && city.buildItemEndsAt.isNotZero)
-					dt = city.buildItemEndsAt - CnVServer.simTime;
+					dt = city.buildItemEndsAt - Sim.simTime;
 				else
 					dt = new(op.TimeRequired(city));
 				var text = dt.ToString();
@@ -1099,7 +1099,7 @@ namespace CnV
 				var q = city.recruitQueue;
 				TimeSpanS dt;
 				if(q.Any() && q[0]== op && city.recruitItemEndsAt.isNotZero)
-					dt = city.recruitItemEndsAt - CnVServer.simTime;
+					dt = city.recruitItemEndsAt - Sim.simTime;
 				else
 					dt = new(op.RecruitTimeRequired(city));
 				var text = dt.ToString();

@@ -318,7 +318,7 @@ namespace CnV.Views
 							   await DoTheStuff.Go(city,false,false);
 							if(cid == City.build)
 							{
-							   CnVServer.CityRefresh();
+							   Sim.CityRefresh();
 
 							}
 					   }

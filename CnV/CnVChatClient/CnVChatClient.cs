@@ -98,7 +98,7 @@ namespace CnVDiscord
 				
 				
 
-				var channels = await connection.JoinAsync(new(){ playerId=me.pid,world=CnVServer.worldId,alliance=me.allianceId,allianceTitle=me.allianceTitle}); // Todo store role somewhere
+				var channels = await connection.JoinAsync(new(){ playerId=me.pid,world=Sim.worldId,alliance=me.allianceId,allianceTitle=me.allianceTitle}); // Todo store role somewhere
 				Log("Got Channels " + channels.Length);
 				AppS.DispatchOnUIThread(async () =>
 				{
@@ -130,7 +130,7 @@ namespace CnVDiscord
 		{
 			Assert(initialized);
 			if(initialized)
-				return instance.UpdatePlayerAsync(new() { playerId=me.pid,world=CnVServer.worldId,alliance=me.allianceId,allianceTitle=me.allianceTitle });
+				return instance.UpdatePlayerAsync(new() { playerId=me.pid,world=Sim.worldId,alliance=me.allianceId,allianceTitle=me.allianceTitle });
 			else
 				return Task.CompletedTask;
 		}

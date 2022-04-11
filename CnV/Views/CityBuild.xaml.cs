@@ -929,7 +929,7 @@ namespace CnV
 			}
 			//	var d = b.def;
 			if(b.id != 0)
-				CnVServer.ExecuteScriptAsync("exBuildingInfo", b.id, b.bl, cc);
+				Sim.ExecuteScriptAsync("exBuildingInfo", b.id, b.bl, cc);
 
 			CityView.SetSelectedBuilding(cc, isSingleClickAction);
 
@@ -1262,7 +1262,7 @@ namespace CnV
 				{
 					var city = City.Get(cid);
 					Assert(false);
-					await CnVServer.ExecuteScriptAsync("misccommand", "abandoncity", cid);
+					await Sim.ExecuteScriptAsync("misccommand", "abandoncity", cid);
 					city.pid = 0; //
 					if(myCities.Length > 1)
 					{

@@ -181,7 +181,7 @@ namespace CnV.Views
 
             if (visible)
             {
-				if (CnVServer.ppdtInitialized)
+				if (Sim.ppdtInitialized)
 				{
 					//await Raiding.UpdateTS(true, false);
 					//await RaidOverview.Send();

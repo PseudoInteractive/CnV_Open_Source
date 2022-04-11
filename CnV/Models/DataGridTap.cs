@@ -74,19 +74,19 @@ namespace CnV;
 									Spot.ProcessCoordClick(i.sourceCid, false, AppS.keyModifiers, false);
 									break;
 								case "aPlyr":
-									CnVServer.ShowPlayer(i.sPlayer);
+									Sim.ShowPlayer(i.sPlayer);
 									break;
 								case "dPlyr":
-									CnVServer.ShowPlayer(i.tPlayer);
+									Sim.ShowPlayer(i.tPlayer);
 									break;
 								//case nameof(i.atkCN): Spot.ProcessCoordClick(i.atkCid, false); break;
 								//case nameof(i.defC):
 								//case nameof(i.defCN): Spot.ProcessCoordClick(i.defCid,false); break;
 								case "atkAli":
-									CnVServer.ShowAlliance(i.sourceAllianceName);
+									Sim.ShowAlliance(i.sourceAllianceName);
 									break;
 								case "defAli":
-									CnVServer.ShowAlliance(i.targetAllianceName);
+									Sim.ShowAlliance(i.targetAllianceName);
 									break;
 									//case nameof(i.aPlyr): CnVServer.ShowPlayer(i.aPlyr);break;
 									//case nameof(i.dPlyr): CnVServer.ShowPlayer(i.dPlyr); break;
@@ -106,7 +106,7 @@ namespace CnV;
 							{
 								case nameof(i.type):
 									
-									CnVServer.ShowReport(i);
+									Sim.ShowReport(i);
 									
 									break;
 							
@@ -119,19 +119,19 @@ namespace CnV;
 									Spot.ProcessCoordClick(i.sourceCid, false, AppS.keyModifiers, false);
 									break;
 								case nameof(i.tPlayer):
-									CnVServer.ShowPlayer(i.tPlayer);
+									Sim.ShowPlayer(i.tPlayer);
 									break;
 								case nameof(i.sPlayer):
-									CnVServer.ShowPlayer(i.sPlayer);
+									Sim.ShowPlayer(i.sPlayer);
 									break;
 								//case nameof(i.atkCN): Spot.ProcessCoordClick(i.atkCid, false); break;
 								//case nameof(i.defC):
 								//case nameof(i.defCN): Spot.ProcessCoordClick(i.defCid,false); break;
 								case nameof(i.sourceAllianceName):
-									CnVServer.ShowAlliance(i.sourceAllianceName);
+									Sim.ShowAlliance(i.sourceAllianceName);
 									break;
 								case nameof(i.targetAllianceName):
-									CnVServer.ShowAlliance(i.targetAllianceName);
+									Sim.ShowAlliance(i.targetAllianceName);
 									break;
 									//case nameof(i.aPlyr): CnVServer.ShowPlayer(i.aPlyr);break;
 									//case nameof(i.dPlyr): CnVServer.ShowPlayer(i.dPlyr); break;
