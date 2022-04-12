@@ -101,7 +101,7 @@
     <PackageReference Include="MessagePack" Version="2.4.14-alpha" />
     <PackageReference Include="MessagePack.Experimental" Version="2.4.14-alpha" />
     <PackageReference Include="MagicOnion.Client" Version="4.4.0" />
-    <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.3" />
+    <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.4" />
     <PackageReference Include="Microsoft.Toolkit" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
@@ -119,7 +119,7 @@
     <PackageReference Include="SharpGen.Runtime.COM" Version="2.0.0-beta.10" />
     <PackageReference Include="System.Collections.Immutable" Version="7.0.0-preview.2.22152.2" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="7.0.0-preview.2.22152.2" />
-    <PackageReference Include="System.Runtime.Experimental" Version="6.0.2-mauipre.1.22102.15" />
+    <PackageReference Include="System.Runtime.Experimental" Version="6.0.2" />
     <PackageReference Include="System.Text.Json" Version="7.0.0-preview.2.22152.2" />
 	<PackageReference Include="ZString" Version="2.4.4" />
   </ItemGroup>

@@ -139,19 +139,19 @@
 				</Border>
 
 			</tk:BladeItem>
-			<tk:BladeItem x:Name="LayoutBlade" Header="ShareString" IsOpen="False"  >
-				<ScrollViewer HorizontalScrollMode="Disabled" VerticalScrollMode="Enabled" >
-					<StackPanel Orientation="Vertical">
-						<TextBox x:Name="shareString" Header="ShareString" TextWrapping="Wrap" AcceptsReturn="False" IsSpellCheckEnabled="False" MinWidth="500" />
-						<Border  Style="{StaticResource BorderReveal}">
-							<tk:WrapPanel  Orientation="Horizontal">
+			<tk:BladeItem x:Name="LayoutBlade" Header="ShareString" IsOpen="False" Width="410"  >
+				<ScrollViewer    >
+					<StackPanel Orientation="Vertical" Width="395" >
+						<TextBox x:Name="shareString" TextWrapping="Wrap" AcceptsReturn="True" MinHeight="150"  IsSpellCheckEnabled="False" HorizontalAlignment="Stretch" />
+						<Border  Style="{StaticResource BorderReveal}" >
+							<tk:WrapPanel  Orientation="Horizontal"  HorizontalSpacing="6" >
 								<TextBox x:Name="shareTitle" Header="Title" TextChanged="title_TextChanged"  />
 								<TextBox x:Name="path" Header="path"  />
-								<TextBox x:Name="description" Header="Description" TextWrapping="Wrap" AcceptsReturn="False" HorizontalAlignment="Stretch" />
+								<TextBox x:Name="description" Header="Description" TextWrapping="Wrap" MinWidth="200" AcceptsReturn="True" HorizontalAlignment="Stretch" />
 							</tk:WrapPanel>
 						</Border>
 						<Border  Style="{StaticResource BorderReveal}">
-							<tk:WrapPanel  Orientation="Horizontal">
+							<tk:WrapPanel  Orientation="Horizontal"  >
 								<Button Content="Share" Click="ShareClick" Style="{StaticResource ButtonMedium}" />
 								<Button Content="Use buildings" Click="UseBuildingsClick" Style="{StaticResource ButtonMedium}" />
 								<Button Content="From Clipboard" Click="FromClipboardClick" Style="{StaticResource ButtonMedium}" />
@@ -181,7 +181,7 @@
 						 Text="{x:Bind cnv:Settings.VRTRatio, Mode=TwoWay}"
 						 Header="W/R/P Ratio (if applicable)" />
 					</StackPanel>
-					<tk:WrapPanel x:Name="tagsPanel" x:FieldModifier="public"></tk:WrapPanel>
+					<tk:WrapPanel x:Name="tagsPanel" x:FieldModifier="public" HorizontalSpacing="3" VerticalSpacing="3" ></tk:WrapPanel>
 				</StackPanel>
 			</tk:BladeItem>
 		</tk:BladeView>

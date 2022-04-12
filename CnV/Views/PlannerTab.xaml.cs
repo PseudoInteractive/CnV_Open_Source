@@ -499,13 +499,10 @@ namespace CnV.Views
 			var hasInvalid = false;
 			int resHelpers = 0;
 			{
-				if (city.isOnWater)
+//				if (!city.isOnWater)
 				{
 					// Oops!
 
-				}
-				else
-				{
 					for (BuildingSpot id = 0; id < City.citySpotCount; ++id)
 					{
 						var bid = city.GetLayoutBid(id);

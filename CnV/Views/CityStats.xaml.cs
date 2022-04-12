@@ -185,7 +185,7 @@ namespace CnV
 			// Don't notify whole we are doing stuff
 			try
 			{
-				Trace("Update build Queue");
+			//	Trace("Update build Queue");
 			//	instance.buildQueue.CollectionChanged -= BuildQueue_CollectionChanged;
 				//var firstVisible = instance.buildQueueListView.vis
 				
