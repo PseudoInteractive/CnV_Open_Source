@@ -62,6 +62,13 @@ namespace CnV.Views
 		{
 			get => IServerTime.timeScale;
 			set {
+			if(!AppS.isSinglePlayer)
+			{
+				Note.Show("Only works in single player mode");
+				return;
+			}
+
+
 				IServerTime.SetTimeScale(value.Clamp(minTimeScale,maxTimeScale));
 				OnPropertyChanged("timeScaleSlider");
 			}
@@ -100,6 +107,12 @@ namespace CnV.Views
 		{
 			if(!e.OldValue.AlmostEquals(e.NewValue,1.0f/2.0f))
 			{
+			if(!AppS.isSinglePlayer)
+			{
+				AppS.MessageBox("Only works in single player mode");
+				return;
+			}
+
 				var v = SliderToTimeScale(e.NewValue);
 				IServerTime.SetTimeScale((float)v);
 
@@ -110,6 +123,13 @@ namespace CnV.Views
 		{
 			Debounce.Q(50,runOnUIThread: true,action: () =>
 			  {
+
+			if(!AppS.isSinglePlayer)
+			{
+				AppS.MessageBox("Only works in single player mode");
+				return;
+			}
+
 				  var v = IServerTime.timeScale;
 				  if(!timeScaleNumberBox.Value.IsEqualTo(v,1.0f/8.0f))
 				  {
@@ -135,6 +155,12 @@ namespace CnV.Views
 			}
 			if(!e.OldValue.IsEqualTo(e.NewValue,1.0f/4.0f))
 			{
+			if(!AppS.isSinglePlayer)
+			{
+				AppS.MessageBox("Only works in single player mode");
+				return;
+			}
+
 				IServerTime.SetTimeScale((float)e.NewValue);
 			}
 		}
@@ -584,6 +610,13 @@ namespace CnV.Views
 																	a.Handled=true;
 																	Settings.fullScreen = !Settings.fullScreen.GetValueOrDefault();
 																	AppS.appWindow.SetPresenter(Settings.fullScreen.GetValueOrDefault() ? Microsoft.UI.Windowing.AppWindowPresenterKind.FullScreen : Microsoft.UI.Windowing.AppWindowPresenterKind.Overlapped);
+																}));
+				KeyboardAccelerators.Add(BuildKeyboardAccelerator(key: VirtualKey.F12,modifiers:
+																VirtualKeyModifiers.Control,OnKeyboardAcceleratorInvoked: (_,a) =>
+																{
+																	a.Handled=true;
+																	AppS.isTest ^= true;
+																	Trace(AppS.isTest.ToString());
 																}));
 
 
@@ -1621,6 +1654,11 @@ namespace CnV.Views
 
 		private void TimeBackClick(object sender,RoutedEventArgs e)
 		{
+			if(!AppS.isSinglePlayer)
+			{
+				AppS.MessageBox("Only works in single player mode");
+				return;
+			}
 		
 			Sim.ResetSim(Sim.simTime - TimeSpanS.FromMinutes(gotoTimeOffset.Value));
 		}
@@ -1634,12 +1672,22 @@ namespace CnV.Views
 
 		private void TimeForwardClick(object sender,RoutedEventArgs e)
 		{
+			if(!AppS.isSinglePlayer)
+			{
+				AppS.MessageBox("Only works in single player mode");
+				return;
+			}
 			var dt = TimeSpanS.FromMinutes(gotoTimeOffset.Value);
 			Sim.RunAtStepEnd( ()=> Sim.SetTargetTime(Sim.simTime +dt) );
 		}
 
 		private void TimeTogglePlay(object sender,RoutedEventArgs e)
 		{
+			if(!AppS.isSinglePlayer)
+			{
+				AppS.MessageBox("Only works in single player mode");
+				return;
+			}
 			if(IServerTime.timeScale == 0)
 			{
 				IServerTime.SetTimeScale(1.0f);
@@ -1652,6 +1700,11 @@ namespace CnV.Views
 
 		private void TimeToggleClearFuture(object sender,RoutedEventArgs e)
 		{
+			if(!AppS.isSinglePlayer)
+			{
+				AppS.MessageBox("Only works in single player mode");
+				return;
+			}
 			Sim.ClearFutureEvents();
 		}
 

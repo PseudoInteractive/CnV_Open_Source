@@ -37,13 +37,14 @@ namespace CnV.Converters
 
 			if (value is DateTimeOffset dateTime)
 			{
-				if(targetType == typeof(DateTimeOffset))
+				if(targetType == typeof(ServerTime))
 				{
 					return dateTime;
 				}
 
 				else
 				{
+					Assert(targetType == typeof(string));
 					return dateTime.Format();
 				}
 			}
@@ -57,6 +58,9 @@ namespace CnV.Converters
 				
 				else
 				{
+					Assert(targetType == typeof(string));
+					if(src == default)
+						return null;
 					return src.Format();
 				}
 			}
@@ -82,7 +86,8 @@ namespace CnV.Converters
 			    }
 			    else
 			    {
-				    if (AUtil.TryParseTime(value.ToString(), out var rv))
+					var str = value.ToString();
+				    if (!str.IsNullOrEmpty() && AUtil.TryParseTime(str, out var rv))
 					    return new ServerTime(rv);
 				    else
 					    return ServerTime.zero;

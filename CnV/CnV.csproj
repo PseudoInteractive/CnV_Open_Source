@@ -109,8 +109,9 @@
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.2" />
 	<PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
     <PackageReference Include="PlayFabAllSDK" Version="1.108.220118" />
-    <PackageReference Include="Syncfusion.Grid.WinUI" Version="20.1.0.47" />
-    <PackageReference Include="Syncfusion.Licensing" Version="20.1.0.47" />
+    <PackageReference Include="Syncfusion.Editors.WinUI" Version="20.1.0.48" />
+    <PackageReference Include="Syncfusion.Grid.WinUI" Version="20.1.0.48" />
+    <PackageReference Include="Syncfusion.Licensing" Version="20.1.0.48" />
 	<PackageReference Include="SharpDX" Version="4.2.0" />
     <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
     <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />

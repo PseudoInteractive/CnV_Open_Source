@@ -295,10 +295,10 @@
 						  MaxHeight="200"  >
 					<ListView.ItemTemplate>
 						<DataTemplate x:DataType="cnv:CommandItem">
-							<StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" ToolTipService.ToolTip="{x:Bind toolTip}" ContextRequested="{x:Bind ContextRequested}"   >
+							<StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" ToolTipService.ToolTip="{x:Bind toolTip, Mode=OneWay}" ContextRequested="{x:Bind ContextRequested}"   >
 								<Image Source="{x:Bind action, Mode=OneWay}"  />
 
-								<HyperlinkButton Content="{x:Bind info}" Click="{x:Bind TargetClick}" />
+								<HyperlinkButton Content="{x:Bind info, Mode=OneWay}" Click="{x:Bind TargetClick}" />
 							</StackPanel>
 						</DataTemplate>
 					</ListView.ItemTemplate>
@@ -353,7 +353,7 @@
 						</StackPanel>
 					</Border>
 					<Border   CornerRadius="4" Margin="0" Padding="4" 
-							  Visibility="{x:Bind IncomingReinforcementsVisible,Mode=OneTime}">
+							  Visibility="{x:Bind IncomingReinforcementsVisible,Mode=OneWay}">
 
 						<StackPanel>
 							<TextBlock Text="Incoming" Style="{StaticResource TextBlockMedium}" Margin="4" />

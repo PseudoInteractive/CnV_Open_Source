@@ -29,6 +29,10 @@ namespace CnV
 		internal City city;
 		internal City target;
 		internal ArmyType type;
+	//	internal ServerTime arrival;
+	
+		
+		//internal ServerTime departure;
 		internal int armyType { get => (int)type; set => type=(ArmyType)(value); }
 		
 		internal readonly int[] splitsItems = Enumerable.Range(1,16).ToArray();
@@ -38,7 +42,8 @@ namespace CnV
 		{
 			this.InitializeComponent();
 			instance = this;
-			
+			arrivalDate.SelectedDate =(DateTimeOffset.UtcNow);
+			arrivalTime.SelectedTime =(DateTimeOffset.UtcNow);
 		}
 
 		private void UpdateTroopItems()
@@ -92,6 +97,11 @@ namespace CnV
 			if(transport == ArmyTransport.ports && city.shipsHome < 25)
 			{
 				if(verbose) AppS.MessageBox($"Need 25 trading ships.  Have {city.shipsHome} home of {city.ships} ");
+				return false;
+			}
+			if( type is ( >= Army.attackFirst and <= Army.attackLast) && (!city.isCastle) )
+			{
+				if(verbose) AppS.MessageBox($"Only castles can attack like that");
 				return false;
 			}
 			if(!troopItems.Any(a => a.count > 0))
@@ -151,8 +161,15 @@ namespace CnV
 				var flags = (byte)(isRaid ? ((repeatCheckBox.IsChecked.Value ? Army.flagRepeating : Army.flagNone)
 									)
 									| Army.FlagSplits((int)splitsCombo.SelectedItem) : Army.flagNone);
-				Army.Send(ts,flags,city,target.cid,type,transport);
-				Done();
+				var arrival = ServerTime.CombineDateTime(arrivalDate.SelectedDate,arrivalTime.SelectedTime);
+
+				bool okay;
+				if(arrival != default )
+					okay =Army.Send(ts,flags,city,target.cid,type,transport,arrival);
+				else
+					okay = Army.Send(ts,flags,city,target.cid,type,transport);
+				if(okay)
+					Done();
 			}
 			else
 			{
@@ -191,6 +208,7 @@ namespace CnV
 					i.OnPropertyChanged(member);
 			}
 		}
+
 	}
 
 

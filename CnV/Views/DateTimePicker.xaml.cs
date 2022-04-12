@@ -90,11 +90,18 @@ namespace CnV.Views
 			}
 			OnPropertyChanged(string.Empty);
 		}
-
+		static bool isOpen = false;
 		public static async Task<(DateTimeOffset t, bool yes)> ShowAsync(string title, DateTimeOffset? _time=null)
 		{
+			Assert(!isOpen);
+			if(isOpen)
+				return (Sim.simTime,false);
+			isOpen = true;
+
 			var result = await AppS.DispatchOnUIThreadTask(async () =>
 			{
+				ShellPage.gameUIFrame.Children.Add(instance);
+
 
 				if (title != null)
 					instance.Title = title;
@@ -119,6 +126,7 @@ namespace CnV.Views
 		{
 			this.InitializeComponent();
 			TimeToUI();
+
 		}
 
 		private static void AddRecentTime(DateTimeOffset _dateTime)

@@ -5,7 +5,7 @@
     xmlns:cnv="using:CnV"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	Width="650"
-
+	xmlns:sfe="using:Syncfusion.UI.Xaml.Editors"
 	xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
@@ -20,6 +20,12 @@
 			<Button Style="{StaticResource ButtonMedium}" Content="Home" Click="HomeClick" Margin="8,2" />
 			<Button Style="{StaticResource ButtonMedium}" Content="Zero" Click="ClearClick" Margin="8,2"  />
 			<ComboBox SelectedIndex="{x:Bind armyType, Mode=TwoWay}" ItemsSource="{x:Bind cnv:Army.typeStrings}" />
+			<!--<TextBox   VerticalAlignment="Center" Text="{x:Bind arrival,Mode=TwoWay,Converter={StaticResource SmallTimeConverter}}"
+               Description="arrival" PlaceholderText="ASAP"    ToolTipService.ToolTip="Time of arrival, leave blank to send as soon as possible" />-->
+
+			<sfe:SfDatePicker x:Name="arrivalDate" Description="arrival date" AllowNull="True" PlaceholderText="Today" DisplayDateFormat="MM/dd" DayFormat="u"  />
+			<sfe:SfTimePicker x:Name="arrivalTime"  Description="arrival time" ClockIdentifier="24HourClock" AllowNull="True" PlaceholderText="ASAP" DisplayTimeFormat="HH:mm:ss"  />
+
 			<StackPanel Orientation="Horizontal" Padding="0" x:Name="raidPanel" >
 				<TextBlock Text="Splits" Margin="12,2,0,2" VerticalAlignment="Center" />
 				<ComboBox x:Name="splitsCombo" ItemsSource="{x:Bind splitsItems}" SelectedIndex="0" Margin="12,2" VerticalAlignment="Center" />
@@ -57,7 +63,7 @@
 										Text="{x:Bind troopsHome,Mode=OneWay}" Style="{StaticResource TextBlockMedium}" VerticalAlignment="Center"  Margin="8,0,8,0"/>
 							<NumberBox  Grid.Column="1"  Grid.Row="1" Style="{StaticResource NumberBoxMedium}" 
                                          ValueChanged="FilterNans"
-                                        Value="{x:Bind count,Mode=TwoWay}" Width="120"   Margin="8,0,8,0" VerticalAlignment="Center" 
+                                        Value="{x:Bind count,Mode=TwoWay}" Width="120"   Margin="8,0,8,0" VerticalAlignment="Center" SmallChange="1000"
                                         HorizontalAlignment="Right" />
 								
 

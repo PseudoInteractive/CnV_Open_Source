@@ -255,6 +255,7 @@
 
 
 
+			<converter:SmallTimeConverter x:Key="SmallTimeConverter" />
 			<converter:DateTimeConverter x:Key="DateTimeConverter" />
 			<converter:IntConverter x:Key="IntConverter" />
 			<converter:TimeConverter x:Key="TimeConverter" />

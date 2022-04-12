@@ -328,7 +328,7 @@ namespace CnV
 				//var firstVisible = instance.buildQueueListView.vis
 				
 				var city = instance.city;
-				var displayQueue = city.outgoing.OrderBy(a => a.arrival).ToArray();
+				var displayQueue = city.outgoing.Concat(city.incoming).OrderBy(a => a.arrival).ToArray();
 				int lg = displayQueue.Length;
 				var bq = instance.commandItems;
 			
@@ -337,7 +337,7 @@ namespace CnV
 				{
 					foreach(var i in bq)
 					{
-						i.UpdateAction();
+						//i.UpdateAction();
 						i.OnPropertyChanged();
 					}
 					commandsDirty=false;
@@ -447,7 +447,7 @@ namespace CnV
 
 		
 
-				AppS.DispatchOnUIThreadIdle(() =>
+				AppS.QueueOnUIThread(() =>
 				{
 					
 
@@ -1133,18 +1133,17 @@ namespace CnV
 	{
 		internal Army army;
 		
-		public BitmapImage action { get; set; }
 	//	public string sourceCoords=> army.sourceCity.nameAndRemarksAndPlayer;
 	//	public string targetCoords=> army.targetCity.nameAndRemarksAndPlayer;
-		public string info => $"{army.nextStopTime.Format()} {army.splitsS}{(army.isReturn ? "from" : "to")} {army.targetCity}";
+		public string info => $"{army.NextStopTimeString(' ')} {army.splitsS}{(army.isReturn ? "from" : "to")} {(army.sourceCid == City.build ? army.targetCity: army.sourceCity)}";
 
-		internal void SourceClick(object sender,RoutedEventArgs e)
-		{
-			CityUI.ShowCity(army.sourceCid,false);
-		}
+		//internal void SourceClick(object sender,RoutedEventArgs e)
+		//{
+		//	CityUI.ShowCity(army.sourceCid,false);
+		//}
 		internal void TargetClick(object sender,RoutedEventArgs e)
 		{
-			CityUI.ShowCity(army.targetCid,false);
+			CityUI.ShowCity(army.sourceCid == City.build ? army.targetCid : army.sourceCid,false);
 		}
 
 
@@ -1153,13 +1152,14 @@ namespace CnV
 		public CommandItem(Army army)
 		{
 			this.army = army;
-			UpdateAction();
+			//UpdateAction();
 			
 			
 		}
-		public void UpdateAction()
-		{
-			action =  ImageHelper.Get(  
+
+	public BitmapImage action =>
+			  ImageHelper.Get(  
+								army.isSchedueledNotSent ? "UI/Icons/icon_cmmnds_raid_datetime.png"  :
 								army.isRaid ? (
 												army.isScheduledToReturn ? "UI/Icons/icon_cmmnds_raid_datetime.png" :
 												army.isRepeating ? "UI/Icons/icon_cmmnds_raid_loop.png" : 
@@ -1169,7 +1169,7 @@ namespace CnV
 								army.isDefense ? "Region/UI/icon_player_own_support_inc.png" :
 								
 								"Region/UI/icon_player_own_attack.png");
-		}
+		
 		
 		public void ContextRequested(UIElement sender,ContextRequestedEventArgs args)
 		{
