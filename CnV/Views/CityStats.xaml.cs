@@ -185,6 +185,7 @@ namespace CnV
 			// Don't notify whole we are doing stuff
 			try
 			{
+				Trace("Update build Queue");
 			//	instance.buildQueue.CollectionChanged -= BuildQueue_CollectionChanged;
 				//var firstVisible = instance.buildQueueListView.vis
 				
@@ -309,8 +310,11 @@ namespace CnV
 
 				}
 			}
-			
-
+			Assert(xQ.Count == lg);
+			for(int i=0;i<lg;++i)
+			{
+				Assert(equals(rtQ[i],xQ[i]));
+			}
 			return anyRemoved;
 		}
 
@@ -749,6 +753,7 @@ namespace CnV
 			try
 			{
 				Log(args.DropResult);
+				
 				if(args.DropResult ==DataPackageOperation.Move)
 				{
 					var item = args.Items.FirstOrDefault() as BuildItem;
@@ -766,7 +771,8 @@ namespace CnV
 				}
 				else
 				{
-					var items = args.Items.Select( (a) =>  buildQueue.IndexOf( a as BuildItem));
+					
+					var items = args.Items.Select( (a) =>  buildQueue.IndexOf( a as BuildItem)).Where(x=>x!=-1);
 					
 					city.RemoveWithDependencies(new(items),bqAtDragStart);
 
@@ -1020,7 +1026,7 @@ namespace CnV
 			{
 				var sel = instance.buildQueueListView.SelectedItems;
 
-				city.RemoveWithDependencies(sel.Any() ? new( sel.Select( x=> instance.buildQueue.IndexOf(x as BuildItem ))) :new(new[] { instance.buildQueue.IndexOf(this) }) ,lastSynchronizedQueue);
+				city.RemoveWithDependencies(new( (sel.Any() ?  sel.Select( x=> instance.buildQueue.IndexOf(x as BuildItem )) : (new[] { instance.buildQueue.IndexOf(this) })).Where(i=>i!=-1) ) ,lastSynchronizedQueue);
 			});
 			flyout.AddItem("Cancel all",Symbol.Cut,() =>
 			{

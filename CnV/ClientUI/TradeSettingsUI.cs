@@ -32,7 +32,7 @@ public partial class CityUI
 
 			var settings = new ResSettings();
 			await settings.InitTradeSettings(city, _sourceHub, _targetHub, reqFilter, targetFilter);
-			await AUtil.AwaitChangesComplete();
+		//	await AUtil.AwaitChangesComplete();
 
 			var dialog = new ContentDialog()
 			{

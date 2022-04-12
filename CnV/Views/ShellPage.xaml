@@ -365,7 +365,7 @@
 				</Expander.Header>
 				<ListView x:Name="InAppNote" x:FieldModifier="public"  Margin="0" Padding="0"
 						  Background="#aa140030"
-                   ItemsSource="{x:Bind inAppNotes,Mode=OneWay}"  MaxHeight="100"  >
+                   ItemsSource="{x:Bind inAppNotes,Mode=OneWay}"  MaxHeight="200"  >
 					<ListView.ItemTemplate>
 						<DataTemplate  x:DataType="x:String"  >
 							<TextBlock  x:Name="message" Text="{x:Bind }"  Margin="1"  Padding="0,0,0,0"    

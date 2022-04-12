@@ -97,6 +97,10 @@ public static class DoTheStuff
 				}
 			}
 
+			city.BuildOpStart();
+		try
+		{
+
 
 			Assert(city.isBuild);
 			if(city.is7Point)
@@ -105,6 +109,7 @@ public static class DoTheStuff
 				{
 					await city.EnqueueUpgrade(8,bspotTownHall);
 					bc = city.UpdateBuildStage();
+					Assert(false);
 				}
 
 			}
@@ -135,23 +140,23 @@ public static class DoTheStuff
 					await city.DowngradeTo((0, 0),1); // downgrade town hall
 				}
 			}
-		if((bc.sorcTowers == 0 || bc.sorcTowerLevel != 10) && (city.tsTotal > Settings.tsForSorcTower || (!city.isMilitary && city.points> Settings.scoreForSorcTower)) && city.FindOverlayBuildingsOfType(bidSorcTower).Count == 1)
-		{
-			var c = FindValidBuildingOfType(city,bidSorcTower);
-
-			if(c.bl == 0)
+			if((bc.sorcTowers == 0 || bc.sorcTowerLevel != 10) && (city.tsTotal > Settings.tsForSorcTower || (!city.isMilitary && city.points> Settings.scoreForSorcTower)) && city.FindOverlayBuildingsOfType(bidSorcTower).Count == 1)
 			{
-				if(await city.SmartBuild((c.x, c.y),bidSorcTower,searchForSpare: true,wantDemoUI: true) != -1)
-					c.bl = 1;
+				var c = FindValidBuildingOfType(city,bidSorcTower);
+
+				if(c.bl == 0)
+				{
+					if(await city.SmartBuild((c.x, c.y),bidSorcTower,searchForSpare: true,wantDemoUI: true) != -1)
+						c.bl = 1;
 
 
 
+				}
+				// raise to level 10
+				if(c.bl != 0) // did it work?
+					await city.EnqueueUpgrade(10,(c.x, c.y));
 			}
-			// raise to level 10
-			if(c.bl != 0) // did it work?
-				await city.EnqueueUpgrade(10,(c.x, c.y));
-		}
-		Assert(city.isBuild);
+			Assert(city.isBuild);
 			if(!bc.hasWall && bc.hasCastle && !city.is7Point)
 			{
 				await city.Enqueue(0,1,bidWall,bspotWall,false);
@@ -239,7 +244,7 @@ public static class DoTheStuff
 									{
 										bool hasCabinsInLayout = cabinsInLayout.Any();
 
-										var c = hasCabinsInLayout ? cabinsInLayout.First() : new BuildC(x, y);// (int x, int y) c = RandCitySpot();
+										var c = hasCabinsInLayout ? cabinsInLayout.First() : new BuildC(x,y);// (int x, int y) c = RandCitySpot();
 										if(hasCabinsInLayout)
 										{
 											cabinsInLayout.RemoveAt(0);
@@ -331,7 +336,7 @@ public static class DoTheStuff
 									{
 
 										var xx = await CheckMoveSlots();
-										if (xx == -1)
+										if(xx == -1)
 										{
 											return false;
 										}
@@ -378,9 +383,9 @@ public static class DoTheStuff
 										if(bc.buildingCount >= buildingLimit)
 											break;
 										var xx = await CheckMoveSlots();
-										if (xx == -1)
+										if(xx == -1)
 										{
-											
+
 											return false;
 										}
 
@@ -399,7 +404,7 @@ public static class DoTheStuff
 
 								}
 							}
-						//	if(bc.buildingCount < buildingLimit)
+							//	if(bc.buildingCount < buildingLimit)
 							{
 								// do the rest
 								var todo = FindPendingOverlayBuildings(city);
@@ -408,7 +413,7 @@ public static class DoTheStuff
 									if(bc.buildingCount >= buildingLimit)
 										break;
 									var xx = await CheckMoveSlots();
-									if (xx == -1)
+									if(xx == -1)
 									{
 										return false;
 									}
@@ -431,15 +436,15 @@ public static class DoTheStuff
 						}
 						else
 						{
-						Note.Show($"Main buildings still building (i.e. {QueueTab.FindFirstUnfinishedBuilding(city)})");
-					}
+							Note.Show($"Main buildings still building (i.e. {QueueTab.FindFirstUnfinishedBuilding(city)})");
+						}
 						Assert(city.isBuild);
 
 						break;
 					}
-			case City.BuildStage.mainBuildings:
+				case City.BuildStage.mainBuildings:
 				case BuildStage.kindOfDone:
-			case City.BuildStage.preTeardown:
+				case City.BuildStage.preTeardown:
 				case City.BuildStage.teardown:
 					{
 						if(city.buildStage == BuildStage.kindOfDone)
@@ -448,10 +453,10 @@ public static class DoTheStuff
 						}
 
 						const int maxCommands = 15;
-						if ( bc.unfinishedBuildings > 4)
+						if(bc.unfinishedBuildings > 4)
 						{
-							if (await AppS.DoYesNoBox($"{bc.unfinishedBuildings} unfinished buildings",
-								    $"continue with teardown anyway in {city.nameAndRemarks}?") != 1)
+							if(await AppS.DoYesNoBox($"{bc.unfinishedBuildings} unfinished buildings",
+									$"continue with teardown anyway in {city.nameAndRemarks}?") != 1)
 							{
 								return true;
 							}
@@ -489,7 +494,7 @@ public static class DoTheStuff
 								var sel = combo.SelectedIndex;
 								if(sel >= 0)
 									Settings.cabinsToRemovePerSwap = cabinCounts[sel];
-							//	Settings.SaveAll();
+								//	Settings.SaveAll();
 								return 1;
 							}
 							if(res == ContentDialogResult.Secondary)
@@ -510,14 +515,14 @@ public static class DoTheStuff
 							var commandLimit = Settings.cabinsToRemovePerSwap * 2;
 							if(!todo.Any())
 							{
-							// 
+								// 
 								Note.Show("No pending buildings?  That doesn't seem right..");
 							}
 							var todoGet = 0;
 							for(;;)
 							{
 								var count = (commandLimit - city.GetBuildQueueLength());
-								if(count < 2 || todoGet >= todo.Length )
+								if(count < 2 || todoGet >= todo.Length)
 									break;
 								var xx = await CheckMoveSlots();
 								if(xx == -1)
@@ -549,7 +554,7 @@ public static class DoTheStuff
 				case City.BuildStage.complete:
 					Note.Show("Complete :)");
 					break;
-			default:
+				default:
 					Assert(false);
 					break;
 			}
@@ -565,12 +570,22 @@ public static class DoTheStuff
 				await city.UpgradeToLevel(Settings.autoWallLevel,IdToXY(bspotWall),false);
 
 			}
-			city.NotifyChange();
-		//	BuildTab.GetBuildInfo();
+			city.OnPropertyChanged();
+			//	BuildTab.GetBuildInfo();
 			if(Settings.clearRes && !city.leaveMe)
 			{
 				await city.ClearResUI();
 			}
+		}
+		catch(Exception _ex)
+		{
+			LogEx(_ex);
+
+		}
+		finally 
+		{
+			city.BuildOpEnd();
+		}
 			return true;
 
 		}
