@@ -400,7 +400,7 @@ namespace CnV
 		{
 			try
 			{
-				await AppS.StartHost(args:args.Arguments,OnReady:async () =>
+				await AppS.StartHost(OnReady:async () =>
 				{
 
 					Assert(AppS.state == AppS.State.loading);

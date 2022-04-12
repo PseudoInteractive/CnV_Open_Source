@@ -15,7 +15,9 @@ namespace CnV;
 
     partial class AppS
     {
-        public static async Task StartHost( Func<Task> OnReady,string args )
+			internal static bool isTest;
+
+	public static async Task StartHost( Func<Task> OnReady )
         {
             var host = new HostBuilder()
                 .ConfigureLogging((hostContext, config) =>
@@ -31,7 +33,10 @@ namespace CnV;
                 {
                     config.AddJsonFile("appsettings.json", optional: true);
                     config.AddJsonFile($"appsettings.{hostContext.HostingEnvironment.EnvironmentName}.json", optional: true);
-                    config.AddCommandLine(new[] { args }); // todo: parse these
+                    config.AddCommandLine(Environment.GetCommandLineArgs()); // todo: parse these
+					var bb = config.Build();
+					if(bb["test"] == "1")
+						AppS.isTest = true;
                 })
                 .ConfigureServices((hostContext, services) =>
                 {
@@ -57,9 +62,10 @@ namespace CnV;
 
             using (host)
             {
+				
                 // Start the host
                 await host.StartAsync();
-
+			     
 				await OnReady();
                 // Wait for the host to shutdown
                 await host.WaitForShutdownAsync();

@@ -310,6 +310,7 @@ namespace CnV
 
 				}
 			}
+			Assert(xQ.Count == rtQ.Count);
 			Assert(xQ.Count == lg);
 			for(int i=0;i<lg;++i)
 			{
@@ -380,7 +381,7 @@ namespace CnV
 			// restore callback
 
 		}
-		internal DebounceA buildCityChangeDebounce = new(BuildCityChanged) { runOnUiThread=true,debounceDelay=100 };
+		//internal DebounceA buildCityChangeDebounce = new(BuildCityChanged) { runOnUiThread=true,debounceDelay=100 };
 
 		internal string TroopsHomeS => city?.troopsHere.Format(separator: ',');
 		internal string TroopsOwnedS => city?.troopsOwned.Format(separator: ',');
@@ -677,8 +678,10 @@ namespace CnV
 
 		internal static void Invalidate()
 		{
-			if(Sim.isPastWarmup)
-				instance?.buildCityChangeDebounce.Go();
+			Note.Show("Invalidate");
+			if(Sim.isPastWarmup && instance != null )
+				AppS.QueueOnUIThread(BuildCityChanged);
+//				instance?.buildCityChangeDebounce.Go();
 		
 			
 		}
@@ -1180,8 +1183,16 @@ namespace CnV
 				new CnVEventReturnTroops(army).EnqueueAsap();
 			//	instance.commandItems.Remove(this);
 			});
-			
-			
+			flyout.AddItem("Return All",Symbol.Delete,() =>
+			{
+				new CnVEventReturnTroops(army.sourceC,CnVEventReturnTroops.outgoingAll).EnqueueAsap();
+			//	instance.commandItems.Remove(this);
+			});
+			flyout.AddItem("Return Raids",Symbol.Refresh,() =>
+			{
+				new CnVEventReturnTroops(army.sourceC,CnVEventReturnTroops.outgoingRaidsFast).EnqueueAsap();
+			//	instance.commandItems.Remove(this);
+			});
 			// Todo: Sort
 
 			if(args.TryGetPosition(sender,out var c))

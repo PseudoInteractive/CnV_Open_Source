@@ -97,10 +97,10 @@
 				</StackPanel>-->
 	
 		<CommandBar.PrimaryCommands  >
-					<AppBarElementContainer  Visibility="Collapsed" VerticalAlignment="Center">
+					<AppBarElementContainer x:Name="progressContainer" Visibility="Collapsed" VerticalAlignment="Center">
 						<ProgressRing x:Name="progress" IsActive="False" />
 					</AppBarElementContainer>
-					<AppBarElementContainer Visibility="Collapsed">
+					<AppBarElementContainer Visibility="Collapsed" x:Name="workContainer" >
 						<TextBlock  x:Name="work" x:FieldModifier="public" Margin="6,0,6,0" VerticalAlignment="Center" Width="255" />
 					</AppBarElementContainer>
 					<AppBarElementContainer VerticalAlignment="Center" >
@@ -355,7 +355,7 @@
 					  Grid.RowSpan="2" 
 					  Margin="0"
 					  Padding="0"
-					  Width="240"
+					  Width="300"
 						MinHeight="20"
 					  ExpandDirection="Up"
 					  Canvas.ZIndex="35"   >
@@ -365,7 +365,7 @@
 				</Expander.Header>
 				<ListView x:Name="InAppNote" x:FieldModifier="public"  Margin="0" Padding="0"
 						  Background="#aa140030"
-                   ItemsSource="{x:Bind inAppNotes,Mode=OneWay}"  MaxHeight="200"  >
+                   ItemsSource="{x:Bind inAppNotes,Mode=OneWay}"  MaxHeight="250"  >
 					<ListView.ItemTemplate>
 						<DataTemplate  x:DataType="x:String"  >
 							<TextBlock  x:Name="message" Text="{x:Bind }"  Margin="1"  Padding="0,0,0,0"    

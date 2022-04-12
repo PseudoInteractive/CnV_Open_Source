@@ -65,7 +65,6 @@ namespace CnV.Views
 				IServerTime.SetTimeScale(value.Clamp(minTimeScale,maxTimeScale));
 				OnPropertyChanged("timeScaleSlider");
 			}
-
 		}
 		static float RoundNicely(float d)
 		{
@@ -79,9 +78,6 @@ namespace CnV.Views
 				return MathF.Round(d/100)*100;
 			else
 				return MathF.Round(d/1000)*1000;
-
-
-
 		}
 		// slider ranges from or 0..10, 2^(x-2) 1/4 .. 256
 		static double SliderToTimeScale(double v) => v<= 0 ? 0 : Math.Pow(2,v-2);
@@ -191,11 +187,12 @@ namespace CnV.Views
 										{
 											if(!workQueue.Any())
 											{
+												(instance.progressContainer).Visibility = Visibility.Visible;
+												(instance.workContainer).Visibility = Visibility.Visible;
 												instance.progress.IsActive = true;
 												// FIX
 												workStarted              = DateTime.UtcNow;
 												instance.work.Text       = desc;
-												instance.work.Visibility = Visibility.Visible;
 											}
 
 											workQueue.Add(desc);
@@ -209,7 +206,7 @@ namespace CnV.Views
 			AppS.DispatchOnUIThreadLow(() => { instance.work.Text = desc; });
 		}
 
-		public static void WorkEnd(string desc)
+		public static void WorkEnd(string desc=null)
 		{
 			AppS.DispatchOnUIThreadLow(() =>
 										{
@@ -226,7 +223,10 @@ namespace CnV.Views
 												}
 												else
 												{
-													workQueue.Remove(desc);
+													if(desc  is null)
+														workQueue.RemoveAt(0);
+													else
+														workQueue.Remove(desc);
 												}
 											}
 
@@ -234,8 +234,9 @@ namespace CnV.Views
 											{
 												instance.progress.IsActive = false;
 
-												// FIX
-												instance.work.Visibility = Visibility.Collapsed;
+												(instance.progressContainer).Visibility = Visibility.Collapsed;
+												(instance.workContainer).Visibility = Visibility.Collapsed;
+
 											}
 											else
 											{
@@ -336,6 +337,9 @@ namespace CnV.Views
 				WorkScope.Start  = WorkStart;
 				WorkScope.End    = WorkEnd;
 				WorkScope.Update = WorkUpdate;
+
+				WorkStart("Sign in");
+
 				//		SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += App.App_CloseRequested; ;
 				//typeof(Telerik.UI.Xaml.Controls.RadDataForm).Assembly.GetType("Telerik.UI.Xaml.Controls.TelerikLicense").GetField("messageDisplayed",BindingFlags.NonPublic|BindingFlags.Static).SetValue(null,true,BindingFlags.Static|BindingFlags.NonPublic,null,null);
 				//var signinTask = await CnVSignin.Go();// Task.Run(CnVSignin.Go);
@@ -459,6 +463,8 @@ namespace CnV.Views
 				AppS.SetState(AppS.State.setup);
 
 				Log("Game Create!");
+				
+
 				try
 				{
 					GameClient.Create(_canvas);
@@ -537,7 +543,7 @@ namespace CnV.Views
 					await CnVSignin.SignOut();
 
 				}
-
+				WorkUpdate("Init");
 				await CnVClient.InitializeGame();
 		//		Player.activePlayerChanged += (p0,p1) => AppS.UpdateAppTitle();
 				while(!Sim.isPastWarmup)

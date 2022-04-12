@@ -2,6 +2,7 @@
   "profiles": {
     "MyApp": {
       "commandName": "MsixPackage",
+      "commandLineArgs": "--test=1",
       "alwaysReinstallApp": false,
       "hotReloadEnabled": false,
       "remoteDebugEnabled": false,

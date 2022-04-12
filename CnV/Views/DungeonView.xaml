@@ -108,12 +108,10 @@
 						  Margin="6,2,6,2" >
 				<ComboBoxItem>No delay</ComboBoxItem>
 				<ComboBoxItem>5 Seconds</ComboBoxItem>
-				<ComboBoxItem>15 Seconds</ComboBoxItem>
+				<ComboBoxItem>10 Seconds</ComboBoxItem>
+				<ComboBoxItem>30 Seconds</ComboBoxItem>
 				<ComboBoxItem>1 Minute</ComboBoxItem>
-				<ComboBoxItem>15 Minutes</ComboBoxItem>
-				<ComboBoxItem>30 Minutes</ComboBoxItem>
-				<ComboBoxItem>45 Minutes</ComboBoxItem>
-				<ComboBoxItem>1 Hour</ComboBoxItem>
+				<ComboBoxItem>5 Minutes</ComboBoxItem>
 			</ComboBox>
 			<ToggleSwitch Header="Repeat" Width="90"
 								   IsOn="{x:Bind cnv:Settings.wantRaidRepeat, Mode=TwoWay}"

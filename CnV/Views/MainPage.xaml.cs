@@ -366,25 +366,26 @@ namespace CnV.Views
 					sel = Spot.GetSelectedForContextMenu(0,false,onlyMine: true);
 				}
 			}
-			var totalSent1=0;
-			for(int iter0=0;iter0<4;++iter0)
+		//	var totalSent1=0;
+		//	for(int iter0=0;iter0<4;++iter0)
 			{
-				ShellPage.WorkUpdate($"Update Raids {iter0}...");
+				ShellPage.WorkUpdate($"Update Raids...");
 				int totalSent = 0;
+				int extraSent = 0;
 				float minRaidIdle = Settings.raidSendMinIdle*0.01f;
-				for (int pass=0;pass<8;++pass)
+				for (int pass=0;pass<4;++pass)
 				{
 
-					await Task.WhenAll(Raiding.UpdateTS(true) );
+					//await Task.WhenAll(Raiding.UpdateTS(true) );
 					int counter = 0;
-					int processed = 0;
 					int max = sel.Count;
+					var sentThisPass = 0;
 					foreach (var cid in sel)
 					{
 						++counter;
 						if (counter % 16 == 0)
 						{
-							Note.ShowTip($"Auto Raid pass {iter0} {pass}: {counter}/{max}..");
+							Note.ShowTip($"Auto Raid {counter}/{max}..");
 						}
 						var c = City.Get(cid);
 						var city = Spot.GetOrAdd(cid);
@@ -392,33 +393,45 @@ namespace CnV.Views
 						{
 							if( await DungeonView.ShowDungeonList(city, true) )
 							{
-								++processed;
-								++totalSent;
+								if(pass > 0)
+								{
+									Note.Show($"Found a dungeon for leftover troops at {city}");
+									++extraSent;
+								}
+								else
+								{
+									totalSent++;
+								}
+								++sentThisPass;
+				
 							}
 						}
 
 					}
-					if (processed == 0)
+					if(sentThisPass == 0 || Settings.raidIntervals!=0)
 						break;
-					Note.Show($"Pass {pass} sent {processed} cities to raid");
+
+					for(int i=0;i<4;++i)
+					{
+						ShellPage.WorkUpdate($"Delaying for pass {pass}... {4-i}s");
+						await Task.Delay(1000);
+					}
+
 
 					// On second and further passes only send if a good number are home
 					// not ideal but it helps
-					if (Settings.raidIntervals != 0)
-						minRaidIdle = minRaidIdle.Max(4.0f / 16.0f);
+					//if (Settings.raidIntervals != 0)
+					//	minRaidIdle = minRaidIdle.Max(4.0f / 16.0f);
 				}
-				Note.ShowTip($"Auto Raid Pass {iter0} {sel.Count}/{sel.Count}");
-				Note.Show($"Sent {totalSent.Min(sel.Count)} Raids (from {sel.Count} selected)");
-				totalSent1 += totalSent;
-				if(totalSent == 0)
-					break;
-				for(int i=0;i<5;++i)
-				{
-					ShellPage.WorkUpdate($"Delaying for pass {iter0}... {5-i}s");
-					await Task.Delay(5000);
+				Note.Show($"Sent {totalSent} cities to raid");
+
+			//	Note.ShowTip($"Auto Raid Pass {iter0} {sel.Count}/{sel.Count}");
+			//	Note.Show($"Sent {totalSent.Min(sel.Count)} Raids (from {sel.Count} selected)");
+//				totalSent1 += totalSent;
+//				if(totalSent == 0)
+//					break;
 				}
-			}
-			Note.Show($"Total Sent {totalSent1.Min(sel.Count)} Raids (from {sel.Count} selected)");
+			//Note.Show($"Total Sent {totalSent1.Min(sel.Count)} Raids (from {sel.Count} selected)");
 
 		}
 
