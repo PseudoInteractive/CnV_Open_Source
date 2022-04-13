@@ -512,23 +512,23 @@ public static class DoTheStuff
 							var todo = FindPendingOverlayBuildings(city);
 							int milBid = bc.GetMainMilitaryBid();
 							var barracks = FindPendingOverlayBuildingsOfType(city,100,bidBarracks).OrderByDescending(a => GetBarrackScore(city,a,milBid)).ToList();
-							var commandLimit = Settings.cabinsToRemovePerSwap * 2;
+						//	var commandLimit = Settings.cabinsToRemovePerSwap * 2;
 							if(!todo.Any())
 							{
 								// 
 								Note.Show("No pending buildings?  That doesn't seem right..");
 							}
 							var todoGet = 0;
-							for(;;)
+							for(int swap=0;swap<Settings.cabinsToRemovePerSwap;++swap)
 							{
-								var count = (commandLimit - city.GetBuildQueueLength());
-								if(count < 2 || todoGet >= todo.Length)
+							//	var count = (commandLimit - city.GetBuildQueueLength());
+								if(todoGet >= todo.Length)
 									break;
-								var xx = await CheckMoveSlots();
-								if(xx == -1)
-									return false;
-								if(xx == 0)
-									break;
+								//var xx = await CheckMoveSlots();
+								//if(xx == -1)
+								//	return false;
+								//if(xx == 0)
+								//	break;
 
 								var c = IdToXY(todo[todoGet++]);
 
@@ -544,8 +544,8 @@ public static class DoTheStuff
 									Note.Show("Something unusual happened");
 									break;
 								}
-								bc = city.GetBuildingCounts();
 							}
+							bc = city.GetBuildingCounts();
 							Assert(city.isBuild);
 
 						}

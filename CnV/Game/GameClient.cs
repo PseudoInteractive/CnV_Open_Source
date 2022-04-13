@@ -376,7 +376,7 @@ namespace CnV
 					int mips = IsMultipleOf4(meta.Width,meta.Height) ?  meta.MipLevels : 1;
 					if(mips==1)
 					{
-						Log("not multiple of 4");
+				//		Log("not multiple of 4");
 					}
 					var rv = new Texture2D(instance.GraphicsDevice,RoundUpTo4(meta.Width),RoundUpTo4(meta.Height),mips,format,meta.ArraySize);
 

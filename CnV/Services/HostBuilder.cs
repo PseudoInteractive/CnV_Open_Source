@@ -22,8 +22,8 @@ namespace CnV;
             var host = new HostBuilder()
                 .ConfigureLogging((hostContext, config) =>
                 {
-                    config.AddConsole();
-                    config.AddDebug();
+               //     config.AddConsole();
+                 //   config.AddDebug();
                 })
                 .ConfigureHostConfiguration(config =>
                 {
@@ -45,17 +45,17 @@ namespace CnV;
 
                     // Application Insights
                     // Add custom TelemetryInitializer
-                    services.AddSingleton<ITelemetryInitializer, MyCustomTelemetryInitializer>();
+                 //   services.AddSingleton<ITelemetryInitializer, MyCustomTelemetryInitializer>();
 
                     // Add custom TelemetryProcessor
-                    services.AddApplicationInsightsTelemetryProcessor<MyCustomTelemetryProcessor>();
+                 //   services.AddApplicationInsightsTelemetryProcessor<MyCustomTelemetryProcessor>();
 
                     // Example on Configuring TelemetryModules.
                     // [SuppressMessage("Microsoft.Security", "CS002:SecretInNextLine", Justification="Not a real api key, this is example code.")]
-                    services.ConfigureTelemetryModule<QuickPulseTelemetryModule>((mod, opt) => mod.AuthenticationApiKey = "e18c4e59-5c78-46cc-8dad-cfd1c8ecb062");
+               //     services.ConfigureTelemetryModule<QuickPulseTelemetryModule>((mod, opt) => mod.AuthenticationApiKey = "e18c4e59-5c78-46cc-8dad-cfd1c8ecb062");
 
                     // instrumentation key is read automatically from appsettings.json
-                    services.AddApplicationInsightsTelemetryWorkerService();
+                    services.AddApplicationInsightsTelemetryWorkerService("e18c4e59-5c78-46cc-8dad-cfd1c8ecb062");
                 })
                 
                 .Build();
