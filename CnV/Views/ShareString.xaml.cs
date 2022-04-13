@@ -239,77 +239,94 @@ namespace CnV.Views
 					   var setName = NameBlade.IsOpen;
 					   var autobuild = AutobuildBlade.IsOpen;
 					   var wantInfoUpdate = false;
-					   if(setTags)
-					   {
-						   await SetCityTags(cid);
-						   wantInfoUpdate=true;
-						   //await CitySettings.SetCitySettings(City.build, setRecruit: true);
-						   if(Settings.setRecruit)
+					   
+						SocketClient.DeferSendStart();
+
+						   try
 						   {
-							   CitySettings.SetRecruitFromTags(city);
-						   }
-
-					   }
-					   var nameWasNull = city.info.name.IsNullOrEmpty();
-					   if(NameBlade.IsOpen)
-					   {
-						   city.info.name = cityName.Text;
-						   city.info.notes = cityNotes.Text;
-						   city.info.remarks = cityRemarks.Text;
-
-						   city.OnPropertyChanged();
-						   //city.BuildStageDirty();
-						   //await Post.Get("includes/nnch.php",$"a={HttpUtility.UrlEncode(city._cityName,Encoding.UTF8)}&cid={cid}",World.CidToPlayerOrMe(cid));
-						   Note.Show($"Set name to {city._cityName}");
-						   wantInfoUpdate=true;
-					   }
-					   if(wantInfoUpdate)
-					   {
-						   city.SaveInfo();
-					   }
-
-					   //var req = new Resources((int)reqWood.Value, (int)reqStone.Value, (int)reqIron.Value, (int)reqFood.Value);
-					   //var max = new Resources((int)maxWood.Value, (int)maxStone.Value, (int)maxIron.Value, (int)maxFood.Value);
-					   //Settings.reqWood = req.wood;
-					   //Settings.reqStone = req.stone;
-					   //Settings.reqIron = req.iron;
-					   //Settings.reqFood = req.food;
-
-					   //Settings.maxWood = max.wood;
-					   //Settings.maxStone = max.stone;
-					   //Settings.maxIron = max.iron;
-					   //Settings.maxFood = max.food;
-					   if(autobuild)
-					   {
-						   city.SetAutobuild(Settings.autobuildOn,autoTowers: Settings.autobuildTowers,
-								autoWalls: Settings.autobuildWalls, cabinLevel: (sbyte)Settings.cottageLevel ) ;
-						}
-
-						   if(setTrade)
-						   {
-							   var reqFilter = res.reqFilter;
-							   var sendFilter = (!city.isHubOrStorage) ? res.sendFilter : ResourceFilter._null;
-							   //			await CitySettings.SetTradeResourcesSettings(city.cid,req,max);
-							  city.SetTradeSettings(
-									  reqHub: (setTrade ? res.reqHub.city switch { City a => a.cid, _ => 0 } : null),
-									  targetHub: (setTrade ? res.sendHub.city switch { null => 0, var a => a.cid } : null),
-									   cartReserve: setTrade ? res.cartReserve : null,
-									  shipReserve: setTrade ? res.shipReserve : null,
-									   req: (setTrade ? res.req : ResourcesNullable._null),
-									   max: (setTrade ? res.max : ResourcesNullable._null),
-									  reqFilter: (setTrade ? reqFilter : ResourceFilter._null),
-									  sendFilter: (setTrade ? sendFilter : ResourceFilter._null));
-
-						   }
-
-						   if(LayoutBlade.IsOpen)
-						   {
-							   await city.SetShareString(await GetShareStringWithJson(),true);
-
-							   if(Settings.autoRearrangeShareStrings && city.isLayoutCustom)
+							   if(setTags)
 							   {
-								   await PlannerTab.SmartRearrange(city,true);
+								   await SetCityTags(cid);
+								   wantInfoUpdate=true;
+								   //await CitySettings.SetCitySettings(City.build, setRecruit: true);
+								   if(Settings.setRecruit)
+								   {
+									   CitySettings.SetRecruitFromTags(city);
+								   }
+
 							   }
+							   var nameWasNull = city.info.name.IsNullOrEmpty();
+							   if(NameBlade.IsOpen)
+							   {
+								   city.info.name = cityName.Text;
+								   city.info.notes = cityNotes.Text;
+								   city.info.remarks = cityRemarks.Text;
+
+								   city.OnPropertyChanged();
+								   //city.BuildStageDirty();
+								   //await Post.Get("includes/nnch.php",$"a={HttpUtility.UrlEncode(city._cityName,Encoding.UTF8)}&cid={cid}",World.CidToPlayerOrMe(cid));
+								   Note.Show($"Set name to {city._cityName}");
+								   wantInfoUpdate=true;
+							   }
+							   if(wantInfoUpdate)
+							   {
+								   city.SaveInfo();
+							   }
+
+							   //var req = new Resources((int)reqWood.Value, (int)reqStone.Value, (int)reqIron.Value, (int)reqFood.Value);
+							   //var max = new Resources((int)maxWood.Value, (int)maxStone.Value, (int)maxIron.Value, (int)maxFood.Value);
+							   //Settings.reqWood = req.wood;
+							   //Settings.reqStone = req.stone;
+							   //Settings.reqIron = req.iron;
+							   //Settings.reqFood = req.food;
+
+							   //Settings.maxWood = max.wood;
+							   //Settings.maxStone = max.stone;
+							   //Settings.maxIron = max.iron;
+							   //Settings.maxFood = max.food;
+							   if(autobuild)
+							   {
+								   city.SetAutobuild(Settings.autobuildOn,autoTowers: Settings.autobuildTowers,
+										autoWalls: Settings.autobuildWalls,cabinLevel: (sbyte)Settings.cottageLevel);
+							   }
+
+							   if(setTrade)
+							   {
+								   var reqFilter = res.reqFilter;
+								   var sendFilter = (!city.isHubOrStorage) ? res.sendFilter : ResourceFilter._null;
+								   //			await CitySettings.SetTradeResourcesSettings(city.cid,req,max);
+								   city.SetTradeSettings(
+										   reqHub: (setTrade ? res.reqHub.city switch { City a => a.cid, _ => 0 } : null),
+										   targetHub: (setTrade ? res.sendHub.city switch { null => 0, var a => a.cid } : null),
+											cartReserve: setTrade ? res.cartReserve : null,
+										   shipReserve: setTrade ? res.shipReserve : null,
+											req: (setTrade ? res.req : ResourcesNullable._null),
+											max: (setTrade ? res.max : ResourcesNullable._null),
+										   reqFilter: (setTrade ? reqFilter : ResourceFilter._null),
+										   sendFilter: (setTrade ? sendFilter : ResourceFilter._null));
+
+							   }
+
+							   if(LayoutBlade.IsOpen)
+							   {
+								   // This wasts a save
+								   await city.SetShareString(await GetShareStringWithJson(),true);
+
+								   if(Settings.autoRearrangeShareStrings && city.isLayoutCustom)
+								   {
+									   await PlannerTab.SmartRearrange(city,true);
+								   }
+							   }
+
+						   }
+						   catch(Exception _ex)
+						   {
+							   LogEx(_ex);
+
+						   }
+						   finally
+						   {
+							   SocketClient.DeferSendEnd();
 						   }
 						   city.BuildStageDirty();
 

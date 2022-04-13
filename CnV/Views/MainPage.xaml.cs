@@ -380,33 +380,49 @@ namespace CnV.Views
 					int counter = 0;
 					int max = sel.Count;
 					var sentThisPass = 0;
-					foreach (var cid in sel)
+
+					SocketClient.DeferSendStart();
+
+					try
 					{
-						++counter;
-						if (counter % 16 == 0)
+						foreach(var cid in sel)
 						{
-							Note.ShowTip($"Auto Raid {counter}/{max}..");
-						}
-						var c = City.Get(cid);
-						var city = Spot.GetOrAdd(cid);
-						if(city.raidIdle >= minRaidIdle )
-						{
-							if( await DungeonView.ShowDungeonList(city, true) )
+							++counter;
+							if(counter % 16 == 0)
 							{
-								if(pass > 0)
-								{
-									Note.Show($"Found a dungeon for leftover troops at {city}");
-									++extraSent;
-								}
-								else
-								{
-									totalSent++;
-								}
-								++sentThisPass;
-				
+								Note.ShowTip($"Auto Raid {counter}/{max}..");
 							}
+							var c = City.Get(cid);
+							var city = Spot.GetOrAdd(cid);
+							if(city.raidIdle >= minRaidIdle)
+							{
+								if(await DungeonView.ShowDungeonList(city,true))
+								{
+									if(pass > 0)
+									{
+										Note.Show($"Found a dungeon for leftover troops at {city}");
+										++extraSent;
+									}
+									else
+									{
+										totalSent++;
+									}
+									++sentThisPass;
+
+								}
+							}
+
 						}
 
+					}
+					catch(Exception _ex)
+					{
+						LogEx(_ex);
+
+					}
+					finally
+					{
+						SocketClient.DeferSendEnd();
 					}
 					if(sentThisPass == 0 || Settings.raidIntervals!=0)
 						break;
