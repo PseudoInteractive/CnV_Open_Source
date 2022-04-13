@@ -139,8 +139,8 @@ internal partial class GameClient
 	const float circleRadMin = 3.0f;
 	const float circleRadMax = 5.5f;
 	static Vector2 shadowOffset = new Vector2(4,4);
-	const float detailsZoomThreshold = 16;
-	const float detailsZoomFade = 4;
+	const float detailsZoomThreshold = 18;
+	const float detailsZoomFade = 8;
 
 	//	static float LineThickness(bool hovered) => hovered ? lineThickness * 2 : lineThickness;
 	const float rectSpanMin = 4.0f;
@@ -312,6 +312,7 @@ internal partial class GameClient
 			var cityAlphaI = (int)(cityAlpha * 255.0f);
 
 			//var wantFade = wantImage; // world to region fade
+			var regionFade = (deltaZoom / detailsZoomFade).Saturate(); // 0 means world view, 1 measns region view
 			var regionAlpha = 1;// wantFade ? (deltaZoom / detailsZoomFade).Saturate().Sqrt() : 1.0f;
 			var intAlpha = byte.MaxValue;
 			var nameAlpha = (byte)162;
@@ -464,6 +465,9 @@ internal partial class GameClient
 					lightCCParam.SetValue(lightC);
 					lightCWParam.SetValue(lightC.CameraToWorld());
 					viewCWParam.SetValue(viewW);
+					var waterGain = regionFade.Lerp(0.5f,1.0f);
+					var terrainGain = regionFade.Lerp(0.25f,1.0f);
+					tileGains.SetValue(new Vector4(terrainGain,waterGain,terrainGain,1));
 					//	ToolTips.debugTip = $"{XVector3.Normalize(lightCC).ToNumerics().Format()} {AUtil.Format(lightCC.ToNumerics())}";
 					var sat = Settings.lightSat;
 					// Hue night
@@ -833,7 +837,7 @@ internal partial class GameClient
 						//	var c = WorldC.FromCid(viewW).continentClamped;
 						for(int i = cc0x;i<=cc1x;++i)
 							for(int j = cc0y;j<=cc1y;++j)
-								draw.AddMesh(World.renderTileMeshes[i,j],Layer.tileBase,World.renderTileMaterial);
+								draw.AddMesh(World.renderTileMeshes[i,j],Layer.tileBase, World.renderTileMaterial);
 					}
 				}
 

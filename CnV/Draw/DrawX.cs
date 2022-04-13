@@ -55,6 +55,7 @@ static partial class View
 				
 				Material.shadowEffect   = EffectPass("Shadow");
 				World.tileEffect =EffectPassOpaque("LitTile", blendReplace,false);
+			//	World.tileWorldEffect =EffectPassOpaque("LitTileWorld", blendReplace,false);
 				World.unlitTileEffect =EffectPassOpaque("UnLitTile",blendReplace,false);
 				animatedSpriteEffect   = EffectPass("SpriteAnim");
 				sdfEffect              = EffectPass("SDF");
@@ -74,6 +75,7 @@ static partial class View
 			//	lightPositionParameter = avaEffect.Parameters["lightPosition"];
 				lightCCParam = avaEffect.Parameters["lightCC"];
 				lightCWParam = avaEffect.Parameters["lightCW"];
+				tileGains= avaEffect.Parameters["tileGains"];
 				//planetGainsParamater = avaEffect.Parameters["planetGains"];
 				//lightGainsParameter = avaEffect.Parameters["lightGains"];
 				lightColorParameter = avaEffect.Parameters["lightColor"];

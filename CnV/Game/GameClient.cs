@@ -74,6 +74,7 @@ namespace CnV
 		public static EffectParameter viewCWParam;
 //		public static      EffectParameter lightPositionParameter;
 		public static      EffectParameter lightCCParam;
+		public static      EffectParameter tileGains;
 		public static      EffectParameter lightCWParam;
 //		public static      EffectParameter lightGainsParameter;
 		public static      EffectParameter lightAmbientParameter;
