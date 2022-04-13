@@ -250,6 +250,7 @@ namespace CnV.Views
 			{
 				BuildTab.instance.ShowOrAdd(true);
 				SpotTab.instance.ShowOrAdd(true);
+
 				ChatTab.tabPage.AddChatTabs();
 			});
 		}
@@ -275,6 +276,7 @@ namespace CnV.Views
 			{    "Recent" ,  "\uF738" },
 			{  "NearDefense", "\uEA18" },
 			{ "alliance", "\uE902" },
+			{ "player", "\uE902" },
 			{ "Outgoing","\uE189" },
 			{ "Hits","\uEA69" },
 			{ "Heat", "\uF738" },

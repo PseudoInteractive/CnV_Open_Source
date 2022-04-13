@@ -57,6 +57,7 @@ public partial class UserTab:UserControl, IANotifyPropertyChanged
 		userTabs = new UserTab[] {
 				new BuildTab(),
 				new MainPage(),
+				new PlayerTab(),
 				new IncomingTab(),
 				new DonationTab(),
 				new HitHistoryTab(),
@@ -344,7 +345,13 @@ public partial class UserTab:UserControl, IANotifyPropertyChanged
 			e.ToolTip.Content = tt;
 		else
 		{
-			if(e.Record is City city)
+			if(e.Record is Player player)
+			{
+				if(e.Column.MappingName is ( nameof(Player.avatarImage)  ) )
+					e.ToolTip.Content = new Image { Source = player.avatarImage };
+
+			}
+			else if(e.Record is City city)
 			{
 				if(e.Column.MappingName is ( "nameAndRemarks"  ) )
 					e.ToolTip.Content = city.toolTip;

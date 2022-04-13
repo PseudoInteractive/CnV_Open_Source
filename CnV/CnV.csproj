@@ -160,6 +160,7 @@
     <Compile Include="Views\CityStats.xaml.cs" />
     <Compile Include="Views\CnVSwapChainPanel.cs" />
     <Compile Include="Views\PlayerStats.xaml.cs" />
+    <Compile Include="Views\PlayerTab.xaml.cs" />
     <Compile Include="Xaml\IconText.cs" />
     <Manifest Include="$(ApplicationManifest)" />
     <Compile Include="Activation\CommandLineActivationHandler.cs" />
@@ -511,6 +512,9 @@
     <Page Include="Views\PlayerStats.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\PlayerTab.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
 	  <Page Include="Views\QueueTab.xaml">
 		  <SubType>Designer</SubType>
 		  <Generator>MSBuild:Compile</Generator>
@@ -650,6 +654,7 @@
     <None Remove="Views\DefenderPage.xaml" />
     <None Remove="Views\DefendTab.xaml" />
     <None Remove="Views\PlayerStats.xaml" />
+    <None Remove="Views\PlayerTab.xaml" />
     <None Remove="Views\ReinforcementsTab.xaml" />
     <None Remove="Views\Signin.xaml" />
     <None Remove="Views\SigninPage.xaml" />
