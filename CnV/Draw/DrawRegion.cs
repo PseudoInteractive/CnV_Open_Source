@@ -290,7 +290,7 @@ internal partial class GameClient
 			pixelScale       = 1.0f/pixelScaleInverse;
 
 			dipScaleInverse = (float)(pixelScaleInverse*dipToNative*Settings.dpiAdjust);
-		//	dipScale       = 1.0f/dipScaleInverse;
+			//	dipScale       = 1.0f/dipScaleInverse;
 
 			//halfSquareOffset = new System.Numerics.Vector2(pixelScale * 0.5f, pixelScale * .5f);
 			var bonusLayerScale = (2 * Settings.iconScale)*MathF.Sqrt(pixelScale / 64.0f).DipToWorld();
@@ -657,7 +657,7 @@ internal partial class GameClient
 
 			if(hideSceneCounter <= 0)
 			{
-				
+
 				//Assert(City.build != 0);
 				if(false)
 				{
@@ -1080,7 +1080,7 @@ internal partial class GameClient
 									if(!outgoingVisible)
 										continue;
 								}
-								var list = City.subCities; //defenders ? Spot.defendersI : Spot.defendersO;
+								var list = City.allCities; //defenders ? Spot.defendersI : Spot.defendersO;
 								bool noneIsAll = list.Length <= Settings.showAttacksLimit;
 								bool showAll = list.Length <= Settings.showAttacksLimit0 ||(isIncoming ? Settings.incomingAlwaysVisible : Settings.attacksAlwaysVisible);
 								foreach(var city in list)
@@ -1096,7 +1096,9 @@ internal partial class GameClient
 										if(IsSquareCulledWC(c1,cullSlopSpace))  // this is in pixel space - Should be normalized for screen resolution or world space (1 continent?)
 											continue;
 										var incAttacks = 0;
+										var incDef = 0;
 										var incTs = 0u;
+										var hasSettle = false;
 										var sieged = false;
 										var hasSen = false;
 										var hasArt = false;
@@ -1114,6 +1116,7 @@ internal partial class GameClient
 													c = returnColor;  // returning carts
 												else
 													c = Color.White;
+												hasSettle=true;
 											}
 											else if(i.isRaid)
 											{
@@ -1126,12 +1129,13 @@ internal partial class GameClient
 											else if(i.isDefense)
 											{
 												c = i.arrival <= serverNow ? defenseArrivedColor : defenseColor;
+												++incDef;
 											}
 											else if(i.isAttack)
 											{
 												++incAttacks;
 												incTs += i.ts;
-												
+
 												if(i.hasSenator)
 												{
 													c = senatorColor; ;
@@ -1141,7 +1145,7 @@ internal partial class GameClient
 													hasArt = true;
 													c = artColor;
 												}
-												else if(i.isSiege)
+												else if(i.isSiege) // intel maybe available
 												{
 													c = siegeColor;
 												}
@@ -1150,7 +1154,7 @@ internal partial class GameClient
 													hasAssault = true;
 													c = assaultColor;
 												}
-												sieged |= i.isSiege;
+												sieged |= i.isSieging;
 												hasSen |= i.hasSenator;
 											}
 											else
@@ -1189,26 +1193,64 @@ internal partial class GameClient
 										}
 										if(isIncoming)
 										{
-											if(hasArt)
-												DrawRectOutlineShadow(Layer.effects - 1,cityCid,artColor,null,1,-2f);
-											if(hasSen)
-												DrawRectOutlineShadow(Layer.effects - 1,cityCid,senatorColor,null,1,-6f);
-											if(hasAssault)
-												DrawRectOutlineShadow(Layer.effects - 1,cityCid,assaultColor,null,1,-10f);
-											if(sieged)
-												DrawRectOutlineShadow(Layer.effects-1,cityCid,siegeColor,null,1,-12f);
-											
-
-											if(!IsCulledWC(c1) && (wantDetails || showAll || Spot.IsSelectedOrHovered(cityCid,noneIsAll)))
+											if(incAttacks > 0)
 											{
-												DrawTextBox($"{incAttacks}{city.IncomingInfo()}\n{ (city.tsDefMax + 999) / 1000 }k",
-														c1.ToVector(),tipTextFormatCentered,incAttacks != 0 ? Color.White : Color.Cyan,textBackgroundOpacity,Layer.tileText);
+												Material sprite = null;
+												if(sieged)
+												{
+													if(hasSen)
+														sprite = siege1Material;
+													else
+														sprite = siege0Material;
+												}
+												else
+												{
+													if(city.isMine)
+														sprite = attack2Material;
+													else if(city.IsAllyOrNap())
+														sprite = attack0Material;
+													else
+														sprite = attack1Material;
+
+
+												}
+												float spriteSize = spriteSizeGain;
+
+												var mid = new Vector2(c1.x + 0.25f, c1.y-0.25f);
+												var _c0 = new Vector2(mid.X - spriteSize,mid.Y - spriteSize);
+												var _c1 = new Vector2(mid.X + spriteSize,mid.Y + spriteSize);
+												draw.AddQuadWithShadow(Layer.action + 4,Layer.effectShadow,sprite,_c0,_c1,Color.White,shadowColor,zEffects);
 											}
+											if(incDef > 0)
+											{
+												Material sprite = defenseMaterial;
+												float spriteSize = spriteSizeGain;
+
+												var mid = new Vector2(c1.x - 0.25f, c1.y-0.25f);
+												var _c0 = new Vector2(mid.X - spriteSize,mid.Y - spriteSize);
+												var _c1 = new Vector2(mid.X + spriteSize,mid.Y + spriteSize);
+												draw.AddQuadWithShadow(Layer.action + 4,Layer.effectShadow,sprite,_c0,_c1,Color.White,shadowColor,zEffects);
+											}
+											if(hasSettle)
+											{
+												Material sprite = defenseMaterial;
+												float spriteSize = spriteSizeGain;
+
+												var mid = new Vector2(c1.x, c1.y);
+												var _c0 = new Vector2(mid.X - spriteSize,mid.Y - spriteSize);
+												var _c1 = new Vector2(mid.X + spriteSize,mid.Y + spriteSize);
+												draw.AddQuadWithShadow(Layer.action + 4,Layer.effectShadow,sprite,_c0,_c1,Color.White,shadowColor,zEffects);
+											}
+											//if(!IsCulledWC(c1) && (wantDetails || showAll || Spot.IsSelectedOrHovered(cityCid,noneIsAll)))
+											//{
+											//	DrawTextBox($"{incAttacks}{city.IncomingInfo()}\n{ (city.tsDefMax + 999) / 1000 }k",
+											//			c1.ToVector(),tipTextFormatCentered,incAttacks != 0 ? Color.White : Color.Cyan,textBackgroundOpacity,Layer.tileText);
+											//}
 										}
 										else
 										{
-											if(city.hasOutgoingAttacks)
-												DrawRectOutlineShadow(Layer.effects - 1,cityCid,attackColor,null,1,-8f);
+											//if(city.hasOutgoingAttacks)
+											//	DrawRectOutlineShadow(Layer.effects - 1,cityCid,attackColor,null,1,-8f);
 										}
 									}
 								}
@@ -1240,13 +1282,13 @@ internal partial class GameClient
 						var tradePartlyVisible = Settings.tradesVisible == null;
 						if(tradesVisible)
 						{
-							
-	
+
+
 							var cullSlopSpace = (32 * pixelScale).RoundToInt();
 							for(int iOrO = 0;iOrO < 2;++iOrO)
 							{
 								var isIncoming = (iOrO == 0);
-								
+
 								var list = City.subCities; //defenders ? Spot.defendersI : Spot.defendersO;
 								bool showAll = !tradePartlyVisible;
 								foreach(var city in list)
@@ -1254,7 +1296,7 @@ internal partial class GameClient
 									if(!city.testContinentFilter) // || !(showAll || Spot.IsSelectedOrHovered(city.cid) ))
 										continue;
 
-									
+
 									{
 
 										var cityCid = city.cid;
@@ -1269,8 +1311,8 @@ internal partial class GameClient
 											if(IsSegmentCulledWC(c0,c1))
 												continue;
 
-											var c = i.isReturning ? returnColor :  Color.Green;  
-											if(!(showAll || Spot.IsSelectedOrHovered(i.sourceCid, i.targetCid) ))
+											var c = i.isReturning ? returnColor : Color.Green;
+											if(!(showAll || Spot.IsSelectedOrHovered(i.sourceCid,i.targetCid)))
 											{
 												continue;
 											}
@@ -1288,13 +1330,13 @@ internal partial class GameClient
 												{
 													_c0 = c1; _c1 = c0;
 												}
-												DrawAction( (i.isReturning ? i.returnTime : i.arrival) - Sim.simTime,i.travelTime,r,
+												DrawAction((i.isReturning ? i.returnTime : i.arrival) - Sim.simTime,i.travelTime,r,
 													_c0.ToVector(),
-												_c1.ToVector(),c,tradeImages[i.viaWater.Switch(0,1)] ,
+												_c1.ToVector(),c,tradeImages[i.viaWater.Switch(0,1)],
 												true,i,alpha: 255,lineThickness: lineThickness,highlight: false);
 											}
 										}
-										
+
 									}
 								}
 							}
@@ -1337,10 +1379,10 @@ internal partial class GameClient
 												color = new Color(255,0,0,255);
 											}
 
-											var c0 = new System.Numerics.Vector2(wc.x + (xT0 * 0.8f - 0.5f) ,
-																		wc.y   + (0.25f - yt1 * 0.5f) );
-											var c1 = new System.Numerics.Vector2(wc.x + (xT1 * 0.8f - 0.5f) ,
-																		wc.y   + 0.25f               );
+											var c0 = new System.Numerics.Vector2(wc.x + (xT0 * 0.8f - 0.5f),
+																		wc.y   + (0.25f - yt1 * 0.5f));
+											var c1 = new System.Numerics.Vector2(wc.x + (xT1 * 0.8f - 0.5f),
+																		wc.y   + 0.25f);
 											DrawRect(Layer.actionOverlay,c0,c1,color,zEffects);
 											// shadow TODO
 											DrawRect(Layer.action,c0,c1,CColor(a: 192),0);
@@ -1367,7 +1409,7 @@ internal partial class GameClient
 										var hover = cityHover;// | Spot.IsHover(toCid);
 										DrawAction(wc.ToVector() - sendOffset,c1- sendOffset,hover ? tradeColorHover : tradeColor,lineThickness,hover);
 									}
-									foreach(var toCid in mo.requestCities )
+									foreach(var toCid in mo.requestCities)
 									{
 										if(needsHover && (toCid!=City.viewHover))
 											continue;
@@ -1585,7 +1627,7 @@ internal partial class GameClient
 												(incomingStatus.IsUnderSiege() ? nameColorSiegedHover : nameColorIncomingHover)
 											   : (incomingStatus.IsUnderSiege() ? nameColorSieged : nameColorIncoming))
 											   : hovered ? nameColorHover
-											   : spot.hasOutgoingAttacks  ? nameColorOutgoing
+											   : spot.hasOutgoingAttacks ? nameColorOutgoing
 											   : nameColor));
 
 										DrawTextBox(name,drawC,nameTextFormat,wantDarkText ? color.A.AlphaToBlack() : Color.White,
@@ -1668,7 +1710,7 @@ internal partial class GameClient
 			//}
 
 			// show selected
-			
+
 			if(underMouse!= priorUnderMouse)
 			{
 				ToolTips.actionToolTip = underMouse;

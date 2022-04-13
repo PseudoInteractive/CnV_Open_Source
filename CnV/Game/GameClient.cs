@@ -32,6 +32,7 @@ namespace CnV
 
 		static readonly Color attackColor = Color.White;
 		static Color ShadowColor(float alpha, bool highlight = false) => new Color(highlight ? 16 : 0, highlight ? 0 : 0, highlight ? 0 : 8, (int)(220 * alpha));
+		static readonly Color shadowColor =  new Color( 0,0, 8,220);
 		static readonly Color returnColor = new Color(60, 30, 200, 255);
 		static readonly Color defenseColor = new Color(00, 255, 225, 225);
 		static readonly Color defenseArrivedColor = new Color(90, 250, 225, 255);
@@ -86,6 +87,16 @@ namespace CnV
 		public static      Material        whiteMaterial;
 		public static      Material        shadowMaterial; // no texture
 //		public static      Material        sky;
+		public static      Material        siege0Material;
+		public static      Material        siege1Material;
+		public static      Material        attack0Material;
+		public static      Material        attack1Material;
+		public static      Material        attack2Material;
+
+		public static      Material        defenseMaterial;
+		public static      Material        settleMaterial;
+		public static      Material        returnMaterial;
+
 		public GameClient()
 		{
 

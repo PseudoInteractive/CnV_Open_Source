@@ -49,7 +49,7 @@ static partial class View
 				Material.litRegionOpaqueEffect = EffectPassOpaque(Material.litRegionEffect,blendAlphaAdd,true);
 				Material.unlitRegionOpaqueEffect = EffectPassOpaque(Material.unlitRegionEffect,blendAlphaAdd,true);
 				
-			Material.litAnimatedEffect              = EffectPass("LitAnimated");
+				Material.litAnimatedEffect              = EffectPass("LitAnimated");
 				Material.unlitAnimatedEffect              = EffectPass("UnlitAnimated");
 				Material.shadowAnimatedEffect              = EffectPass("ShadowAnimated");
 				
@@ -178,6 +178,20 @@ static partial class View
 				{
 					tradeImages[i] = LoadMaterial($"Art/icons/trade{i}");
 				}
+				attack0Material =  LoadMaterial($"Art/Region/UI/icon_player_alliance_attack");
+				attack1Material =  LoadMaterial($"Art/Region/UI/icon_player_own_attack");
+				attack2Material =  LoadMaterial($"Art/Region/UI/icon_player_selfunder_attack");
+
+				siege0Material =  LoadMaterial($"Art/Region/UI/icon_player_alliance_siege");
+				siege1Material =  LoadMaterial($"Art/Region/UI/icon_player_selfunder_siege");
+
+
+				settleMaterial =  LoadMaterial($"Art/Region/UI/icon_player_own_settlement");
+				defenseMaterial =  LoadMaterial($"Art/Region/UI/icon_player_own_support_inc");
+				returnMaterial =  LoadMaterial($"Art/Region/UI/icon_player_own_troops_ret");
+
+				returnMaterial =  LoadMaterial($"Art/Region/UI/icon_player_own_troops_ret");
+
 				//// create a full screen rendertarget
 				//RemakeRenderTarget();
 

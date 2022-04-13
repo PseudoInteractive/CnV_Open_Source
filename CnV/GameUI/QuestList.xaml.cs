@@ -84,7 +84,7 @@ namespace CnV
 				b.IsEnabled=false;
 			await Task.Delay(1000); // wait 1s for event to execut
 			foreach(var i in questGroups)
-				i.OnPropertyChanged();
+				i.OnPropertyChangedImmediate();
 			PropertyChanged?.Invoke(this,new(String.Empty));
 			
 		}

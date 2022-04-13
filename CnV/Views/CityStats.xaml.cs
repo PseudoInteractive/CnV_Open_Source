@@ -328,19 +328,35 @@ namespace CnV
 				//var firstVisible = instance.buildQueueListView.vis
 				
 				var city = instance.city;
-				var displayQueue = city.outgoing.Concat(city.incoming).OrderBy(a => a.arrival).ToArray();
-				int lg = displayQueue.Length;
-				var bq = instance.commandItems;
-			
-				var anyRemoved=SyncLists(displayQueue,bq,(rt,city)=>new CommandItem(rt),(a,b)=>a == b.army );
-				if(commandsDirty)
 				{
-					foreach(var i in bq)
+					var displayQueue = city.outgoing.OrderBy(a => a.arrival).ToArray();
+					int lg = displayQueue.Length;
+					var bq = instance.commandItems;
+
+					var anyRemoved = SyncLists(displayQueue,bq,(rt,city) => new CommandItem(rt),(a,b) => a == b.army);
+					if(commandsDirty)
 					{
-						//i.UpdateAction();
-						i.OnPropertyChanged();
+						foreach(var i in bq)
+						{
+							//i.UpdateAction();
+							i.OnPropertyChanged();
+						}
+						commandsDirty=false;
 					}
-					commandsDirty=false;
+				}
+				{
+					var displayQueue = city.incoming.Where(a=>a.isDefense).OrderBy(a => a.arrival).ToArray();
+					int lg = displayQueue.Length;
+					var bq = instance.reinforcementItems;
+
+					var anyRemoved = SyncLists(displayQueue,bq,(rt,city) => new CommandItem(rt),(a,b) => a == b.army);
+				}
+				{
+					var displayQueue = city.incoming.Where(a=>a.isAttack).OrderBy(a => a.arrival).ToArray();
+					int lg = displayQueue.Length;
+					var bq = instance.incomingItems;
+
+					var anyRemoved = SyncLists(displayQueue,bq,(rt,city) => new CommandItem(rt),(a,b) => a == b.army);
 				}
 				// keep first in view
 				//if(anyRemoved && bq.Any() )
@@ -388,6 +404,8 @@ namespace CnV
 		internal string IncomingReinforcements => city?.incomingReinforcements.Format(separator: ',');
 
 		internal Visibility TroopsHomeVisible => city?.troopsOwned != new TroopTypeCounts(city.troopsHere) ? Visibility.Visible : Visibility.Collapsed;
+
+		internal Visibility incomingVisible => city.incoming.Any(a=>a.isAttack) ? Visibility.Visible : Visibility.Collapsed;
 
 		internal Visibility IncomingReinforcementsVisible => city.incomingReinforcements.Any()==true? Visibility.Visible : Visibility.Collapsed;
 
@@ -464,7 +482,7 @@ namespace CnV
 						var bdd = !hasBeenDisplayed ? GetBuildingCounts(city) : default;
 						var t = Sim.simTime;
 #if DEBUG
-						ShellPage.instance.timeDisplay.Text = $"{t.FormatWithYear()} Frame {GameClient.renderFrame/60}";
+						ShellPage.instance.timeDisplay.Text = $"{t.FormatWithYear()}\nFrame {GameClient.renderFrame/60} d0:{AppS.dispatches0} d1:{AppS.dispatches1}";
 #else
 						ShellPage.instance.timeDisplay.Text = t.FormatWithYear();
 #endif
@@ -522,7 +540,7 @@ namespace CnV
 									Colors.LightGray : Colors.LightBlue));
 
 
-								rr.OnPropertyChanged();
+								rr.OnPropertyChangedImmediate();
 							}
 						}
 						if(expBuildQueue.IsExpanded)
@@ -678,7 +696,6 @@ namespace CnV
 
 		internal static void Invalidate()
 		{
-			Note.Show("Invalidate");
 			if(Sim.isPastWarmup && instance != null )
 				AppS.QueueOnUIThread(BuildCityChanged);
 //				instance?.buildCityChangeDebounce.Go();
@@ -735,6 +752,8 @@ namespace CnV
 		internal ObservableCollection<BuildItem> buildQueue = new();
 		internal ObservableCollection<RecruitItem> recruitQueue = new();
 		internal ObservableCollection<CommandItem> commandItems= new();
+		internal ObservableCollection<CommandItem> reinforcementItems= new();
+		internal ObservableCollection<CommandItem> incomingItems= new();
 		internal ObservableCollection<TradeItem> tradeItems= new();
 		internal ResourceItem[] resourceItems = new[] { new ResourceItem() {r= 0},new ResourceItem() {r= 1},new ResourceItem() {r= 2},new ResourceItem() {r= 3}  };
 		private void UserControl_Loaded(object sender,RoutedEventArgs e)
@@ -1132,10 +1151,10 @@ namespace CnV
 	public class CommandItem:INotifyPropertyChanged
 	{
 		internal Army army;
-		
+		internal bool isOutgoing => army.sourceCid == City.build;
 	//	public string sourceCoords=> army.sourceCity.nameAndRemarksAndPlayer;
 	//	public string targetCoords=> army.targetCity.nameAndRemarksAndPlayer;
-		public string info => $"{army.NextStopTimeString(' ')} {army.splitsS}{(army.isReturn ? "from" : "to")} {(army.sourceCid == City.build ? army.targetCity: army.sourceCity)}";
+		public string info => $"{army.NextStopTimeString(' ')} {army.splitsS}{(army.isReturn^isOutgoing ? "to" : "from" )} {(isOutgoing ? army.targetCity: army.sourceCity)}";
 
 		//internal void SourceClick(object sender,RoutedEventArgs e)
 		//{
@@ -1143,7 +1162,7 @@ namespace CnV
 		//}
 		internal void TargetClick(object sender,RoutedEventArgs e)
 		{
-			CityUI.ShowCity(army.sourceCid == City.build ? army.targetCid : army.sourceCid,false);
+			CityUI.ShowCity(isOutgoing ? army.targetCid : army.sourceCid,false);
 		}
 
 

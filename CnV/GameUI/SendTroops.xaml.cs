@@ -42,8 +42,7 @@ namespace CnV
 		{
 			this.InitializeComponent();
 			instance = this;
-			arrivalDate.SelectedDate =(DateTimeOffset.UtcNow);
-			arrivalTime.SelectedTime =(DateTimeOffset.UtcNow);
+			
 		}
 
 		private void UpdateTroopItems()

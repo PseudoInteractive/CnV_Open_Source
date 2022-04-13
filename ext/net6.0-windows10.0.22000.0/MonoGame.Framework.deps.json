@@ -8,7 +8,7 @@
     ".NETCoreApp,Version=v6.0": {
       "MonoGame.Framework/1.0.0": {
         "dependencies": {
-          "Microsoft.WindowsAppSDK": "1.0.1",
+          "Microsoft.WindowsAppSDK": "1.0.2",
           "SharpDX": "4.2.0",
           "SharpDX.DXGI": "4.2.0",
           "SharpDX.Direct3D11": "4.2.0",
@@ -46,7 +46,7 @@
         }
       },
       "Microsoft.Windows.SDK.BuildTools/10.0.22000.194": {},
-      "Microsoft.WindowsAppSDK/1.0.1": {
+      "Microsoft.WindowsAppSDK/1.0.2": {
         "dependencies": {
           "Microsoft.Windows.SDK.BuildTools": "10.0.22000.194"
         },
@@ -57,7 +57,7 @@
           },
           "lib/net5.0-windows10.0.18362.0/Microsoft.WinUI.dll": {
             "assemblyVersion": "3.0.0.0",
-            "fileVersion": "3.0.0.2203"
+            "fileVersion": "3.0.0.2204"
           },
           "lib/net5.0-windows10.0.18362.0/Microsoft.Windows.AppLifecycle.Projection.dll": {
             "assemblyVersion": "1.0.0.0",
@@ -908,12 +908,12 @@
       "path": "microsoft.windows.sdk.buildtools/10.0.22000.194",
       "hashPath": "microsoft.windows.sdk.buildtools.10.0.22000.194.nupkg.sha512"
     },
-    "Microsoft.WindowsAppSDK/1.0.1": {
+    "Microsoft.WindowsAppSDK/1.0.2": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-JpGOsTzW6jQ29DZxxGyelgZ/8GvLdhbh/KKgAbIofZvRWIA/h/eMxhUdlYA5QJJyzOVN/MmBueiJF8GTS5+HhQ==",
-      "path": "microsoft.windowsappsdk/1.0.1",
-      "hashPath": "microsoft.windowsappsdk.1.0.1.nupkg.sha512"
+      "sha512": "sha512-1frlcyTPP8l+6GfslYXveEvkL9w0JuugSVUeKxmrZNS0Dg2uuNAczasuEqNd8M+nFFjlmAVMz9CsbQSFyb2Q4A==",
+      "path": "microsoft.windowsappsdk/1.0.2",
+      "hashPath": "microsoft.windowsappsdk.1.0.2.nupkg.sha512"
     },
     "NETStandard.Library/1.6.1": {
       "type": "package",

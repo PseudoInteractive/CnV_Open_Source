@@ -55,7 +55,28 @@
 				</ComboBox.ItemTemplate>
 			</ComboBox>
 
-			<Expander Header="Incoming" Expanding="Expander_Expanding"  Visibility="Collapsed" x:Name="expIncoming" HorizontalAlignment="Stretch"  >
+			<Expander IsExpanded="True" Expanding="Expander_Expanding" Visibility="{x:Bind incomingVisible,Mode=OneWay}"  x:Name="expIncoming" HorizontalAlignment="Stretch" Background="{StaticResource ExpanderBrushContent}"   >
+				<Expander.Header   >
+					
+						<TextBlock Text ="Incoming" Margin="0"   Style="{StaticResource TextBlockMedium}"  HorizontalAlignment="Right"  />
+				</Expander.Header>
+				<ListView 
+						  SelectionMode="Single"  
+						  Margin="0" Padding="0" HorizontalAlignment="Stretch" 
+						HorizontalContentAlignment="Stretch"
+						ItemsSource="{x:Bind incomingItems,Mode=OneWay}"
+						   >
+					<ListView.ItemTemplate>
+						<DataTemplate x:DataType="cnv:CommandItem">
+							<StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" ToolTipService.ToolTip="{x:Bind toolTip, Mode=OneWay}" ContextRequested="{x:Bind ContextRequested}"   >
+								<Image Source="{x:Bind action, Mode=OneWay}"  />
+
+								<HyperlinkButton Content="{x:Bind info, Mode=OneWay}" Click="{x:Bind TargetClick}" />
+							</StackPanel>
+						</DataTemplate>
+					</ListView.ItemTemplate>
+				</ListView>
+
 			</Expander>
 			<Expander Background="{StaticResource ExpanderBrushContent}" Expanding="Expander_Expanding" IsExpanded="True"   x:Name="expResource" HorizontalAlignment="Stretch"  >
 				<ToolTipService.ToolTip >
@@ -138,27 +159,7 @@
 						</TransitionCollection>
 					</ListView.ItemContainerTransitions>
 
-					<!-- The ItemsStackPanel must be edited to update the following two properties -->
-					<!-- These properties allow the list to grow from the bottom -->
-					<ListView.ItemsPanel>
-						<ItemsPanelTemplate>
-							<ItemsStackPanel 
-								ItemsUpdatingScrollMode="KeepItemsInView" 
-								
-                            VerticalAlignment="Center"/>
-						</ItemsPanelTemplate>
-					</ListView.ItemsPanel>
-					<!-- This setter property is created so ListViewItems correctly align to the left or right. -->
-					<!--<ListView.ItemContainerStyle>
-						<Style TargetType="ListViewItem">
-							<Setter Property="Margin" Value="1" />
-							<Setter Property="Padding" Value="0" />
-							<Setter Property="VerticalAlignment" Value="Center"/>
-							<Setter Property="VerticalContentAlignment" Value="Center"/>
-							<Setter Property="Background" Value="#8020"/>
-						</Style>
-					</ListView.ItemContainerStyle>-->
-
+					
 				</ListView>
 			</Expander>
 
@@ -245,27 +246,7 @@
 
 					</ListView.ItemTemplate>
 
-					<!-- The ItemsStackPanel must be edited to update the following two properties -->
-					<!-- These properties allow the list to grow from the bottom -->
-					<ListView.ItemsPanel>
-						<ItemsPanelTemplate>
-							<ItemsStackPanel 
-								ItemsUpdatingScrollMode="KeepItemsInView" 
-								
-                            VerticalAlignment="Center"/>
-						</ItemsPanelTemplate>
-					</ListView.ItemsPanel>
-					<!-- This setter property is created so ListViewItems correctly align to the left or right. -->
-					<!--<ListView.ItemContainerStyle>
-						<Style TargetType="ListViewItem">
-							<Setter Property="Margin" Value="1" />
-							<Setter Property="Padding" Value="0" />
-							<Setter Property="VerticalAlignment" Value="Center"/>
-							<Setter Property="VerticalContentAlignment" Value="Center"/>
-							<Setter Property="Background" Value="#8020"/>
-						</Style>
-					</ListView.ItemContainerStyle>-->
-
+					
 				</ListView>
 
 			</Expander>
@@ -285,8 +266,8 @@
 					</Button>
 				</Expander.Header>
 
-				<ListView x:Name="CommandsListView" x:FieldModifier="public"  
-						  SelectionMode="Extended"  
+				<ListView  
+						  SelectionMode="Single"  
 						  Margin="0" Padding="0" HorizontalAlignment="Stretch" 
 						
 						HorizontalContentAlignment="Stretch"
@@ -302,28 +283,6 @@
 							</StackPanel>
 						</DataTemplate>
 					</ListView.ItemTemplate>
-
-					<!-- The ItemsStackPanel must be edited to update the following two properties -->
-					<!-- These properties allow the list to grow from the bottom -->
-					<ListView.ItemsPanel>
-						<ItemsPanelTemplate>
-							<ItemsStackPanel 
-								ItemsUpdatingScrollMode="KeepItemsInView" 
-								
-                            VerticalAlignment="Center"/>
-						</ItemsPanelTemplate>
-					</ListView.ItemsPanel>
-					<!-- This setter property is created so ListViewItems correctly align to the left or right. -->
-					<!--<ListView.ItemContainerStyle>
-						<Style TargetType="ListViewItem">
-							<Setter Property="Margin" Value="1" />
-							<Setter Property="Padding" Value="0" />
-							<Setter Property="VerticalAlignment" Value="Center"/>
-							<Setter Property="VerticalContentAlignment" Value="Center"/>
-							<Setter Property="Background" Value="#8020"/>
-						</Style>
-					</ListView.ItemContainerStyle>-->
-
 				</ListView>
 
 			</Expander>
@@ -359,6 +318,25 @@
 							<TextBlock Text="Incoming" Style="{StaticResource TextBlockMedium}" Margin="4" />
 							<TextBlock Text="{x:Bind IncomingReinforcements, Mode=OneWay}"  Style="{StaticResource TextBlockMedium}"  
 									   TextWrapping="Wrap" FontSize="16" MaxLines="8" Margin="8,2,2,2" />
+							<ListView 
+						  SelectionMode="Single"  
+						  Margin="0" Padding="0" HorizontalAlignment="Stretch" 
+						
+						HorizontalContentAlignment="Stretch"
+						 
+						ItemsSource="{x:Bind reinforcementItems,Mode=OneWay}"
+						  MaxHeight="200"  >
+								<ListView.ItemTemplate>
+									<DataTemplate x:DataType="cnv:CommandItem">
+										<StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" ToolTipService.ToolTip="{x:Bind toolTip, Mode=OneWay}" ContextRequested="{x:Bind ContextRequested}"   >
+											<Image Source="{x:Bind action, Mode=OneWay}"  />
+
+											<HyperlinkButton Content="{x:Bind info, Mode=OneWay}" Click="{x:Bind TargetClick}" />
+										</StackPanel>
+									</DataTemplate>
+								</ListView.ItemTemplate>
+							</ListView>
+
 						</StackPanel>
 					</Border>
 				</StackPanel>
@@ -397,27 +375,7 @@
 						</TransitionCollection>
 					</ListView.ItemContainerTransitions>
 
-					<!-- The ItemsStackPanel must be edited to update the following two properties -->
-					<!-- These properties allow the list to grow from the bottom -->
-					<ListView.ItemsPanel>
-						<ItemsPanelTemplate>
-							<ItemsStackPanel 
-								ItemsUpdatingScrollMode="KeepItemsInView" 
-								
-                            VerticalAlignment="Center"/>
-						</ItemsPanelTemplate>
-					</ListView.ItemsPanel>
-					<!-- This setter property is created so ListViewItems correctly align to the left or right. -->
-					<!--<ListView.ItemContainerStyle>
-						<Style TargetType="ListViewItem">
-							<Setter Property="Margin" Value="1" />
-							<Setter Property="Padding" Value="0" />
-							<Setter Property="VerticalAlignment" Value="Center"/>
-							<Setter Property="VerticalContentAlignment" Value="Center"/>
-							<Setter Property="Background" Value="#8020"/>
-						</Style>
-					</ListView.ItemContainerStyle>-->
-
+					
 				</ListView>
 			</Expander>
 

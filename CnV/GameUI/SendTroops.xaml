@@ -23,8 +23,10 @@
 			<!--<TextBox   VerticalAlignment="Center" Text="{x:Bind arrival,Mode=TwoWay,Converter={StaticResource SmallTimeConverter}}"
                Description="arrival" PlaceholderText="ASAP"    ToolTipService.ToolTip="Time of arrival, leave blank to send as soon as possible" />-->
 
-			<sfe:SfDatePicker x:Name="arrivalDate" Description="arrival date" AllowNull="True" PlaceholderText="Today" DisplayDateFormat="MM/dd" DayFormat="u"  />
-			<sfe:SfTimePicker x:Name="arrivalTime"  Description="arrival time" ClockIdentifier="24HourClock" AllowNull="True" PlaceholderText="ASAP" DisplayTimeFormat="HH:mm:ss"  />
+			<sfe:SfDatePicker x:Name="arrivalDate" Description="arrival date" AllowNull="True" PlaceholderText="Today" DisplayDateFormat="MM/dd" 
+							  ToolTipService.ToolTip="clear to send today" />
+			<sfe:SfTimePicker x:Name="arrivalTime"  Description="arrival time" 
+			ToolTipService.ToolTip="clear to send immediately" 		ClockIdentifier="24HourClock" AllowNull="True" PlaceholderText="ASAP" DisplayTimeFormat="HH:mm:ss"  />
 
 			<StackPanel Orientation="Horizontal" Padding="0" x:Name="raidPanel" >
 				<TextBlock Text="Splits" Margin="12,2,0,2" VerticalAlignment="Center" />

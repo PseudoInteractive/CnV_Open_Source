@@ -62,11 +62,7 @@ namespace CnV.Views
 		{
 			get => IServerTime.timeScale;
 			set {
-			if(!AppS.isSinglePlayer)
-			{
-				Note.Show("Only works in single player mode");
-				return;
-			}
+			
 
 
 				IServerTime.SetTimeScale(value.Clamp(minTimeScale,maxTimeScale));
@@ -107,11 +103,7 @@ namespace CnV.Views
 		{
 			if(!e.OldValue.AlmostEquals(e.NewValue,1.0f/2.0f))
 			{
-			if(!AppS.isSinglePlayer)
-			{
-				AppS.MessageBox("Only works in single player mode");
-				return;
-			}
+			
 
 				var v = SliderToTimeScale(e.NewValue);
 				IServerTime.SetTimeScale((float)v);
@@ -155,11 +147,7 @@ namespace CnV.Views
 			}
 			if(!e.OldValue.IsEqualTo(e.NewValue,1.0f/4.0f))
 			{
-			if(!AppS.isSinglePlayer)
-			{
-				AppS.MessageBox("Only works in single player mode");
-				return;
-			}
+			
 
 				IServerTime.SetTimeScale((float)e.NewValue);
 			}
