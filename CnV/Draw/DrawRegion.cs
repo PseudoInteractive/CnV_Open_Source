@@ -1102,7 +1102,7 @@ internal partial class GameClient
 										var sieged = false;
 										var hasSen = false;
 										var hasArt = false;
-										var hasAssault = false;
+										//	var hasAssault = false;
 										foreach(var i in isIncoming ? city.incoming : city.outgoing)
 										{
 											var c0 = isIncoming ? i.sourceCid.CidToWorld() : i.targetCid.CidToWorld();
@@ -1117,6 +1117,19 @@ internal partial class GameClient
 												else
 													c = Color.White;
 												hasSettle=true;
+												// outgoing
+												// if(hasSettle)
+												{
+													Assert(!isIncoming);
+													Material sprite = settleMaterial;
+													float spriteSize = spriteSizeGain;
+
+													var mid = c0;
+													var _c0 = new Vector2(mid.x - spriteSize,mid.y - spriteSize);
+													var _c1 = new Vector2(mid.x + spriteSize,mid.y + spriteSize);
+													draw.AddQuadWithShadow(Layer.action + 4,Layer.effectShadow,sprite,_c0,_c1,Color.White,shadowColor,zEffects);
+												}
+
 											}
 											else if(i.isRaid)
 											{
@@ -1151,7 +1164,7 @@ internal partial class GameClient
 												}
 												else
 												{
-													hasAssault = true;
+													//	hasAssault = true;
 													c = assaultColor;
 												}
 												sieged |= i.isSieging;
@@ -1216,7 +1229,7 @@ internal partial class GameClient
 												}
 												float spriteSize = spriteSizeGain;
 
-												var mid = new Vector2(c1.x + 0.25f, c1.y-0.25f);
+												var mid = new Vector2(c1.x + 0.25f,c1.y-0.25f);
 												var _c0 = new Vector2(mid.X - spriteSize,mid.Y - spriteSize);
 												var _c1 = new Vector2(mid.X + spriteSize,mid.Y + spriteSize);
 												draw.AddQuadWithShadow(Layer.action + 4,Layer.effectShadow,sprite,_c0,_c1,Color.White,shadowColor,zEffects);
@@ -1226,21 +1239,12 @@ internal partial class GameClient
 												Material sprite = defenseMaterial;
 												float spriteSize = spriteSizeGain;
 
-												var mid = new Vector2(c1.x - 0.25f, c1.y-0.25f);
+												var mid = new Vector2(c1.x - 0.25f,c1.y-0.25f);
 												var _c0 = new Vector2(mid.X - spriteSize,mid.Y - spriteSize);
 												var _c1 = new Vector2(mid.X + spriteSize,mid.Y + spriteSize);
 												draw.AddQuadWithShadow(Layer.action + 4,Layer.effectShadow,sprite,_c0,_c1,Color.White,shadowColor,zEffects);
 											}
-											if(hasSettle)
-											{
-												Material sprite = defenseMaterial;
-												float spriteSize = spriteSizeGain;
 
-												var mid = new Vector2(c1.x, c1.y);
-												var _c0 = new Vector2(mid.X - spriteSize,mid.Y - spriteSize);
-												var _c1 = new Vector2(mid.X + spriteSize,mid.Y + spriteSize);
-												draw.AddQuadWithShadow(Layer.action + 4,Layer.effectShadow,sprite,_c0,_c1,Color.White,shadowColor,zEffects);
-											}
 											//if(!IsCulledWC(c1) && (wantDetails || showAll || Spot.IsSelectedOrHovered(cityCid,noneIsAll)))
 											//{
 											//	DrawTextBox($"{incAttacks}{city.IncomingInfo()}\n{ (city.tsDefMax + 999) / 1000 }k",
@@ -1249,6 +1253,7 @@ internal partial class GameClient
 										}
 										else
 										{
+
 											//if(city.hasOutgoingAttacks)
 											//	DrawRectOutlineShadow(Layer.effects - 1,cityCid,attackColor,null,1,-8f);
 										}

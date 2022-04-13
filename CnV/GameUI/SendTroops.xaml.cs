@@ -57,7 +57,8 @@ namespace CnV
 		}
 
 		bool isRaid => type==ArmyType.raid; 
-
+		bool isDefense => type==ArmyType.defense && !isSettle;
+		int splits => isDefense || isRaid ? splitsCombo.SelectedIndex+1 : 1;
 
 		public static void ShowInstance(City city,City target,bool isSettle,bool viaWater=false, ArmyType type = ArmyType.defense)
 		{
@@ -108,6 +109,12 @@ namespace CnV
 				if(verbose) AppS.MessageBox($"Please send something");
 				return false;
 			}
+			if(city.freeCommandSlots < splits)
+			{
+				if(verbose) AppS.MessageBox($"Out of command slots");
+				return false;
+			}
+
 			return true;
 		}
 
@@ -157,9 +164,11 @@ namespace CnV
 			}
 			if(ts.Any())
 			{
+				var splits = this.splits;
+
 				var flags = (byte)(isRaid ? ((repeatCheckBox.IsChecked.Value ? Army.flagRepeating : Army.flagNone)
 									)
-									| Army.FlagSplits((int)splitsCombo.SelectedItem) : Army.flagNone);
+									| Army.FlagSplits(splits) : Army.flagNone);
 				var arrival = ServerTime.CombineDateTime(arrivalDate.SelectedDate,arrivalTime.SelectedTime);
 
 				bool okay;
