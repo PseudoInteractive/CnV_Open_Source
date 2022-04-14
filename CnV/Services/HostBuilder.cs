@@ -15,7 +15,6 @@ namespace CnV;
 
     partial class AppS
     {
-			internal static bool isTest;
 
 	public static async Task StartHost( Func<Task> OnReady )
         {
