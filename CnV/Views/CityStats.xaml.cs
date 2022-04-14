@@ -1324,13 +1324,15 @@ namespace CnV
 					{
 						const int toUse = 1;
 						var needed = toUse- Player.active.ArtifactCount(artifact);
+						if(!Artifact.Get(artifact).IsOkayToUse(toUse))
+							return;
 						SocketClient.DeferSendStart();
 
 						try
 						{
 							if(needed > 0)
 							{
-								(new CnVEventPurchaseArtifacts() { artifact =(ushort)artifact,count = (ushort)needed }).EnqueueAsap();
+								new CnVEventPurchaseArtifacts((ushort)artifact, (ushort)needed,Player.active.id).EnqueueAsap();
 							}
 
 							(new CnVEventUseArtifacts(city.c) { artifactId = (ushort)artifact,count = toUse,aux=id }).EnqueueAsap();

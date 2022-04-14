@@ -18,7 +18,7 @@
 		
 		<ComboBox Grid.Column="1" x:Name="titleComboBox" SelectedIndex="{x:Bind SselectedTitle,Mode=TwoWay}" ItemsSource="{x:Bind cnv:Title.artifactTitleNames}"
 				  HorizontalAlignment="Left" VerticalAlignment="Center" />
-		<Button Grid.Column="1" Content="Get Zirconia" Click="GetZirconiaClick" HorizontalAlignment="Right" VerticalAlignment="Center" />
+		<!--<Button Grid.Column="1" Content="Get Zirconia" Click="GetZirconiaClick" HorizontalAlignment="Right" VerticalAlignment="Center" />-->
 	</cnv:DialogG.TitleGrid>
 	
 

@@ -53,11 +53,14 @@ namespace CnV
 		{
 			var wanted = count.Value.RoundToInt();
 			int have = a.owned;
+			if(!a.IsOkayToUse(wanted))
+				return;
+
 			SocketClient.DeferSendStart();
 			try
 			{
 				if(wanted > have)
-					(new CnVEventPurchaseArtifacts() { artifact = (ushort)a.id,count = (ushort)(wanted-have) }).EnqueueAsap();
+					(new CnVEventPurchaseArtifacts( (ushort)a.id,(ushort)(wanted-have), Player.active.id) ).EnqueueAsap();
 				if(wanted > 0)
 					(new CnVEventUseArtifacts(City.build) { artifactId = (ushort)a.id,count = (ushort)wanted,aux=0 }).EnqueueAsap();
 			}
