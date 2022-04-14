@@ -1660,12 +1660,21 @@ namespace CnV.Views
 
 		private void TimeForwardClick(object sender,RoutedEventArgs e)
 		{
-			if(!AppS.isSinglePlayer)
-			{
-				AppS.MessageBox("Only works in single player mode");
-				return;
-			}
 			var dt = TimeSpanS.FromMinutes(gotoTimeOffset.Value);
+
+			if(!AppS.isSinglePlayer  )
+			{
+				if(AppS.isTest)
+				{
+					(new SocketSimControlArgs() { timeScale = IServerTime.timeScale, deltaServerTickOffset=dt }).SendToServer();
+				}
+				else
+				{
+					AppS.MessageBox("Only works in single player mode");
+				}
+				return;
+
+			}
 			Sim.RunAtStepEnd( ()=> Sim.SetTargetTime(Sim.simTime +dt) );
 		}
 
