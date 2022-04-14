@@ -1123,8 +1123,8 @@ internal partial class GameClient
 												hasSettle=true;
 												// outgoing
 												// if(hasSettle)
+												if(!isIncoming)
 												{
-													Assert(!isIncoming);
 													Material sprite = settleMaterial;
 													float spriteSize = spriteSizeGain;
 
