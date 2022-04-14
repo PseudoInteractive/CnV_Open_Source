@@ -1248,32 +1248,21 @@ namespace CnV
 
 			buildFlyout.Hide();
 			var cid = City.build;
-			await AppS.DispatchOnUIThreadExclusive(cid, async () =>
-			{
-				var dialog = new ContentDialog()
-				{
-					Title = "Are you Sure?",
-					Content = "Abandon " + City.GetOrAdd(cid).nameAndRemarks,
-					PrimaryButtonText = "Yes",
-					SecondaryButtonText = "Cancel"
-				};
-				var rv = await dialog.ShowAsync2();
-				if(rv == ContentDialogResult.Primary)
+			var rv = await AppS.DoYesNoBox("Abandon " + City.GetOrAdd(cid).ToString,"Are you sure?");
+			if(rv == 1)
 				{
 					var city = City.Get(cid);
-					Assert(false);
-					await Sim.ExecuteScriptAsync("misccommand", "abandoncity", cid);
-					city.pid = 0; //
+					
+					//city.pid = 0; //
 					if(myCities.Length > 1)
 					{
 						var closest = myCities.Min<City, (float d, City c)>(a => (a == city ? float.MaxValue : cid.DistanceTo(a.cid), a));
 						await CnVClient.CitySwitch(closest.c.cid, false);
 					}
-					await Task.Delay(500);
-					CitiesChanged();
+					new CnVEventAbandon(city.c).EnqueueAsap();
+
 				}
 
-			});
 
 		}
 
