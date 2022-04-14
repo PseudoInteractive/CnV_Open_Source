@@ -20,6 +20,7 @@ using Windows.Foundation.Collections;
 
 namespace CnV
 {
+	using static Troops;
 	public sealed partial class SendTroops:DialogG,INotifyPropertyChanged
 	{
 		internal bool viaWater;
@@ -103,6 +104,36 @@ namespace CnV
 			{
 				if(verbose) AppS.MessageBox($"Only castles can attack like that");
 				return false;
+			}
+			if( (type is (  ArmyType.siege or ArmyType.assault)) &&(!target.isCastle) )
+			{
+				if(verbose) AppS.MessageBox($"Target must be castle");
+				return false;
+			}
+			// check for water
+			if(transport is ( ArmyTransport.land or ArmyTransport.carts) )
+			{
+				if(troopItems.Any(a => a.count>0 && IsTTNaval(a.type)))
+				{
+					if(verbose) AppS.MessageBox($"Boats must go by water");
+					return false;
+				}
+				if(city.cont != target.cont)
+				{ 
+					if(verbose) AppS.MessageBox($"Land travel only to same continent");
+					return false;
+				}
+			}
+			else
+			{
+				// by water
+				// check galley space todo
+				if(!city.isOnWater || !target.isOnWater)
+				{
+					if(verbose) AppS.MessageBox($"Source and target must be on water");
+					return false;
+				}
+
 			}
 			if(!troopItems.Any(a => a.count > 0))
 			{

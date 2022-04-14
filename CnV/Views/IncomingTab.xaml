@@ -124,7 +124,7 @@
 				<sf:GridNumericColumn MappingName="scoutRange"
                                             TextAlignment="Right"
                                              IsHidden="True" />
-				<sf:GridNumericColumn MappingName="tsOff"
+				<sf:GridNumericColumn MappingName="tsOffMax"
                                              HeaderText="offense home"
 									   
 
@@ -148,7 +148,7 @@
 		<sf:SfDataGrid x:Name="armyGrid"
                         Grid.Row="2"
                         AllowFocusOnInteraction="True"
-						IsTabStop="True"
+						
 						
                                     ItemsSource="{x:Bind game:Army.EmptyArray, Mode=OneWay}"
                                     
@@ -156,14 +156,14 @@
 						
                                     FontSize="{StaticResource MediumFontSize}"
                                     HorizontalAlignment="Stretch"
-                                    RowHeight="74"
+                                    RowHeight="42"
                                     
                                     
                                     
                                     AutoGenerateColumns="False">
 			<sf:SfDataGrid.Columns>
 				<sf:GridTimeColumn
-                                                   MappingName="time"
+                                                   MappingName="T"
                                                    DisplayTimeFormat="0:dd',' HH':'mm':'ss"
                                                    TextAlignment="Center" />
 				<sf:GridHyperlinkColumn MappingName="sXY"
@@ -173,11 +173,14 @@
                                                    HeaderText="Player"
 
                                                    TextAlignment="Left" />
-				<sf:GridTextColumn MappingName="aType"
+				<sf:GridTextColumn MappingName="typeS"
 
                                                       TextAlignment="Center" />
-				<sf:GridTextColumn MappingName="miscInfo"
-                                                   HeaderText="Misc"
+				<sf:GridTextColumn MappingName="troopsS"
+
+                                                   ColumnWidthMode="Auto" 
+                                                   TextAlignment="Left" />
+				<sf:GridTextColumn MappingName="defenseAtArrival"
 
                                                    ColumnWidthMode="Auto" 
                                                    TextAlignment="Left" />
@@ -196,159 +199,8 @@
                                                    DisplayTimeFormat="0:dd',' HH':'mm':'ss"
                                                    TextAlignment="Center" />
 
-				<sf:GridTemplateColumn MappingName="Troops">
-					<sf:GridTemplateColumn.CellTemplate>
-						<DataTemplate x:DataType="cnv:Army">
-							<StackPanel Orientation="Vertical"
-                                                    Width="Auto">
-								<StackPanel Orientation="Horizontal"
-                                                        Height="54">
-									<StackPanel Orientation="Vertical"
-                                                            Width="Auto">
-										<Image Source="{Binding i0}"
-                                                           HorizontalAlignment="Center"
-                                                           Height="32" />
-										<TextBlock Text="{Binding c0}"
-                                                               FontSize="{StaticResource MediumFontSize}"
-                                                               HorizontalAlignment="Center"
-                                                               Height="22" />
-									</StackPanel>
-									<StackPanel Orientation="Vertical"
-                                                            Width="Auto">
-										<Image Source="{Binding i1}"
-                                                           HorizontalAlignment="Center"
-                                                           Height="32" />
-										<TextBlock Text="{Binding c1}"
-                                                               FontSize="{StaticResource MediumFontSize}"
-                                                               HorizontalAlignment="Center"
-                                                               Height="22" />
-									</StackPanel>
-									<StackPanel Orientation="Vertical"
-                                                            Width="Auto">
-										<Image Source="{Binding i2}"
-                                                           HorizontalAlignment="Center"
-                                                           Height="32" />
-										<TextBlock Text="{Binding c2}"
-                                                               FontSize="{StaticResource MediumFontSize}"
-                                                               HorizontalAlignment="Center"
-                                                               Height="22" />
-									</StackPanel>
-									<StackPanel Orientation="Vertical"
-                                                            Width="Auto">
-										<Image Source="{Binding i3}"
-                                                           HorizontalAlignment="Center"
-                                                           Height="32" />
-										<TextBlock Text="{Binding c3}"
-                                                               FontSize="{StaticResource MediumFontSize}"
-                                                               HorizontalAlignment="Center"
-                                                               Height="22" />
-									</StackPanel>
-								</StackPanel>
-								<TextBlock Text="{Binding ts}"
-                                                       FontSize="{StaticResource MediumFontSize}"
-                                                       HorizontalAlignment="Center"
-                                                       Height="22" />
-							</StackPanel>
-						</DataTemplate>
-					</sf:GridTemplateColumn.CellTemplate>
-				</sf:GridTemplateColumn>
-				<sf:GridTemplateColumn MappingName="Total Def">
 				
-					<sf:GridTemplateColumn.CellTemplate>
-						<DataTemplate>
-							<StackPanel Orientation="Vertical"
-                                                    Width="Auto">
-								<StackPanel Orientation="Horizontal"
-                                                        Height="54">
-									<StackPanel Orientation="Vertical"
-                                                            Width="Auto">
-										<Image Source="{Binding si0}"
-                                                           HorizontalAlignment="Center"
-                                                           Height="32" />
-										<TextBlock Text="{Binding sc0}"
-                                                               FontSize="{StaticResource MediumFontSize}"
-                                                               HorizontalAlignment="Center"
-                                                               Height="22" />
-									</StackPanel>
-									<StackPanel Orientation="Vertical"
-                                                            Width="Auto">
-										<Image Source="{Binding si1}"
-                                                           HorizontalAlignment="Center"
-                                                           Height="32" />
-										<TextBlock Text="{Binding sc1}"
-                                                               FontSize="{StaticResource MediumFontSize}"
-                                                               HorizontalAlignment="Center"
-                                                               Height="22" />
-									</StackPanel>
-									<StackPanel Orientation="Vertical"
-                                                            Width="Auto">
-										<Image Source="{Binding si2}"
-                                                           HorizontalAlignment="Center"
-                                                           Height="32" />
-										<TextBlock Text="{Binding sc2}"
-                                                               FontSize="{StaticResource MediumFontSize}"
-                                                               HorizontalAlignment="Center"
-                                                               Height="22" />
-									</StackPanel>
-									<StackPanel Orientation="Vertical"
-                                                            Width="Auto">
-										<Image Source="{Binding si3}"
-                                                           HorizontalAlignment="Center"
-                                                           Height="32" />
-										<TextBlock Text="{Binding sc3}"
-                                                               FontSize="{StaticResource MediumFontSize}"
-                                                               HorizontalAlignment="Center"
-                                                               Height="22" />
-									</StackPanel>
-									<StackPanel Orientation="Vertical"
-                                                            Width="Auto">
-										<Image Source="{Binding si4}"
-                                                           HorizontalAlignment="Center"
-                                                           Height="32" />
-										<TextBlock Text="{Binding sc4}"
-                                                               FontSize="{StaticResource MediumFontSize}"
-                                                               HorizontalAlignment="Center"
-                                                               Height="22" />
-									</StackPanel>
-									<StackPanel Orientation="Vertical"
-                                                            Width="Auto">
-										<Image Source="{Binding si5}"
-                                                           HorizontalAlignment="Center"
-                                                           Height="32" />
-										<TextBlock Text="{Binding sc5}"
-                                                               FontSize="{StaticResource MediumFontSize}"
-                                                               HorizontalAlignment="Center"
-                                                               Height="22" />
-									</StackPanel>
-									<StackPanel Orientation="Vertical"
-                                                            Width="Auto">
-										<Image Source="{Binding si6}"
-                                                           HorizontalAlignment="Center"
-                                                           Height="32" />
-										<TextBlock Text="{Binding sc6}"
-                                                               FontSize="{StaticResource MediumFontSize}"
-                                                               HorizontalAlignment="Center"
-                                                               Height="22" />
-									</StackPanel>
-									<StackPanel Orientation="Vertical"
-                                                            Width="Auto">
-										<Image Source="{Binding si7}"
-                                                           HorizontalAlignment="Center"
-                                                           Height="32" />
-										<TextBlock Text="{Binding sc7}"
-                                                               FontSize="{StaticResource MediumFontSize}"
-                                                               HorizontalAlignment="Center"
-                                                               Height="22" />
-									</StackPanel>
-								</StackPanel>
-								<TextBlock Text="{Binding dTS}"
-                                                       FontSize="{StaticResource MediumFontSize}"
-                                                       HorizontalAlignment="Center"
-                                                       Height="22" />
-							</StackPanel>
-						</DataTemplate>
-					</sf:GridTemplateColumn.CellTemplate>
-				</sf:GridTemplateColumn>
+				
 			</sf:SfDataGrid.Columns>
 		</sf:SfDataGrid>
 		<tk:GridSplitter

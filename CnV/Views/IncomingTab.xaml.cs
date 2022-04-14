@@ -35,6 +35,7 @@ namespace CnV.Views
 
 			InitializeComponent();
 			SetupDataGrid(defenderGrid);
+			SetupDataGrid(armyGrid);
 			//			spotGrids.Add(defenderGrid);
 
 			//defenderGrid.OnKey = Spot.OnKeyDown;
@@ -202,8 +203,9 @@ namespace CnV.Views
 
 			if(visible)
 			{
-				lastSelected = null;
-				IncomingOverview.Process(false);
+			//	lastSelected = null;
+				NotifyIncomingUpdated();
+				AppS.QueueOnUIThreadIdle(() =>UpdateArmyGrid(true) );
 			}
 			return base.VisibilityChanged(visible, longTerm: longTerm);
 
@@ -218,31 +220,40 @@ namespace CnV.Views
 				return;
 			if(SpotTab.silenceSelectionChanges == 0)
 			{
-				var sel = selected;
-				var changed = sel != null && sel != lastSelected;
-				if(changed)
+				UpdateArmyGrid(false);
+				//	SpotSelectionChanged(sender, e);
+			}
+		}
+
+		private void UpdateArmyGrid(bool force)
+		{
+			var sel = selected;
+			var changed = sel != null && sel != lastSelected;
+			if(changed || force)
+			{
+				lastSelected = sel;
+				if(sel != null)
 				{
-					lastSelected = sel;
-					if(sel != null)
+					armyGrid.ItemsSource = sel.incoming;
+
+					if(Settings.fetchFullHistory)
 					{
-						armyGrid.ItemsSource = sel.incoming;
-
-						if(Settings.fetchFullHistory)
+						var tab = HitHistoryTab.instance;
+						if(!tab.isFocused)
 						{
-							var tab = HitHistoryTab.instance;
-							if(!tab.isFocused)
-							{
-								tab.ShowOrAdd(true, onlyIfClosed: true);
+							tab.ShowOrAdd(true,onlyIfClosed: true);
 
-							}
-							else
-							{
-								tab.refresh.Go();
-							}
+						}
+						else
+						{
+							tab.refresh.Go();
 						}
 					}
 				}
-			//	SpotSelectionChanged(sender, e);
+				else
+				{
+					armyGrid.ItemsSource = Army.EmptyArray;
+				}
 			}
 		}
 

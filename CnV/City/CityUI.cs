@@ -701,15 +701,15 @@ public partial class City
 
 	internal void Settle(WorldC worldC)
 	{
-		SendTroops.ShowInstance(this,City.Get(worldC), isSettle:true);
+		SendTroops.ShowInstance(this,City.Get(worldC), isSettle:true,viaWater:cont != worldC.continentDigits );
 	}
 	internal void Raid(WorldC worldC)
 	{
-		SendTroops.ShowInstance(this,City.Get(worldC),isSettle: false,viaWater:false, type:ArmyType.raid) ;
+		SendTroops.ShowInstance(this,City.Get(worldC),isSettle: false,viaWater:cont != worldC.continentDigits, type:ArmyType.raid) ;
 	}
 	internal void SendDefence(WorldC worldC)
 	{
-		SendTroops.ShowInstance(this,City.Get(worldC),isSettle: false,viaWater:false, type:ArmyType.defense) ;
+		SendTroops.ShowInstance(this,City.Get(worldC),isSettle: false,viaWater:cont != worldC.continentDigits, type:ArmyType.defense) ;
 	}
 }
 

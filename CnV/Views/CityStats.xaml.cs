@@ -1186,7 +1186,7 @@ namespace CnV
 								army.isReturn? "Region/UI/icon_player_own_troops_ret.png"  : 
 								army.isSettle ? "Region/UI/icon_player_own_settlement.png" : 
 								army.isDefense ? "Region/UI/icon_player_own_support_inc.png" :
-								
+								army.isSiege ? "Region/UI/icon_player_alliance_siege.png" :
 								"Region/UI/icon_player_own_attack.png");
 		
 		

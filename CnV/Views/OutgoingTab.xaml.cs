@@ -80,14 +80,14 @@ namespace CnV.Views
         public override Task VisibilityChanged(bool visible, bool longTerm)
 		{
 			/// TODO:  Why clear?
-            //AppS.DispatchOnUIThreadLow(() =>
-            //{
-            //    attackerGrid.ItemsSource = null;
-            //    armyGrid.ItemsSource = Army.empty;
-            //});
+			//AppS.DispatchOnUIThreadLow(() =>
+			//{
+			//    attackerGrid.ItemsSource = null;
+			//    armyGrid.ItemsSource = Army.empty;
+			//});
 
-            if (visible)
-                OutgoingOverview.OutgoingUpdateDebounce.Go();
+			if(visible)
+				NotifyOutgoingUpdated();
             return base.VisibilityChanged(visible, longTerm: longTerm);
 
         }
