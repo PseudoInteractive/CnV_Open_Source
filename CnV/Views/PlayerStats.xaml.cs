@@ -28,7 +28,7 @@ namespace CnV
 		{
 			instance = this;
 			this.InitializeComponent();
-
+			Player.active.PropertyChanged += PlayerChanged;
 			City.buildCityChanged += (oldCity,newCity) =>
 				{
 					oldCity.player.PropertyChanged-= PlayerChanged;
@@ -47,7 +47,9 @@ namespace CnV
 	public void OnPropertyChanged(string? member = null)
 	{
 		if (this.PropertyChanged is not null) 
-			AppS.QueueOnUIThread(() => PropertyChanged?.Invoke(this,new(member)));
+			AppS.QueueOnUIThread(
+				() => 
+				PropertyChanged?.Invoke(this,new(member)));
 	}
 		public static void Changed(string? member = null)
 		{

@@ -114,7 +114,7 @@ namespace CnV.Views
 
 		//}
 
-		static int GetScore(City city, Building[]cityB ,(int x,int y) xy, int bid, int militaryBid )
+		static int GetScore(City city, Building[]cityB ,(int x,int y) xy, int bid, int sorcTowerCount, int academyCount )
 		{
 			int id = XYToId(xy);
 			var rv = 0;
@@ -143,10 +143,17 @@ namespace CnV.Views
 						if (bid1 == bidStorehouse)
 							rv += 16;
 					}
-					else if (bid == militaryBid || bid == bidAcademy)
+					else if (  IsBidMilitary( (BuildingId)bid) )
 					{
-						if (bid1 == bidBarracks)
-							rv += 16;
+						if(bid1 == bidBarracks)
+						{
+							if(bid == bidSorcTower && sorcTowerCount <= 1)
+								rv += 0;
+							else if(bid == bidAcademy && academyCount<=1)
+								rv += 4;
+							else
+								rv += 16;
+						}
 					}
 					else if( bid == bidStorehouse)
 					{
@@ -156,9 +163,15 @@ namespace CnV.Views
 					}
 					else if (bid == bidBarracks)
 					{
-						if (bid1 == militaryBid)
-							rv += 16;
-
+						if(IsBidMilitary((BuildingId)bid1))
+						{
+							if(bid1 == bidSorcTower && sorcTowerCount <= 1)
+								rv += 0;
+							else if(bid1 == bidAcademy && academyCount<=1)
+								rv += 4;
+							else
+								rv += 16;
+						}
 					}
 				}
 
@@ -588,7 +601,7 @@ namespace CnV.Views
 
 						//if ( bds[bdId].isRes)
 						{
-							var score = GetScore(city, bds, (x,y), bd.bid, milBid);
+							var score = GetScore(city, bds, (x,y), bd.bid, bc.sorcTowers,bc.academies);
 
 							// move to a non res spot
 							for (int r = 1;r< citySpan; ++r)
@@ -608,7 +621,7 @@ namespace CnV.Views
 											continue;
 										}
 
-										var score1 = GetScore(city,bds,(x0, y0), bd.bid, milBid);
+										var score1 = GetScore(city,bds,(x0, y0), bd.bid, bc.sorcTowers,bc.academies);
 										if(score1 > score)
 										{
 

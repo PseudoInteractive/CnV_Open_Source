@@ -250,7 +250,9 @@ namespace CnV.Views
 			{
 				BuildTab.instance.ShowOrAdd(true);
 				SpotTab.instance.ShowOrAdd(true);
-
+				PlayerTab.instance.ShowOrAdd(false);
+				RaidTab.instance.ShowOrAdd(false);
+				
 				ChatTab.tabPage.AddChatTabs();
 			});
 		}
