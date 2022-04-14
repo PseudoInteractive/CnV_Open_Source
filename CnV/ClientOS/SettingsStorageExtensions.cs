@@ -98,10 +98,10 @@ namespace CnV.Helpers
 			}
 		}
 		
-		public static async Task<T> ReadMessagePack< T>(this StorageFolder folder,string name,  Func<T> _default =null)
-		{
-			return AMessagePack.Deserialize<T>(await ReadAsync(folder,name), _default );
-		}
+		//public static async Task<T> ReadMessagePack< T>(this StorageFolder folder,string name,  Func<T> _default =null)
+		//{
+		//	return AMessagePack.Deserialize<T>(await ReadAsync(folder,name), _default );
+		//}
 
 		//public static async Task<TCollection<T>> ReadMessagePack<TCollection,T>(this StorageFolder folder,string name,Func<TCollection<T>> _default = null)
 		//{
