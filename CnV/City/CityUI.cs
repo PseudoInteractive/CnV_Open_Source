@@ -240,7 +240,7 @@ public static partial class CityUI
 			AApp.AddItem(flyout, "Raid", (_, _) => City.GetBuild().Raid(WorldC.FromCid(cid) ));
 
 		}
-		else if (me.isEmpty )
+		if (me.isEmpty || (me.isCityOrCastle && !me.isCastle && me.isLawless) )
 		{
 			AApp.AddItem(flyout, "Settle", (_,_)=> City.GetBuild().Settle(WorldC.FromCid(cid) ) );
 		//	AApp.AddItem(flyout, "Claim", (_,_)=> CityUI.DiscordClaim(WorldC.FromCid(cid) ) );
@@ -628,6 +628,8 @@ public static partial class CityUI
 
 public partial class City
 {
+	internal bool isLawless => pid == default;
+
 	public void SetFocus(bool scrollIntoView, bool select = true, bool bringIntoWorldView = true, bool lazyMove = true)
 	{
 		SetFocus(cid, scrollIntoView, select, bringIntoWorldView, lazyMove);
