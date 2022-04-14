@@ -40,7 +40,7 @@ namespace CnV.Views
 		{
 			Dungeon.Initialize();
 			instance = new();
-			
+				using var __ = ADataGrid.SetupDataGrid(null, instance.dungeonGrid, false,typeof(Dungeon));
 		
 		}
 		static void AddStep()
@@ -307,11 +307,7 @@ namespace CnV.Views
 			UpdateRaidPlans.Go();
 		}
 
-		private void DataGridLoaded(object sender, RoutedEventArgs e)
-		{
-			var dataGrid = (xDataGrid)sender;
-			using var __ = ADataGrid.SetupDataGrid(null, dataGrid, false,typeof(Dungeon));
-		}
+		
 		public static async Task<bool> ShowDungeonList(City city,  bool autoRaid)
 		{
 			var rv = new List<Dungeon>();

@@ -29,9 +29,9 @@ public partial class UserTab:UserControl, IANotifyPropertyChanged
 	}
 	public ImmutableArray<xDataGrid> myDataGrids = ImmutableArray<xDataGrid>.Empty;
 
-	public static Dictionary<xDataGrid,UserTab> dataGrids = new();
+//	public static Dictionary<xDataGrid,UserTab> dataGrids = new();
 
-
+	internal List<xDataGrid> dataGrids = new(); // grids owned by this tab
 
 	public virtual IEnumerable<xDataGrid> GetDataGrids()
 	{
@@ -142,7 +142,7 @@ public partial class UserTab:UserControl, IANotifyPropertyChanged
 															//			this.Height = 500;
 															//	ScrollViewer.SetVerticalScrollMode(this, ScrollMode.Auto); //DependencyObjectExtensions.FindDescendant<ScrollViewer>(this).AllowFocusOnInteraction= false;
 		Margin= new(8);
-		Loaded+=OnLoaded;
+		//Loaded+=OnLoaded;
 
 	}
 	protected void DataGridLoaded(object sender,RoutedEventArgs e)
@@ -150,14 +150,7 @@ public partial class UserTab:UserControl, IANotifyPropertyChanged
 		var dataGrid = (xDataGrid)sender;
 		using var __ = ADataGrid.SetupDataGrid(this,dataGrid,false);
 	}
-	protected virtual void OnLoaded(object sender,RoutedEventArgs e)
-	{
-		// not generally required
-		foreach(var grid in GetDataGrids())
-		{
-			using var __ = ADataGrid.SetupDataGrid(this,grid,false);
-		}
-	}
+	
 	protected ADataGrid.ChangeContextDisposable SetupDataGrid(xDataGrid grid,bool wantChangeContext = false,Type? sourceType = null)
 	{
 		return ADataGrid.SetupDataGrid(this,grid,wantChangeContext,sourceType);
@@ -355,6 +348,8 @@ public partial class UserTab:UserControl, IANotifyPropertyChanged
 			{
 				if(e.Column.MappingName is ( "nameAndRemarks"  ) )
 					e.ToolTip.Content = city.toolTip;
+				else if(e.Column.MappingName is ( nameof(City.icon)  ) )
+					e.ToolTip.Content = new Image { Source = city.icon };
 
 			}
 			else  if(e.Record is BattleReport b)
@@ -430,10 +425,10 @@ public partial class UserTab:UserControl, IANotifyPropertyChanged
 
 public static class UserTabHelpers
 {
-	internal static UserTab GetTab(this xDataGrid grid)
-	{
-		return UserTab.dataGrids[grid];
-	}
+	//internal static UserTab GetTab(this xDataGrid grid)
+	//{
+	//	return UserTab.dataGrids[grid];
+	//}
 
 	internal static bool IsCityGrid(this xDataGrid grid) => object.ReferenceEquals(grid.ItemsSource,City.gridCitySource);
 }

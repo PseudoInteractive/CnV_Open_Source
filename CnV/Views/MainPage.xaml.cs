@@ -164,6 +164,159 @@ namespace CnV.Views
             OnPropertyChanged(propertyName);
         }
 
+		internal void UpdateRaidIncome()
+		{
+
+			ResourcesAndGold raidIncome = new(); // per hour
+			var tsTotal = 0u;
+			var tsHome = 0u;
+			var onWater = 0;
+			var castles = 0;
+												 //		if (jsd.RootElement.ValueKind == JsonValueKind.Object)
+												 //		{
+												 //			//           string dateExtra = DateTime.Now.Year
+												 //			var a = jsd.RootElement.GetProperty("a");
+			foreach(var city in City.gridCitySource)
+				{
+					int cid = city.cid;
+				if(city.isOnWater)
+					++onWater;
+				if(city.isCastle)
+					++castles;
+				tsTotal += city.tsTotal;
+				tsHome += city.tsHome;
+	//				var city = City.GetOrAddCity(cid);
+	//				var raids = Array.Empty<Raid>();
+	//				var minCarry = 255;
+					
+					foreach(var r in city.outgoing)
+					{
+					if(!r.isRaid)
+						continue;
+					var carry = r.troops.carry;
+					var d = Cavern.Get(r.targetCid);
+					//	Assert(d.valid);
+
+					var maxLoot = d.loot*r.splits;
+					var loot = carry.Min((maxLoot));
+					var res = new Resources(Troops.cavernLootRatios[(int)d.resId]*loot);
+					var gold = (int)((loot * Troops.cavernGoldByLevel[d.level])/100);
+					var dt = r.journeyTime * 2;
+					var multiplier = ISmallTime.secondsPerHour / (double)dt;
+					raidIncome += new ResourcesAndGold( res*multiplier, (gold*multiplier).RoundToInt()) ;
+	//				foreach (var r in cr[12].EnumerateArray())
+	//				{
+	//					var target = r[8].GetInt32();
+	//					var dateTime = r[7].GetString().ParseDateTime(false);
+
+	//					if (raids.FindAndIncrement(target, dateTime))
+	//					{
+	//						rWood += tWood;
+	//						rStone += tStone;
+	//						rIron += tIron;
+	//						rFood += tFood;
+	//						rGold += tGold;
+	//						continue;
+	//					}
+	//					string desc = r[2].GetString();
+	//					//    Mountain Cavern, Level 4(91 %)
+	//					var raid = new Raid();
+	//					raid.repeatCount = 1;
+	//					raid.target = target;
+	//					raid.time = dateTime;
+	//					var r4 = r[4].GetByte(); 
+	//					raid.isReturning = r[3].GetInt32() != 0;
+	//					raid.r4 = r4;
+	//					//=  r4== 2 ||r4==3;
+	//					//    Log(raid.ToString());
+	//					// raid.arrival.Year = DateTime.Now.Year;
+	//					var ss0 = desc.Split(',');
+	//					Assert(ss0.Length == 2);
+	//					var isMountain = ss0[0].Trim()[0] == 'M';
+	//					var ss = ss0[1].Split(new char[] { ' ', '(', ',', '%' }, StringSplitOptions.RemoveEmptyEntries);
+	//					Assert(ss.Length == 4);
+	//					var level = int.Parse(ss[1]);
+	//					var completion = int.Parse(ss[2]);
+	//					var res = (isMountain ? mountainLoot[level - 1] : otherLoot[level - 1]) * (2 - completion * 0.01f);
+	//					int cc = 0;
+
+	//					// slowest
+	//					var maxTravel = 0.0;
+	//					foreach (var ttr in r[5].EnumerateArray())
+	//					{
+	//						var tt = ttr.GetAsInt("tt");
+	//						int tv = ttr.GetAsInt("tv");
+	//						cc += ttCarry[tt] * tv;
+	//						//var ts = ttTs[tt] * tv;
+	//						var travel = TTTravel(tt);
+	//						// Todo Navy
+	//						if (travel > maxTravel)
+	//						{
+	//							maxTravel = travel;
+	//							raid.troopType = (byte)tt;
+	//						}
+	//						//   Log($"{tt}:{tv}");
+	//					}
+	//					if (raid.isReturning)
+	//					{
+	//						var resO = r[6];
+	//						var rate = 60.0f * 0.5f / (raid.GetOneWayTripTimeMinutes(city)); // to res per hour
+	//						tWood = resO.GetAsInt("w") * rate;
+	//						tIron = resO.GetAsInt("i") * rate;
+	//						tFood = resO.GetAsInt("f") * rate;
+	//						tStone = resO.GetAsInt("s") * rate;
+	//						tGold = resO.GetAsInt("g") * rate;
+	//						rWood += tWood;
+	//						rStone += tStone;
+	//						rIron += tIron;
+	//						rFood += tFood;
+	//						rGold += tGold;
+	//					}
+	//					else
+	//					{
+	//						tWood = 0; tStone = 0; tIron = 0; tFood = 0; tGold = 0;
+	//					}
+	//					var carry = (cc * 100.0f / res).RoundToInt();
+	//					if (carry < minCarry)
+	//						minCarry = carry;
+	//					// Log($"cc:{cc}, res:{res}, carry:{cc/res} {r[7].GetString()} {r[3].GetInt32()} {r[4].GetInt32()}");
+
+	//					raids = raids.ArrayAppend(raid);
+	//				}
+	//				city.raidCarry = (byte)minCarry.Min(255);
+	//				city.raids = raids;
+	//				var commands = (byte)cr[12].GetArrayLength();
+	//				city.activeCommands = city.activeCommands.Max(commands);
+	//				// Log($"cid:{cid} carry: {minCarry}");
+
+				}
+			}
+			AppS.QueueOnUIThread(()
+				=>
+			{
+				MainPage.instance.rWood.Text = $"{CnV.Resources.ResGlyphC(0)} {(raidIncome.r.wood * 0.001).RoundToInt():N0} k/h";
+				MainPage.instance.rStone.Text = $"{CnV.Resources.ResGlyphC(1)} {(raidIncome.r.stone * 0.001).RoundToInt():N0} k/h";
+				MainPage.instance.rIron.Text = $"{CnV.Resources.ResGlyphC(2)} {(raidIncome.r.iron * 0.001).RoundToInt():N0} k/h";
+				MainPage.instance.rFood.Text = $"{CnV.Resources.ResGlyphC(3)} {(raidIncome.r.food * 0.001).RoundToInt():N0} k/h";
+				MainPage.instance.rGold.Text = $"{CnV.Resources.goldGlyph} {(raidIncome.gold * 0.001).RoundToInt():N0} k/h";
+
+				MainPage.instance.count.Text = $"Cities: {City.gridCitySource.Count}";
+				MainPage.instance.tsTotal.Text = $"TS Total:  {tsTotal:N0}";
+				MainPage.instance.tsRaid.Text = $"TS Home: {tsHome:N0}";
+				MainPage.instance.castles.Text = $"Castles: {castles}";
+				MainPage.instance.water.Text = $"On Water: {onWater}";
+
+
+				// ts stuff
+				//MainPage.rStone = rStone;
+				//			//MainPage.rIron = rIron;
+				//			//MainPage.rFood = rFood;
+				//			//MainPage.rGold = rGold;
+				//			//// MainPage.CityListUpdateAll();
+				//			///
+			});
+		}
+
 		public static void ToggleInfoBoxes(bool on)
 		{
 			//if (on)
@@ -192,6 +345,7 @@ namespace CnV.Views
 						if(c.testContinentAndTagFilter)
 							c.OnPropertyChanged();
 					}
+					UpdateRaidIncome();
 			//		City.gridCitySource.NotifyReset(true,true);
 				}
              //  if (cityGrid.ItemsSource == App.emptyCityList )

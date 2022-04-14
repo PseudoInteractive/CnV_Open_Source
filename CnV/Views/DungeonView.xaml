@@ -22,7 +22,7 @@
 	<StackPanel  >
 
 		<sf:SfDataGrid x:Name="dungeonGrid" 
-		               Loaded="DataGridLoaded"
+		              
 						      
 							ItemsSource="{x:Bind items}"
 							

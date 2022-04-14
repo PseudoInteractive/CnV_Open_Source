@@ -232,14 +232,19 @@ public static partial class ADataGrid
 	}
 	public static bool Register(this UserTab tab,xDataGrid grid)
 	{
-		var a = UserTab.dataGrids.TryAdd(grid, tab);
-		return a;
+		if(tab is null)
+			return true;
+		if(tab.dataGrids.Contains(grid))
+			return false;
+
+		tab.dataGrids.Add(grid);
+		return true;
 	}
-	public static bool Deregister(this UserTab tab,xDataGrid grid)
-	{
-		var a = UserTab.dataGrids.Remove(grid);
-		return a;
-	}
+	//public static bool Deregister(this UserTab tab,xDataGrid grid)
+	//{
+	//	var a = UserTab.dataGrids.Remove(grid);
+	//	return a;
+	//}
 
 	public static ADataGrid.ChangeContextDisposable SetupDataGrid(this UserTab? tab, xDataGrid grid,
 		bool wantChangeContext = false, Type? sourceType = null)

@@ -10,7 +10,8 @@
 			  xmlns:view="using:CnV.Views"
 			  mc:Ignorable="d"
 			  Tag="Player"
-			  FontStretch="Condensed"		             
+			  FontStretch="Condensed"		         
+			  Loaded="OnLoaded"
 			  FontFamily="{StaticResource CnvIcons}">
 	<Grid x:Name="cityBaseGrid">
 		<Grid.RowDefinitions>
@@ -22,19 +23,19 @@
 
 		<sf:SfDataGrid x:Name="playerGrid"
 							x:FieldModifier="public"
+					   Grid.Row="3"
 							AllowFiltering="True"
-							Grid.Row="3"
-							FrozenColumnCount="2"
+							
 							ItemsSource="{x:Bind playerList, Mode=OneWay}"
 							AutoGenerateColumns="False"
 							SelectionMode="Extended"
 							RowHeight="{StaticResource LargeGridRowHeight}"
 							FontSize="{StaticResource SmallFontSize}"
 							SelectionUnit="Row"
-					   
+							AutoGenerateRelations="False"
 							ShowToolTip="True"
 							FontStretch="Condensed"
-							Loaded="DataGridLoaded"
+							
 							
 							>
 
@@ -45,12 +46,12 @@
 				<sf:GridImageColumn MappingName="avatarImage"
 				                    AllowFiltering="False"
 									AllowSorting="False"
-											HeaderText="Ava"
-											
+											HeaderText="Avatar"
+											Width="38"
 											ShowToolTip="True"
 											 />
 				<sf:GridTextColumn MappingName="name"
-								   Width="200"
+								   Width="240"
 										 
 										   TextAlignment="Left"
 										  
@@ -84,6 +85,79 @@
 										    />
 
 			</sf:SfDataGrid.Columns>
+			<sf:SfDataGrid.DetailsViewDefinition>
+				<!--  FirstLevelNestedGrid1 is created here  -->
+				<sf:GridViewDefinition RelationalColumn="myCities">
+					<sf:GridViewDefinition.DataGrid>
+						<sf:SfDataGrid x:Name="citiesGrid" 
+									   AutoGenerateColumns="False"
+							SelectionMode="Extended"
+							RowHeight="{StaticResource LargeGridRowHeight}"
+							FontSize="{StaticResource SmallFontSize}"
+							SelectionUnit="Row"
+							AutoGenerateRelations="False"
+							ShowToolTip="True"
+							FontStretch="Condensed"
+									   >
+							<sf:SfDataGrid.Columns >
+
+
+								<sf:GridImageColumn MappingName="icon"
+				                    AllowFiltering="False"
+									AllowSorting="False"
+											HeaderText="I"
+											Width="32"
+											winui:ToolTipService.ToolTip="Click to switch to this city"
+											 />
+								<sf:GridTextColumn MappingName="nameAndRemarks"
+										   HeaderText="Name"
+										   TextAlignment="Left"
+										   Width="300"
+										    />
+							
+								<sf:GridHyperlinkColumn MappingName="xy"
+				                        TextAlignment="Center"
+				                        Width="64"
+
+				/>
+								<sf:GridNumericColumn MappingName="cont"
+				                      TextAlignment="Center"
+											Width="48"
+												 />
+
+
+								
+								<sf:GridNumericColumn MappingName="points"
+												winui:ToolTipService.ToolTip="City score"
+											Width="64"
+												DisplayNumberFormat="N0"
+												TextAlignment="Right"
+												 />
+							
+								<sf:GridNumericColumn MappingName="tsTotal"
+												TextAlignment="Right"
+												winui:ToolTipService.ToolTip="TS enlisted in city"
+												DisplayNumberFormat="N0"
+												AllowSorting="True"
+												
+												ColumnWidthMode="Auto"
+												 />
+								<sf:GridCheckBoxColumn MappingName="isCastle"
+											  IsHidden="True"
+											  ColumnWidthMode="Auto"
+											   />
+								<sf:GridCheckBoxColumn MappingName="isOnWater"
+											  IsHidden="True"
+											  ColumnWidthMode="Auto"
+											   />
+
+							</sf:SfDataGrid.Columns>
+						</sf:SfDataGrid>
+					</sf:GridViewDefinition.DataGrid>
+				</sf:GridViewDefinition>
+				<!--  FirstLevelNestedGrid2 is created here  -->
+				
+			</sf:SfDataGrid.DetailsViewDefinition>
 
 		</sf:SfDataGrid>
 

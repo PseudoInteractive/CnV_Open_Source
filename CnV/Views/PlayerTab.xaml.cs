@@ -97,8 +97,9 @@ namespace CnV.Views;
 
 		public static bool IsVisible() => instance.isFocused;
 
-	
-
-
-	
+	private void OnLoaded(object sender,RoutedEventArgs e)
+	{
+		base.SetupDataGrid(playerGrid);
+		base.SetupDataGrid(citiesGrid);
+	}
 }

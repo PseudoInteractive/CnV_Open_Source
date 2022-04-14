@@ -396,74 +396,79 @@ public static partial class CityUI
 		++SpotTab.silenceSelectionChanges;
 		try
 		{
-			foreach(var gridX in UserTab.dataGrids)
+			foreach(var tab in UserTab.userTabs)
 			{
-
-				var grid = gridX.Key;
-
-				if(!gridX.Value?.isFocused == true)
+				if(!tab.isFocused)
 					continue;
-
-				if(grid.IsCityGrid())
+				foreach(var grid in tab.dataGrids)
 				{
-					var uiInSync = false;
-					var sel1 = grid.SelectedItems;
-					if(selected.Count == sel1.Count)
+
+					//			var grid = gridX.Key;
+
+					//		if(!gridX.Value?.isFocused == true)
+					//		continue;
+
+					if(grid.IsCityGrid())
 					{
-						uiInSync = true;
-						foreach(var i in sel1)
+						var uiInSync = false;
+						var sel1 = grid.SelectedItems;
+						if(selected.Count == sel1.Count)
 						{
-							if(!selected.Contains((i as City).cid))
+							uiInSync = true;
+							foreach(var i in sel1)
 							{
-								uiInSync = false;
-								break;
+								if(!selected.Contains((i as City).cid))
+								{
+									uiInSync = false;
+									break;
+								}
 							}
 						}
-					}
 
-					if(!uiInSync)
-					{
-						selected.SyncList(sel1, (cid, spot) => cid == ((Spot)spot).cid,
-							(cid) => City.Get(cid));
-					}
-
-					if((scrollIntoView) && (sel1.Any() || focusSpot != null))
-					{
-						var current = focusSpot ?? (City.GetBuild().isSelected ? City.GetBuild() : null);
-						if(current != null)
+						if(!uiInSync)
 						{
-							grid.CurrentItem = current;
+							selected.SyncList(sel1,(cid,spot) => cid == ((Spot)spot).cid,
+								(cid) => City.Get(cid));
 						}
 
-						var any = current ?? sel1.First();
+						if((scrollIntoView) && (sel1.Any() || focusSpot != null))
 						{
-							var rowIndex = grid.ResolveToRowIndex(any);
-							var columnIndex = grid.ResolveToStartColumnIndex();
-							if(rowIndex >= 0)
-								grid.ScrollInView(new RowColumnIndex(rowIndex, columnIndex));
-						}
-					}
-
-					if(AttackTab.IsVisible() && focusSpot != null)
-					{
-						try
-						{
-							if(AttackTab.attacks.Contains(focusSpot.cid)
-								 && !AttackTab.instance.attackGrid.SelectedItems.Contains(focusSpot))
+							var current = focusSpot ?? (City.GetBuild().isSelected ? City.GetBuild() : null);
+							if(current != null)
 							{
-								AttackTab.instance.attackGrid.SelectedItem = focusSpot as City;
-								AttackTab.instance.attackGrid.ScrollIntoView(focusSpot, null);
+								grid.CurrentItem = current;
 							}
 
-							if(AttackTab.targets.Contains(focusSpot.cid)
-								&& !AttackTab.instance.targetGrid.SelectedItems.Contains(focusSpot))
+							var any = current ?? sel1.First();
 							{
-								AttackTab.instance.targetGrid.SelectedItem = focusSpot as City;
-								AttackTab.instance.targetGrid.ScrollIntoView(focusSpot, null);
+								var rowIndex = grid.ResolveToRowIndex(any);
+								var columnIndex = grid.ResolveToStartColumnIndex();
+								if(rowIndex >= 0)
+									grid.ScrollInView(new RowColumnIndex(rowIndex,columnIndex));
 							}
 						}
-						catch
+
+						if(AttackTab.IsVisible() && focusSpot != null)
 						{
+							try
+							{
+								if(AttackTab.attacks.Contains(focusSpot.cid)
+									 && !AttackTab.instance.attackGrid.SelectedItems.Contains(focusSpot))
+								{
+									AttackTab.instance.attackGrid.SelectedItem = focusSpot as City;
+									AttackTab.instance.attackGrid.ScrollIntoView(focusSpot,null);
+								}
+
+								if(AttackTab.targets.Contains(focusSpot.cid)
+									&& !AttackTab.instance.targetGrid.SelectedItems.Contains(focusSpot))
+								{
+									AttackTab.instance.targetGrid.SelectedItem = focusSpot as City;
+									AttackTab.instance.targetGrid.ScrollIntoView(focusSpot,null);
+								}
+							}
+							catch
+							{
+							}
 						}
 					}
 				}
