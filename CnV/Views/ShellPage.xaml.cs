@@ -58,17 +58,7 @@ namespace CnV.Views
 		}
 		const float minTimeScale = 0.125f;
 		const float maxTimeScale = 1024.0f;
-		float timeScale
-		{
-			get => IServerTime.timeScale;
-			set {
-			
-
-
-				IServerTime.SetTimeScale(value.Clamp(minTimeScale,maxTimeScale));
-				OnPropertyChanged("timeScaleSlider");
-			}
-		}
+		
 		static float RoundNicely(float d)
 		{
 			var absD = d.Abs();
@@ -87,6 +77,20 @@ namespace CnV.Views
 		static double TimeScaleToSlider(double v) => v <= 0 ? 0 : (Math.Log2(v) + 2).Clamp(0,10);
 
 		static internal Grid rootGrid;
+
+		internal float timeScale
+		{
+			get {
+				return IServerTime.timeScale;
+			}
+			set {
+				if(value.IsEqualTo(IServerTime.timeScale))
+					return;
+				if(Sim.isInitialized)
+					IServerTime.SetTimeScale(value.Clamp(minTimeScale,maxTimeScale));
+				OnPropertyChanged();
+			}
+		}
 		class TimeScaleToolTipConverter:IValueConverter
 		{
 
@@ -106,7 +110,8 @@ namespace CnV.Views
 			
 
 				var v = SliderToTimeScale(e.NewValue);
-				IServerTime.SetTimeScale((float)v);
+				if(Sim.isInitialized)
+					IServerTime.SetTimeScale((float)v);
 
 			}
 
@@ -116,17 +121,13 @@ namespace CnV.Views
 			Debounce.Q(50,runOnUIThread: true,action: () =>
 			  {
 
-			if(!AppS.isSinglePlayer)
-			{
-				AppS.MessageBox("Only works in single player mode");
-				return;
-			}
-
+			
+				
 				  var v = IServerTime.timeScale;
-				  if(!timeScaleNumberBox.Value.IsEqualTo(v,1.0f/8.0f))
-				  {
-					  timeScaleNumberBox.Value = v;
-				  }
+				  //if(!timeScaleNumberBox.Value.IsEqualTo(v,1.0f/8.0f))
+				  //{
+					 // timeScaleNumberBox.Value = v;
+				  //}
 				  var sliderValue = TimeScaleToSlider(v);
 				  if(!timeScaleSlider.Value.AlmostEquals(sliderValue,0.25f))
 				  {
@@ -136,22 +137,23 @@ namespace CnV.Views
 				  var icon = timeTogglePlayIcon;
 				  if(icon.Symbol != symbol)
 					  icon.Symbol = symbol;
+				  OnPropertyChanged();
 			  });
 		}
-		internal void TimeScaleValueChanged(NumberBox sender,NumberBoxValueChangedEventArgs e)
-		{
-			if(e.NewValue.IsNaN())
-			{
-				App.FilterNans(sender,e);
-				return;
-			}
-			if(!e.OldValue.IsEqualTo(e.NewValue,1.0f/4.0f))
-			{
+		//internal void TimeScaleValueChanged(NumberBox sender,NumberBoxValueChangedEventArgs e)
+		//{
+		//	if(e.NewValue.IsNaN())
+		//	{
+		//		App.FilterNans(sender,e);
+		//		return;
+		//	}
+		//	if(!e.OldValue.IsEqualTo(e.NewValue,1.0f/4.0f))
+		//	{
 			
-
-				IServerTime.SetTimeScale((float)e.NewValue);
-			}
-		}
+		//		if(Sim.isInitialized)
+		//			IServerTime.SetTimeScale((float)e.NewValue);
+		//	}
+		//}
 		//float timeScaleSlider
 		//{
 		//	get => MathF.Log2(IServerTime.timeScale) + 2.0f;
@@ -1020,7 +1022,7 @@ namespace CnV.Views
 
 		public event PropertyChangedEventHandler PropertyChanged;
 
-		private void OnPropertyChanged(string propertyName) =>
+		private void OnPropertyChanged(string propertyName = "") =>
 				PropertyChanged?.Invoke(this,new PropertyChangedEventArgs(propertyName));
 
 		private void Set<T>(ref T storage,T value,[CallerMemberName] string propertyName = null)

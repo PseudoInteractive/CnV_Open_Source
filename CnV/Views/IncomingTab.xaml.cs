@@ -234,7 +234,7 @@ namespace CnV.Views
 				lastSelected = sel;
 				if(sel != null)
 				{
-					armyGrid.ItemsSource = sel.incoming;
+					armyGrid.ItemsSource = sel.incoming.OrderBy(a=>a.arrival);
 
 					if(Settings.fetchFullHistory)
 					{
