@@ -467,7 +467,7 @@ internal partial class GameClient
 					viewCWParam.SetValue(viewW);
 					var waterGain = regionFade.Lerp(0.5f,1.0f);
 					var terrainGain = regionFade.Lerp(0.25f,1.0f);
-					tileGains.SetValue(new Vector4(terrainGain,waterGain,terrainGain,1));
+					tileGains.SetValue(new Vector4(terrainGain,waterGain,terrainGain,0.5f));
 					//	ToolTips.debugTip = $"{XVector3.Normalize(lightCC).ToNumerics().Format()} {AUtil.Format(lightCC.ToNumerics())}";
 					var sat = Settings.lightSat;
 					// Hue night
