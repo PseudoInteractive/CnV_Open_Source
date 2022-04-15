@@ -76,7 +76,7 @@ namespace CnV.Views
 						filterFromAlliance => City.allianceCities,
 						_ => City.allCities,
 
-					}).SelectMany(c => c.outgoing.Where(a => a.isAttack).Select(a => a.targetCity).Distinct()).
+					}).SelectMany(c => c.outgoing.Where(a => a.isOutgoingAttack ).Select(a => a.targetCity).Distinct()).
 					Where(w =>
 																					  w.testContinentFilter
 																					&& (instance.includeInternal || !w.IsAllyOrNap())).OrderBy(w => w.firstIncoming)); ; ;

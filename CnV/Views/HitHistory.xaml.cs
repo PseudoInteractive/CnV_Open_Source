@@ -34,9 +34,22 @@ namespace CnV.Views
 					var cid = sel.cid;
 					historyGrid.ItemsSource = BattleReport.all.Where(s => s.targetCid == cid).ToArray();
 				}
+				if(IncomingTab.IsVisible())
+			{
+				IncomingTab.instance.UpdateArmyGrid(true,false);
+			}
+				if(OutgoingTab.IsVisible())
+			{
+				OutgoingTab.NotifyOutgoingUpdated();
+			}
 			
 		}
-
+		public static void CombatNotify()
+		{
+			if(!IsVisible())
+				return;
+			AppS.QueueOnUIThread( instance.UpdateDataGrid );
+		}
         public static HitHistoryTab instance;
         public static xDataGrid HistoryGrid => instance.historyGrid;
         //        public static Army showingRowDetails;

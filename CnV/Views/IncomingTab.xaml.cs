@@ -146,7 +146,7 @@ namespace CnV.Views
 					{
 
 						var newItems = City.allianceCities.Where(w => w.testContinentFilter
-														&& (includeInternal||w.hasEnemyIncoming)
+														&& w.HasIncomingAttacks(includeInternal)
 														&&(typeFilter == 2 ? w.pid == Player.myId
 														: typeFilter == 1 ? Settings.incomingWatch.Contains(w.playerName)|| w.pid == Player.myId
 														: true)).OrderBy(w => w.firstIncoming).ToArray();
@@ -205,7 +205,7 @@ namespace CnV.Views
 			{
 			//	lastSelected = null;
 				NotifyIncomingUpdated();
-				AppS.QueueOnUIThreadIdle(() =>UpdateArmyGrid(true) );
+				AppS.QueueOnUIThreadIdle(() =>UpdateArmyGrid(true,false) );
 			}
 			return base.VisibilityChanged(visible, longTerm: longTerm);
 
@@ -220,12 +220,12 @@ namespace CnV.Views
 				return;
 			if(SpotTab.silenceSelectionChanges == 0)
 			{
-				UpdateArmyGrid(false);
+				UpdateArmyGrid(false,true);
 				//	SpotSelectionChanged(sender, e);
 			}
 		}
 
-		private void UpdateArmyGrid(bool force)
+		internal void UpdateArmyGrid(bool force, bool updatehistoryTab)
 		{
 			var sel = selected;
 			var changed = sel != null && sel != lastSelected;
@@ -236,7 +236,7 @@ namespace CnV.Views
 				{
 					armyGrid.ItemsSource = sel.incoming.OrderBy(a=>a.arrival);
 
-					if(Settings.fetchFullHistory)
+					if(updatehistoryTab)
 					{
 						var tab = HitHistoryTab.instance;
 						tab.SetFilter(sel);

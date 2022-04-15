@@ -80,7 +80,7 @@ namespace CnVDiscord
 					EnableMultipleHttp2Connections = true
 				};
 				// Connect to the server using gRPC channel.
-				channel = GrpcChannel.ForAddress("https://localhost:5001",new GrpcChannelOptions()
+				channel = GrpcChannel.ForAddress("http://cnv.westus2.cloudapp.azure.com:5000",new GrpcChannelOptions()
 				{
 					HttpHandler = handler
 				});
