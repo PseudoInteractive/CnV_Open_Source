@@ -59,19 +59,16 @@ public partial class UserTab:UserControl, IANotifyPropertyChanged
 				new MainPage(),
 				new PlayerTab(),
 				new IncomingTab(),
-				new DonationTab(),
 				new HitHistoryTab(),
-				new BossTab(),
-				new HeatTab(),
 				new AttackTab(),
 				new PlannerTab(),
 				new SpotTab(),
 				new ReinforcementsTab(),
 				new OutgoingTab(),
-				
+
 				new NearDefenseTab(),
 				new NearRes(),
-				new PlayerChangeTab(),
+				new NPCHistory(),
 		};
 
 	}

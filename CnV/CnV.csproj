@@ -159,6 +159,7 @@
     <Compile Include="Views\CanvasUI.cs" />
     <Compile Include="Views\CityStats.xaml.cs" />
     <Compile Include="Views\CnVSwapChainPanel.cs" />
+    <Compile Include="Views\NPCHistory.xaml.cs" />
     <Compile Include="Views\PlayerStats.xaml.cs" />
     <Compile Include="Views\PlayerTab.xaml.cs" />
     <Compile Include="Xaml\IconText.cs" />
@@ -505,6 +506,9 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\NPCHistory.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\PlayerChangeTab.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -653,6 +657,7 @@
     <None Remove="Views\CityStats.xaml" />
     <None Remove="Views\DefenderPage.xaml" />
     <None Remove="Views\DefendTab.xaml" />
+    <None Remove="Views\NPCHistory.xaml" />
     <None Remove="Views\PlayerStats.xaml" />
     <None Remove="Views\PlayerTab.xaml" />
     <None Remove="Views\ReinforcementsTab.xaml" />

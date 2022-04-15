@@ -23,6 +23,7 @@ namespace CnV.Views
 
 	public sealed partial class ReinforcementsTab : UserTab
 	{
+		public static bool IsVisible() => instance is var f  && f.isFocused == true;
 		
 		public override TabPage                defaultPage => TabPage.secondaryTabs;
 		public          string                 reinInTitle;

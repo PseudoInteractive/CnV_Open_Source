@@ -262,7 +262,7 @@ public static partial class ADataGrid
 			grid.FontWeight=Microsoft.UI.Text.FontWeights.Normal;
 			grid.SelectionMode = GridSelectionMode.Extended;
 			grid.GridLinesVisibility = GridLinesVisibility.Both;
-			grid.AutoGenerateColumns = false;
+		
 			grid.ShowGroupDropArea=true;
 			grid.AllowResizingHiddenColumns = true;
 			grid.AllowResizingColumns = true;

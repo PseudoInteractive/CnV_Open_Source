@@ -270,6 +270,7 @@ namespace CnV.Views
 			{ "NearRes", Symbol.Favorite },
 			{ "officer" ,Symbol.Admin },
 			{ "WebView", Symbol.World },
+			{ "BossHits", Symbol.Play }
 		};
 
 		static Dictionary<string,string> tabFontIcons = new Dictionary<string,string> {

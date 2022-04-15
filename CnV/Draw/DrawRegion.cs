@@ -851,7 +851,7 @@ internal partial class GameClient
 
 				if(!focusOnCity)
 				{
-					var incomingVisible = IncomingTab.IsVisible() || ReinforcementsTab.instance.isFocused || NearDefenseTab.IsVisible() || Settings.incomingAlwaysVisible;
+					var incomingVisible = IncomingTab.IsVisible() || ReinforcementsTab.IsVisible() || NearDefenseTab.IsVisible() || Settings.incomingAlwaysVisible;
 					var outgoingVisible = OutgoingTab.IsVisible() || Settings.attacksAlwaysVisible;
 					{
 						//if (DefenseHistoryTab.IsVisible() || HitTab.IsVisible())

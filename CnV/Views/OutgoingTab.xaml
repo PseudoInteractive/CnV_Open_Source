@@ -2,7 +2,7 @@
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:game="using:CnV"
+      xmlns:cnv="using:CnV"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:sf="using:Syncfusion.UI.Xaml.DataGrid"
       xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
@@ -18,14 +18,8 @@
         </Grid.RowDefinitions>
 		<tk:WrapPanel>
 			<ToggleSwitch Header="Internal" OnContent="Include" OffContent="Excluse" IsOn="{x:Bind includeInternal,Mode=TwoWay}" Toggled="ToggleSwitch_Toggled"/>
-			<ComboBox Header="From" SelectedIndex="{x:Bind filterFrom,Mode=TwoWay}" SelectionChanged="filterFromChanged" >
-				<ComboBox.Items>
-					<ComboBoxItem>Me</ComboBoxItem>
-					<ComboBoxItem>Subs</ComboBoxItem>
-					<ComboBoxItem>Alliance</ComboBoxItem>
-					<ComboBoxItem>Anyone</ComboBoxItem>
-				</ComboBox.Items>
-			</ComboBox>
+			<ComboBox Header="From" SelectedIndex="{x:Bind filterFrom,Mode=TwoWay}" SelectionChanged="filterFromChanged" ItemsSource="{x:Bind cnv:Alliance.cityFilterList}" />
+
 		</tk:WrapPanel>
         <sf:SfDataGrid Grid.Row="1" x:Name="attackerGrid"
 						x:FieldModifier="public"
@@ -105,7 +99,7 @@ ItemsSource="{x:Bind attackerSource,Mode=OneWay}"
             </sf:SfDataGrid.Columns>
         </sf:SfDataGrid>
         <sf:SfDataGrid x:Name="armyGrid"
-                                    ItemsSource="{x:Bind game:Army.EmptyArray, Mode=OneTime}"
+                                    ItemsSource="{x:Bind cnv:Army.EmptyArray, Mode=OneTime}"
 IsTabStop="True"
                                     Grid.Row="2"
                                     FontSize="{StaticResource MediumFontSize}"
