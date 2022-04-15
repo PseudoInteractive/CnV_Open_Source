@@ -313,9 +313,8 @@ namespace CnV.Views
 			var rv = new List<Dungeon>();
 			//	rv.Clear();
 			var idealType = city.GetIdealDungeonType();
-			foreach(var _dung in Cavern.all)
+			foreach(var dung in Cavern.caverns)
 			{
-				var dung = _dung.Value;
 				var type = dung.tileType;
 				if(Settings.raidOffDungeons || (type == idealType) || type == World.TileType.typeWater)
 				{

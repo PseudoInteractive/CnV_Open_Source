@@ -249,7 +249,7 @@
                         <DataTemplate x:DataType="cnv:SupportByTroopType">
                             <TextBlock Text= "{x:Bind send, Converter={StaticResource IntConverter} }"
                                       ToolTipService.ToolTip="Troops to send.  Right click to select troops home or total troops (if troops will return before the send).  You can use expressions i.e. if you want to send half the troops, right click and set Troops Home, then add /2 after the number"
-                                      Style="{StaticResource RightAlign}" RightTapped="TTSendRightTapped" 
+                                   RightTapped="TTSendRightTapped" 
                                         />
                         </DataTemplate>
                     </tk:DataGridTemplateColumn.CellTemplate>

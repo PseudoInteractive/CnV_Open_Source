@@ -109,10 +109,13 @@ namespace CnVDiscord
 						Log( channel );
 						var c = CnVJsonMessagePackDiscordChannel.Get(channel);
 						// Todo:  Create channel
-						ChatTab.CreateChatTab(c);
+						if( ChatTab.CreateChatTab(c) == true )
+						{
+							await connection.ConnectChannelAsync( new()
+								{ channelId = c.Id, lastRecieved = 0 }); // todo:  Lastrecieved
 
-						await connection.ConnectChannelAsync( new()
-							{ channelId = c.Id, lastRecieved = 0 }); // todo:  Lastrecieved
+						}
+
 					}
 				});
 				initialized=true;

@@ -407,7 +407,7 @@ namespace CnV
 
 		internal Visibility incomingVisible => city.incoming.Any(a=>a.isAttack) ? Visibility.Visible : Visibility.Collapsed;
 
-		internal Visibility IncomingReinforcementsVisible => city.incomingReinforcements.Any()==true? Visibility.Visible : Visibility.Collapsed;
+		internal Visibility IncomingReinforcementsVisible => city.allReinforcements.Any()==true? Visibility.Visible : Visibility.Collapsed;
 
 		public string commandsTitle => $"Commands {city.activeCommands}/{city.commandSlots}";
 		public string tradesTitle => $"Trades {tradeItems.Count}";

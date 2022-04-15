@@ -83,7 +83,7 @@ public partial class City
 				return "Shrine\n(To be named)";
 			else if(isPortal)
 				return "Moon Gate";
-			else if(isDungeon)
+			else if(isDungeonOrBoss)
 				return Cavern.Get(cid).ToString();
 													//if (spot is City city)
 													{

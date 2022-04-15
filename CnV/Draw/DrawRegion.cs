@@ -1137,7 +1137,7 @@ internal partial class GameClient
 											}
 											else if(i.isRaid)
 											{
-												c = Color.DarkOrange;
+												c = Color.DarkSlateBlue;
 											}
 											else if(i.isReturn)
 											{

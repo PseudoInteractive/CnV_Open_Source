@@ -58,8 +58,9 @@ namespace CnV
 		}
 
 		bool isRaid => type==ArmyType.raid; 
+		bool isCavernRaid => type==ArmyType.raid && target.isDungeon; 
 		bool isDefense => type==ArmyType.defense && !isSettle;
-		int splits => isDefense || isRaid ? splitsCombo.SelectedIndex+1 : 1;
+		int splits => isDefense || isCavernRaid ? splitsCombo.SelectedIndex+1 : 1;
 
 		public static void ShowInstance(City city,City target,bool isSettle,bool viaWater=false, ArmyType type = ArmyType.defense)
 		{
@@ -73,7 +74,7 @@ namespace CnV
 			if(isSettle)
 				rv.troopItems[Troops.ttMagistra].count = 1;
 
-			rv.raidPanel.Visibility = rv.isRaid ? Visibility.Visible : Visibility.Collapsed;
+			rv.raidPanel.Visibility = rv.isCavernRaid ? Visibility.Visible : Visibility.Collapsed;
 			rv.OnPropertyChanged();
 			rv.Show(false);
 			
@@ -197,7 +198,7 @@ namespace CnV
 			{
 				var splits = this.splits;
 
-				var flags = (byte)(isRaid ? ((repeatCheckBox.IsChecked.Value ? Army.flagRepeating : Army.flagNone)
+				var flags = (byte)(isCavernRaid ? ((repeatCheckBox.IsChecked.Value ? Army.flagRepeating : Army.flagNone)
 									)
 									| Army.FlagSplits(splits) : Army.flagNone);
 				var arrival = ServerTime.CombineDateTime(arrivalDate.SelectedDate,arrivalTime.SelectedTime);

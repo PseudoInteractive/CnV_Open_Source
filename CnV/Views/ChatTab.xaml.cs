@@ -1,45 +1,24 @@
-﻿using CnV.Helpers;
-using CommunityToolkit.WinUI;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading;
-using Windows.ApplicationModel.Core;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-//using Windows.UI.Core;
+﻿//using Windows.UI.Core;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
 using CnVDiscord;
-using static CnV.Debug;
-using Microsoft.UI.Xaml.Documents;
-using CnV.Game;
 using System.Text.Json;
 using Microsoft.UI;
-using CnV.Services;
-using System.Threading.Tasks;
 using System.Text;
-using Microsoft.UI.Xaml.Media.Imaging;
-using System.Collections.ObjectModel;
 using CommunityToolkit.WinUI.UI.Controls;
 
 
 namespace CnV.Views
 {
 	using System.Collections.Immutable;
+
 	using CnV;
 
 	using DSharpPlus.Entities;
-	using Game;
+
 	using Services;
 
 	public sealed class ChatEntry
@@ -70,20 +49,20 @@ namespace CnV.Views
 		{
 			return Player.FromNameOrNull(player)?.avatarImage;
 		}
-		public ChatEntry(string _player, string _a, DateTimeOffset _time = default)
+		public ChatEntry(string _player,string _a,DateTimeOffset _time = default)
 		{
 			avatar = GetAvatar(_player);
 			text = Note.TranslateCOTGChatToMarkdown(_a.Truncate(maxMessageLength));
 			time = _time;
 			player = _player;
 		}
-		public ChatEntry(string _player, string _text, DateTimeOffset _time, byte _type) 
+		public ChatEntry(string _player,string _text,DateTimeOffset _time,byte _type)
 		{
 			avatar = GetAvatar(_player);
 			text = _text.Truncate(maxMessageLength);
 			time = _time;
-			type = _type; 
-			player = _player; 
+			type = _type;
+			player = _player;
 		}
 
 
@@ -107,7 +86,7 @@ namespace CnV.Views
 	//    }
 	//}
 
-	public sealed partial class ChatTab : UserTab
+	public sealed partial class ChatTab:UserTab
 	{
 		public static ChatTab alliance;// = new ChatTab() { Tag = nameof(alliance) };
 		public static ChatTab world;// = new ChatTab() { Tag = nameof(world) };
@@ -115,56 +94,60 @@ namespace CnV.Views
 									  // public static ChatTab whisper = new ChatTab() { Tag = nameof(whisper) };
 
 		public static ChatTab debug;// = new ChatTab() { Tag = nameof(debug) };
-		public static ImmutableDictionary<ulong,ChatTab> discordChatTabs =  ImmutableDictionary<ulong,ChatTab>.Empty;
+		public static ImmutableDictionary<ulong,ChatTab> discordChatTabs = ImmutableDictionary<ulong,ChatTab>.Empty;
 		public static ImmutableArray<ChatTab> all = ImmutableArray<ChatTab>.Empty;
 		public DiscordChannel discordChannel; // 0 if not a discord Id
-		
+
 		public static void Ctor()
 		{
 			alliance = new ChatTab() { Tag = nameof(alliance) };
 			world = new ChatTab() { Tag = nameof(world) };
 			officer = new ChatTab() { Tag = nameof(officer) };
-		// public static ChatTab whisper = new ChatTab() { Tag = nameof(whisper) };
+			// public static ChatTab whisper = new ChatTab() { Tag = nameof(whisper) };
 			debug = new ChatTab() { Tag = nameof(debug) };
 
 			all = (new ChatTab[] { }).ToImmutableArray();
 		}
 		public string whisperTarget; // null if no target
 		public DateTimeOffset lastRead;
-		public static string[] chatToId = { nameof(world), "whisper", nameof(alliance), nameof(officer) };
+		public static string[] chatToId = { nameof(world),"whisper",nameof(alliance),nameof(officer) };
 		//        public DumbCollection<ChatEntry> logEntries = new DumbCollection<ChatEntry>(new ChatEntry[] { new ChatEntry("Hello") });
 		// public DumbCollection<ChatEntryGroup> Groups { get; set; } = new DumbCollection<ChatEntryGroup>();// new[] { new ChatEntryGroup() {time=AUtil.dateTimeZero} });
-		public NotifyCollection<ChatEntry> items { get; set; } = new ();
-		override public Task VisibilityChanged(bool visible, bool longTerm)
+		public NotifyCollection<ChatEntry> items { get; set; } = new();
+		override public Task VisibilityChanged(bool visible,bool longTerm)
 		{
-			if (items.Count > 0 && visible)
+			if(items.Count > 0 && visible)
 			{
 				AppS.QueueOnUIThread(() =>
-				
+
 				{
 					items.NotifyReset(true,true);
 					listView.ScrollIntoView(items.Last());
-		//			input.Focus(FocusState.Programmatic);
+					//			input.Focus(FocusState.Programmatic);
 				});
 			}
 
-			return base.VisibilityChanged(visible, longTerm: longTerm);
+			return base.VisibilityChanged(visible,longTerm: longTerm);
 		}
 
-		internal static void CreateChatTab(DiscordChannel channel)
+		internal static bool CreateChatTab(DiscordChannel channel)
 		{
-			var tab = new ChatTab() { discordChannel = channel, Tag = channel.Name};
+			Trace($"Create {channel.Id}");
+			if(all.Any(a => a.discordChannel?.Id == channel?.Id))
+				return false;
+			var tab = new ChatTab() { discordChannel = channel,Tag = channel.Name };
 			all = all.Add(tab);
 			tab.ShowOrAdd();
+			return true;
 		}
 
-	
+
 
 		public override TabPage defaultPage => ChatTab.tabPage;
 		//public ChatEntry lastChat = new ChatEntry(null, string.Empty, DateTimeOffset.MinValue, 0);
-		public void Post(ChatEntry entry, bool isNew) // if is new, this message is fresh.  Otherwise loaded from archives
+		public void Post(ChatEntry entry,bool isNew) // if is new, this message is fresh.  Otherwise loaded from archives
 		{
-		// this runs on the UI thread?
+			// this runs on the UI thread?
 			// duplicate?
 			//if (lastChat.player == entry.player
 			//	&& string.Equals(lastChat.text, entry.text, StringComparison.Ordinal)
@@ -174,9 +157,9 @@ namespace CnV.Views
 			try
 			{
 
-				if (!isOpen)
+				if(!isOpen)
 				{
-					ShowOrAdd(true, false);
+					ShowOrAdd(true,false);
 				}
 				var at = entry.time;
 				//var activeGroup = Groups.Count > 0 ? Groups.Last() : null;
@@ -201,33 +184,33 @@ namespace CnV.Views
 				//	}
 				//}
 				var insert = items.Count;
-				if (!isNew)
+				if(!isNew)
 				{
-					for (; insert > 0 && items[insert - 1].time > at; --insert) { }
-					if (insert > 0)
+					for(;insert > 0 && items[insert - 1].time > at;--insert) { }
+					if(insert > 0)
 					{
 						var lastChat = items[insert - 1];
-						if (lastChat.player == entry.player
-							&& string.Equals(lastChat.text, entry.text, StringComparison.Ordinal)
+						if(lastChat.player == entry.player
+							&& string.Equals(lastChat.text,entry.text,StringComparison.Ordinal)
 							&& lastChat.type == entry.type)
 							return;
 					}
 				}
-				items.Insert(insert, entry);
+				items.Insert(insert,entry);
 				var text = entry.text;
-				if (isNew)
+				if(isNew)
 				{
-					if (this != debug && (text.Contains(Player.myName, StringComparison.OrdinalIgnoreCase) || text.Contains("@here", StringComparison.OrdinalIgnoreCase)))
+					if(this != debug && (text.Contains(Player.myName,StringComparison.OrdinalIgnoreCase) || text.Contains("@here",StringComparison.OrdinalIgnoreCase)))
 					{
-						ToastNotificationsService.instance.ShowNotification(entry.ToString(), "mention");
+						ToastNotificationsService.instance.ShowNotification(entry.ToString(),"mention");
 						Note.Show(entry.ToString());
 					}
 				}
 
 				// Set + if not from me
-				if (entry.player != Player.myName && entry.player != null && entry.type != ChatEntry.typeWhisperTo)
+				if(entry.player != Player.myName && entry.player != null && entry.type != ChatEntry.typeWhisperTo)
 				{
-				//	Log(entry);
+					//	Log(entry);
 					SetPlus(true);
 				}
 			}
@@ -240,7 +223,7 @@ namespace CnV.Views
 		{
 			using var aaa = items.DeferChanges();
 			// Todo: batch these
-			foreach (var entry in entries)
+			foreach(var entry in entries)
 				Post(entry,false);
 		}
 
@@ -261,7 +244,7 @@ namespace CnV.Views
 		public static void L(string s)
 		{
 
-			if (debug == null || !debug.isOpen)
+			if(debug == null || !debug.isOpen)
 				return;
 			//              await _logSemaphore.WaitAsync();
 			// try
@@ -274,9 +257,9 @@ namespace CnV.Views
 					//  var str = $"{Tick.MSS()}:{s}";
 					//  instance.logEntries
 
-					debug.Post(new ChatEntry(null, s, Sim.serverTime), true);
+					debug.Post(new ChatEntry(null,s,Sim.serverTime),true);
 				}
-				catch (Exception e)
+				catch(Exception e)
 				{
 					LogEx(e);
 				}
@@ -299,22 +282,22 @@ namespace CnV.Views
 			//      }
 			//});
 		}
-		private void MarkdownTextBlock_LinkClicked(object sender, LinkClickedEventArgs e)
+		private void MarkdownTextBlock_LinkClicked(object sender,LinkClickedEventArgs e)
 		{
-			Note.MarkDownLinkClicked(sender, e);
+			Note.MarkDownLinkClicked(sender,e);
 		}
 
-		private void HyperlinkButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
+		private void HyperlinkButton_RightTapped(object sender,RightTappedRoutedEventArgs e)
 		{
 			var chatEntry = sender as HyperlinkButton;
-			if (chatEntry != null)
+			if(chatEntry != null)
 				Sim.ShowPlayer(chatEntry.Content.ToString());
 		}
-		private void HyperlinkButton_Tapped(object sender, TappedRoutedEventArgs e)
+		private void HyperlinkButton_Tapped(object sender,TappedRoutedEventArgs e)
 		{
 			var chatEntry = sender as HyperlinkButton;
-			if (chatEntry != null)
-				PasteToChatInput($"/w {chatEntry.Content.ToString()} ", false);
+			if(chatEntry != null)
+				PasteToChatInput($"/w {chatEntry.Content.ToString()} ",false);
 
 		}
 
@@ -322,7 +305,7 @@ namespace CnV.Views
 		internal static TabPage tabPage;
 		const int maxItems = 512;
 
-		private void Paste(string s, bool afterInput)
+		private void Paste(string s,bool afterInput)
 		{
 			try
 			{
@@ -347,26 +330,26 @@ namespace CnV.Views
 			}
 		}
 
-		private void input_KeyDown(object sender, KeyRoutedEventArgs e)
+		private void input_KeyDown(object sender,KeyRoutedEventArgs e)
 		{
-			if (Tag is string s)
+			if(Tag is string s)
 			{
 				var isWhisperChannel = whisperTarget != null;
 				//int id = isWhisperChannel ? 1 : chatToId.IndexOf(s);
 				//if (id >= 0)
 				{
 					var sel = input.Text;
-					if ((e.Key == Windows.System.VirtualKey.Up) || (e.Key == Windows.System.VirtualKey.Down))
+					if((e.Key == Windows.System.VirtualKey.Up) || (e.Key == Windows.System.VirtualKey.Down))
 					{
-						if (messageCache.Count > 0)
+						if(messageCache.Count > 0)
 						{
 							var index = messageCache.IndexOf(sel);
-							if (e.Key == Windows.System.VirtualKey.Up)
+							if(e.Key == Windows.System.VirtualKey.Up)
 							{
-								if (index <= 0)
+								if(index <= 0)
 								{
 									index = messageCache.Count - 1;
-									if (!sel.IsNullOrEmpty())
+									if(!sel.IsNullOrEmpty())
 										messageCache.Add(sel);
 
 								}
@@ -377,12 +360,12 @@ namespace CnV.Views
 							}
 							else
 							{
-								if (index == -1)
+								if(index == -1)
 								{
 									index = 0;
-									if (!sel.IsNullOrEmpty())
+									if(!sel.IsNullOrEmpty())
 									{
-										messageCache.Insert(0, sel);
+										messageCache.Insert(0,sel);
 										++index;
 									}
 
@@ -391,7 +374,7 @@ namespace CnV.Views
 								else
 								{
 									++index;
-									if (index >= messageCache.Count)
+									if(index >= messageCache.Count)
 										index = 0;
 								}
 							}
@@ -399,35 +382,49 @@ namespace CnV.Views
 							input.SelectedText = messageCache[index];
 						}
 					}
-					else if (e.Key == Windows.System.VirtualKey.Enter)
+					else if(e.Key == Windows.System.VirtualKey.Enter)
 					{
 						var str = input.Text;
-						if (!str.IsNullOrEmpty())
+						if(!str.IsNullOrEmpty())
 						{
 
 							//   Log(input.Text);
 							messageCache.Remove(str); // remove duplicates
 							messageCache.Add(str);
 							// remove duplicates
-							if (isWhisperChannel)
+							if(isWhisperChannel)
 							{
-								if (str[0] != '/')
+								if(str[0] != '/')
 								{
 									str = $"/w {whisperTarget} {str}";
 								}
 							}
 							input.Text = "";
 
-							if (discordChannel is not null)
+							if(discordChannel is not null)
 							{
-									CnVChatClient.instance.connection.SendMessageAsync(new(){channelId=discordChannel.Id,memberId=Player.me.discordId,messageText=str});
+								
+									async void SendAsync(string str)
+									{
+										try
+										{
+											await CnVChatClient.instance.connection.SendMessageAsync(new() { channelId=discordChannel.Id,memberId=Player.me.discordId,messageText=str });
+
+										}
+										catch(Exception _ex)
+										{
+											LogEx(_ex);
+
+										}
+									}
+								SendAsync(str);
 							}
 							else
 							{
 								int cotgId = isWhisperChannel ? 1 : chatToId.IndexOf(s);
-								if ( cotgId >= 0)
+								if(cotgId >= 0)
 								{
-									Sim.SendChat(cotgId + 1, str);
+									Sim.SendChat(cotgId + 1,str);
 								}
 
 							}
@@ -444,14 +441,16 @@ namespace CnV.Views
 					}
 				}
 			}
+
+		
 		}
 
 		internal static void Post(ulong channelId,ChatEntry chat,bool isNew,bool notify)
 		{
 			ChatTab t = null;
-			foreach (var tab in all)
+			foreach(var tab in all)
 			{
-				if (tab.discordChannel?.Id == channelId)
+				if(tab.discordChannel?.Id == channelId)
 				{
 					t = tab;
 					break;
@@ -459,39 +458,39 @@ namespace CnV.Views
 			}
 			if(t ==null)
 				t = alliance;
-			t.Post(chat, isNew);
+			t.Post(chat,isNew);
 
 		}
 
-		public static ChatTab GetWhisperTab(string player, bool activate)
+		public static ChatTab GetWhisperTab(string player,bool activate)
 		{
-			foreach (var w in all)
+			foreach(var w in all)
 			{
-				if (w.whisperTarget != null && w.whisperTarget == player)
+				if(w.whisperTarget != null && w.whisperTarget == player)
 				{
-					if (activate)
+					if(activate)
 						TabPage.Show(w);
 					return w;
 				}
 			}
-			var ch = new ChatTab() { Tag = player, whisperTarget = player };
+			var ch = new ChatTab() { Tag = player,whisperTarget = player };
 			all = all.Add(ch);
-			ch.ShowOrAdd(activate, false);
+			ch.ShowOrAdd(activate,false);
 			return ch;
 		}
 
 		private static ChatEntry GetChatMessage(JsonElement msg)
 		{
-			if (!msg.TryGetProperty("b", out var info))
+			if(!msg.TryGetProperty("b",out var info))
 			{
-				return new ChatEntry("", "Error");
+				return new ChatEntry("","Error");
 			}
-			var ch = new ChatEntry(info.GetAsString("b"), System.Net.WebUtility.HtmlDecode(info.GetAsString("d") ) )
+			var ch = new ChatEntry(info.GetAsString("b"),System.Net.WebUtility.HtmlDecode(info.GetAsString("d")))
 			{
 				crown = info.GetAsByte("c"),
 				type = info.GetAsByte("a")
 			};
-			if (msg.TryGetProperty("c", out var c))
+			if(msg.TryGetProperty("c",out var c))
 			{
 				ch.time = c.GetString().ParseDateTime();
 			}
@@ -503,25 +502,25 @@ namespace CnV.Views
 			return ch;
 		}
 		// also for whisper
-		public static void PasteToChatInput(string coords, bool afterInput = true)
+		public static void PasteToChatInput(string coords,bool afterInput = true)
 		{
-			if (coords[0] == '/')
+			if(coords[0] == '/')
 			{
-				var parseEnd = coords.IndexOf(' ', 3);
-				var player = coords.Substring(3, parseEnd - 3);
+				var parseEnd = coords.IndexOf(' ',3);
+				var player = coords.Substring(3,parseEnd - 3);
 				AppS.CopyTextToClipboard(player);
-				var tab = ChatTab.GetWhisperTab(player, true);
-				tab.Paste(coords, false);
+				var tab = ChatTab.GetWhisperTab(player,true);
+				tab.Paste(coords,false);
 				return;
 			}
 			//                afterInput = false;
-			foreach (var tab in all)
-				tab.Paste(coords, afterInput);
+			foreach(var tab in all)
+				tab.Paste(coords,afterInput);
 
 			var lg = coords.Length;  //  <coords>000:000</coords>
-			if (lg == 24)
+			if(lg == 24)
 			{
-				var c = coords.Substring(8, 7);
+				var c = coords.Substring(8,7);
 				AppS.CopyTextToClipboard(c);
 				//               Note.Show($"[{c}](/c/{c}) posted to chat");
 			}
@@ -530,39 +529,39 @@ namespace CnV.Views
 		public static void ProcessIncomingChat(JsonElement jsp)
 		{
 			var a = jsp.GetAsInt("a");
-			switch (a)
+			switch(a)
 			{
 				case 444:
 				case 555:
 				case 333:
 					{
-						if (!jsp.TryGetProperty("b", out var messages))
+						if(!jsp.TryGetProperty("b",out var messages))
 							break;
 
 						var batch = new List<ChatEntry>();
-						foreach (var msg in messages.EnumerateArray())
+						foreach(var msg in messages.EnumerateArray())
 						{
 							batch.Add(GetChatMessage(msg));
 						}
 						int c = batch.Count-1;
 						var epsilon = TimeSpan.FromSeconds(10);
 						var lastTime = Sim.serverTime + epsilon;
-						for (; c >= 0;--c)
+						for(;c >= 0;--c)
 						{
-							while( lastTime < batch[c].time )
+							while(lastTime < batch[c].time)
 							{
 								batch[c].time -= TimeSpan.FromDays(1); // days are missing damn it
 							}
 							lastTime = batch[c].time+epsilon;
 						}
 
-						if (a == 333)
+						if(a == 333)
 						{
 							ChatTab.world.Post(batch);
 						}
 						else
 						{
-							if (a != 444)
+							if(a != 444)
 							{
 								ChatTab.officer.Post(batch);
 							}
@@ -579,7 +578,7 @@ namespace CnV.Views
 				case 3:
 					{
 						var ch = GetChatMessage(jsp);
-						if (ch.type == ChatEntry.typeWhisperFrom || ch.type == ChatEntry.typeWhisperTo) // whisper
+						if(ch.type == ChatEntry.typeWhisperFrom || ch.type == ChatEntry.typeWhisperTo) // whisper
 						{
 							//if (ch.player == "Avatar" && ch.type == ChatEntry.typeWhisperFrom)
 							//	PlayerHooks.PlayerChat?.Invoke(new PlayerHooks.PlayerChatEventArgs() { player = Player.FromName(ch.player), text = ch.text });
@@ -589,7 +588,7 @@ namespace CnV.Views
 							//		var prior = FocusManager.GetFocusedElement();
 							//		Log(prior.GetType());
 
-							ChatTab.GetWhisperTab(ch.player, false).Post(ch, true);
+							ChatTab.GetWhisperTab(ch.player,false).Post(ch,true);
 							// ChatTab.whisper.Post(ch);
 							ChatTab.alliance.Post(ch,true);
 							//       ChatTab.officer.Post(ch);
@@ -597,19 +596,19 @@ namespace CnV.Views
 						}
 						else
 						{
-							if (ch.type == 5)
+							if(ch.type == 5)
 							{
-								ChatTab.officer.Post(ch, true);
+								ChatTab.officer.Post(ch,true);
 							}
-							if (ch.type == 5 || ch.type == 4)
+							if(ch.type == 5 || ch.type == 4)
 							{
 
 								//if (ch.type == 4)
 								//	PlayerHooks.PlayerChat?.Invoke(new PlayerHooks.PlayerChatEventArgs() { player = Player.FromName(ch.player), text = ch.text });
-								ChatTab.alliance.Post(ch, true);
+								ChatTab.alliance.Post(ch,true);
 							}
 							else
-								ChatTab.world.Post(ch, true);
+								ChatTab.world.Post(ch,true);
 						}
 						break;
 					}
@@ -770,29 +769,29 @@ namespace CnV.Views
 		//    });
 		//}
 		//static ChatTab hasFocus;
-		private void input_GotFocus(object sender, RoutedEventArgs e)
+		private void input_GotFocus(object sender,RoutedEventArgs e)
 		{
 			SetPlus(false);
-		//	hasFocus = this;
+			//	hasFocus = this;
 		}
 
-		private void inputPointerOver(object sender, PointerRoutedEventArgs e)
+		private void inputPointerOver(object sender,PointerRoutedEventArgs e)
 		{
 			//           Log("Tapped");
 			//   listView.Focus(FocusState.Programmatic);
-	//		if(input.Focus(FocusState) == focus )
-	//			input.Focus(FocusState.Keyboard);
+			//		if(input.Focus(FocusState) == focus )
+			//			input.Focus(FocusState.Keyboard);
 		}
 
 
 
-		private void Copy_Click(object sender, RoutedEventArgs e)
+		private void Copy_Click(object sender,RoutedEventArgs e)
 		{
 			var sb = new StringBuilder();
 			var sel = listView.SelectedItems;
-			if (sel.Any())
+			if(sel.Any())
 			{
-				foreach (var _i in sel)
+				foreach(var _i in sel)
 				{
 					var i = _i as ChatEntry;
 					sb.Append($"{i.arrivedString}:{i.player}:{i.text}\n");
@@ -800,7 +799,7 @@ namespace CnV.Views
 			}
 			else
 			{
-				foreach (var _i in items)
+				foreach(var _i in items)
 				{
 					var i = _i as ChatEntry;
 					sb.Append($"{i.arrivedString}:{i.player}:{i.text}\n");
@@ -812,7 +811,7 @@ namespace CnV.Views
 		}
 	}
 
-	class HyperlinkColorConverter : IValueConverter
+	class HyperlinkColorConverter:IValueConverter
 	{
 		static SolidColorBrush[] brushes;
 		static HyperlinkColorConverter()
@@ -827,13 +826,13 @@ namespace CnV.Views
 			brushes[ChatEntry.typeAnnounce] = new SolidColorBrush() { Color = Colors.Red };
 
 		}
-		public object Convert(object value, Type targetType, object parameter, string language)
+		public object Convert(object value,Type targetType,object parameter,string language)
 		{
 			var ce = value as ChatEntry;
 			return brushes[ce.type];
 		}
 
-		public object ConvertBack(object value, Type targetType, object parameter, string language)
+		public object ConvertBack(object value,Type targetType,object parameter,string language)
 		{
 			LogEx(new NotImplementedException());
 			return default;

@@ -113,6 +113,10 @@
 				                      TextAlignment="Center"
 									  DisplayNumberFormat="N0"
 											 />
+				<sf:GridNumericColumn MappingName="caps"
+				                      TextAlignment="Center"
+									  DisplayNumberFormat="N0"
+											 />
 				<sf:GridNumericColumn MappingName="buildingDamage"
 				                      TextAlignment="Center"
 									  DisplayNumberFormat="N0"

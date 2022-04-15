@@ -235,7 +235,7 @@ public static partial class CityUI
 			//	flyout.AddItem("Ministers", me.ministersOn, (me as City).SetMinistersOn);
 			}
 		}
-		else if (me.isDungeon || me.isBoss)
+		else if (me.isDungeonOrBoss)
 		{
 			AApp.AddItem(flyout, "Raid", (_, _) => City.GetBuild().Raid(WorldC.FromCid(cid) ));
 

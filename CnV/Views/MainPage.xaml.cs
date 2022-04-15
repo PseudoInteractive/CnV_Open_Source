@@ -200,7 +200,7 @@ namespace CnV.Views
 					var maxLoot = d.loot*r.splits;
 					var loot = carry.Min((maxLoot));
 					var res = new Resources(Troops.cavernLootRatios[(int)d.resId]*loot);
-					var gold = (int)((loot * Troops.cavernGoldByLevel[d.level])/100);
+					var gold = (int)((loot * d.goldPercent)/100);
 					var dt = r.journeyTime * 2;
 					var multiplier = ISmallTime.secondsPerHour / (double)dt;
 					raidIncome += new ResourcesAndGold( res*multiplier, (gold*multiplier).RoundToInt()) ;

@@ -315,7 +315,7 @@
 							  Visibility="{x:Bind IncomingReinforcementsVisible,Mode=OneWay}">
 
 						<StackPanel>
-							<TextBlock Text="Incoming" Style="{StaticResource TextBlockMedium}" Margin="4" />
+							<TextBlock Text="Incoming or returning" Style="{StaticResource TextBlockMedium}" Margin="4" />
 							<TextBlock Text="{x:Bind IncomingReinforcements, Mode=OneWay}"  Style="{StaticResource TextBlockMedium}"  
 									   TextWrapping="Wrap" FontSize="16" MaxLines="8" Margin="8,2,2,2" />
 							<ListView 

@@ -143,7 +143,7 @@ using Game;
 									toolTip = $"Moon Gate";
 									break;
 							default:
-								if(data.isDungeon)
+								if(data.isDungeonOrBoss)
 								{
 									var cavern = Cavern.Get(cid);
 									toolTip = cavern.ToString(); // \ntype:{data >> 4}";
