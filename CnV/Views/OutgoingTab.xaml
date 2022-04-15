@@ -18,7 +18,14 @@
         </Grid.RowDefinitions>
 		<tk:WrapPanel>
 			<ToggleSwitch Header="Internal" OnContent="Include" OffContent="Excluse" IsOn="{x:Bind includeInternal,Mode=TwoWay}" Toggled="ToggleSwitch_Toggled"/>
-			<ToggleSwitch Header="From" OnContent="Me" OffContent="Anyone" IsOn="{x:Bind onlyMine,Mode=TwoWay}" Toggled="ToggleSwitch_Toggled"/>
+			<ComboBox Header="From" SelectedIndex="{x:Bind filterFrom,Mode=TwoWay}" SelectionChanged="filterFromChanged" >
+				<ComboBox.Items>
+					<ComboBoxItem>Me</ComboBoxItem>
+					<ComboBoxItem>Subs</ComboBoxItem>
+					<ComboBoxItem>Alliance</ComboBoxItem>
+					<ComboBoxItem>Anyone</ComboBoxItem>
+				</ComboBox.Items>
+			</ComboBox>
 		</tk:WrapPanel>
         <sf:SfDataGrid Grid.Row="1" x:Name="attackerGrid"
 						x:FieldModifier="public"
@@ -81,7 +88,7 @@ ItemsSource="{x:Bind attackerSource,Mode=OneWay}"
                                        MappingName="alliance"
                                        TextAlignment="Left"
                                        
-                                        IsHidden="True" />
+                                       />
                 <sf:GridTextColumn MappingName="attackers"
                                        TextAlignment="Left"
                                        
@@ -110,11 +117,11 @@ IsTabStop="True"
                                     
                                     AutoGenerateColumns="False">
             <sf:SfDataGrid.Columns>
-                <sf:GridTimeColumn MappingName="time"
-                                   DisplayTimeFormat="0:dd',' HH':'mm':'ss"
+                <sf:GridTimeColumn MappingName="T"
+                                   DisplayTimeFormat="MM/dd',' HH':'mm':'ss"
                                    TextAlignment="Center" />
 				<sf:GridHyperlinkColumn MappingName="sXY" />
-                <sf:GridTextColumn MappingName="Type"
+                <sf:GridTextColumn MappingName="typeS"
                                                    
                                                    
                                                    TextAlignment="Center" />
@@ -139,13 +146,9 @@ IsTabStop="True"
                                                    
                                                    
                                                    TextAlignment="Left" />
-                <sf:GridNumericColumn MappingName="dTS"
-                                            
-                                       TextAlignment="Right"
-                                            DisplayNumberFormat="N0"
-                                             />
+           
                 <sf:GridTextColumn MappingName="troopInfo"
-                                                   
+                                                 HeaderText="Attack"  
                                                    
                                                    TextAlignment="Left" />
             </sf:SfDataGrid.Columns>

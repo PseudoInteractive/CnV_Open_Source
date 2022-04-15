@@ -57,7 +57,7 @@ namespace CnV.Views
 		{
             if (visible)
             {
-	            IncomingOverview.ProcessTask();
+	           
 				if (defendants.Count == 0)
 				{
 					var focus = Spot.GetFocus();

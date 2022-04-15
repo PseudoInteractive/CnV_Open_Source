@@ -14,8 +14,14 @@
       mc:Ignorable="d">
 
     <Grid>
-        
-        <sf:SfDataGrid x:Name="historyGrid"
+		<Grid.RowDefinitions>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+		<ComboBox Header="CityFilter" x:Name="cityFilterCombo" ItemsSource="{x:Bind cityFilter, Mode=OneWay}" SelectedIndex="0" SelectionChanged="cityFilterCombo_SelectionChanged" />
+		<sf:SfDataGrid 
+			Grid.Row="1"
+			x:Name="historyGrid"
 AllowFocusOnInteraction="True"
 Loaded="DataGridLoaded"				
 

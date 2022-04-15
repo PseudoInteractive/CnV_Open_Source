@@ -608,6 +608,12 @@ namespace CnV.Views
 																	AppS.isTest ^= true;
 																	Trace(AppS.isTest.ToString());
 																}));
+				KeyboardAccelerators.Add(BuildKeyboardAccelerator(key: VirtualKey.F12,modifiers:
+																VirtualKeyModifiers.Control|VirtualKeyModifiers.Shift,OnKeyboardAcceleratorInvoked: (_,a) =>
+																{
+																	a.Handled=true;
+																	Sim.AddSubs();
+																}));
 
 
 				//AppS.SetState(AppS.State.active);

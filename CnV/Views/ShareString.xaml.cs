@@ -259,6 +259,8 @@ namespace CnV.Views
 							   if(NameBlade.IsOpen)
 							   {
 								   city.info.name = cityName.Text;
+								   if(city.info.name.IsNullOrEmpty())
+									   city.info.name = null;
 								   city.info.notes = cityNotes.Text;
 								   city.info.remarks = cityRemarks.Text;
 

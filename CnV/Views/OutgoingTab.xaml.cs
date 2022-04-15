@@ -12,10 +12,13 @@ namespace CnV.Views
 
 	public sealed partial class OutgoingTab : UserTab
     {
-		public static Spot lastSelected;
 		bool includeInternal;
-		bool onlyMine;
-		
+		int filterFrom = filterFromAlliance;
+		const int filterFromMe = 0;
+		const int filterFromSubs = 1;
+		const int filterFromAlliance = 2;
+		const int filterFromAll = 3;
+
 
 		public static OutgoingTab instance;
         //        public static Report showingRowDetails;
@@ -33,6 +36,7 @@ namespace CnV.Views
 
             InitializeComponent();
 			SetupDataGrid(attackerGrid);
+			SetupDataGrid(armyGrid);
 //			spotGrids.Add(attackerGrid);
 
 		//	attackerGrid.OnKey = Spot.OnKeyDown;
@@ -55,23 +59,36 @@ namespace CnV.Views
 
 		NotifyCollection<City> attackerSource = new();
 
-
+		
 
 		public static void NotifyOutgoingUpdated()
         {
-            if (OutgoingTab.IsVisible())
-            {
-                try
-                {
-					instance.attackerSource.Set( Spot.defendersO.Where( w => w.testContinentFilter 
-																					&& (instance.includeInternal || !w.IsAllyOrNap() ) 
-																					&& (!instance.onlyMine ||w.HasIncomingFrom(Player.myId))).OrderBy(w=>w.firstIncoming) );
+			if(OutgoingTab.IsVisible())
+			{
+				AppS.QueueOnUIThread(() =>
+				{ 
+				try
+				{
+					instance.attackerSource.Set((instance.filterFrom switch
+					{
+						filterFromMe => City.myCities,
+						filterFromSubs => City.subCities,
+						filterFromAlliance => City.allianceCities,
+						_ => City.allCities,
+
+					}).SelectMany(c => c.outgoing.Where(a => a.isAttack).Select(a => a.targetCity).Distinct()).
+					Where(w =>
+																					  w.testContinentFilter
+																					&& (instance.includeInternal || !w.IsAllyOrNap())).OrderBy(w => w.firstIncoming)); ; ;
 					instance.attackerSource.ItemContentChanged();
+					selChanged.Go();
 				}
-                catch (Exception e)
-                {
-                    LogEx(e);
-                }
+				catch(Exception e)
+				{
+					LogEx(e);
+				}
+			}
+				);
             }
         }
 
@@ -99,14 +116,15 @@ namespace CnV.Views
 
 		static Task SelChanged()
 		{
-			var sel = lastSelected;
+			var sel = instance.attackerGrid.SelectedItem as Spot;
 			if (sel != null)
 			{
 				instance.armyGrid.ItemsSource = sel.incoming;
 				if (Settings.fetchFullHistory)
 				{
 					var tab = HitHistoryTab.instance;
-					if (!instance.isFocused)
+					tab.SetFilter(sel);
+					if (!tab.isFocused)
 					{
 						tab.ShowOrAdd(true, onlyIfClosed: true);
 
@@ -125,26 +143,17 @@ namespace CnV.Views
 		{
 			if (!isOpen)
 				return;
-
-			var sel = attackerGrid.SelectedItem as Spot;
-           // if(sel==null)
-           // {
-           ////     armyGrid.ItemsSource = Army.empty;
-           // }
-           // else
-            {
-				if (lastSelected == sel)
-					return;
-				lastSelected = sel;
-
-				selChanged.Go(/*throttled: true,runAgainIfStarted: false*/);
-
-			}
+			selChanged.Go();
 		}
 
 		private void ToggleSwitch_Toggled(object sender, RoutedEventArgs e)
 		{
 			instance.refresh.Go();
+		}
+
+		private void filterFromChanged(object sender,Microsoft.UI.Xaml.Controls.SelectionChangedEventArgs e)
+		{
+			refresh.Go();
 		}
 	}
        

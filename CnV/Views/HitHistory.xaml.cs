@@ -10,13 +10,24 @@ namespace CnV.Views
 
 	public sealed partial class HitHistoryTab : UserTab
     {
+		NotifyList<City> cityFilter = new(new[] { City.invalid });
+		internal void SetFilter(City c)
+		{
+			AppS.QueueOnUIThread(() =>
+			{
+				cityFilter.AddIfAbsent(c);
+				cityFilter.OnReset();
+				cityFilterCombo.SelectedItem = c;
+			});
+		}
+
 		public override  TabPage defaultPage => TabPage.secondaryTabs;
 		//public ArmyArray history { get; set; } = ArmyArray.Empty;
 		public void UpdateDataGrid()
 		{
 			
-				var sel = IncomingTab.selected ?? OutgoingTab.selected;
-				if(sel == null)
+				var sel = instance.cityFilterCombo.SelectedItem as City;
+				if(sel == null || sel.IsInvalid())
 					historyGrid.ItemsSource = BattleReport.all;
 				else
 				{
@@ -74,5 +85,9 @@ namespace CnV.Views
       
         public static bool IsVisible() => instance.isFocused;
 
-    }
+		private void cityFilterCombo_SelectionChanged(object sender,Microsoft.UI.Xaml.Controls.SelectionChangedEventArgs e)
+		{
+			UpdateDataGrid();
+		}
+	}
 }

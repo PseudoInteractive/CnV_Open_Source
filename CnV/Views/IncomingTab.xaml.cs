@@ -239,6 +239,8 @@ namespace CnV.Views
 					if(Settings.fetchFullHistory)
 					{
 						var tab = HitHistoryTab.instance;
+						tab.SetFilter(sel);
+
 						if(!tab.isFocused)
 						{
 							tab.ShowOrAdd(true,onlyIfClosed: true);

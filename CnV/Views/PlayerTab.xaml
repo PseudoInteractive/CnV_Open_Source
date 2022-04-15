@@ -83,7 +83,40 @@
 										   ShowHeaderToolTip="True"
 										   TextAlignment="Center"
 										    />
+				<sf:GridNumericColumn MappingName="kills"
+				                      TextAlignment="Center"
+									  DisplayNumberFormat="N0" />
 
+				<sf:GridNumericColumn MappingName="defKills"
+				                      TextAlignment="Center"
+									  DisplayNumberFormat="N0"
+											 />
+				<sf:GridNumericColumn MappingName="supportKills"
+				                      TextAlignment="Center"
+									  DisplayNumberFormat="N0"
+											 />
+
+				<sf:GridNumericColumn MappingName="offReputation"
+				                      TextAlignment="Center"
+									  DisplayNumberFormat="N0"
+											 />
+
+				<sf:GridNumericColumn MappingName="recruitedTroops"
+				                      TextAlignment="Center"
+									  DisplayNumberFormat="N0"
+											 />
+				<sf:GridNumericColumn MappingName="cavernLoot"
+				                      TextAlignment="Center"
+									  DisplayNumberFormat="N0"
+											 />
+				<sf:GridNumericColumn MappingName="plundered"
+				                      TextAlignment="Center"
+									  DisplayNumberFormat="N0"
+											 />
+				<sf:GridNumericColumn MappingName="buildingDamage"
+				                      TextAlignment="Center"
+									  DisplayNumberFormat="N0"
+											 />
 			</sf:SfDataGrid.Columns>
 			<sf:SfDataGrid.DetailsViewDefinition>
 				<!--  FirstLevelNestedGrid1 is created here  -->

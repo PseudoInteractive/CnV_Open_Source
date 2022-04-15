@@ -144,12 +144,12 @@ namespace CnV
 		public static void BackInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
 		{
 			Back(true);
-			//args.Handled = true;
+			args.Handled = true;
 		}
 		public static void ForwardInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
 		{
 			Forward(true);
-			//args.Handled = true;
+			args.Handled = true;
 		}
 
 		public static void BackClick(object sender, RoutedEventArgs e)

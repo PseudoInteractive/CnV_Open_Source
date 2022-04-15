@@ -164,7 +164,7 @@
 			<sf:SfDataGrid.Columns>
 				<sf:GridTimeColumn
                                                    MappingName="T"
-                                                   DisplayTimeFormat="0:dd',' HH':'mm':'ss"
+                                                   DisplayTimeFormat="MM/dd',' HH':'mm':'ss"
                                                    TextAlignment="Center" />
 				<sf:GridHyperlinkColumn MappingName="sXY"
 
@@ -180,7 +180,7 @@
 
                                                    ColumnWidthMode="Auto" 
                                                    TextAlignment="Left" />
-				<sf:GridTextColumn MappingName="defenseAtArrival"
+				<sf:GridTextColumn MappingName="defenseAtArrivalS"
 
                                                    ColumnWidthMode="Auto" 
                                                    TextAlignment="Left" />
@@ -196,7 +196,7 @@
                                                    TextAlignment="Left" />
 				<sf:GridTimeColumn
                                                    MappingName="spotted"
-                                                   DisplayTimeFormat="0:dd',' HH':'mm':'ss"
+                                                   DisplayTimeFormat="MM/dd',' HH':'mm':'ss"
                                                    TextAlignment="Center" />
 
 				

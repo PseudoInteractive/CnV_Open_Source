@@ -1468,72 +1468,7 @@ internal partial class GameClient
 							}
 
 						}
-						const int raidCullSlopSpace = 4;
-						foreach(var city in City.subCities)
-						{
-							if(!city.testContinentFilter)
-								continue;
-
-							var wc = city.cid.CidToWorld();
-							// Todo: clip thi
-							//if(city.senatorInfo.Length != 0 && !(IncomingTab.IsVisible() || NearDefenseTab.IsVisible()))
-							//{
-							//	//var c = wc.WorldToCamera();
-							//	var idle = 0;
-							//	var active = 0;
-							//	var recruiting = 0;
-							//	foreach(var sen in city.senatorInfo)
-							//	{
-							//		if(sen.type == SenatorInfo.Type.idle)
-							//			idle += sen.count;
-							//		else if(sen.type == SenatorInfo.Type.recruit)
-							//			recruiting += sen.count;
-							//		else
-							//			active += sen.count;
-							//		if(sen.target != 0 && sen.type == SenatorInfo.Type.settle)
-							//		{
-							//			var c1 = sen.target.CidToWorldV();
-
-							//			var dist = (float)(city.cid.DistanceToCidD(sen.target) * cartTravel); // todo: ship travel?
-							//			var t = (tick * city.cid.CidToRandom().Lerp(1.5f / 512.0f,1.75f / 512f)) + 0.25f;
-							//			var r = t.Ramp();
-							//			// Todo: more accurate senator travel times
-							//			DrawAction((float)(sen.time - serverNow).TotalSeconds,dist * 60.0f,r,wc.ToVector(),c1,senatorColor,
-							//				troopImages[ttSenator],false,null,highlight: Spot.IsSelectedOrHovered(city.cid));
-							//			DrawFlag(sen.target,SpriteAnim.flagGrey,System.Numerics.Vector2.Zero);
-							//		}
-							//	}
-							//	if(!IsCulledWC(wc))
-							//		DrawTextBox($"Sen:  {recruiting}`{idle}`{active}",wc.ToVector(),tipTextFormatCentered,Color.White,textBackgroundOpacity,Layer.tileText);
-
-							//}
-							//if(city.isMine)
-							//{
-							//	if(!IsCulledWC(wc))
-							//	{
-							//		if(!city.isSelected || city.cid == City.build)
-							//			DrawFlag(city.cid,city.cid == City.build ? SpriteAnim.flagHome : SpriteAnim.flagRed,new System.Numerics.Vector2(4,4));
-							//	}
-							//	if((MainPage.IsVisible() && Settings.raidsVisible != 0) || Settings.raidsVisible == 1)
-							//	{
-							//		if(IsSquareCulledWC(wc,raidCullSlopSpace))
-							//			continue;
-							//		//var c = wc.WorldToCamera();
-							//		var t = (tick * city.cid.CidToRandom().Lerp(1.375f / 512.0f,1.75f / 512f));
-							//		var r = t.Ramp();
-							//		//ds.DrawRoundedSquareWithShadow(c,r, raidBrush);
-							//		foreach(var raid in city.raids)
-							//		{
-							//			var ct = raid.target.CidToWorld();
-							//			var (c0, c1) = !raid.isReturning ? (wc, ct) : (ct, wc);
-							//			DrawAction((float)(raid.arrival - serverNow).TotalSeconds,
-							//				raid.GetOneWayTripTime(city),
-							//				r,c0.ToVector(),c1.ToVector(),raidColor,troopImages[raid.troopType],false,null,highlight: Spot.IsSelectedOrHovered(city.cid));
-
-							//		}
-							//	}
-							//}
-						}
+						
 					}
 
 					foreach(var cid in Spot.selected)
