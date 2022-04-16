@@ -1224,7 +1224,7 @@ internal partial class GameClient
 												{
 													if(city.isMine)
 														sprite = attack2Material;
-													else if(city.IsAllyOrNap())
+													else if(city.isAllyOrNap)
 														sprite = attack0Material;
 													else
 														sprite = attack1Material;

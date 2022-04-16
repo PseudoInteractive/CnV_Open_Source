@@ -722,7 +722,7 @@ namespace CnV.Views
 					var cid = match[0].Groups[0].Captures[0].Value.FromCoordinate();
 					var atk = City.Get(cid);
 					
-					if (!atk.IsAllyOrNap() )
+					if (!atk.isAllyOrNap )
 					{
 						if (await AppS.DoYesNoBox("Add non ally as attacker?", $"{atk.playerName} {atk}" ) != 1 )
 							continue;
@@ -878,7 +878,7 @@ namespace CnV.Views
                         var cid = m.Groups[0].Value.FromCoordinate();
 
                         var spot = City.GetOrAdd(cid);
-					if(Alliance.GetDiplomacy( spot.allianceId) == Diplomacy.allied)
+					if(Alliance.GetDiplomacy( spot.player) == Diplomacy.allied)
 					{
 						Note.Show($"You are not supposed to attack your friend {Player.IdToName(spot.pid)}");
 						continue;
@@ -1090,7 +1090,7 @@ namespace CnV.Views
 			foreach (var cid in cids)
 			{
 				var spot = City.GetOrAdd(cid);
-				if(Alliance.IsAllyOrNap(spot.allianceId) )
+				if(Alliance.IsAllyOrNap(spot) )
 				{
 					if (await AppS.DoYesNoBox("Add friend as target?", $"{spot.playerName} {spot}") != 1)
 					{

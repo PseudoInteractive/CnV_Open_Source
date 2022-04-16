@@ -79,7 +79,7 @@ namespace CnV.Views
 					}).SelectMany(c => c.outgoing.Where(a => a.isOutgoingAttack ).Select(a => a.targetCity).Distinct()).
 					Where(w =>
 																					  w.testContinentFilter
-																					&& (instance.includeInternal || !w.IsAllyOrNap())).OrderBy(w => w.firstIncoming)); ; ;
+																					&& (instance.includeInternal || !w.isAllyOrNap)).OrderBy(w => w.firstIncoming)); ; ;
 					instance.attackerSource.ItemContentChanged();
 					selChanged.Go();
 				}

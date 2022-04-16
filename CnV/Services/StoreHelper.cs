@@ -43,7 +43,7 @@ namespace CnV.Services
 			}
 			catch(Exception ex)
 			{
-				Debug.LogEx(ex);
+				Debug.Log(ex.ToString());
 			}
 		}
 

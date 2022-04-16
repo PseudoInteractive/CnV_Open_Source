@@ -164,7 +164,7 @@ public static partial class CityUI
 					var multiString = sel.Count > 1 ? $" _x {sel.Count} selected" : "";
 					aWar.AddItem("Cancel Attacks..", me.CancelAttacks);
 					var afly = aWar.AddSubMenu("Attack Planner");
-					if (!Alliance.IsAllyOrNap(me.allianceId))
+					if (!me.player.isAllyOrNap)
 					{
 						afly.AddItem("Ignore Player" + multiString, (_, _) => AttackTab.IgnorePlayer(cid.CidToPid()));
 					}
@@ -188,7 +188,7 @@ public static partial class CityUI
 
 				}
 				//else
-				if (!Alliance.IsAllyOrNap(me.allianceId))
+				if (!Alliance.IsAllyOrNap(me))
 				{
 					aWar.AddItem("Add funky Attack String", async (_, _) =>
 															{
@@ -217,9 +217,10 @@ public static partial class CityUI
 
 			aWar.AddItem("Attack",       (_, _) => Spot.JSAttack(cid));
 			aWar.AddItem("Near Defence", me.DefendMe);
-			if (me.incoming.Any())
+			//if (me.incoming.Any())
 				aWar.AddItem("Incoming", me.ShowIncoming);
-
+			//if(me.outgoing.Any())
+				aWar.AddItem("Outgoing",me.ShowOutgoing);
 			//	if (Raid.test)
 			aWar.AddItem("Send Defence",            (_, _) => City.GetBuild().SendDefence(WorldC.FromCid(cid) ));
 			aWar.AddItem("Recruit Sen",             (_, _) => Recruit.Send(cid, ttSenator, 1, true));
@@ -553,12 +554,7 @@ public static partial class CityUI
 	}
 	public static async void ShowIncoming(this City me)
 	{
-		Assert(false);
-		return;
-
-		// Todo:  use IsAlly?
-		if(Alliance.IsAlly(me.allianceId) )
-		{
+	
 			var tab = IncomingTab.instance;
 			AppS.DispatchOnUIThread(() => tab.Show());
 			
@@ -568,7 +564,7 @@ public static partial class CityUI
 										});
 
 		}
-		else
+		public static async void ShowOutgoing(this City me)
 		{
 			var tab = OutgoingTab.instance;
 			AppS.DispatchOnUIThread(() => tab.Show());
@@ -577,7 +573,6 @@ public static partial class CityUI
 											tab.attackerGrid.SetFocus(me);
 										});
 		}
-	}
 
 
 
