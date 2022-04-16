@@ -92,6 +92,11 @@ namespace CnV
 
 		private void SendClick(object sender,RoutedEventArgs e)
 		{
+			if(source.underSiege)
+			{
+				AppS.MessageBox("City is under siege");
+				return;
+			}
 			Done();
 			var viaWater = this.viaWater; // fetch before lock
 //			using(var locker = Sim.eventQLock.Enter)

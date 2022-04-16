@@ -82,6 +82,12 @@ namespace CnV
 
 		internal bool IsValid(bool verbose)
 		{
+			if(city.underSiege)
+			{
+				if(verbose)
+					AppS.MessageBox($"City is under siege");
+				return false;
+			}
 			if(isSettle)
 			{
 				if(!troopItems.Any(a => a.type == Troops.ttSenator && a.count > 0))

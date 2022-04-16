@@ -331,16 +331,23 @@ namespace CnV.Views
 				}
 				else
 				{
-					
-					
+					if(source.underSiege)
+					{
+						Note.Show($"Under Siege");
+
+					}
+					else
+					{
+
 						var trade = new TradeOrder(source: source.c,target: target.c,departure: Sim.simTime,viaWater: viaWater,isTempleTrade: asDonation,resources: s.res);
 
 						new CnVEventTrade(source.c,trade: trade).EnqueueAsap();
 
-					
+
 						{
 							Note.Show($"Sent {s.res.Format()}");
 						}
+					}
 					
 				}
 
