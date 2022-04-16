@@ -49,6 +49,7 @@ namespace CnV
 	using CnV;
 
 	using Microsoft.UI.Windowing;
+	using Microsoft.Windows.ApplicationModel.WindowsAppRuntime;
 	//// using PInvoke
 	using Services;
 
@@ -484,7 +485,7 @@ namespace CnV
 
 					await OnLaunchedOrActivated(args.UWPLaunchActivatedEventArgs);
 					//if(uwpArgs.Kind == Windows.ApplicationModel.Activation.ActivationKind.Launch)
-					//	AppS.QueueOnUIThread(Services.StoreHelper.instance.DownloadAndInstallAllUpdatesAsync);
+					AppS.QueueOnUIThread(Services.StoreHelper.instance.DownloadAndInstallAllUpdatesAsync);
 				});
 
 			}
@@ -583,6 +584,17 @@ namespace CnV
 
 			try
 			{
+				if (DeploymentManager.GetStatus().Status != DeploymentStatus.Ok)
+				{
+					// Initialize does a status check, and if the status is not Ok it will attempt to get
+					// the WindowsAppRuntime into a good state by deploying packages. Unlike a simple
+					// status check, Initialize can sometimes take several seconds to deploy the packages.
+					// These should be run on a separate thread so as not to hang your app while the
+					// packages deploy. 
+					await Task.Run(() => DeploymentManager.Initialize());
+             
+				}
+            
 
 
 

@@ -92,14 +92,14 @@ namespace CnV.Views
 						if (viaWater && !city.isOnWater)
 							continue;
 
-						var hours = 0.0f;
+						var travelTime = new TimeSpanS(0);
 						var canTravelViaWater=city.isOnWater && defendants.Any(a=>a.isOnWater);
 
 
 							int validCount = 0;
 							if (!portal)
 							{
-								validCount = FindValidDefendants(viaWater, onlyHome, city, ref hours).Count;
+								validCount = FindValidDefendants(viaWater, onlyHome, city, ref travelTime).Count;
 								if (validCount == 0)
 									continue;
 							}
@@ -137,7 +137,7 @@ namespace CnV.Views
 								{
 									sendGain = galleys * 500.0 / landTroops;
 								}
-								supporter.tSend = new(new TroopTypeCount(ttGalley, galleys));
+								supporter.tSend |= new TroopTypeCount(ttGalley, galleys);
 								foreach (var tt in troops)
 								{
 									if (tt.type == ttStinger)
@@ -161,7 +161,7 @@ namespace CnV.Views
 						{
 							supporter.tSend += troops.Where( tt => (includeOffense || tt.isDef) && (canTravelViaWater||!tt.isNaval) );
 						}
-						supporter.travel = TimeSpanS.FromHours(hours);  // penality for targtes that we cannot make it to
+						supporter.travel = (travelTime);  // penality for targtes that we cannot make it to
 					}
 				}
                     if (portal)
@@ -191,7 +191,7 @@ namespace CnV.Views
 			await base.VisibilityChanged(visible, longTerm: longTerm);
         }
 
-		private List<Spot> FindValidDefendants(bool viaWater, bool onlyHome, City city, ref float hours)
+		private List<Spot> FindValidDefendants(bool viaWater, bool onlyHome, City city, ref TimeSpanS dt)
 		{
 			if (portal)
 				return defendants.ToList<Spot>();
@@ -200,7 +200,7 @@ namespace CnV.Views
 			foreach (var d in defendants)
 			{
 
-				if (city.ComputeTravelTime(d.cid, onlyHome, includeOffense,includeOffense,includeOffense, viaWater, filterTime, ref hours))
+				if (city.ComputeTravelTime(d.cid, onlyHome, includeOffense,includeOffense,includeOffense, viaWater, TimeSpanS.FromHours(filterTime), ref dt))
 				{
 					rv.Add(d);
 				}
@@ -269,19 +269,19 @@ namespace CnV.Views
             AApp.AddItem(flyout, "Troops Home", (_, _) =>
             {
                 var supporter = stt.supporter;
-                supporter.tSend = new(stt.type, stt.supporter.city.troopsHome.GetCount(stt.type));
+                supporter.tSend |= new TroopTypeCount(stt.type, stt.supporter.city.troopsHome.GetCount(stt.type));
                 supporter.NotifyChange();
             });
             AApp.AddItem(flyout, "Total Troops", (_, _) =>
             {
                 var supporter = stt.supporter;
-                supporter.tSend = new(stt.type, stt.supporter.city.troopsOwned.GetCount(stt.type));
+                supporter.tSend |= new TroopTypeCount(stt.type, stt.supporter.city.troopsOwned.GetCount(stt.type));
                 supporter.NotifyChange();
             });
             AApp.AddItem(flyout, "None", (_, _) =>
             {
                 var supporter = stt.supporter;
-                supporter.tSend = new(stt.type, 0);
+                supporter.tSend |= new TroopTypeCount(stt.type, 0);
                 supporter.NotifyChange();
             });
 
@@ -325,7 +325,7 @@ namespace CnV.Views
                 Note.Show("To few command slots");
                 return;
             }
-            var departAt = AUtil.dateTimeZero;
+            var departAt = ServerTime.zero;
             var _arriveAt = arriveAt;
             if(waitReturn && !supporter.city.troopsHome.IsSuperSetOf(supporter.tSend))
             {
@@ -336,9 +336,9 @@ namespace CnV.Views
                     Raiding.Return(city.cid, false,true);
                 }
 
-                departAt = city.GetRaidReturnTime() + TimeSpan.FromSeconds(15);
-                var canArriveAt = departAt+ (TimeSpan)(supporter.travel );
-                if (_arriveAt > Sim.serverTime && _arriveAt < canArriveAt)
+                departAt = city.GetRaidReturnTime() + TimeSpanS.FromSeconds(15);
+                var canArriveAt = departAt+ (supporter.travel );
+                if (_arriveAt > Sim.simTime && _arriveAt < canArriveAt)
                 {
 					var result = await AppS.DispatchOnUIThreadTask(async () =>
 					{
@@ -363,21 +363,29 @@ namespace CnV.Views
 
                 }
             }
-			var hours = 0.0f;
+			var hours = new TimeSpanS(0);
 			var def = FindValidDefendants(sendViaWater && defendants.Any(d => d.isOnWater),  onlyHome, city, ref hours);
+			var success = true;
 			foreach (var d in def)
 			{
 				var ts = supporter.tSend /  (def.Count);
 				var cid = d.cid;
-				await Post.SendRein(supporter.cid, cid, ts, departAt, _arriveAt, hours, supporter.split, text);
+				if(_arriveAt > Sim.simTime)
+				{
+					success &= Army.Send(ts,Army.FlagSplits(supporter.split),City.Get(supporter.cid),cid,ArmyType.defense,sendViaWater ? ArmyTransport.water : ArmyTransport.land,_arriveAt);
+				}
+				else
+				{
+					Army.Send(ts,Army.FlagSplits(supporter.split),City.Get(supporter.cid),cid,ArmyType.defense,sendViaWater ? ArmyTransport.water : ArmyTransport.land, (departAt - Sim.simTime).Max(0)  );
+				}
 				Log($"Sent {ts} from {supporter.cid.AsCity()} to {cid.AsCity()} @{_arriveAt.ToString()}");
-				await Task.Delay(500);
+			//	await Task.Delay(500);
 			}
-			IncomingOverview.ProcessTask();
 
-			supporter.tSend.Clear();
+			if (success)
+				supporter.tSend.Clear();
+
 			supporter.OnPropertyChanged();
-
 		}
 		//private void gridPointerPress(object sender, PointerRoutedEventArgs e)
 		//{

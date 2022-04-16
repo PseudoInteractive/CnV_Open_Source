@@ -132,7 +132,7 @@ namespace CnV.Views
 
 		internal static bool CreateChatTab(DiscordChannel channel)
 		{
-			Trace($"Create {channel.Id}");
+	//		Trace($"Create {channel.Id}");
 			if(all.Any(a => a.discordChannel?.Id == channel?.Id))
 				return false;
 			var tab = new ChatTab() { discordChannel = channel,Tag = channel.Name };

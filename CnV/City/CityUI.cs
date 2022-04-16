@@ -561,16 +561,10 @@ public static partial class CityUI
 		{
 			var tab = IncomingTab.instance;
 			AppS.DispatchOnUIThread(() => tab.Show());
-			for(; ; )
-			{
-				await Task.Delay(1000);
-				if(tab.defenderGrid.ItemsSource != null)
-					break;
-			}
+			
 			AppS.DispatchOnUIThreadIdle(() =>
 										{
-											tab.defenderGrid.SelectedItem = (me);
-											tab.defenderGrid.ScrollItemIntoView(me);
+											tab.defenderGrid.SetFocus(me);
 										});
 
 		}
@@ -578,16 +572,9 @@ public static partial class CityUI
 		{
 			var tab = OutgoingTab.instance;
 			AppS.DispatchOnUIThread(() => tab.Show());
-			for(; ; )
-			{
-				await Task.Delay(1000);
-				if(tab.attackerGrid.ItemsSource != null)
-					break;
-			}
 			AppS.DispatchOnUIThreadIdle(() =>
 										{
-											tab.attackerGrid.SelectedItem = (me);
-											tab.attackerGrid.ScrollItemIntoView(me);
+											tab.attackerGrid.SetFocus(me);
 										});
 		}
 	}

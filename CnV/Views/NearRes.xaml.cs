@@ -319,39 +319,29 @@ namespace CnV.Views
 
 				var text = sender as FrameworkElement;
 				var s = text.DataContext as ResSource;
-				var city = s.city;
-				var pid = city.pid;
-				var cid = city.cid;
-				var secret = $"JJx452Tdd{pid}sRAssa";
-				var reqF = $"{{\"a\":{s.res.wood},\"b\":{s.res.stone},\"c\":{s.res.iron},\"d\":{s.res.food},\"cid\":{s.city.cid},\"rcid\":{target.cid},\"t\":\"{(viaWater ? 2 : 1)}\"}}"; // t==1 is land, t==2 is water
-				int count =  1;
-				Log(count.ToString());
+				var source = s.city;
+			//	var pid = city.pid;
+			//	var cid = city.cid;
+
 				string res = string.Empty;
 				var asDonation = this.SendAsDontation.IsOn;
-				if(asDonation)
+				if(asDonation && false)
 				{
-					await BlessedCity.SendDonation(s.city.cid,target.cid,s.res.wood,s.res.stone,viaWater);
+				//	await BlessedCity.SendDonation(s.city.cid,target.cid,s.res.wood,s.res.stone,viaWater);
 				}
 				else
 				{
-					for(int j = 0;j < count;++j)
-					{
+					
+					
+						var trade = new TradeOrder(source: source.c,target: target.c,departure: Sim.simTime,viaWater: viaWater,isTempleTrade: asDonation,resources: s.res);
 
-						res = await Post.SendForText("includes/sndTr.php",
-							$"cid={cid}&f=" + HttpUtility.UrlEncode(Aes.Encode(reqF,secret),Encoding.UTF8),pid);
-						if(int.TryParse(res.Trim(),out var i) && i == 10)
+						new CnVEventTrade(source.c,trade: trade).EnqueueAsap();
+
+					
 						{
 							Note.Show($"Sent {s.res.Format()}");
 						}
-						else
-						{
-							Note.Show($"Something changed, please refresh and try again");
-						}
-
-						if(count == 1)
-							break;
-						await Task.Delay(450);
-					}
+					
 				}
 
 				s.res = default;

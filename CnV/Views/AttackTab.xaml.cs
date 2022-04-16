@@ -258,7 +258,7 @@ namespace CnV.Views
 				case nameof(City.attackCluster): cmpL = (a) => -(long)a.attackCluster; break;
 				case nameof(City.attackType): cmpL = (a) => -(long)a.attackType; break;
 				case "Points": cmpL = (a) => (long)-a.points; break;
-				case nameof(City.xy): cmpL = (a) => (long)a.cid.ZCurveEncodeCid(); break;
+				case nameof(City.xy): cmpL = (a) => (long)a.c.ZCurveEncode(); break;
 				case "Water": cmpL = (a) => a.isOnWater ? 1L : 0L ; break;
 				case "Player": cmpS = (a) => a.playerName; break;
 				case "Alliance": cmpS = (a) => a.alliance; break;

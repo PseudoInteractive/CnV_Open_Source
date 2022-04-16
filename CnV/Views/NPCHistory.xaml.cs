@@ -28,13 +28,19 @@ namespace CnV.Views
 			};
 
 			// removed
-			foreach(var r in items)
 			{
-				if(!rs.Contains(r))
-					items.Remove(r);
+			__restart:
+				foreach(var r in items)
+				{
+					if(!rs.Contains(r))
+					{
+						items.Remove(r);
+						goto __restart;
+					}
+				}
 			}
 			// added
-			foreach(var r in BossReport.reports)
+			foreach(var r in rs)
 			{
 				if(!items.Contains(r))
 					items.Add(r);

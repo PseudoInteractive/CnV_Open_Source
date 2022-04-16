@@ -18,7 +18,7 @@
 			<RowDefinition Height="auto"/>
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
-		<ComboBox Header="Filter" x:Name="filterCombo" SelectedIndex="0" SelectionChanged="filterFromChanged" ItemsSource="{x:Bind cnv:Alliance.cityFilterList}" />
+		<ComboBox Header="Filter" x:Name="filterCombo" SelectedIndex="3" SelectionChanged="filterFromChanged" ItemsSource="{x:Bind cnv:Alliance.cityFilterList}" />
 		
 		<sf:SfDataGrid 
 			Grid.Row="1"
@@ -45,7 +45,7 @@ Loaded="DataGridLoaded"
                                        
                                        
                                        />
-				<sf:GridImageColumn MappingName="icon" Width="38" />
+				<sf:GridImageColumn MappingName="icon" Width="38"  AllowSorting="False"  />
 				<sf:GridCheckBoxColumn  
 					Width="32"
                                           TextAlignment="Center"
@@ -65,10 +65,10 @@ Loaded="DataGridLoaded"
                                             TextAlignment="Center"
 					Width="40"
                                              />
-				<sf:GridImageColumn MappingName="artifactIcon0" Width="42" />
+				<sf:GridImageColumn MappingName="artifactIcon0" Width="42" AllowSorting="False" />
 				<sf:GridTextColumn MappingName="artifactText"  />
-				<sf:GridImageColumn MappingName="artifactIcon1" Width="42" />
-				<sf:GridImageColumn MappingName="artifactIcon2" Width="42" />
+				<sf:GridImageColumn MappingName="artifactIcon1" Width="42" AllowSorting="False"  />
+				<sf:GridImageColumn MappingName="artifactIcon2" Width="42"  AllowSorting="False" />
 				<sf:GridTextColumn MappingName="loot"         />
 
 			</sf:SfDataGrid.Columns>

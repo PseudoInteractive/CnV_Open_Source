@@ -274,6 +274,8 @@ public partial class UserTab:UserControl, IANotifyPropertyChanged
 	public void ShowOrAdd(bool selectMe = true,bool onlyIfClosed = false,TabPage page = null)
 
 	{
+		AppS.DispatchOnUIThread(() =>
+	{
 		if(onlyIfClosed && isOpen)
 			return;
 
@@ -287,6 +289,7 @@ public partial class UserTab:UserControl, IANotifyPropertyChanged
 		}
 
 		(page??defaultPage).Add(this,selectMe);
+	});
 	}
 
 

@@ -88,14 +88,14 @@
 			<ToggleButton Content="Only home" IsChecked="{x:Bind onlyHome, Mode=TwoWay}" VerticalAlignment="Center" Margin="12"  Click="PropChanged"
                           Width="70" HorizontalAlignment="Center" Style="{ThemeResource ToggleButtonRevealStyle}"
                       ToolTipService.ToolTip="If on, the # to send only counts troops at home" />
-            <my:NumberBox Value="{x:Bind _filterTime,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}" 
+            <NumberBox Value="{x:Bind _filterTime,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}" 
                           Header="Max Travel" Width="140" Margin="6,0,6,0" AcceptsExpression="True" SmallChange="0.5"
                           NumberFormatter="{x:Bind cnv:App.formatter2Digit}"
                           />
-            <my:NumberBox Value="{x:Bind _filterTSHome,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
+            <NumberBox Value="{x:Bind _filterTSHome,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
                           NumberFormatter="{x:Bind cnv:App.formatterInt,Mode=OneTime}" 
                           Header="Min TS(Home)" Width="140" Margin="6,0,6,0" AcceptsExpression="True" SmallChange="5000"  />
-            <my:NumberBox Value="{x:Bind _filterTSTotal,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
+            <NumberBox Value="{x:Bind _filterTSTotal,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
                            NumberFormatter="{x:Bind cnv:App.formatterInt,Mode=OneTime}" 
                           Header="Min TS(Total)" Width="140" Margin="6,0,6,0" AcceptsExpression="True" SmallChange="5000" />
         </tk:WrapPanel>
@@ -103,7 +103,7 @@
                         AutoGenerateColumns="False"
 					 					 RowHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
                         ItemsSource="{x:Bind views:NearDefenseTab.supporters, Mode=OneWay}"
-                        RowHeight="{StaticResource MediumGridRowHeight}"
+                        RowHeight="{StaticResource LargeGridRowHeight}"
                      Grid.Row="2"
                      SelectionMode="Extended"
                      RowDetailsVisibilityMode="Collapsed"
@@ -221,8 +221,7 @@
                         AutoGenerateColumns="False"
                      Grid.Row="3"
                         ItemsSource="{x:Bind views:NearDefenseTab.supportByTroopTypeEmpty, Mode=OneWay}"
-                        RowHeight="46"
-					 					 RowHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
+                       				 RowHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
                     RowStyle="{StaticResource DataGridRowStyle}"
 					 IsRightTapEnabled="True"
 					 RightTapped="troopTypeGrid_RightTapped"
@@ -247,7 +246,7 @@
                 <tk:DataGridTemplateColumn Header="Send" IsReadOnly="False">
                     <tk:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate x:DataType="cnv:SupportByTroopType">
-                            <TextBlock Text= "{x:Bind send, Converter={StaticResource IntConverter} }"
+							<NumberBox Text= "{x:Bind send,Mode=TwoWay}"
                                       ToolTipService.ToolTip="Troops to send.  Right click to select troops home or total troops (if troops will return before the send).  You can use expressions i.e. if you want to send half the troops, right click and set Troops Home, then add /2 after the number"
                                    RightTapped="TTSendRightTapped" 
                                         />
@@ -255,7 +254,7 @@
                     </tk:DataGridTemplateColumn.CellTemplate>
                     <tk:DataGridTemplateColumn.CellEditingTemplate>
                         <DataTemplate x:DataType="cnv:SupportByTroopType">
-                            <my:NumberBox Text= "{x:Bind send,Mode=TwoWay,Converter={StaticResource IntConverter}}" HorizontalContentAlignment="Right" AcceptsExpression="True" SmallChange="1000" LargeChange="10000" VerticalAlignment="Center" FontSize="12"
+                            <NumberBox Text= "{x:Bind send,Mode=TwoWay}" HorizontalContentAlignment="Right" AcceptsExpression="True" SmallChange="1000" LargeChange="10000" VerticalAlignment="Center" FontSize="12"
                                         />
                         </DataTemplate>
                     </tk:DataGridTemplateColumn.CellEditingTemplate>

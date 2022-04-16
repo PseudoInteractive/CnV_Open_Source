@@ -46,7 +46,25 @@ namespace CnV;
 						return;
 					}
 					
+					case BossReport br:
+					{
+						switch(e.Column.MappingName)
+						{
+							case nameof(BossReport.bossC):
+							case nameof(BossReport.icon):
+								Spot.ProcessCoordClick(br.bossC, false, AppS.keyModifiers, false);
+								break;
+							case nameof(BossReport.city):
+								Spot.ProcessCoordClick(br.cityC, false, AppS.keyModifiers, false);
+								break;
 
+							case nameof(BossReport.Player):
+								br.Player.Click();
+								break;
+
+						}
+						return;
+					}
 					case  Army i:
 					{
 						if (i.ProcessTap(e.Column.HeaderText) == false)
@@ -74,10 +92,10 @@ namespace CnV;
 									Spot.ProcessCoordClick(i.sourceCid, false, AppS.keyModifiers, false);
 									break;
 								case "aPlyr":
-									Sim.ShowPlayer(i.sPlayer);
+									PlayerHelper.Click(i.sPlayer);
 									break;
 								case "dPlyr":
-									Sim.ShowPlayer(i.tPlayer);
+									PlayerHelper.Click(i.tPlayer);
 									break;
 								//case nameof(i.atkCN): Spot.ProcessCoordClick(i.atkCid, false); break;
 								//case nameof(i.defC):

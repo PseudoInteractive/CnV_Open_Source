@@ -197,7 +197,7 @@
 		TargetType="tk:DataGridCell">
 				<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
 				<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
-				<Setter Property="Height" Value="{StaticResource ShortGridRowHeight}" />
+				<Setter Property="Height" Value="{StaticResource LargeGridRowHeight}" />
 				<Setter Property="MinHeight" Value="{StaticResource ShortGridRowHeight}" />
 				<Setter Property="FontStretch" Value="Condensed" />
 
@@ -209,11 +209,10 @@
 				<Setter Property="Padding" Value="0,0,0,0"/>
 				<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
 				<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
-				<Setter Property="Height" Value="{StaticResource ShortGridRowHeight}" />
+				<Setter Property="Height" Value="{StaticResource LargeGridRowHeight}" />
 				<Setter Property="MinHeight" Value="{StaticResource ShortGridRowHeight}" />
 				<Setter Property="FontStretch" Value="Condensed" />
 
-				<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
 			</Style>
 			<Style
 		x:Key="DataGridColumnHeaderStyle"

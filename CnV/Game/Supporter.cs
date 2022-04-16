@@ -99,7 +99,7 @@ namespace CnV
 
         public BitmapImage icon => ImageHelper.Get($"Icons/troops{type}.png");
         public string troopType => Troops.ttNames[type];
-        public uint send { get => supporter.tSend.GetCount(type); set => supporter.tSend = new(new TroopTypeCount( type,value)) ; }
+        public uint send { get => supporter.tSend.GetCount(type); set => supporter.tSend |= new TroopTypeCount( type,value) ; }
         public uint home { get => supporter.city.troopsHome.GetCount(type); }
         public uint total { get => supporter.city.troopsOwned.GetCount(type); }
     }
