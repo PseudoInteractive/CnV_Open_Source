@@ -24,10 +24,11 @@ namespace CnVDiscord
 	using CnVChat;
 	using Microsoft.UI.Xaml.Media.Imaging;
 
-	internal class CnVChatClient:ICnVChatClient
+	internal class CnVChatClient:ICnVChatClient,IMagicOnionClientLogger
 	{
 		public static CnVChatClient? instance;
 		internal static bool initialized = false;
+		internal static bool isShuttingDown = false;
 		private static CancellationTokenSource shutdownCancellation = new CancellationTokenSource();
 		private static ChannelBase channel;
 		public ICnVChatClientConnection connection;
@@ -44,24 +45,40 @@ namespace CnVDiscord
 				return; 
 			#endif
 		}
-		public static async Task ShutDown()
+		public static async Task ShutDown(bool permanent)
 		{
-			if(!initialized)
-				return;
-			initialized=false;
-			if(instance?.connection is var c)
+			//Assert(isShuttingDown == false);
+			try
 			{
-				instance.connection = null;
-				await c.LeaveAsync();
+				isShuttingDown=true;
+				//if(!initialized)
+				//	return;
+				initialized=false;
+				if(instance?.connection is var c && c is not null)
+				{
+					instance.connection = null;
+					await c.LeaveAsync();
 
-				await c.DisposeAsync();
+					await c.DisposeAsync();
+				}
+				if(channel is var ch && ch is not null)
+				{
+					channel = null;
+					await ch.ShutdownAsync();
+				}
 			}
+			catch(Exception _ex)
+			{
+				Log(_ex.Message);
+
+			}
+			if(!permanent)
+				isShuttingDown=false;
+
 		}
 		public async Task<bool> Initialize()
 		{
 #if CNV
-			try
-			{
 				Assert(channel == null);
 				Assert(initialized==false);
 				// NOTE: Currently, CompositeResolver doesn't work on Unity IL2CPP build. Use StaticCompositeResolver instead of it.
@@ -72,66 +89,78 @@ namespace CnVDiscord
 				//);
 
 				//	MessagePackSerializer.DefaultOptions = MessagePackSerializer.DefaultOptions.WithResolver(resolver);
-				var handler = new SocketsHttpHandler
-				{
-					PooledConnectionIdleTimeout = Timeout.InfiniteTimeSpan,
-					KeepAlivePingDelay = TimeSpan.FromSeconds(60),
-					KeepAlivePingTimeout = TimeSpan.FromSeconds(30),
-					EnableMultipleHttp2Connections = true
-				};
-				// Connect to the server using gRPC channel.
-				channel = GrpcChannel.ForAddress("http://cnv.westus2.cloudapp.azure.com:5000",new GrpcChannelOptions()
-				{
-					HttpHandler = handler
-				});
-
-				connection = await StreamingHubClient.ConnectAsync<ICnVChatClientConnection,ICnVChatClient>(channel,this,cancellationToken: shutdownCancellation.Token);
-				if(connection == null)
-					return false;
-				while(!Sim.isPastWarmup)
-				{
-					await Task.Delay(300);
-				}
-
-				await Alliance.alliancesFetchedTask.WaitAsync(false);
-				var me = Player.me;
 				
-				
-
-				var channels = await connection.JoinAsync(new(){ playerId=me.pid,world=Sim.worldId,alliance=me.allianceId,allianceTitle=me.allianceTitle}); // Todo store role somewhere
-				Log("Got Channels " + channels.Length);
-				AppS.DispatchOnUIThread(async () =>
+				for(;;)
 				{
-					foreach (var channel in channels)
+					if(!initialized && !isShuttingDown)
 					{
-						if(connection is null)
-							break;
-						Log( channel );
-						var c = CnVJsonMessagePackDiscordChannel.Get(channel);
-						// Todo:  Create channel
-						if( ChatTab.CreateChatTab(c) == true )
+						// Connect to the server using gRPC channel.
+						try
 						{
-							await connection.ConnectChannelAsync( new()
-								{ channelId = c.Id, lastRecieved = 0 }); // todo:  Lastrecieved
+						
+							channel = GrpcChannel.ForAddress("http://cnv.westus2.cloudapp.azure.com:5000",new GrpcChannelOptions()
+							{
+								HttpHandler = new SocketsHttpHandler
+							{
+								PooledConnectionIdleTimeout = Timeout.InfiniteTimeSpan,
+								KeepAlivePingDelay = TimeSpan.FromSeconds(60),
+								KeepAlivePingTimeout = TimeSpan.FromSeconds(30),
+								EnableMultipleHttp2Connections = true
+							}
+							});
 
+						connection = await StreamingHubClient.ConnectAsync<ICnVChatClientConnection,ICnVChatClient>(channel,this,cancellationToken: shutdownCancellation.Token,logger:this);
+						if(connection == null)
+							return false;
+						while(!Sim.isPastWarmup)
+						{
+							await Task.Delay(300);
 						}
 
+						await Alliance.alliancesFetchedTask.WaitAsync(false);
+						var me = Player.me;
+
+
+
+						var channels = await connection.JoinAsync(new() { playerId=me.pid,world=Sim.worldId,alliance=me.allianceId,allianceTitle=me.allianceTitle }); // Todo store role somewhere
+						Log("Got Channels " + channels.Length);
+						AppS.DispatchOnUIThread(async () =>
+						{
+							foreach(var channel in channels)
+							{
+								if(connection is null)
+									break;
+								Log(channel);
+								var c = CnVJsonMessagePackDiscordChannel.Get(channel);
+								ChatTab.CreateChatTab(c);
+								await connection.ConnectChannelAsync(new()
+								{ channelId = c.Id,lastRecieved = 0 }); // todo:  Lastrecieved
+
+
+							}
+						});
+					Note.Show("Connected to Chat");
+						initialized=true;
+						}
+						catch (Exception e)
+						{
+							Log(e.ToString());
+							await ShutDown(false);
+
+						//	return false;
+						}
 					}
-				});
-				initialized=true;
-			}
-			catch (Exception e)
-			{
-				Log(e.ToString());
-				return false;
-			}
+
+					await Task.Delay(TimeSpan.FromMinutes(0.5f));
+				}
+			
+			
 #endif
 			return true;
 		}
 
 		public static Task UpdatePlayerAlliance(Player me)
 		{
-			Assert(initialized);
 			if(initialized)
 				return instance.UpdatePlayerAsync(new() { playerId=me.pid,world=Sim.worldId,alliance=me.allianceId,allianceTitle=me.allianceTitle });
 			else
@@ -250,5 +279,26 @@ namespace CnVDiscord
 			return;
 		}
 
+		public async void Error(Exception ex,string message) {
+			Log(message);
+			Note.Show("Disconnected from Chat");
+			if(initialized)
+			{
+				try
+				{
+					await ShutDown(false);
+					
+				}
+				catch(Exception ex2)
+				{
+					Log(ex2.Message);
+				}
+				isShuttingDown=false; // start up again later
+			}
+			//LogEx(ex);
+		}
+		public void Information(string message) => Log(message);
+		public void Debug(string message) => Log(message);
+		public void Trace(string message) => Log(message);
 	}
 }

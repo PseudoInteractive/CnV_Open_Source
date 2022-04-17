@@ -140,7 +140,7 @@ namespace CnV.Views
 		{
 			if(!mouseOverCanvas)
 			{
-				Note.Show($"Pointer focus not over canvas!");
+			//	Note.Show($"Pointer focus not over canvas!");
 				return;
 			}
 			if(CityBuild.menuOpen)
@@ -435,7 +435,7 @@ namespace CnV.Views
 			}
 			if(!mouseOverCanvas)
 			{
-				Note.Show("Not over canvas");
+			//	Note.Show("Not over canvas");
 				return false;
 			}
 			// don't process if chat has focus
@@ -451,7 +451,7 @@ namespace CnV.Views
 			{
 				if (tab.input.FocusState != FocusState.Unfocused)
 				{
-					Note.Show($"Chat Focus {tab.Name} {tab.input.FocusState}");
+				//	Note.Show($"Chat Focus {tab.Name} {tab.input.FocusState}");
 					return true;
 				}
 			}
@@ -469,7 +469,7 @@ namespace CnV.Views
 
 			if(!mouseOverCanvas)
 			{
-				Note.Show("Mouse not over canvas");
+		//		Note.Show("Mouse not over canvas");
 				return false;
 		//		Log("Mouse not over");
 			}

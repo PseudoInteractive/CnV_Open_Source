@@ -243,7 +243,7 @@ internal partial class GameClient
 			//	tipTextFormat.FontStretch = fontStretch;
 			//	tipTextFormatCentered.FontStretch = fontStretch;
 			//}
-			animationTWrap = (float)((animationT*(1.0/3.0)).Frac()); // wraps every 3 seconds, 0..1
+			animationTWrap = ((animationT*(1.0/3.0)).Frac()); // wraps every 3 seconds, 0..1
 
 			device.Textures[7] = fontTexture;
 
@@ -1940,7 +1940,7 @@ internal partial class GameClient
 		{
 			progress = 1.0f;
 			timeToArrival = 0;
-			lineRate = (animationT/8.0f).Wave().Lerp(-lineAnimationRate,lineAnimationRate)*(1f/64.0f);
+			lineRate = (animationT/16.0f).Wave().Lerp(-lineAnimationRate,lineAnimationRate)*(1f/128.0f);
 		}
 		else
 		{

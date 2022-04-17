@@ -132,9 +132,13 @@ namespace CnV.Views
 
 		internal static bool CreateChatTab(DiscordChannel channel)
 		{
-	//		Trace($"Create {channel.Id}");
-			if(all.Any(a => a.discordChannel?.Id == channel?.Id))
+			//		Trace($"Create {channel.Id}");
+			var existing = all.FirstOrDefault(a => a.discordChannel?.Id == channel?.Id);
+			if(existing != null)
+			{
+			//	existing.items.Clear(); // reset and re fetch
 				return false;
+			}
 			var tab = new ChatTab() { discordChannel = channel,Tag = channel.Name };
 			all = all.Add(tab);
 			tab.ShowOrAdd();
@@ -387,23 +391,29 @@ namespace CnV.Views
 						var str = input.Text;
 						if(!str.IsNullOrEmpty())
 						{
-
-							//   Log(input.Text);
-							messageCache.Remove(str); // remove duplicates
-							messageCache.Add(str);
-							// remove duplicates
-							if(isWhisperChannel)
+							if(!CnVChatClient.initialized)
 							{
-								if(str[0] != '/')
-								{
-									str = $"/w {whisperTarget} {str}";
-								}
+								AppS.MessageBox("Chat discconected, please try again later");
 							}
-							input.Text = "";
-
-							if(discordChannel is not null)
+							else
 							{
-								
+
+
+								//   Log(input.Text);
+								messageCache.Remove(str); // remove duplicates
+								messageCache.Add(str);
+								// remove duplicates
+								if(isWhisperChannel)
+								{
+									if(str[0] != '/')
+									{
+										str = $"/w {whisperTarget} {str}";
+									}
+								}
+								input.Text = "";
+
+								if(discordChannel is not null)
+								{
 									async void SendAsync(string str)
 									{
 										try
@@ -417,27 +427,27 @@ namespace CnV.Views
 
 										}
 									}
-								SendAsync(str);
-							}
-							else
-							{
-								int cotgId = isWhisperChannel ? 1 : chatToId.IndexOf(s);
-								if(cotgId >= 0)
+									SendAsync(str);
+								}
+								else
 								{
-									Sim.SendChat(cotgId + 1,str);
+									int cotgId = isWhisperChannel ? 1 : chatToId.IndexOf(s);
+									if(cotgId >= 0)
+									{
+										Sim.SendChat(cotgId + 1,str);
+									}
+
 								}
 
+								//{
+								//	var count = items.Count;
+								//	if (count > 0)
+								//	{
+								//		listView.ScrollIntoView(items.Last());
+								//	}
+								//}
 							}
-
-							//{
-							//	var count = items.Count;
-							//	if (count > 0)
-							//	{
-							//		listView.ScrollIntoView(items.Last());
-							//	}
-							//}
 						}
-
 					}
 				}
 			}
