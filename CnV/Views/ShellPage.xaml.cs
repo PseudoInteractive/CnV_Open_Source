@@ -622,6 +622,14 @@ namespace CnV.Views
 
 				await Task.Delay(500);
 				ShellPage.RefreshX();
+
+//				if(AppS.processingTasksStarted == false)
+				{
+					
+
+				//	Task.Run(AppS.ProcessThrottledTasks);
+					Task.Run(AppS.ProcessIdleTasks);
+				}
 			}
 			catch(Exception ex)
 			{

@@ -69,7 +69,7 @@ namespace CnV
 
 
 		private Lazy<ActivationService> _activationService;
-		public static bool processingTasksStarted;
+//		public static bool processingTasksStarted;
 
 		private ActivationService ActivationService
 		{
@@ -718,13 +718,7 @@ namespace CnV
 				//	CoreApplication.MainView.CoreWindow.Closed+=CoreWindow_Closed;
 				//if(args!=null)
 				//	SystemInformation.TrackAppUse(args);
-				if(processingTasksStarted == false)
-				{
-					processingTasksStarted = true;
-
-					Task.Run(ProcessThrottledTasks);
-					Task.Run(AppS.ProcessIdleTasks);
-				}
+				
 
 
 #if DEBUG
@@ -1017,35 +1011,35 @@ namespace CnV
 		//}
 
 		// Uses Task Await
-		static async void ProcessThrottledTasks()
-		{
-			for(;;)
-			{
+		//internal static async void ProcessThrottledTasks()
+		//{
+		//	for(;;)
+		//	{
 
 
-				try
-				{
-					if(!throttledTasks.IsEmpty)
-					{
-						if(throttledTasks.TryDequeue(out var t))
-							await t().ConfigureAwait(false);
+		//		try
+		//		{
+		//			if(!throttledTasks.IsEmpty)
+		//			{
+		//				if(throttledTasks.TryDequeue(out var t))
+		//					await t().ConfigureAwait(false);
 
-					}
-				}
-				catch(Exception _exception)
-				{
-					Debug.LogEx(_exception);
-				}
+		//			}
+		//		}
+		//		catch(Exception _exception)
+		//		{
+		//			Debug.LogEx(_exception);
+		//		}
 
 
-				await Task.Delay(500).ConfigureAwait(false);
-			}
-		}
+		//		await Task.Delay(500).ConfigureAwait(false);
+		//	}
+		//}
 
-		public static void EnqeueTask(Func<Task> a)
-		{
-			throttledTasks.Enqueue(a);
-		}
+		//public static void EnqeueTask(Func<Task> a)
+		//{
+		//	throttledTasks.Enqueue(a);
+		//}
 
 		public static bool OnPointerPressed(PointerUpdateKind prop)
 		{

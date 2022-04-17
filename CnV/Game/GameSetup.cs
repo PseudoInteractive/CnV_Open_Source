@@ -144,8 +144,10 @@ namespace CnV
 			//|| TipsSeen.instance.chat2 == false)
 			//    App.QueueIdleTask(ShellPage.ShowTipRefresh);
 			// await RaidOverview.Send();
-			AppS.QueueIdleTask(IncomingOverview.ProcessTask,1000);
-			AppS.QueueIdleTask(OutgoingOverview.ProcessTask,1000);
+		//	AppS.QueueIdleTask(IncomingOverview.ProcessTask,1000);
+		//	AppS.QueueIdleTask(OutgoingOverview.ProcessTask,1000);
+
+			
 
 			Task.Run(  CnVChatClient.Setup );
 
@@ -179,7 +181,7 @@ namespace CnV
 				Sim.isInitialized      = true;
 				
 				AppS.DispatchOnUIThread( ShellPage.SetupNonCoreInput );
-			
+				AppS.QueueIdleTask(DailyRewardTask);
 		
 			}
 		catch(Exception ex)
@@ -192,6 +194,9 @@ namespace CnV
 		}
 		}
 	
-	
+		static void DailyRewardTask()
+		{
+			AppS.QueueOnUIThread( () => DailyDialog.ShowInstance(Artifact.GetForPlayerRank(Artifact.ArtifactType.axe)) );
+		}
 	}
 }
