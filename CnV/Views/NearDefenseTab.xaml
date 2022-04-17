@@ -68,11 +68,9 @@
 			</sf:SfDataGrid.Columns>
 		</sf:SfDataGrid>
 		<tk:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
-            <Border  Margin="12" VerticalAlignment="Center">
-                <TextBlock x:Name="sendAtUI"  VerticalAlignment="Center" Text="{x:Bind arriveAt,Mode=OneWay,Converter={StaticResource DateTimeConverter}}"
-                           Width="100" HorizontalAlignment="Center" FontSize="14" HorizontalTextAlignment="Center" PointerPressed="SendAtTapped"
-                           ToolTipService.ToolTip="Time at which the defense should arrive. They will leave immediately if there is not enough time, otherwise they will wait and schedule their arrival for this time." />
-            </Border>
+           
+            <cnv:DateTimeBox x:Name="sendAtUI"  VerticalAlignment="Center" Label="arrive"
+                                  ToolTipService.ToolTip="Time at which the defense should arrive. They will leave immediately if there is not enough time, otherwise they will wait and schedule their arrival for this time." />
             <ToggleButton Content="Wait Return" IsChecked="{x:Bind waitReturn,Mode=TwoWay}" VerticalAlignment="Center" Margin="12"
                           Width="70" HorizontalAlignment="Center" Style="{ThemeResource ToggleButtonRevealStyle}"
                       ToolTipService.ToolTip="If on, wait until troops return from raids or to make the arrival time (left), whichever is later" />

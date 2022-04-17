@@ -33,7 +33,7 @@ namespace CnV.Views
 		public float _filterTime { get => filterTime; set { filterTime = value; refresh.Go(); } }  // defenders outside of this window are not included
         public int _filterTSTotal { get => filterTSTotal; set { filterTSTotal = value; refresh.Go(); } }
         public int _filterTSHome { get => filterTSHome; set { filterTSHome = value; refresh.Go(); } } // need at this this many ts at home to be considered for def
-        public ServerTime arriveAt { get; set; } = default;
+     //   public ServerTime arriveAt { get; set; } = default;
         public static SupportByTroopType [] supportByTroopTypeEmpty = Array.Empty<SupportByTroopType>();
         public static int[] splitArray = { 1, 2, 3, 4, 5 };
         public static bool Include(TroopTypeCount tt) => includeOffense || tt.isDef;
@@ -52,7 +52,10 @@ namespace CnV.Views
                 rv.AddIfAbsent(s.cid);
             }
         }
-
+		internal void SetArrived(ServerTime t)
+		{
+			sendAtUI.SetDateTime(t);
+		}
         public async override Task VisibilityChanged(bool visible, bool longTerm)
 		{
             if (visible)
@@ -326,7 +329,7 @@ namespace CnV.Views
                 return;
             }
             var departAt = ServerTime.zero;
-            var _arriveAt = arriveAt;
+            var _arriveAt = sendAtUI.dateTime;
             if(waitReturn && !supporter.city.troopsHome.IsSuperSetOf(supporter.tSend))
             {
 				//RaidOverview.SendMaybe();
@@ -338,7 +341,7 @@ namespace CnV.Views
 
                 departAt = city.GetRaidReturnTime() + TimeSpanS.FromSeconds(15);
                 var canArriveAt = departAt+ (supporter.travel );
-                if (_arriveAt > Sim.simTime && _arriveAt < canArriveAt)
+                if (_arriveAt.isNotZero && _arriveAt < canArriveAt)
                 {
 					var result = await AppS.DispatchOnUIThreadTask(async () =>
 					{
@@ -370,13 +373,13 @@ namespace CnV.Views
 			{
 				var ts = supporter.tSend /  (def.Count);
 				var cid = d.cid;
-				if(_arriveAt > Sim.simTime)
+				if(_arriveAt.isNotZero )
 				{
 					success &= Army.Send(ts,Army.FlagSplits(supporter.split),City.Get(supporter.cid),cid,ArmyType.defense,sendViaWater ? ArmyTransport.water : ArmyTransport.land,_arriveAt);
 				}
 				else
 				{
-					Army.Send(ts,Army.FlagSplits(supporter.split),City.Get(supporter.cid),cid,ArmyType.defense,sendViaWater ? ArmyTransport.water : ArmyTransport.land, (departAt - Sim.simTime).Max(0)  );
+					success &= Army.Send(ts,Army.FlagSplits(supporter.split),City.Get(supporter.cid),cid,ArmyType.defense,sendViaWater ? ArmyTransport.water : ArmyTransport.land, (departAt - Sim.simTime).Max(0)  );
 				}
 				Log($"Sent {ts} from {supporter.cid.AsCity()} to {cid.AsCity()} @{_arriveAt.ToString()}");
 			//	await Task.Delay(500);
@@ -443,18 +446,18 @@ namespace CnV.Views
             }
         }
 
-        private async void SendAtTapped(object sender, PointerRoutedEventArgs e)
-        {
-            e.KeyModifiers.UpdateKeyModifiers();
-            e.Handled = true;
-            (var dateTime, var okay) = await DateTimePicker.ShowAsync("Send At");
-            if (okay)
-            {
-                arriveAt = (ServerTime)(dateTime);
-                OnPropertyChanged(nameof(arriveAt));
-            }
+        //private async void SendAtTapped(object sender, PointerRoutedEventArgs e)
+        //{
+        //    e.KeyModifiers.UpdateKeyModifiers();
+        //    e.Handled = true;
+        //    (var dateTime, var okay) = await DateTimePicker.ShowAsync("Send At");
+        //    if (okay)
+        //    {
+        //        arriveAt = (ServerTime)(dateTime);
+        //        OnPropertyChanged(nameof(arriveAt));
+        //    }
 
-        }
+        //}
 
        
         private void PropChanged(object sender, RoutedEventArgs e)

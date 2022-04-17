@@ -64,6 +64,11 @@ namespace CnV
 
 		public static void ShowInstance(City city,City target,bool isSettle,bool viaWater=false, ArmyType type = ArmyType.defense)
 		{
+			if(city == target)
+			{
+				AppS.MessageBox("Cannot send to self");
+				return;
+			}
 			var rv = instance ?? new SendTroops();
 			rv.city = city;
 			rv.target = target;
@@ -185,7 +190,7 @@ namespace CnV
 			Changed();
 		}
 
-		private void SendTroopsClick(object sender,RoutedEventArgs e)
+		private  void SendTroopsClick(object sender,RoutedEventArgs e)
 		{
 			if(!IsValid(true))
 				return;
@@ -207,11 +212,11 @@ namespace CnV
 				var flags = (byte)(isCavernRaid ? ((repeatCheckBox.IsChecked.Value ? Army.flagRepeating : Army.flagNone)
 									)
 									| Army.FlagSplits(splits) : Army.flagNone);
-				var arrival = ServerTime.CombineDateTime(arrivalDate.SelectedDate,arrivalTime.SelectedTime);
+				var arrival = this.arrival.dateTime; 
 
 				bool okay;
 				if(arrival != default )
-					okay =Army.Send(ts,flags,city,target.cid,type,transport,arrival);
+					okay = Army.Send(ts,flags,city,target.cid,type,transport,arrival);
 				else
 					okay = Army.Send(ts,flags,city,target.cid,type,transport);
 				if(okay)

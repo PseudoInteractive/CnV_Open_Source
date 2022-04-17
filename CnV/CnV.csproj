@@ -138,6 +138,7 @@
     <Compile Include="GameUI\BattleReportDialog.xaml.cs" />
     <Compile Include="GameUI\CombatCalcDialog.xaml.cs" />
     <Compile Include="GameUI\CreateAlliance.xaml.cs" />
+    <Compile Include="GameUI\DateTimeBox.xaml.cs" />
     <Compile Include="GameUI\DialogG.cs" />
     <Compile Include="GameUI\ErrorReport.xaml.cs" />
     <Compile Include="GameUI\JoinAlliance.xaml.cs" />
@@ -396,6 +397,9 @@
     <Page Include="GameUI\CreateAlliance.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="GameUI\DateTimeBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="GameUI\ErrorReport.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -628,6 +632,7 @@
 	<None Remove="GameUI\BattleReportDialog.xaml" />
 	<None Remove="GameUI\CombatCalcDialog.xaml" />
 	<None Remove="GameUI\CreateAlliance.xaml" />
+	<None Remove="GameUI\DateTimeBox.xaml" />
 	<None Remove="GameUI\ErrorReport.xaml" />
 	<None Remove="GameUI\JoinAlliance.xaml" />
 	<None Remove="GameUI\MessageBox.xaml" />

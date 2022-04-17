@@ -876,7 +876,6 @@ namespace CnV
 		{
 			args.Handled    = true;
 			var flyout = new MenuFlyout();
-			flyout.SetXamlRoot(sender);
 			
 			flyout.AddItem("Amulet..",Symbol.OutlineStar,() =>
 			{
@@ -901,21 +900,8 @@ namespace CnV
 					new CnVEventCancelBuildQueue(city.worldC).EnqueueAsap();
 				});
 			}
-			// Todo: Sort
+			flyout.ShowContext(sender,args);
 
-			if(args.TryGetPosition(sender,out var c))
-			{
-				flyout.ShowAt(sender,c);
-			}
-			else if(args.TryGetPosition(CityStats.instance,out var c2))
-			{
-				flyout.ShowAt(CityStats.instance,c2);
-			}
-			else
-			{
-				flyout.ShowAt(sender,new());
-				Assert(false); 
-			}
 			
 		}
 
@@ -1023,12 +1009,7 @@ namespace CnV
 		{
 			args.Handled    = true;
 			var flyout = new MenuFlyout();
-			flyout.SetXamlRoot(sender);
-			
-			//flyout.AddItem("Autobuild..",Symbol.Setting,() =>
-			//{
-			//	AutobuildDialog.ShowInstance();
-			//});
+
 			flyout.AddItem("Medallion..",Symbol.OutlineStar,() =>
 			{
 				CityUI.Show( Artifact.ArtifactType.medallion, sender);
@@ -1077,25 +1058,8 @@ namespace CnV
 					Invalidate();
 			});
 			
-			// Todo: Sort
+			flyout.ShowContext(sender,args);
 
-			if(args.TryGetPosition(sender,out var c))
-			{
-				flyout.ShowAt(sender,c);
-			}
-			else if(args.TryGetPosition(CityStats.instance,out var c2))
-			{
-				flyout.ShowAt(CityStats.instance,c2);
-			}
-			else
-			{
-				flyout.ShowAt(sender,new());
-				Assert(false); 
-			}
-			//VisualTreeHelper.GetParent(args.OriginalSource
-			//LogJson(args);
-			//Log(args.OriginalSource);
-			//LogJson(sender);
 		}
 		public void OnPropertyChanged(string members = null) => PropertyChanged?.Invoke(this,new(members));
 
@@ -1194,44 +1158,96 @@ namespace CnV
 		{
 			args.Handled    = true;
 			var flyout = new MenuFlyout();
-			flyout.SetXamlRoot(sender);
-			
-			
-			flyout.AddItem("Return",Symbol.Undo,() =>
+
+			if(!army.isReturn)
 			{
-				new CnVEventReturnTroops(army).EnqueueAsap();
-			//	instance.commandItems.Remove(this);
-			});
+				flyout.AddItem("Return",Symbol.Undo,() =>
+				{
+					new CnVEventReturnTroops(army).EnqueueAsap();
+				});
+			}
+			flyout.AddItem("Speedup",Symbol.Forward,SpeedupDefense);
+
 			flyout.AddItem("Return All",Symbol.Delete,() =>
 			{
 				new CnVEventReturnTroops(army.sourceC,CnVEventReturnTroops.outgoingAll).EnqueueAsap();
-			//	instance.commandItems.Remove(this);
 			});
 			flyout.AddItem("Return Raids",Symbol.Refresh,() =>
 			{
 				new CnVEventReturnTroops(army.sourceC,CnVEventReturnTroops.outgoingRaidsFast).EnqueueAsap();
-			//	instance.commandItems.Remove(this);
 			});
-			// Todo: Sort
-
-			if(args.TryGetPosition(sender,out var c))
-			{
-				flyout.ShowAt(sender,c);
-			}
-			else if(args.TryGetPosition(CityStats.instance,out var c2))
-			{
-				flyout.ShowAt(CityStats.instance,c2);
-			}
-			else
-			{
-				flyout.ShowAt(sender,new());
-				Assert(false); 
-			}
-			//VisualTreeHelper.GetParent(args.OriginalSource
-			//LogJson(args);
-			//Log(args.OriginalSource);
-			//LogJson(sender);
+			flyout.ShowContext(sender,args);
 		}
+
+		private void SpeedupDefense()
+		{
+			try
+			{
+				var aType = Artifact.ArtifactType.Horn;
+				var art = Artifact.GetForPlayerRank(aType);
+				if(art is null)
+				{
+					Assert(false);
+					return;
+				}
+				var artifact = art.id;
+
+
+				var city = army.sourceCity;
+				var id = city.outgoing.IndexOf(army);
+				Assert(id != -1);
+				if(id >= 0)
+				{
+					var toUse = (int)army.splits;
+					var needed = toUse- Player.active.ArtifactCount(artifact);
+					if(!Artifact.Get(artifact).IsOkayToUse(toUse))
+						return;
+					SocketClient.DeferSendStart();
+
+					try
+					{
+						if(needed > 0)
+						{
+							new CnVEventPurchaseArtifacts((ushort)artifact,(ushort)needed,Player.active.id).EnqueueAsap();
+						}
+
+						(new CnVEventUseArtifacts(city.c) { artifactId = (ushort)artifact,count = (ushort)toUse,aux=id }).EnqueueAsap();
+
+					}
+					catch(Exception _ex)
+					{
+						LogEx(_ex);
+
+					}
+					finally
+					{
+						SocketClient.DeferSendEnd();
+					}
+				}
+			}
+			catch(Exception _ex)
+			{
+				LogEx(_ex);
+
+			}
+		}
+
+		public void ReinContextRequested(UIElement sender,ContextRequestedEventArgs args)
+		{
+			args.Handled    = true;
+			var flyout = new MenuFlyout();
+		
+
+			flyout.AddItem("Return",Symbol.Undo,() =>
+			{
+				new CnVEventReturnTroops(army).EnqueueAsap();
+			});
+			flyout.AddItem("Speedup",Symbol.Forward,SpeedupDefense);
+
+			flyout.ShowContext(sender,args);
+		}
+
+
 		public void OnPropertyChanged(string members = null) => PropertyChanged?.Invoke(this,new(members));
 
 		public event PropertyChangedEventHandler? PropertyChanged;
@@ -1294,8 +1310,6 @@ namespace CnV
 		{
 			args.Handled    = true;
 			var flyout = new MenuFlyout();
-			flyout.SetXamlRoot(sender);
-			
 			
 			flyout.AddItem("Return",Symbol.Undo,() =>
 			{
@@ -1356,26 +1370,8 @@ namespace CnV
 				}
 			});
 			
-			
-			// Todo: Sort
+			flyout.ShowContext(sender,args);
 
-			if(args.TryGetPosition(sender,out var c))
-			{
-				flyout.ShowAt(sender,c);
-			}
-			else if(args.TryGetPosition(CityStats.instance,out var c2))
-			{
-				flyout.ShowAt(CityStats.instance,c2);
-			}
-			else
-			{
-				flyout.ShowAt(sender,new());
-				Assert(false); 
-			}
-			//VisualTreeHelper.GetParent(args.OriginalSource
-			//LogJson(args);
-			//Log(args.OriginalSource);
-			//LogJson(sender);
 		}
 		
 	}

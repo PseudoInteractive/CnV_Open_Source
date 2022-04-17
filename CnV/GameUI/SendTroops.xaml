@@ -30,11 +30,8 @@
 				<ComboBox x:Name="splitsCombo" ItemsSource="{x:Bind splitsItems}" SelectedIndex="0" Margin="12,2" VerticalAlignment="Center" />
 				<CheckBox x:Name="repeatCheckBox" Content="Repeat" IsChecked="True" Margin="8,2" />
 			</StackPanel>
-			<sfe:SfDatePicker x:Name="arrivalDate" Description="arrival date" AllowNull="True" PlaceholderText="Today" DisplayDateFormat="MM/dd" 
-							  ToolTipService.ToolTip="clear to send today" />
-			<sfe:SfTimePicker x:Name="arrivalTime"  Description="arrival time" 
-			ToolTipService.ToolTip="clear to send immediately" 		ClockIdentifier="24HourClock" AllowNull="True" PlaceholderText="ASAP" DisplayTimeFormat="HH:mm:ss"  />
-		</tk:WrapPanel>
+			<cnv:DateTimeBox Label="arrival" x:Name="arrival" ToolTipService.ToolTip="Clear both boxes to send immediately" />
+			</tk:WrapPanel>
 
 		<GridView x:Name="troopList"  Grid.Row="0" VerticalAlignment="Stretch"  ItemsSource="{x:Bind troopItems,Mode=OneWay}" >
 			

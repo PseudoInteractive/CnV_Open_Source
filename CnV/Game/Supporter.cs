@@ -34,15 +34,13 @@ namespace CnV
        
         public DateTimeOffset eta { get => Sim.serverTime + (TimeSpan)(travel);
 			set {
-				NearDefenseTab.instance.arriveAt = new ServerTime(value);
-				NearDefenseTab.instance.OnPropertyChanged(string.Empty);
+				NearDefenseTab.instance.SetArrived( new ServerTime(value));
 			}
 		}
         public DateTimeOffset etaWings { get => Sim.serverTime + 0.5f * (TimeSpan)(travel); 
 			set
 			{
-					NearDefenseTab.instance.arriveAt = new ServerTime(value);
-					NearDefenseTab.instance.OnPropertyChanged(string.Empty);
+					NearDefenseTab.instance.SetArrived( new ServerTime(value));
 			}
 		}
         public string troopInfo
