@@ -23,8 +23,8 @@ namespace CnV
 	public sealed partial class DailyDialog:DialogG,INotifyPropertyChanged
 	{
 		static DailyDialog instance;
-		protected override string title => "Use/Purchase Artifact";
-		public Artifact a;
+		protected override string title => "Fortune Teller";
+		public ObservableCollection<Artifact> artifacts = new();
 		public DailyDialog() 
 		{
 			this.InitializeComponent();
@@ -33,59 +33,57 @@ namespace CnV
 			//if(target is not null)
 			//	Target=target;
 		}
-		public static void ShowInstance(Artifact artifact)
+		public static async void ShowInstance(params Artifact[] artifact)
 		{
 			var rv = instance ?? new DailyDialog();
-			rv.a = artifact;
+			rv.artifacts.Clear();
 		//	rv.HeroContent.Focus(FocusState.Programmatic);
-			rv.count.Value = artifact.owned. Max(1);
+		//	rv.count.Value = artifact.owned. Max(1);
 			rv.OnPropertyChanged();
 			rv.Show(false);
+
+			foreach(var a in artifact)
+			{
+				if(a is not null)
+				{
+					await Task.Delay(500);
+					rv.artifacts.Add(a);
+				}
+			}
 			
 		}
 
 		public ImageSource background => ImageHelper.Get("UI/menues/fortune_teller/background_welcome.jpg");
-		public string priceStr => $"{CnV.Resources.zirconiaGlyph} {((count.Value.RoundToInt()-a.owned).Max(0)*a.zirconia).Format()}";
+
 		
-		
 
-
-		private void Button_Click(object sender,RoutedEventArgs e)
-		{
-			var wanted = count.Value.RoundToInt();
-			int have = a.owned;
-			if(!a.IsOkayToUse(wanted))
-				return;
-
-			SocketClient.DeferSendStart();
-			try
-			{
-				if(wanted > have)
-					(new CnVEventPurchaseArtifacts( (ushort)a.id,(ushort)(wanted-have), Player.active.id) ).EnqueueAsap();
-				if(wanted > 0)
-					(new CnVEventUseArtifacts(City.build) { artifactId = (ushort)a.id,count = (ushort)wanted,aux=0 }).EnqueueAsap();
-			}
-			catch(Exception ex)
-			{
-				LogEx(ex);
-			}
-			finally
-			{
-				SocketClient.DeferSendEnd();
-			}
-			Done();
-		}
-
-		private void CountChanged(NumberBox sender,NumberBoxValueChangedEventArgs args)
-		{
-			base.FilterNans(sender,args);
-			OnPropertyChanged();
-		}
 		public event PropertyChangedEventHandler? PropertyChanged;
 		public void OnPropertyChanged(string? member = null)
 		{
 			if (this.PropertyChanged is not null) 
 				AppS.QueueOnUIThread(() => PropertyChanged?.Invoke(this,new(member)));
+		}
+
+		private void ItemClick(object sender,ItemClickEventArgs e)
+		{
+			var art = e.ClickedItem as Artifact;
+			artifacts.Remove(art);
+			new CnVEventPurchaseArtifacts((ushort)art.id,(ushort)1,Player.active.id,true).EnqueueAsap();
+			if(artifacts.Count == 0)
+			{
+				Hide(true);
+				AppS.QueueIdleTask(DailyRewardTask,5000);
+			}
+
+		}
+		internal static void DailyRewardTask()
+		{
+			AppS.QueueOnUIThread( () =>
+			{
+				var rnd = new XXRand(Sim.simTime.seconds);
+				ShowInstance(Artifact.GetArtifactDrop(-1,ref rnd),Artifact.GetArtifactDrop(-1,ref rnd),Artifact.GetForPlayerRank(Artifact.ArtifactType.zirconia));
+			}
+			);
 		}
 	}
 }

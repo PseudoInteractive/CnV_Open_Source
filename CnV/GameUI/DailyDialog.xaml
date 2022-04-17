@@ -12,35 +12,35 @@
 	>
 
 	<Grid  >
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width ="80"  />
-			<ColumnDefinition Width ="80" />
-			<ColumnDefinition Width ="*" />
-		</Grid.ColumnDefinitions>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="64"/>
-			<RowDefinition Height="54"/>
-			<RowDefinition />
-		</Grid.RowDefinitions>
-		<Image Stretch="None" Grid.ColumnSpan="3" Grid.RowSpan="3" Source="{x:Bind background}" />
-		<Image Grid.Column="0" Source="{x:Bind a.image, Mode=OneWay}" Margin="2"  />
-		<TextBlock Grid.Column="1" Text="{x:Bind a.name, Mode=OneWay}" Margin="2" Style="{StaticResource TextBlockMedium}" TextWrapping="Wrap" TextAlignment="Center" MaxLines="3"  VerticalAlignment="Center" />
-		<TextBlock Grid.Column="2" Text="{x:Bind a.description, Mode=OneWay}"  Margin="0" Style="{StaticResource TextBlockSmall}" TextWrapping="Wrap"  MaxLines="5" TextAlignment="Center" VerticalAlignment="Center" />
-		<cnv:ZirconiaText x:Name="zirc"  Grid.Row="1" Width="74"
-					
-					  Text="{x:Bind a.zirconia, Mode=OneWay}" />
-
-		<cnv:ManaText Grid.Column="1" Grid.Row="1" Width="74"
-					  Text="{x:Bind a.mana, Mode=OneWay}" 
-					 />
-		<StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal" Margin="8,0,0,0" >
-			<TextBlock Text="{x:Bind a.ownedStr,Mode=OneWay}" Style="{StaticResource TextBlockMedium}"  Margin="4,0,4,0" VerticalAlignment="Center"  TextAlignment="Center" TextWrapping="Wrap" />
-			<NumberBox  x:Name="count" Style="{StaticResource NumberBoxSmall}"   Margin="16,2,4,2" Width="100" ValueChanged="CountChanged" />
-			<TextBlock Text="{x:Bind priceStr,Mode=OneWay}" Style="{StaticResource TextBlockMedium}"  Margin="8,0,4,0" VerticalAlignment="Center"  TextAlignment="Center" />
+		<Image Stretch="None" Source="{x:Bind background}" />
+		
+		<ListView ItemsSource="{x:Bind artifacts}" HorizontalAlignment="Center" VerticalAlignment="Bottom"  SelectionMode="None" IsItemClickEnabled="True" ItemClick="ItemClick"  >
+			<ListView.ItemTemplate>
+				<DataTemplate x:DataType="cnv:Artifact" >
+					<Grid  ToolTipService.ToolTip="{x:Bind description, Mode=OneWay}"  Margin="8">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width ="100"  />
+						</Grid.ColumnDefinitions>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="auto"/>
+							<RowDefinition Height="54"/>
+						</Grid.RowDefinitions>
 
 
-		</StackPanel>
-		<Button Grid.Row="2" Grid.Column="2" Style="{StaticResource ButtonMedium}" Click="Button_Click" Content="Purchase and Use" HorizontalAlignment="Right" />
+						<Image Grid.Column="0" Source="{x:Bind image, Mode=OneWay}" Margin="4"  />
+						<TextBlock Grid.Row="1" Text="{x:Bind name, Mode=OneWay}" Margin="4" Style="{StaticResource TextBlockMedium}" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" MaxLines="3"  VerticalAlignment="Center" Foreground="Black" />
+						
+					</Grid>
+				</DataTemplate>
+			</ListView.ItemTemplate>
+
+			<ItemsControl.ItemsPanel>
+				<ItemsPanelTemplate>
+					<ItemsStackPanel Orientation="Horizontal" Margin="8" />
+				</ItemsPanelTemplate>
+			</ItemsControl.ItemsPanel>
+
+		</ListView>
 
 	</Grid>
 

@@ -181,7 +181,7 @@ namespace CnV
 				Sim.isInitialized      = true;
 				
 				AppS.DispatchOnUIThread( ShellPage.SetupNonCoreInput );
-				AppS.QueueIdleTask(DailyRewardTask);
+				AppS.QueueIdleTask(DailyDialog.DailyRewardTask);
 		
 			}
 		catch(Exception ex)
@@ -194,9 +194,6 @@ namespace CnV
 		}
 		}
 	
-		static void DailyRewardTask()
-		{
-			AppS.QueueOnUIThread( () => DailyDialog.ShowInstance(Artifact.GetForPlayerRank(Artifact.ArtifactType.axe)) );
-		}
+		
 	}
 }
