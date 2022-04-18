@@ -552,9 +552,11 @@ namespace CnV
 						}
 						if(expEnlistment.IsExpanded)
 						{
+							int counter = 0;
 							foreach(var b in recruitQueue)
 							{
-								b.UpdateText();
+								b.UpdateText(counter);
+								++counter;
 							}
 						}
 
@@ -1014,7 +1016,14 @@ namespace CnV
 			{
 				CityUI.Show( Artifact.ArtifactType.medallion, sender);
 			});
-			flyout.AddItem(StandardUICommandKind.Delete.Create( () =>
+			if(op.isRes && op.isDemo)
+			{
+			flyout.AddItem("Powder..",Symbol.Favorite,() =>
+			{
+				CityUI.Show( Artifact.ArtifactType.black_powder, sender);
+			});
+			}
+			flyout.AddItem("Remove..",Symbol.Remove, () =>
 			{
 				var index = instance.buildQueue.IndexOf(this);
 				if(index != -1)
@@ -1024,8 +1033,8 @@ namespace CnV
 					Note.Show("Something changed");
 					Invalidate();
 				}
-			}));
-			flyout.AddItem("Cancel Selected",Symbol.Remove,() =>
+			});
+			flyout.AddItem("Cancel Selected",Symbol.Cancel,() =>
 			{
 				var sel = instance.buildQueueListView.SelectedItems;
 
@@ -1082,23 +1091,26 @@ namespace CnV
 			count = item.c.Format();
 			///var u = op.unpack;
 			//opText = u.isMove ? "Move" : u.isDemo ? "Destroy" : u.isBuild ? $"Build{(u.pa==false ? " p" : "") }" : u.isDowngrade ? $"Down to {u.elvl}" : $"Up to {u.elvl}";
-			UpdateText();
+	
 		}
-		public void UpdateText()
+		public void UpdateText(int myId)
 		{
 			try
 			{
 				var q = city.recruitQueue;
-				TimeSpanS dt;
-				if(q.Any() && q[0]== op && city.recruitItemEndsAt.isNotZero)
-					dt = city.recruitItemEndsAt - Sim.simTime;
-				else
-					dt = new(op.RecruitTimeRequired(city));
-				var text = dt.ToString();
-				if(text != timeText)
+				if(myId < q.Length)
 				{
-					timeText = text;// + BuildingDef.FromId(item.bid).Bn;
-					OnPropertyChanged(nameof(this.timeText));
+					TimeSpanS dt;
+					if(myId ==0 && city.recruitItemEndsAt.isNotZero)
+						dt = city.recruitItemEndsAt - Sim.simTime;
+					else
+						dt = new(op.RecruitTimeRequired(city));
+					var text = dt.ToString();
+					if(text != timeText)
+					{
+						timeText = text;// + BuildingDef.FromId(item.bid).Bn;
+						OnPropertyChanged(nameof(this.timeText));
+					}
 				}
 			}
 			catch(Exception ex)
