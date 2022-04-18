@@ -139,7 +139,7 @@ namespace CnVDiscord
 
 							}
 						});
-					Note.Show("Connected to Chat");
+					Note.Show($"Connected to Chat ({channels.Length} channels)");
 						initialized=true;
 						}
 						catch (Exception e)
@@ -151,7 +151,7 @@ namespace CnVDiscord
 						}
 					}
 
-					await Task.Delay(TimeSpan.FromMinutes(0.5f));
+					await Task.Delay(TimeSpan.FromMinutes(1.0f));
 				}
 			
 			
