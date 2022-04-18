@@ -180,9 +180,7 @@ namespace CnV
 			//	senInfoTask        = new( interval: 68f, City.UpdateSenatorInfo, 3.0f);
 				Sim.isInitialized      = true;
 				
-				AppS.DispatchOnUIThread( ShellPage.SetupNonCoreInput );
-				AppS.QueueIdleTask(DailyDialog.DailyRewardTask);
-		
+				
 			}
 		catch(Exception ex)
 		{

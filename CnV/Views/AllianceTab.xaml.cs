@@ -1,60 +1,56 @@
 ﻿//using Windows.UI.Core;
 using Microsoft.UI.Xaml;
 //using Windows.UI.Input;
-using System.Threading.Tasks;
 
 namespace CnV.Views;
 
-	using CnV;
-	using Game;
-	using Services;
-	using Syncfusion.UI.Xaml.DataGrid;
+using CnV;
 
 
-	public sealed partial class AllianceTab:UserTab
+public sealed partial class AllianceTab:UserTab
+{
+	public static AllianceTab instance;
+
+	NotifyList<Alliance> allianceList = new();
+
+	//        public static City showingRowDetails;
+
+	//{
+	//    var rv = cityGrid.Resources["tsInfoDT"] as DataTemplate;
+	//    Assert(rv != null);
+	//    return rv;
+	//}
+	//  static MenuFlyout cityMenuFlyout;
+	public AllianceTab()
 	{
-		public static AllianceTab instance;
+		//            var a = Telerik.UI.Xaml.Controls.Grid.Primitives.For
+		Assert(instance == null);
+		instance = this;
+		InitializeComponent();
 
-		NotifyList<Alliance> allianceList = new();
 
-		//        public static City showingRowDetails;
+		//			cityGrid.SelectionChanged += SpotSelectionChanged;
+		//cityGrid.OnKey = Spot.OnKeyDown;
 
-		//{
-		//    var rv = cityGrid.Resources["tsInfoDT"] as DataTemplate;
-		//    Assert(rv != null);
-		//    return rv;
-		//}
-		//  static MenuFlyout cityMenuFlyout;
-		public AllianceTab()
+		//cityGrid.CurrentItemChanged += CityGrid_CurrentItemChanged;
+
+
+		//			cityGrid.ProcessTooltips();
+		//			spotGrids.Add(cityGrid);
+
+	}
+
+
+
+
+
+	override public async Task VisibilityChanged(bool visible,bool longTerm)
+	{
+		//   Log("Vis change" + visible);
+
+
+		if(visible)
 		{
-			//            var a = Telerik.UI.Xaml.Controls.Grid.Primitives.For
-			Assert(instance == null);
-			instance = this;
-			InitializeComponent();
-
-
-			//			cityGrid.SelectionChanged += SpotSelectionChanged;
-			//cityGrid.OnKey = Spot.OnKeyDown;
-
-			//cityGrid.CurrentItemChanged += CityGrid_CurrentItemChanged;
-
-
-			//			cityGrid.ProcessTooltips();
-			//			spotGrids.Add(cityGrid);
-
-		}
-
-
-
-
-
-		override public async Task VisibilityChanged(bool visible,bool longTerm)
-		{
-			//   Log("Vis change" + visible);
-		
-
-			if(visible)
-			{
 
 			//if(CnVServer.ppdtInitialized)
 			//{
@@ -80,21 +76,25 @@ namespace CnV.Views;
 			//  if (cityGrid.ItemsSource == App.emptyCityList )
 			//     cityGrid.ItemsSource = City.gridCitySource;
 
-				allianceList.Set(Alliance.all);
-			}
-			else
+			allianceList.Set(Alliance.all);
+			foreach(var a in Alliance.all)
 			{
-				//        cityGrid.ItemsSource = null;
+				a.OnPropertyChanged();
 			}
-			await base.VisibilityChanged(visible,longTerm: longTerm);
-			//	if(visible)
-			//	{
-			//		AppS.DispatchOnUIThreadLow(() => Spot.SyncUISelection(true, City.GetBuild() ));
-			//	}
 		}
-		
+		else
+		{
+			//        cityGrid.ItemsSource = null;
+		}
+		await base.VisibilityChanged(visible,longTerm: longTerm);
+		//	if(visible)
+		//	{
+		//		AppS.DispatchOnUIThreadLow(() => Spot.SyncUISelection(true, City.GetBuild() ));
+		//	}
+	}
 
-		public static bool IsVisible() => instance.isFocused;
+
+	public static bool IsVisible() => instance.isFocused;
 	public static void AlliancesChanged()
 	{
 		if(IsVisible())

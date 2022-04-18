@@ -623,6 +623,16 @@ namespace CnV.Views
 				await Task.Delay(500);
 				ShellPage.RefreshX();
 
+				AppS.DispatchOnUIThread( ShellPage.SetupNonCoreInput );
+				AppS.QueueIdleTask(DailyDialog.DailyRewardTask);
+				{
+					var p = Player.me;
+					if(!p.hasAlliance && p.allianceInvites.Any())
+					{
+						AppS.QueueOnUIThread( JoinAlliance.ShowInstance );
+
+					}
+				}
 //				if(AppS.processingTasksStarted == false)
 				{
 					
@@ -1881,10 +1891,17 @@ namespace CnV.Views
 
 		private void FormAlliance(object sender,RoutedEventArgs e)
 		{
-			CreateAlliance.ShowInstance();
+			if(Player.active.title.rank < (byte)TitleName.Dame)
+			{
+				AppS.MessageBox("Must be Dame/Knight to create alliance");
+			}
+			else
+			{
+				CreateAlliance.ShowInstance();
+			}
 		}
 
-		private void JoinAlliance(object sender,RoutedEventArgs e)
+		private void ShowAllianceInvites(object sender,RoutedEventArgs e)
 		{
 			CnV.JoinAlliance.ShowInstance();
 		}

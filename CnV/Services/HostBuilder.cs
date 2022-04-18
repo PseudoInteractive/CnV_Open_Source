@@ -55,8 +55,8 @@ namespace CnV;
 					//     services.ConfigureTelemetryModule<QuickPulseTelemetryModule>((mod, opt) => mod.AuthenticationApiKey = "e18c4e59-5c78-46cc-8dad-cfd1c8ecb062");
 
 					// instrumentation key is read automatically from appsettings.json
-					services.AddApplicationInsightsTelemetryWorkerService("e18c4e59-5c78-46cc-8dad-cfd1c8ecb062");
-					//services.AddApplicationInsightsTelemetryWorkerService(new ApplicationInsightsServiceOptions() { InstrumentationKey="e18c4e59-5c78-46cc-8dad-cfd1c8ecb062",ConnectionString="InstrumentationKey=e18c4e59-5c78-46cc-8dad-cfd1c8ecb062;IngestionEndpoint=https://southcentralus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://southcentralus.livediagnostics.monitor.azure.com/quickpulseservice.svc",EnableDebugLogger=false });
+					//services.AddApplicationInsightsTelemetryWorkerService("e18c4e59-5c78-46cc-8dad-cfd1c8ecb062");
+					services.AddApplicationInsightsTelemetryWorkerService(new ApplicationInsightsServiceOptions() { InstrumentationKey="e18c4e59-5c78-46cc-8dad-cfd1c8ecb062",ConnectionString="InstrumentationKey=e18c4e59-5c78-46cc-8dad-cfd1c8ecb062;IngestionEndpoint=https://southcentralus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://southcentralus.livediagnostics.monitor.azure.com/quickpulseservice.svc",EnableDebugLogger=false,EnableDependencyTrackingTelemetryModule=false,EnableAzureInstanceMetadataTelemetryModule=false });;;
                 })
                 
                 .Build();

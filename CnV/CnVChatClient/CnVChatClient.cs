@@ -214,7 +214,7 @@ namespace CnVDiscord
 						var longer = Player.all.FirstOrDefault(a=>a.shortName == name);
 						if(longer is not null)
 							name = longer.name;
-						Log($"Missing discordName: {message.Author.Username} {message.Author.Id} {authorId} HasOverride:{senderOverrides != null} ");
+						Log($"Missing discordName: {message.Author.Username}=>{name} {message.Author.Id} {authorId} HasOverride:{senderOverrides != null} ");
 
 					}
 					AddMessage( name,message, false, true);

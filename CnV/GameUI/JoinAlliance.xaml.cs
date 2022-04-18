@@ -45,8 +45,8 @@ namespace CnV
 				art.leave.Visibility = Visibility.Collapsed;
 
 			}
-//			art.invites.ItemsSource = p.allianceInvites;
-			art.invites.ItemsSource = Alliance.all.Where(a=>a.id != 0).Select(a=> new CnVEventAllianceInvite(p.id,a.id,AllianceTitle.leader,false)).ToArray();
+			art.invites.ItemsSource = p.allianceInvites;
+//			art.invites.ItemsSource = Alliance.all.Where(a=>a.id != 0).Select(a=> new CnVEventAllianceInvite(p.id,a.id,AllianceTitle.leader,false)).ToArray();
 		//	if(p.alliance.isValid)
 		//		art.alliance.SelectedItem =p.alliance;
 		//	art.allianceTitle.SelectedIndex = (int) p.allianceTitle;

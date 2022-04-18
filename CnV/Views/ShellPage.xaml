@@ -215,8 +215,8 @@
 					<AppBarButton 
 					             Icon="Comment"
 					             
-					              Click="JoinAlliance"
-						 Label="Join Alliance.." />
+					              Click="ShowAllianceInvites"
+						 Label="Alliance Invites.." />
 				</CommandBar.SecondaryCommands>
 	</CommandBar>
 

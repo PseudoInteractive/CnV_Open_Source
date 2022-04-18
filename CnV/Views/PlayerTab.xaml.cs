@@ -1,61 +1,57 @@
 ﻿//using Windows.UI.Core;
 using Microsoft.UI.Xaml;
 //using Windows.UI.Input;
-using System.Threading.Tasks;
 
 namespace CnV.Views;
 
-	using CnV;
-	using Game;
-	using Services;
-	using Syncfusion.UI.Xaml.DataGrid;
+using CnV;
 
 
-	public sealed partial class PlayerTab:UserTab
+public sealed partial class PlayerTab:UserTab
+{
+	private const string workStr = "Refreshing build states..";
+	public static PlayerTab instance;
+
+	NotifyList<Player> playerList = new();
+
+	//        public static City showingRowDetails;
+
+	//{
+	//    var rv = cityGrid.Resources["tsInfoDT"] as DataTemplate;
+	//    Assert(rv != null);
+	//    return rv;
+	//}
+	//  static MenuFlyout cityMenuFlyout;
+	public PlayerTab()
 	{
-		private const string workStr = "Refreshing build states..";
-		public static PlayerTab instance;
+		//            var a = Telerik.UI.Xaml.Controls.Grid.Primitives.For
+		Assert(instance == null);
+		instance = this;
+		InitializeComponent();
 
-		NotifyList<Player> playerList = new();
 
-		//        public static City showingRowDetails;
+		//			cityGrid.SelectionChanged += SpotSelectionChanged;
+		//cityGrid.OnKey = Spot.OnKeyDown;
 
-		//{
-		//    var rv = cityGrid.Resources["tsInfoDT"] as DataTemplate;
-		//    Assert(rv != null);
-		//    return rv;
-		//}
-		//  static MenuFlyout cityMenuFlyout;
-		public PlayerTab()
+		//cityGrid.CurrentItemChanged += CityGrid_CurrentItemChanged;
+
+
+		//			cityGrid.ProcessTooltips();
+		//			spotGrids.Add(cityGrid);
+
+	}
+
+
+
+
+
+	override public async Task VisibilityChanged(bool visible,bool longTerm)
+	{
+		//   Log("Vis change" + visible);
+
+
+		if(visible)
 		{
-			//            var a = Telerik.UI.Xaml.Controls.Grid.Primitives.For
-			Assert(instance == null);
-			instance = this;
-			InitializeComponent();
-
-
-			//			cityGrid.SelectionChanged += SpotSelectionChanged;
-			//cityGrid.OnKey = Spot.OnKeyDown;
-
-			//cityGrid.CurrentItemChanged += CityGrid_CurrentItemChanged;
-
-
-			//			cityGrid.ProcessTooltips();
-			//			spotGrids.Add(cityGrid);
-
-		}
-
-
-
-
-
-		override public async Task VisibilityChanged(bool visible,bool longTerm)
-		{
-			//   Log("Vis change" + visible);
-		
-
-			if(visible)
-			{
 
 			//if(CnVServer.ppdtInitialized)
 			//{
@@ -81,21 +77,25 @@ namespace CnV.Views;
 			//  if (cityGrid.ItemsSource == App.emptyCityList )
 			//     cityGrid.ItemsSource = City.gridCitySource;
 
-				playerList.Set(World.activePlayers);
-			}
-			else
+			playerList.Set(World.activePlayers);
+			foreach(var a in World.activePlayers)
 			{
-				//        cityGrid.ItemsSource = null;
+				a.OnPropertyChanged();
 			}
-			await base.VisibilityChanged(visible,longTerm: longTerm);
-			//	if(visible)
-			//	{
-			//		AppS.DispatchOnUIThreadLow(() => Spot.SyncUISelection(true, City.GetBuild() ));
-			//	}
 		}
-		
+		else
+		{
+			//        cityGrid.ItemsSource = null;
+		}
+		await base.VisibilityChanged(visible,longTerm: longTerm);
+		//	if(visible)
+		//	{
+		//		AppS.DispatchOnUIThreadLow(() => Spot.SyncUISelection(true, City.GetBuild() ));
+		//	}
+	}
 
-		public static bool IsVisible() => instance.isFocused;
+
+	public static bool IsVisible() => instance.isFocused;
 
 	private void OnLoaded(object sender,RoutedEventArgs e)
 	{

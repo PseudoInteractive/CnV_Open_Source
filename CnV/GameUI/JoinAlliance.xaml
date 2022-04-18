@@ -15,8 +15,7 @@
 				<ListView.ItemTemplate>
 					<DataTemplate x:DataType="cnv:CnVEventAllianceInvite">
 						<StackPanel>
-							<TextBlock Text="{x:Bind alliance.name}"/>
-							<TextBlock Text="{x:Bind alliance.abbreviation}"/>
+							<TextBlock Text="{x:Bind alliance}"/>
 							<TextBlock Text="{x:Bind title}"/>
 						</StackPanel>
 					</DataTemplate>

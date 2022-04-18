@@ -401,7 +401,7 @@ namespace CnV
 		{
 			try
 			{
-				await AppS.StartHost(OnReady:async () =>
+				//await AppS.StartHost(OnReady:async () =>
 				{
 
 					Assert(AppS.state == AppS.State.loading);
@@ -486,7 +486,8 @@ namespace CnV
 					await OnLaunchedOrActivated(args.UWPLaunchActivatedEventArgs);
 					//if(uwpArgs.Kind == Windows.ApplicationModel.Activation.ActivationKind.Launch)
 					AppS.QueueOnUIThread(Services.StoreHelper.instance.DownloadAndInstallAllUpdatesAsync);
-				});
+				}
+				//);
 
 			}
 			catch(Exception e)
