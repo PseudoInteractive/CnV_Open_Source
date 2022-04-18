@@ -82,7 +82,12 @@ namespace CnV
 		internal bool isEnabled => city.CanRecruit(type);
 		internal void Recruit(object sender,RoutedEventArgs e)
 		{
-
+			var freeSpace = (int)(city.stats.maxTs - city.troopsOwnedTS());
+			if(freeSpace < tt.ts)
+			{
+				AppS.MessageBox("Not enough troop space");
+				return;
+			}
 			Note.Show("Recruit");
 			new CnVEventRecruit(city.c,tt).EnqueueAsap();
 			count =0;
@@ -107,6 +112,8 @@ namespace CnV
 			if(req.gold > 0)
 				m = m.Min(city.player.gold / req.gold);
 
+			var freeSpace = (int)(city.stats.maxTs - city.troopsOwnedTS());
+			m = m.Min(freeSpace / Troops.ttTs[type]);
 			count = (uint)m;
 			OnPropertyChanged();
 		}

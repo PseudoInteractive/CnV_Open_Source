@@ -105,7 +105,7 @@ namespace CnVDiscord
 								PooledConnectionIdleTimeout = Timeout.InfiniteTimeSpan,
 								KeepAlivePingDelay = TimeSpan.FromSeconds(60),
 								KeepAlivePingTimeout = TimeSpan.FromSeconds(30),
-								EnableMultipleHttp2Connections = true
+								KeepAlivePingPolicy = HttpKeepAlivePingPolicy.Always
 							}
 							});
 

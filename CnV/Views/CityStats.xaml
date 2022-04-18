@@ -42,6 +42,7 @@
 							SelectionChanged="CityBox_SelectionChanged"
 					                 ToolTipService.ToolTip="Right tap for menu"
 					                Margin="0"
+					
 					   Background="{StaticResource ExpanderBrushHeader}"
 					   RightTapped="{x:Bind views:ShellPage.BuildHomeRightTapped}"
 					   >

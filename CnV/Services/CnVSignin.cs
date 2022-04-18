@@ -206,7 +206,7 @@ namespace CnV
 
 
 			return await	AppS.DispatchOnUIThreadTask(async () => { 
-			for(;;)
+		//	for(;;)
 			{
 				try
 				{
@@ -223,8 +223,9 @@ namespace CnV
 					Log(ex.Message);
 				}
 				await Task.Delay(200);
-
+					AppS.Fatal("Login did not work :(");
 			}
+				return false;
 				});
 		}
 		catch(Exception e)
