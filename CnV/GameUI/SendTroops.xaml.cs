@@ -85,7 +85,7 @@ namespace CnV
 			
 		}
 
-		internal bool IsValid(bool verbose)
+		internal bool IsValid(TroopTypeCounts troops,bool verbose)
 		{
 			if(city.underSiege)
 			{
@@ -112,10 +112,19 @@ namespace CnV
 				if(verbose) AppS.MessageBox($"Need 25 trading ships.  Have {city.shipsHome} home of {city.ships} ");
 				return false;
 			}
-			if( type is ( >= Army.attackFirst and <= Army.attackLast) && (!city.isCastle) )
+			if( type is ( >= Army.attackFirst and <= Army.attackLast))
 			{
-				if(verbose) AppS.MessageBox($"Only castles can attack like that");
-				return false;
+				if( !city.isCastle )
+				{ 
+					if(verbose) AppS.MessageBox($"Only castles can attack like that");
+						return false;
+				}
+				if(troops.TS() < city.minTS)
+				{
+					if(verbose) AppS.MessageBox($"Cannot send {troops.TS()}, min TS is {city.minTS}");
+						return false;
+
+				}
 			}
 			if( (type is (  ArmyType.siege or ArmyType.assault)) &&(!target.isCastle) )
 			{
@@ -192,10 +201,6 @@ namespace CnV
 
 		private  void SendTroopsClick(object sender,RoutedEventArgs e)
 		{
-			if(!IsValid(true))
-				return;
-			
-			
 			var ts = new TroopTypeCounts();
 			foreach(var i in troopItems)
 			{
@@ -205,6 +210,12 @@ namespace CnV
 					
 				}
 			}
+
+			if(!IsValid(ts,true))
+				return;
+			
+			
+			
 			if(ts.Any())
 			{
 				var splits = this.splits;

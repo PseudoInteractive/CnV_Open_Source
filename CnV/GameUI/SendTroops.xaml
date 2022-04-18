@@ -21,6 +21,7 @@
 			<Button Style="{StaticResource ButtonMedium}" Content="Zero" Click="ClearClick" Margin="8,2"  />
 			<ComboBox SelectedIndex="{x:Bind armyType, Mode=TwoWay}" ItemsSource="{x:Bind cnv:Army.typeStrings}" />
 			<ToggleSwitch IsOn="{x:Bind viaWater, Mode=TwoWay}" OnContent="Water" OffContent="Land" />
+			
 			<!--<TextBox   VerticalAlignment="Center" Text="{x:Bind arrival,Mode=TwoWay,Converter={StaticResource SmallTimeConverter}}"
                Description="arrival" PlaceholderText="ASAP"    ToolTipService.ToolTip="Time of arrival, leave blank to send as soon as possible" />-->
 
@@ -31,7 +32,8 @@
 				<CheckBox x:Name="repeatCheckBox" Content="Repeat" IsChecked="True" Margin="8,2" />
 			</StackPanel>
 			<cnv:DateTimeBox Label="arrival" x:Name="arrival" ToolTipService.ToolTip="Clear both boxes to send immediately" />
-			</tk:WrapPanel>
+			<NumberBox Description="Min TS" Value="{x:Bind city.minTS,Mode=OneWay}" IsEnabled="false" />
+		</tk:WrapPanel>
 
 		<GridView x:Name="troopList"  Grid.Row="0" VerticalAlignment="Stretch"  ItemsSource="{x:Bind troopItems,Mode=OneWay}" >
 			
