@@ -65,7 +65,7 @@ public partial class UserTab:UserControl, IANotifyPropertyChanged
 				new SpotTab(),
 				new ReinforcementsTab(),
 				new OutgoingTab(),
-
+				new AllianceTab(),
 				new NearDefenseTab(),
 				new NearRes(),
 				new NPCHistory(),
@@ -407,8 +407,21 @@ public partial class UserTab:UserControl, IANotifyPropertyChanged
 
 						break;
 					}
+					else if(info.Record is Player p)
+					{
+						//var me = Player.me;
 
-					if(info.Record is Reinforcement r)
+						p.AddToFlyout(flyout);
+						break;
+					}
+					else if(info.Record is Alliance a)
+					{
+						//var me = Player.me;
+
+						a.AddToFlyout(flyout);
+						break;
+					}
+					else if(info.Record is Reinforcement r)
 					{
 						flyout.AddItem("Return",() => r.ReturnAsync());
 						break;

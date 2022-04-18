@@ -34,7 +34,7 @@ namespace CnV.Views
 		public const byte typeAnnounce = 6;
 		public sbyte allignment;
 		public HorizontalAlignment MsgAlignment => (AMath.random.Next(3) - 1) switch { -1 => HorizontalAlignment.Left, 1 => HorizontalAlignment.Right, _ => HorizontalAlignment.Center };
-		public DateTimeOffset time;
+		public ServerTime time;
 #if DEBUG
 		public string arrivedString => time.ToString("dd HH':'mm':'ss");
 #else
@@ -49,14 +49,14 @@ namespace CnV.Views
 		{
 			return Player.FromNameOrNull(player)?.avatarImage;
 		}
-		public ChatEntry(string _player,string _a,DateTimeOffset _time = default)
+		public ChatEntry(string _player,string _a,ServerTime _time = default)
 		{
 			avatar = GetAvatar(_player);
 			text = Note.TranslateCOTGChatToMarkdown(_a.Truncate(maxMessageLength));
 			time = _time;
 			player = _player;
 		}
-		public ChatEntry(string _player,string _text,DateTimeOffset _time,byte _type)
+		public ChatEntry(string _player,string _text,ServerTime _time,byte _type)
 		{
 			avatar = GetAvatar(_player);
 			text = _text.Truncate(maxMessageLength);
@@ -261,7 +261,7 @@ namespace CnV.Views
 					//  var str = $"{Tick.MSS()}:{s}";
 					//  instance.logEntries
 
-					debug.Post(new ChatEntry(null,s,Sim.serverTime),true);
+					debug.Post(new ChatEntry(null,s,Sim.simTime),true);
 				}
 				catch(Exception e)
 				{
@@ -502,11 +502,11 @@ namespace CnV.Views
 			};
 			if(msg.TryGetProperty("c",out var c))
 			{
-				ch.time = c.GetString().ParseDateTime();
+				ch.time = IServerTime.UtcToServerTime( c.GetString().ParseDateTime() );
 			}
 			else
 			{
-				ch.time = Sim.serverTime;
+				ch.time = Sim.simTime;
 			}
 
 			return ch;
@@ -536,94 +536,94 @@ namespace CnV.Views
 			}
 		}
 
-		public static void ProcessIncomingChat(JsonElement jsp)
-		{
-			var a = jsp.GetAsInt("a");
-			switch(a)
-			{
-				case 444:
-				case 555:
-				case 333:
-					{
-						if(!jsp.TryGetProperty("b",out var messages))
-							break;
+		//public static void ProcessIncomingChat(JsonElement jsp)
+		//{
+		//	var a = jsp.GetAsInt("a");
+		//	switch(a)
+		//	{
+		//		case 444:
+		//		case 555:
+		//		case 333:
+		//			{
+		//				if(!jsp.TryGetProperty("b",out var messages))
+		//					break;
 
-						var batch = new List<ChatEntry>();
-						foreach(var msg in messages.EnumerateArray())
-						{
-							batch.Add(GetChatMessage(msg));
-						}
-						int c = batch.Count-1;
-						var epsilon = TimeSpan.FromSeconds(10);
-						var lastTime = Sim.serverTime + epsilon;
-						for(;c >= 0;--c)
-						{
-							while(lastTime < batch[c].time)
-							{
-								batch[c].time -= TimeSpan.FromDays(1); // days are missing damn it
-							}
-							lastTime = batch[c].time+epsilon;
-						}
+		//				var batch = new List<ChatEntry>();
+		//				foreach(var msg in messages.EnumerateArray())
+		//				{
+		//					batch.Add(GetChatMessage(msg));
+		//				}
+		//				int c = batch.Count-1;
+		//				var epsilon = TimeSpan.FromSeconds(10);
+		//				var lastTime = Sim.serverTime + epsilon;
+		//				for(;c >= 0;--c)
+		//				{
+		//					while(lastTime < batch[c].time)
+		//					{
+		//						batch[c].time -= TimeSpanS.FromDays(1); // days are missing damn it
+		//					}
+		//					lastTime = batch[c].time+epsilon;
+		//				}
 
-						if(a == 333)
-						{
-							ChatTab.world.Post(batch);
-						}
-						else
-						{
-							if(a != 444)
-							{
-								ChatTab.officer.Post(batch);
-							}
-							else
-							{
-								ChatTab.alliance.Post(batch);
-							}
-						}
+		//				if(a == 333)
+		//				{
+		//					ChatTab.world.Post(batch);
+		//				}
+		//				else
+		//				{
+		//					if(a != 444)
+		//					{
+		//						ChatTab.officer.Post(batch);
+		//					}
+		//					else
+		//					{
+		//						ChatTab.alliance.Post(batch);
+		//					}
+		//				}
 
-					}
-					break;
-				case 4:
-				case 5:
-				case 3:
-					{
-						var ch = GetChatMessage(jsp);
-						if(ch.type == ChatEntry.typeWhisperFrom || ch.type == ChatEntry.typeWhisperTo) // whisper
-						{
-							//if (ch.player == "Avatar" && ch.type == ChatEntry.typeWhisperFrom)
-							//	PlayerHooks.PlayerChat?.Invoke(new PlayerHooks.PlayerChatEventArgs() { player = Player.FromName(ch.player), text = ch.text });
+		//			}
+		//			break;
+		//		case 4:
+		//		case 5:
+		//		case 3:
+		//			{
+		//				var ch = GetChatMessage(jsp);
+		//				if(ch.type == ChatEntry.typeWhisperFrom || ch.type == ChatEntry.typeWhisperTo) // whisper
+		//				{
+		//					//if (ch.player == "Avatar" && ch.type == ChatEntry.typeWhisperFrom)
+		//					//	PlayerHooks.PlayerChat?.Invoke(new PlayerHooks.PlayerChatEventArgs() { player = Player.FromName(ch.player), text = ch.text });
 
-							// add to all tabs
-							ch.text = $"`{(ch.type == ChatEntry.typeWhisperFrom ? "whispers" : "you whisper")}` {ch.text}";
-							//		var prior = FocusManager.GetFocusedElement();
-							//		Log(prior.GetType());
+		//					// add to all tabs
+		//					ch.text = $"`{(ch.type == ChatEntry.typeWhisperFrom ? "whispers" : "you whisper")}` {ch.text}";
+		//					//		var prior = FocusManager.GetFocusedElement();
+		//					//		Log(prior.GetType());
 
-							ChatTab.GetWhisperTab(ch.player,false).Post(ch,true);
-							// ChatTab.whisper.Post(ch);
-							ChatTab.alliance.Post(ch,true);
-							//       ChatTab.officer.Post(ch);
-							//       ChatTab.world.Post(ch);
-						}
-						else
-						{
-							if(ch.type == 5)
-							{
-								ChatTab.officer.Post(ch,true);
-							}
-							if(ch.type == 5 || ch.type == 4)
-							{
+		//					ChatTab.GetWhisperTab(ch.player,false).Post(ch,true);
+		//					// ChatTab.whisper.Post(ch);
+		//					ChatTab.alliance.Post(ch,true);
+		//					//       ChatTab.officer.Post(ch);
+		//					//       ChatTab.world.Post(ch);
+		//				}
+		//				else
+		//				{
+		//					if(ch.type == 5)
+		//					{
+		//						ChatTab.officer.Post(ch,true);
+		//					}
+		//					if(ch.type == 5 || ch.type == 4)
+		//					{
 
-								//if (ch.type == 4)
-								//	PlayerHooks.PlayerChat?.Invoke(new PlayerHooks.PlayerChatEventArgs() { player = Player.FromName(ch.player), text = ch.text });
-								ChatTab.alliance.Post(ch,true);
-							}
-							else
-								ChatTab.world.Post(ch,true);
-						}
-						break;
-					}
-			}
-		}
+		//						//if (ch.type == 4)
+		//						//	PlayerHooks.PlayerChat?.Invoke(new PlayerHooks.PlayerChatEventArgs() { player = Player.FromName(ch.player), text = ch.text });
+		//						ChatTab.alliance.Post(ch,true);
+		//					}
+		//					else
+		//						ChatTab.world.Post(ch,true);
+		//				}
+		//				break;
+		//			}
+		//	}
+		//}
 
 		//private void input_PointerEntered(object sender, PointerRoutedEventArgs e)
 		//{

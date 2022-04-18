@@ -83,6 +83,10 @@
 										   ShowHeaderToolTip="True"
 										   TextAlignment="Center"
 										    />
+				<sf:GridNumericColumn MappingName="ts"/>
+				<sf:GridNumericColumn MappingName="tsOffense"/>
+				<sf:GridNumericColumn MappingName="tsDefense"/>
+
 				<sf:GridNumericColumn MappingName="kills"
 				                      TextAlignment="Center"
 									  DisplayNumberFormat="N0" />

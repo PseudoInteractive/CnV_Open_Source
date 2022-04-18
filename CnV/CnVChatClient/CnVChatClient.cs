@@ -111,7 +111,7 @@ namespace CnVDiscord
 
 						connection = await StreamingHubClient.ConnectAsync<ICnVChatClientConnection,ICnVChatClient>(channel,this,cancellationToken: shutdownCancellation.Token,logger:this);
 						if(connection == null)
-							return false;
+							goto tryAgain;
 						while(!Sim.isPastWarmup)
 						{
 							await Task.Delay(300);
@@ -150,7 +150,7 @@ namespace CnVDiscord
 						//	return false;
 						}
 					}
-
+					tryAgain:
 					await Task.Delay(TimeSpan.FromMinutes(5.0f));
 				}
 			
@@ -269,7 +269,7 @@ namespace CnVDiscord
 
 					content = content.Replace(mention, mentionGame);
 				}
-				var chat = new ChatEntry(name, content, message.Timestamp.UTCToServerTime(), ChatEntry.typeAlliance);
+				var chat = new ChatEntry(name, content,IServerTime.UtcToServerTime(message.Timestamp), ChatEntry.typeAlliance);
 				AppS.DispatchOnUIThread(() => ChatTab.Post(message.ChannelId, chat, isNew,notify));
 			}
 			catch (Exception ex)

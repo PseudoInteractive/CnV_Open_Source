@@ -1846,6 +1846,12 @@ namespace CnV.Views
 		{
 			try
 			{
+							if(!AppS.isSinglePlayer)
+			{
+				AppS.MessageBox("Only works in single player mode");
+				return;
+			}
+
 				FileOpenPicker savePicker = new FileOpenPicker();
 				savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
 				// Dropdown of file types the user can save the file as

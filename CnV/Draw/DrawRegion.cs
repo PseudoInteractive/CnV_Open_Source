@@ -259,8 +259,8 @@ internal partial class GameClient
 			device.Textures[2] = TileData.cityTileset.material.texture;
 			device.Textures[3] = TileData.cityTileset.material.texture1;
 
-			device.Textures[4] = TileData.topLevelTileset.material.texture;
-			device.Textures[5] = TileData.topLevelTileset.material.texture1;
+	//		device.Textures[4] = TileData.topLevelTileset.material.texture;
+	//		device.Textures[5] = TileData.topLevelTileset.material.texture1;
 			//				float accentAngle = animT * MathF.PI * 2;
 			int tick = (Environment.TickCount >> 3) & 0xfffff;
 			var animTLoop = animationTWrap.Wave();

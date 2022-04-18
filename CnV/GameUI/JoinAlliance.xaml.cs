@@ -35,48 +35,74 @@ namespace CnV
 		{
 			var art = instance ?? new JoinAlliance();
 			var p = Player.active;
-			art.alliance.ItemsSource = Alliance.all;
 			if(p.alliance.isValid)
-				art.alliance.SelectedItem =p.alliance;
-			art.allianceTitle.SelectedIndex = (int) p.allianceTitle;
+			{
+				art.leave.Visibility = Visibility.Visible;
+				art.leave.Content = $"Leave {p.alliance.name}";
+			}
+			else
+			{
+				art.leave.Visibility = Visibility.Collapsed;
+
+			}
+//			art.invites.ItemsSource = p.allianceInvites;
+			art.invites.ItemsSource = Alliance.all.Where(a=>a.id != 0).Select(a=> new CnVEventAllianceInvite(p.id,a.id,AllianceTitle.leader,false)).ToArray();
+		//	if(p.alliance.isValid)
+		//		art.alliance.SelectedItem =p.alliance;
+		//	art.allianceTitle.SelectedIndex = (int) p.allianceTitle;
 			art.Show(true);
 		}
 
-		private async void Button_Click(object sender,RoutedEventArgs e)
-		{
-			try
-			{
-				var sel = this.alliance.SelectedItem as Alliance;
+		//private async void Button_Click(object sender,RoutedEventArgs e)
+		//{
+		//	try
+		//	{
+		//		var sel = this.alliance.SelectedItem as Alliance;
 
-				if(sel == null)
-				{
-					AppS.MessageBox("Must select Alliance");
-					return;
-				}
-				Hide(true);
-				await Go(Player.active,sel.id,(AllianceTitle)allianceTitle.SelectedIndex);
+		//		if(sel == null)
+		//		{
+		//			AppS.MessageBox("Must select Alliance");
+		//			return;
+		//		}
+		//		Hide(true);
+		//		await Go(Player.active,sel.id,(AllianceTitle)allianceTitle.SelectedIndex);
 
-			}
-			catch(Exception _ex)
-			{
-				LogEx(_ex);
+		//	}
+		//	catch(Exception _ex)
+		//	{
+		//		LogEx(_ex);
 
-			}
+		//	}
 
 
-		}
+		//}
 
 		internal static  async Task Go(Player p,AllianceId sel,AllianceTitle title)
 		{
 		
 			
 			var entity = new PlayerEntity(p.pid,p.id,World.id) { allianceId =sel,allianceTitle=(AllianceTitleAzure)title };
-			PlayerEntity.table.UpsertAsync(entity);
+			var t0= PlayerEntity.table.UpsertAsync(entity);
 			// Do we need a delay in here?
 
 			new CnVEventAlliance(p.id,sel,title).EnqueueAsap();
 			await Task.Delay(1000);
-			CnVChatClient.UpdatePlayerAlliance(p);
+			await Task.WhenAll(t0, CnVChatClient.UpdatePlayerAlliance(p));
+		}
+
+		private void InviteClick(object sender,ItemClickEventArgs e)
+		{
+			var i = e.ClickedItem as CnVEventAllianceInvite;
+			Hide(true);
+			Go(Player.active,i.allianceId,i.title);
+
+
+		}
+
+		private void LeaveAlliance(object sender,RoutedEventArgs e)
+		{
+			Hide(true);
+			Go(Player.active,0,0);
 		}
 	}
 }

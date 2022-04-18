@@ -844,34 +844,34 @@ namespace CnV
 							//    }
 							case "notify":
 								{
-									foreach(var note in jsp.Value.EnumerateArray())
-									{
-										var str = note.GetString();
-										Log(str);
-										var ss = str.Split(',', StringSplitOptions.RemoveEmptyEntries);
-										if(int.TryParse(ss[0], out var id))
-											if(id == 99)
-											{
-												// online notify
-												var friend = ss[1];
-												var online = ss[2] == "1";
-												var msg = new ChatEntry(friend, online ? " has come online" : " has gone offline", serverTime, ChatEntry.typeAnnounce);
-												AppS.DispatchOnUIThreadLow(() =>
-												{
-													ChatTab.alliance.Post(msg, true);
-													ChatTab.world.Post(msg, true);
-												}); // post on both
-											}
-											else if(id == 9)
-											{
-												var cid = int.Parse(ss[1]);
-												// founded new city
-												await Task.Delay(30000);//.ConfigureAwait(false);
-												Note.Show($"You have founded a new city!  Would you like to run [Setup](/s/{cid.CidToString()})");
+									//foreach(var note in jsp.Value.EnumerateArray())
+									//{
+									//	var str = note.GetString();
+									//	Log(str);
+									//	var ss = str.Split(',', StringSplitOptions.RemoveEmptyEntries);
+									//	if(int.TryParse(ss[0], out var id))
+									//		if(id == 99)
+									//		{
+									//			// online notify
+									//			var friend = ss[1];
+									//			var online = ss[2] == "1";
+									//			var msg = new ChatEntry(friend, online ? " has come online" : " has gone offline", serverTime, ChatEntry.typeAnnounce);
+									//			AppS.DispatchOnUIThreadLow(() =>
+									//			{
+									//				ChatTab.alliance.Post(msg, true);
+									//				ChatTab.world.Post(msg, true);
+									//			}); // post on both
+									//		}
+									//		else if(id == 9)
+									//		{
+									//			var cid = int.Parse(ss[1]);
+									//			// founded new city
+									//			await Task.Delay(30000);//.ConfigureAwait(false);
+									//			Note.Show($"You have founded a new city!  Would you like to run [Setup](/s/{cid.CidToString()})");
 
-											}
+									//		}
 
-									}
+									//}
 									break;
 								}
 							case "incoming":
@@ -1103,8 +1103,8 @@ namespace CnV
 							//	}
 							case "chat":
 								{
-									var jsv = jsp.Value.Clone();
-									AppS.DispatchOnUIThreadLow(() => ChatTab.ProcessIncomingChat(jsv));
+									//var jsv = jsp.Value.Clone();
+									//AppS.DispatchOnUIThreadLow(() => ChatTab.ProcessIncomingChat(jsv));
 
 									break;
 								}

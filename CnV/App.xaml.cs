@@ -785,6 +785,8 @@ namespace CnV
 					// Cancel sim thread
 					Sim.simCancelTokenSource.Cancel();
 					SocketClient.ShutDown();
+					if(CnVDiscord.CnVChatClient.initialized)
+						Note.Show("Shutting down chat");
 					var t1 = CnVDiscord.CnVChatClient.ShutDown(true);
 					var t0 = BackgroundTask.dispatcherQueueController.ShutdownQueueAsync();
 

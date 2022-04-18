@@ -1,0 +1,163 @@
+﻿<view:UserTab x:Class="CnV.Views.AllianceTab"
+			  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			  xmlns:sf="using:Syncfusion.UI.Xaml.DataGrid"
+			  xmlns:winui="using:Microsoft.UI.Xaml.Controls"
+			  xmlns:game="using:CnV"
+			  xmlns:cnv="using:CnV"
+			  xmlns:view="using:CnV.Views"
+			  mc:Ignorable="d"
+			  Tag="Alliance"
+			  FontStretch="Condensed"		         
+			  Loaded="OnLoaded"
+			  FontFamily="{StaticResource CnvIcons}">
+	<Grid x:Name="cityBaseGrid">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="*" />
+		</Grid.RowDefinitions>
+
+		<sf:SfDataGrid x:Name="allianceGrid"
+							x:FieldModifier="public"
+					   Grid.Row="3"
+							AllowFiltering="True"
+							
+							ItemsSource="{x:Bind cnv:Alliance.all}"
+							AutoGenerateColumns="False"
+							SelectionMode="Extended"
+							RowHeight="{StaticResource LargeGridRowHeight}"
+							FontSize="{StaticResource SmallFontSize}"
+							SelectionUnit="Row"
+							AutoGenerateRelations="False"
+							ShowToolTip="True"
+							FontStretch="Condensed"
+							
+							
+							>
+
+
+			<sf:SfDataGrid.Columns >
+				<sf:GridTextColumn MappingName="name"/>
+				<sf:GridTextColumn MappingName="abbreviation"/>
+				<sf:GridTextColumn MappingName="invite"/>
+				<sf:GridNumericColumn MappingName="playerCount"/>
+				<sf:GridNumericColumn MappingName="cities"/>
+				<sf:GridNumericColumn MappingName="ts"/>
+				<sf:GridNumericColumn MappingName="tsOffense"/>
+				<sf:GridNumericColumn MappingName="tsDefense"/>
+
+			</sf:SfDataGrid.Columns>
+			<sf:SfDataGrid.DetailsViewDefinition>
+				<!--  FirstLevelNestedGrid1 is created here  -->
+				<sf:GridViewDefinition RelationalColumn="players">
+					<sf:GridViewDefinition.DataGrid>
+						<sf:SfDataGrid x:Name="playersGrid" 
+									   AutoGenerateColumns="False"
+							SelectionMode="Extended"
+							RowHeight="{StaticResource LargeGridRowHeight}"
+							FontSize="{StaticResource SmallFontSize}"
+							SelectionUnit="Row"
+							AutoGenerateRelations="False"
+							ShowToolTip="True"
+							FontStretch="Condensed"
+									   >
+							<sf:SfDataGrid.Columns >
+
+
+								<sf:GridImageColumn MappingName="avatarImage"
+				                    AllowFiltering="False"
+									AllowSorting="False"
+											HeaderText="Avatar"
+											Width="38"
+											ShowToolTip="True"
+											 />
+								<sf:GridTextColumn MappingName="name"
+								   Width="240"
+										 
+										   TextAlignment="Left"
+										  
+										    />
+								<sf:GridTextColumn MappingName="allianceTitleS"
+									HeaderText="Title"
+										 
+										   TextAlignment="Left"
+										
+										    />
+								<sf:GridNumericColumn MappingName="points"
+				                      TextAlignment="Center"
+									  DisplayNumberFormat="N0"
+											 />
+
+								<sf:GridNumericColumn MappingName="cityCount"
+				                      TextAlignment="Center"
+																		 />
+
+
+								<sf:GridCheckBoxColumn MappingName="isOnline"
+										   ShowHeaderToolTip="True"
+										   TextAlignment="Center"
+										    />
+								<sf:GridNumericColumn MappingName="ts"/>
+								<sf:GridNumericColumn MappingName="tsOffense"/>
+								<sf:GridNumericColumn MappingName="tsDefense"/>
+								<sf:GridNumericColumn MappingName="kills"
+				                      TextAlignment="Center"
+									  DisplayNumberFormat="N0" />
+
+								<sf:GridNumericColumn MappingName="defKills"
+				                      TextAlignment="Center"
+									  DisplayNumberFormat="N0"
+											 />
+								<sf:GridNumericColumn MappingName="supportKills"
+				                      TextAlignment="Center"
+									  DisplayNumberFormat="N0"
+											 />
+
+								<sf:GridNumericColumn MappingName="offReputation"
+				                      TextAlignment="Center"
+									  DisplayNumberFormat="N0"
+											 />
+								<sf:GridNumericColumn MappingName="npcKills"
+									  HeaderText="Bosses"
+				                      TextAlignment="Center"
+									  DisplayNumberFormat="N0"
+											 />
+								<sf:GridNumericColumn MappingName="recruitedTroops"
+				                      TextAlignment="Center"
+									  DisplayNumberFormat="N0"
+											 />
+								<sf:GridNumericColumn MappingName="cavernLoot"
+				                      TextAlignment="Center"
+									  DisplayNumberFormat="N0"
+											 />
+								<sf:GridNumericColumn MappingName="plundered"
+				                      TextAlignment="Center"
+									  DisplayNumberFormat="N0"
+											 />
+								<sf:GridNumericColumn MappingName="caps"
+				                      TextAlignment="Center"
+									  DisplayNumberFormat="N0"
+											 />
+								<sf:GridNumericColumn MappingName="buildingDamage"
+				                      TextAlignment="Center"
+									  DisplayNumberFormat="N0"
+											 />
+
+							</sf:SfDataGrid.Columns>
+						</sf:SfDataGrid>
+					</sf:GridViewDefinition.DataGrid>
+				</sf:GridViewDefinition>
+				<!--  FirstLevelNestedGrid2 is created here  -->
+
+			</sf:SfDataGrid.DetailsViewDefinition>
+
+		</sf:SfDataGrid>
+
+
+
+	</Grid>
+</view:UserTab>
