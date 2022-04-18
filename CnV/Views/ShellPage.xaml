@@ -248,7 +248,7 @@
 				Background="Transparent"
 				Canvas.ZIndex="22">
 				<tk:GridSplitter.Element>
-					<FontIcon FontFamily="{StaticResource CnvIcons}" Glyph="&#x1F032;"
+					<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE784;"
 					/>
 				</tk:GridSplitter.Element>
 			</tk:GridSplitter>
@@ -466,6 +466,7 @@
 			<tk:GridSplitter
                         Background="{x:Null}"
                     Grid.RowSpan="3"
+				Grid.Row="1"
 				ManipulationCompleted="GridSplitter_ManipulationCompleted"
 										IsTabStop="True"
 			 				

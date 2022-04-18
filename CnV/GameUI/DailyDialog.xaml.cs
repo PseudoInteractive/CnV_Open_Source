@@ -66,9 +66,33 @@ namespace CnV
 
 		private void ItemClick(object sender,ItemClickEventArgs e)
 		{
+			if (Settings.wantUISounds)
+			{	
+				ElementSoundPlayer.Play(ElementSoundKind.Invoke);
+			}
+
 			var art = e.ClickedItem as Artifact;
 			artifacts.Remove(art);
-			new CnVEventPurchaseArtifacts((ushort)art.id,(ushort)1,Player.active.id,true).EnqueueAsap();
+			SocketClient.DeferSendStart();
+			try
+			{
+				new CnVEventPurchaseArtifacts((ushort)art.id,(ushort)1,Player.active.id,true).EnqueueAsap();
+
+				// use Zirconia immediately
+				if(art.type == Artifact.ArtifactType.zirconia)
+				{
+					(new CnVEventUseArtifacts(City.build) { artifactId = (ushort)art.id,count = 1,aux=0 }).EnqueueAsap();
+				}
+				
+			}
+			catch(Exception ex)
+			{
+				LogEx(ex);
+			}
+			finally
+			{
+				SocketClient.DeferSendEnd();
+			}
 			if(artifacts.Count == 0)
 			{
 				Hide(true);
@@ -78,6 +102,15 @@ namespace CnV
 		}
 		internal static void DailyRewardTask()
 		{
+			var nextClaim = Player.active.nextDailyClaim;
+			// wait for next
+			var dt = nextClaim - Sim.simTime;
+			if(dt > 0 )
+			{
+				AppS.QueueIdleTask(DailyRewardTask, ((dt+60)*1000 /IServerTime.timeScale).RoundToInt() );
+				return;
+
+			}
 			AppS.QueueOnUIThread( () =>
 			{
 				var rnd = new XXRand(Sim.simTime.seconds);
