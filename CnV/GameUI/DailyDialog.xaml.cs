@@ -76,10 +76,10 @@ namespace CnV
 			SocketClient.DeferSendStart();
 			try
 			{
-				new CnVEventPurchaseArtifacts((ushort)art.id,(ushort)1,Player.active.id,true).EnqueueAsap();
+				new CnVEventPurchaseArtifacts((ushort)art.id,(ushort)1,Player.active.id,free:true).EnqueueAsap();
 
 				// use Zirconia immediately
-				if(art.type == Artifact.ArtifactType.zirconia)
+				if(art.type == Artifact.ArtifactType.zirconia || art.type == Artifact.ArtifactType.karma)
 				{
 					(new CnVEventUseArtifacts(City.build) { artifactId = (ushort)art.id,count = 1,aux=0 }).EnqueueAsap();
 				}

@@ -151,7 +151,7 @@ namespace CnVDiscord
 						}
 					}
 
-					await Task.Delay(TimeSpan.FromMinutes(1.0f));
+					await Task.Delay(TimeSpan.FromMinutes(5.0f));
 				}
 			
 			
