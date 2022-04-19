@@ -101,6 +101,11 @@ namespace CnV
 						AppS.MessageBox($"Need a Magistra to settle");
 					return false;
 				}
+
+				if(!Army.CheckSettleResources(city))
+				{
+					return false;
+				}
 			}
 			if(transport == ArmyTransport.carts && city.cartsHome < 250)
 			{

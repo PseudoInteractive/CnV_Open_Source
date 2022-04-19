@@ -123,15 +123,15 @@ using Game;
 										
 										if(city != null)
 										{
+											toolTip = city.toolTip;
 											if(data.player == 0)
 											{
-												toolTip = $"Lawless\n{c.y / 100}{c.x / 100} ({c.x}:{c.y})\nPoints {city.points}";
 											}
 											else
 											{
 												Player.viewHover = data.player;
-												toolTip = city.toolTip;
-												}
+												
+											}
 										}
 										break;
 									}

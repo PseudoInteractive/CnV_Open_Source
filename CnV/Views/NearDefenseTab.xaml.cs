@@ -381,6 +381,7 @@ namespace CnV.Views
 				{
 					success &= Army.Send(ts,Army.FlagSplits(supporter.split),City.Get(supporter.cid),cid,ArmyType.defense,sendViaWater ? ArmyTransport.water : ArmyTransport.land, (departAt - Sim.simTime).Max(0)  );
 				}
+				Assert(success);
 				Log($"Sent {ts} from {supporter.cid.AsCity()} to {cid.AsCity()} @{_arriveAt.ToString()}");
 			//	await Task.Delay(500);
 			}

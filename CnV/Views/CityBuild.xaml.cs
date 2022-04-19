@@ -1248,15 +1248,16 @@ namespace CnV
 
 			buildFlyout.Hide();
 			var cid = City.build;
-			var rv = await AppS.DoYesNoBox("Abandon " + City.GetOrAdd(cid).ToString,"Are you sure?");
+			var rv = await AppS.DoYesNoBox("Abandon " + City.GetOrAdd(cid).ToString(),"Are you sure?");
 			if(rv == 1)
 				{
 					var city = City.Get(cid);
-					
+
+					var p = city.player;
 					//city.pid = 0; //
-					if(myCities.Length > 1)
+					if(p.cities.Length > 1)
 					{
-						var closest = myCities.Min<City, (float d, City c)>(a => (a == city ? float.MaxValue : cid.DistanceTo(a.cid), a));
+						var closest = p.myCities.Min<City, (float d, City c)>(a => (a == city ? float.MaxValue : cid.DistanceTo(a.cid), a));
 						await CnVClient.CitySwitch(closest.c.cid, false);
 					}
 					new CnVEventAbandon(city.c).EnqueueAsap();

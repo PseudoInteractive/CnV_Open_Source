@@ -75,7 +75,7 @@ namespace CnV;
 								case nameof(Reinforcement.retUri):
 							{
 								Note.Show($"Returning {i}");
-								i.ReturnAsync();
+							//	i.ReturnAsync();
 								
 								//if (r.targetCity.reinforcementsIn is not null)
 								//	r.targetCity.reinforcementsIn.Remove(r, true);

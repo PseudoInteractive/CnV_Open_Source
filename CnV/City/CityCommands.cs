@@ -73,7 +73,7 @@ public partial class City
 			if(isShrine)
 				return "Shrine\n(To be named)";
 			else if(isPortal)
-				return "Moon Gate";
+				return "Moongate";
 			else if(isDungeonOrBoss)
 				return Cavern.Get(cid).ToString();
 			//if (spot is City city)
@@ -81,7 +81,7 @@ public partial class City
 				using var psb = new PooledStringBuilder();
 				var sb = psb.s;
 				//	var notes = city.remarks.IsNullOrEmpty() ? "" : city.remarks.Substring(0, city.remarks.Length.Min(40)) + "\n";
-				sb.Append(player.shortName)
+				sb.Append(player.isValid ? player.shortName : "Lawless")
 					.AppendLinePre(city.nameAndRemarks)
 				.AppendFormat("\npts:{0:N0}",city.points);
 				if(player.allianceId!= 0)
