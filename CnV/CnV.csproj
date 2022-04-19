@@ -82,7 +82,7 @@
     <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.Primitives" Version="7.0.0-preview.3.22175.4" />
     <PackageReference Include="Microsoft.Identity.Client" Version="4.43.1" />
-    <PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="2.19.6" />
+    <PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="2.20.0" />
     <PackageReference Include="Microsoft.Toolkit" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
@@ -106,7 +106,7 @@
     <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.197" />	  
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.2" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.3" />
 	<PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
     <PackageReference Include="PlayFabAllSDK" Version="1.108.220118" />
     <PackageReference Include="Syncfusion.Editors.WinUI" Version="20.1.0.48" />
