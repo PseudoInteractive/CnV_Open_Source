@@ -174,12 +174,12 @@ using Game;
 													}
 													else if(data.player == 0)
 													{
-														var player = Player.GetValueOrDefault(pData.player,Player._default);
+														var player = Player.GetValueOrDefault(pData.player,Player.none);
 														toolTip += $"\nWas abandoned by:\n{player.name}\n{player.allianceName}";
 													}
 													else
 													{
-														var player = Player.GetValueOrDefault(pData.player,Player._default);
+														var player = Player.GetValueOrDefault(pData.player,Player.none);
 														toolTip += $"\nWas captured from:\n{player.name}\n{player.allianceName}";
 													}
 												}

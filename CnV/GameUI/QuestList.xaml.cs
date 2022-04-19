@@ -77,7 +77,15 @@ namespace CnV
 
 		private async void Claim(object sender,RoutedEventArgs e)
 		{
-			new CnVEventClaimQuest(City.GetBuild().c,(ushort)quest.id).EnqueueAsap();
+			var questId = (ushort)quest.id;
+			if (!AUtil.InterlockedSetAdd(ref Quests.unlockData.claimed,questId))
+			{
+				AppS.MessageBox("Already claimed 🙃");
+				return;
+			}
+
+
+			new CnVEventClaimQuest(City.GetBuild().c,questId).EnqueueAsap();
 			
 			var b = sender as Button;
 			if(b is not null)
