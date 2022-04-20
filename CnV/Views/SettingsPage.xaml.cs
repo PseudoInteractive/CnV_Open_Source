@@ -845,21 +845,7 @@ namespace CnV
 			});
 		}
 
-		private void raidsVisibleTrue(object sender, RoutedEventArgs e)
-		{
-			raidsVisible = 1;
-		}
-
-		private void raidsVisibleFalse(object sender, RoutedEventArgs e)
-		{
-			raidsVisible = 0;
-		}
-
-		private void raidsVisibleMaybe(object sender, RoutedEventArgs e)
-		{
-			raidsVisible = -1;
-		}
-
+		
 		
 		private void VersionTapped(object sender, RoutedEventArgs e)
 		{

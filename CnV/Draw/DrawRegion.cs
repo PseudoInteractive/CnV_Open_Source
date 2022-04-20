@@ -179,6 +179,7 @@ internal partial class GameClient
 	public static float fadeCounter = 1;
 	internal static HashSet<int> drawTradesHash = new();
 	internal static HashSet<int> drawArmyHash = new();
+	internal static HashSet<int> targetOpponents = new();
 
 	protected override void Draw(GameTime gameTime)
 	{
@@ -1084,7 +1085,8 @@ internal partial class GameClient
 									if(!outgoingVisible)
 										continue;
 								}
-								var list = City.allCities; //defenders ? Spot.defendersI : Spot.defendersO;
+								var raidsVisble = Settings.raidVisible != false;
+								var list = City.allianceCities; //defenders ? Spot.defendersI : Spot.defendersO;
 								bool noneIsAll = list.Length <= Settings.showAttacksLimit;
 								bool showAll = list.Length <= Settings.showAttacksLimit0 ||(isIncoming ? Settings.incomingAlwaysVisible : Settings.attacksAlwaysVisible);
 								foreach(var city in list)
@@ -1101,11 +1103,11 @@ internal partial class GameClient
 											continue;
 										var incAttacks = 0;
 										var incDef = 0;
-										var incTs = 0u;
+		//								var incTs = 0u;
 										var hasSettle = false;
 										var sieged = false;
 										var hasSen = false;
-										var hasArt = false;
+									//	var hasArt = false;
 										//	var hasAssault = false;
 										foreach(var i in isIncoming ? city.incoming : city.outgoing)
 										{
@@ -1113,74 +1115,85 @@ internal partial class GameClient
 											if(IsSegmentCulledWC(c0,c1))
 												continue;
 
+											if(!isIncoming && (i.isAttack || i.isDefense) && !i.isReturn && !IsCulledWC(c0))
+											{
+												targetOpponents.Add(i.targetCid);
+											}
+
 											Color c;
-											if(i.isSettle)
-											{
-												if(i.arrived)
-													c = returnColor;  // returning carts
-												else
-													c = Color.White;
-												hasSettle=true;
-												// outgoing
-												// if(hasSettle)
-												if(!isIncoming)
-												{
-													Material sprite = settleMaterial;
-													float spriteSize = spriteSizeGain;
-
-													var mid = c0;
-													var _c0 = new Vector2(mid.x - spriteSize,mid.y - spriteSize);
-													var _c1 = new Vector2(mid.x + spriteSize,mid.y + spriteSize);
-													draw.AddQuadWithShadow(Layer.action + 4,Layer.effectShadow,sprite,_c0,_c1,Color.White,shadowColor,zEffects);
-												}
-												else
-												{
-													Assert(false);
-												}
-
-											}
-											else if(i.isRaid)
-											{
-												c = Color.DarkSlateBlue;
-											}
-											else if(i.isReturn)
+											c = Color.Magenta;
+											if(i.isReturn)
 											{
 												c = returnColor;
 											}
-											else if(i.isDefense)
-											{
-												c = i.arrival <= serverNow ? defenseArrivedColor : defenseColor;
-												++incDef;
-											}
-											else if(i.isAttack)
-											{
-												++incAttacks;
-												incTs += i.ts;
-
-												if(i.hasSenator)
-												{
-													c = senatorColor; ;
-												}
-												else if(i.hasArt)
-												{
-													hasArt = true;
-													c = artColor;
-												}
-												else if(i.isSiege) // intel maybe available
-												{
-													c = siegeColor;
-												}
-												else
-												{
-													//	hasAssault = true;
-													c = assaultColor;
-												}
-												sieged |= i.isSieging;
-												hasSen |= i.hasSenator;
-											}
 											else
 											{
-												c = Color.Magenta;
+													if(i.isSettle)
+													{
+														if(i.arrived)
+															c = returnColor;  // returning carts
+														else
+															c = Color.White;
+														hasSettle=true;
+														// outgoing
+														// if(hasSettle)
+														if(!isIncoming)
+														{
+															Material sprite = settleMaterial;
+															float spriteSize = spriteSizeGain;
+
+															var mid = c0;
+															var _c0 = new Vector2(mid.x - spriteSize,mid.y - spriteSize);
+															var _c1 = new Vector2(mid.x + spriteSize,mid.y + spriteSize);
+															draw.AddQuadWithShadow(Layer.action + 4,Layer.effectShadow,sprite,_c0,_c1,Color.White,shadowColor,zEffects);
+														}
+														else
+														{
+															Assert(false);
+														}
+
+													}
+													else if(i.isRaid )
+													{
+														if(!raidsVisble)
+															continue;
+														c = Color.DarkSlateBlue;
+													}
+											
+													else if(i.isDefense)
+													{
+														c = i.arrival <= serverNow ? defenseArrivedColor : defenseColor;
+														if(isIncoming)
+															++incDef;
+													}
+													else if(i.isAttack)
+													{
+														if(isIncoming)
+														{
+															++incAttacks;
+															sieged |= i.isSieging;
+															hasSen |= i.hasSenator;
+														}
+														if(i.hasSenator)
+														{
+															c = senatorColor; ;
+														}
+														else if(i.hasArt)
+														{
+														//	hasArt = true;
+															c = artColor;
+														}
+														else if(i.isSiege) // intel maybe available
+														{
+															c = siegeColor;
+														}
+														else
+														{
+															//	hasAssault = true;
+															c = assaultColor;
+														}
+													
+												}
 											}
 											var sel = Spot.IsSelectedOrHovered(i.sourceCid,i.targetCid);
 											if(!(showAll || sel))
@@ -1214,43 +1227,46 @@ internal partial class GameClient
 										}
 										if(isIncoming)
 										{
-											if(incAttacks > 0)
+											if(!IsCulledWC(c1))
 											{
-												Material sprite = null;
-												if(sieged)
+												if(incAttacks > 0)
 												{
-													if(hasSen)
-														sprite = siege1Material;
+													Material sprite = null;
+													if(sieged)
+													{
+														if(hasSen)
+															sprite = siege1Material;
+														else
+															sprite = siege0Material;
+													}
 													else
-														sprite = siege0Material;
+													{
+														if(city.isMine)
+															sprite = attack2Material;
+														else if(city.isAllyOrNap)
+															sprite = attack0Material;
+														else
+															sprite = attack1Material;
+
+
+													}
+													float spriteSize = spriteSizeGain;
+
+													var mid = new Vector2(c1.x + 0.25f,c1.y-0.25f);
+													var _c0 = new Vector2(mid.X - spriteSize,mid.Y - spriteSize);
+													var _c1 = new Vector2(mid.X + spriteSize,mid.Y + spriteSize);
+													draw.AddQuadWithShadow(Layer.action + 4,Layer.effectShadow,sprite,_c0,_c1,Color.White,shadowColor,zEffects);
 												}
-												else
+												if(incDef > 0)
 												{
-													if(city.isMine)
-														sprite = attack2Material;
-													else if(city.isAllyOrNap)
-														sprite = attack0Material;
-													else
-														sprite = attack1Material;
+													Material sprite = defenseMaterial;
+													float spriteSize = spriteSizeGain;
 
-
+													var mid = new Vector2(c1.x - 0.25f,c1.y-0.25f);
+													var _c0 = new Vector2(mid.X - spriteSize,mid.Y - spriteSize);
+													var _c1 = new Vector2(mid.X + spriteSize,mid.Y + spriteSize);
+													draw.AddQuadWithShadow(Layer.action + 4,Layer.effectShadow,sprite,_c0,_c1,Color.White,shadowColor,zEffects);
 												}
-												float spriteSize = spriteSizeGain;
-
-												var mid = new Vector2(c1.x + 0.25f,c1.y-0.25f);
-												var _c0 = new Vector2(mid.X - spriteSize,mid.Y - spriteSize);
-												var _c1 = new Vector2(mid.X + spriteSize,mid.Y + spriteSize);
-												draw.AddQuadWithShadow(Layer.action + 4,Layer.effectShadow,sprite,_c0,_c1,Color.White,shadowColor,zEffects);
-											}
-											if(incDef > 0)
-											{
-												Material sprite = defenseMaterial;
-												float spriteSize = spriteSizeGain;
-
-												var mid = new Vector2(c1.x - 0.25f,c1.y-0.25f);
-												var _c0 = new Vector2(mid.X - spriteSize,mid.Y - spriteSize);
-												var _c1 = new Vector2(mid.X + spriteSize,mid.Y + spriteSize);
-												draw.AddQuadWithShadow(Layer.action + 4,Layer.effectShadow,sprite,_c0,_c1,Color.White,shadowColor,zEffects);
 											}
 
 											//if(!IsCulledWC(c1) && (wantDetails || showAll || Spot.IsSelectedOrHovered(cityCid,noneIsAll)))
@@ -1261,6 +1277,8 @@ internal partial class GameClient
 										}
 										else
 										{
+											
+											// outgoing
 
 											//if(city.hasOutgoingAttacks)
 											//	DrawRectOutlineShadow(Layer.effects - 1,cityCid,attackColor,null,1,-8f);
@@ -1269,6 +1287,55 @@ internal partial class GameClient
 								}
 							}
 							drawArmyHash.Clear();
+						
+							//
+							// process targets, draw badges
+							//
+							//
+							foreach(var opCid in targetOpponents)
+							{
+								// opponents with 
+								var c = City.Get(opCid);
+								var hasSiege = false;
+								var hasPendingSiege = false;
+								var hasAttack = false;
+								foreach(var i in c.incoming)
+								{
+									if(i.isAttack)
+									{
+										hasAttack=true;
+										hasSiege |= i.isSieging;
+										hasPendingSiege |= i.isSiege;
+
+									}
+								}
+								if(hasAttack)
+								{
+									Material sprite = null;
+									if(hasSiege)
+									{
+										sprite = siege1Material;
+									}
+									else if(hasPendingSiege)
+									{
+										sprite = siege0Material;
+									}
+									else
+									{
+										sprite = attack1Material;
+									}
+									float spriteSize = spriteSizeGain;
+									var c1 = c.c;
+
+									var mid = new Vector2(c1.x + 0.25f,c1.y-0.25f);
+									var _c0 = new Vector2(mid.X - spriteSize,mid.Y - spriteSize);
+									var _c1 = new Vector2(mid.X + spriteSize,mid.Y + spriteSize);
+									draw.AddQuadWithShadow(Layer.action + 4,Layer.effectShadow,sprite,_c0,_c1,Color.White,shadowColor,zEffects);
+
+								}
+							}
+							targetOpponents.Clear();
+						
 						}
 						//if(incomingVisible)
 						//{

@@ -174,12 +174,10 @@
 							   OffContent="If Tab Open"
 							   ToolTipService.ToolTip="Allows you to always show outgoing overlays (potentialy slower and more confusing) or to only show the overlays if an ougoing tab is selected"
 							   />
-				<CheckBox  Content="Raids Visible" IsThreeState="True" x:Name="raidsVisibleCheckbox"
+				<CheckBox  Content="Raids Visible" IsThreeState="True"
 							   Margin="4"
-						   Checked="raidsVisibleTrue"
-						   Unchecked="raidsVisibleFalse"
-						   Indeterminate="raidsVisibleMaybe"
-							   ToolTipService.ToolTip="If checked, raids are always visible, if off, raids are never visible, if indeterminate raids are visible when the tab is open"
+							IsChecked="{x:Bind cnv:Settings.raidVisible, Mode=TwoWay}"
+						ToolTipService.ToolTip="If checked, raids are always visible, if off, raids are never visible, if indeterminate raids are visible when the tab is open"
 							   />
 				<CheckBox  Content="Troops Visible" IsThreeState="True" IsChecked="{x:Bind cnv:Settings.troopsVisible, Mode=TwoWay}" 
 							   Margin="4"
