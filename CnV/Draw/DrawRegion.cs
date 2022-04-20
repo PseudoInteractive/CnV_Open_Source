@@ -1133,6 +1133,10 @@ internal partial class GameClient
 													var _c1 = new Vector2(mid.x + spriteSize,mid.y + spriteSize);
 													draw.AddQuadWithShadow(Layer.action + 4,Layer.effectShadow,sprite,_c0,_c1,Color.White,shadowColor,zEffects);
 												}
+												else
+												{
+													Assert(false);
+												}
 
 											}
 											else if(i.isRaid)
