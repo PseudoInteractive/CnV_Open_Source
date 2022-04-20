@@ -17,6 +17,7 @@ namespace CnVDiscord
 		public static CnVChatClient? instance;
 		internal static bool initialized = false;
 		internal static bool isShuttingDown = false;
+		internal static bool isBusy;
 		private static CancellationTokenSource shutdownCancellation = new CancellationTokenSource();
 		private static ChannelBase channel;
 		public ICnVChatClientConnection connection;
@@ -38,7 +39,13 @@ namespace CnVDiscord
 			//Assert(isShuttingDown == false);
 			try
 			{
+				while(isBusy)
+				{
+					await Task.Delay(1000);
+				}
+				Assert(!isBusy);
 				isShuttingDown=true;
+				isBusy = true;
 				//if(!initialized)
 				//	return;
 				initialized=false;
@@ -59,6 +66,10 @@ namespace CnVDiscord
 			{
 				Log(_ex.Message);
 
+			}
+			finally
+			{
+				isBusy = false;
 			}
 			if(!permanent)
 				isShuttingDown=false;
@@ -82,12 +93,12 @@ namespace CnVDiscord
 
 			for(;;)
 			{
-				if(!initialized && !isShuttingDown)
+				if(!initialized && !isShuttingDown && !isBusy)
 				{
 					// Connect to the server using gRPC channel.
 					try
 					{
-
+						isBusy=true;
 						channel = GrpcChannel.ForAddress("http://cnv.westus2.cloudapp.azure.com:5000",new GrpcChannelOptions()
 						{
 							HttpHandler = new SocketsHttpHandler
@@ -132,14 +143,17 @@ namespace CnVDiscord
 						});
 						Note.Show($"Connected to Chat ({channels.Length} channels)");
 						initialized=true;
+						isBusy = false;
 					}
 					catch(Exception e)
 					{
 						Log(e.ToString());
+						isBusy = false;
 						await ShutDown(false);
 
 						//	return false;
 					}
+					
 				}
 			tryAgain:
 				if(reconnectWaitCancel.IsCancellationRequested)
@@ -196,8 +210,9 @@ namespace CnVDiscord
 		public void OnReceiveMessages(ICnVChatClient.OnReceiveMessagesArgs messageArgs)
 		{
 			Log("Got Messages " + messageArgs.discordMessages.Length);
-			AppS.DispatchOnUIThread(() =>
+			AppS.QueueOnUIThread(() =>
 			{
+				var isNew = messageArgs.discordMessages.Length==1; // Does the server ever batch them up?
 				for(int i = 0;i<messageArgs.discordMessages.Length;++i)
 				{
 					var message = CnVJsonMessagePackDiscordMessage.Get(messageArgs.discordMessages[i]);
@@ -219,7 +234,8 @@ namespace CnVDiscord
 						Log($"Missing discordName: {message.Author.Username}=>{name} {message.Author.Id} {authorId} HasOverride:{senderOverrides != null} ");
 
 					}
-					AddMessage(name,message,false,true);
+					
+					AddMessage(name,message,isNew:isNew,deferNotify:!isNew);
 				}
 			});
 		}
@@ -231,10 +247,11 @@ namespace CnVDiscord
 
 		
 
-		public static void AddMessage(string name,DiscordMessage message,bool isNew,bool notify)
+		public static void AddMessage(string name,DiscordMessage message,bool isNew,bool deferNotify)
 		{
 			try
 			{
+				Assert(AppS.IsOnUIThread());
 				//if(!Player.fromDiscordId.TryGetValue(senderOverride,out var p))
 				//	p = Player.me;
 				//var name = p.name; // todo: use clients
@@ -275,7 +292,8 @@ namespace CnVDiscord
 				}
 				var chat = new ChatEntry(name,content,IServerTime.UtcToServerTime(message.Timestamp),ChatEntry.typeAlliance);
 				//Note.Show(chat.ToString());
-				AppS.DispatchOnUIThread(() => ChatTab.Post(message.ChannelId,chat,isNew,notify));
+//				AppS.DispatchOnUIThread(() => ChatTab.Post(message.ChannelId,chat,isNew,notify));
+				ChatTab.Post(message.ChannelId,chat,isNew,deferNotify);
 			}
 			catch(Exception ex)
 			{
@@ -286,7 +304,9 @@ namespace CnVDiscord
 
 		public static async Task Reconnect()
 		{
-			if(!initialized)
+			//		if(!initialized)
+			//			return;
+			if(isBusy)
 				return;
 			await ShutDown(false);
 			await Task.Delay(1000);
@@ -302,6 +322,7 @@ namespace CnVDiscord
 			{
 				try
 				{
+					
 					await ShutDown(false);
 
 				}

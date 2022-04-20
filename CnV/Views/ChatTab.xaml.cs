@@ -98,6 +98,7 @@ namespace CnV.Views
 		public static ImmutableArray<ChatTab> all = ImmutableArray<ChatTab>.Empty;
 		public DiscordChannel discordChannel; // 0 if not a discord Id
 
+		internal bool itemsDirty;
 		public static void Ctor()
 		{
 	//		alliance = new ChatTab() { Tag = nameof(alliance) };
@@ -128,7 +129,7 @@ namespace CnV.Views
 							AppS.QueueOnUIThread(() =>
 							{
 								if(all.Length>0)
-									all[all.Length-1].Post(new ChatEntry(player,message,Sim.simTime,ChatEntry.typeWorld),true);
+									all[all.Length-1].Post(new ChatEntry(player,message,Sim.simTime,ChatEntry.typeWorld),isNew:true,deferNotify:false);
 							});
 							break;
 						}
@@ -191,7 +192,7 @@ namespace CnV.Views
 
 		public override TabPage defaultPage => ChatTab.tabPage;
 		//public ChatEntry lastChat = new ChatEntry(null, string.Empty, DateTimeOffset.MinValue, 0);
-		public void Post(ChatEntry entry,bool isNew) // if is new, this message is fresh.  Otherwise loaded from archives
+		public void Post(ChatEntry entry,bool isNew, bool deferNotify) // if is new, this message is fresh.  Otherwise loaded from archives
 		{
 			// this runs on the UI thread?
 			// duplicate?
@@ -242,7 +243,13 @@ namespace CnV.Views
 							return;
 					}
 				}
-				items.Insert(insert,entry);
+				items.Insert(insert,entry,!deferNotify);
+				if(deferNotify)
+				{
+					itemsDirty=true;
+					PostsCompleteNotify.Go();
+				}
+
 				var text = entry.text;
 				if(isNew)
 				{
@@ -257,7 +264,7 @@ namespace CnV.Views
 				if(entry.player != Player.myName && entry.player != null && entry.type != ChatEntry.typeWhisperTo)
 				{
 					//	Log(entry);
-					SetPlus(true);
+				//	SetPlus(true);
 				}
 			}
 			catch(Exception ex)
@@ -265,13 +272,13 @@ namespace CnV.Views
 				LogEx(ex);
 			}
 		}
-		public void Post(IEnumerable<ChatEntry> entries)
-		{
-			using var aaa = items.DeferChanges();
-			// Todo: batch these
-			foreach(var entry in entries)
-				Post(entry,false);
-		}
+		//public void Post(IEnumerable<ChatEntry> entries)
+		//{
+		//	using var aaa = items.DeferChanges();
+		//	// Todo: batch these
+		//	foreach(var entry in entries)
+		//		Post(entry,false);
+		//}
 
 
 		public ChatTab()
@@ -498,7 +505,7 @@ namespace CnV.Views
 		
 		}
 
-		internal static void Post(ulong channelId,ChatEntry chat,bool isNew,bool notify)
+		internal static void Post(ulong channelId,ChatEntry chat,bool isNew,bool deferNotify)
 		{
 			ChatTab t = null;
 			foreach(var tab in all)
@@ -510,9 +517,23 @@ namespace CnV.Views
 				}
 			}
 			if(t !=null)
-				t.Post(chat,isNew);
+				t.Post(chat,isNew,deferNotify);
 
 		}
+		internal static DebounceA PostsCompleteNotify = new( () =>
+		{
+			ChatTab t = null;
+			foreach(var tab in all)
+			{
+				if(tab.itemsDirty)
+				{
+					tab.itemsDirty=false;
+					tab.items.NotifyReset();
+				}
+			}
+
+		});
+
 
 		//public static ChatTab GetWhisperTab(string player,bool activate)
 		//{
@@ -823,7 +844,7 @@ namespace CnV.Views
 		//static ChatTab hasFocus;
 		private void input_GotFocus(object sender,RoutedEventArgs e)
 		{
-			SetPlus(false);
+//			SetPlus(false);
 			//	hasFocus = this;
 		}
 
