@@ -19,8 +19,7 @@
 			<ColumnDefinition Width="400" />
 		</Grid.ColumnDefinitions>
 		<Grid Grid.Column="1" Margin="8" Padding="4" VerticalAlignment="Stretch"
-					Visibility="{x:Bind semanticZoom.ZoomedInView.IsActiveView,Mode=OneWay,
-			Converter={StaticResource BoolToVisibilityConverter}}">
+					>
 			<Grid.RowDefinitions>
 				<RowDefinition Height="*" />
 				<RowDefinition Height="auto" />
