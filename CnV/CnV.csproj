@@ -167,6 +167,7 @@
     <Compile Include="Views\PlayerStats.xaml.cs" />
     <Compile Include="Views\PlayerTab.xaml.cs" />
     <Compile Include="Xaml\IconText.cs" />
+    <Compile Include="Xaml\TTip.cs" />
     <Manifest Include="$(ApplicationManifest)" />
     <Compile Include="Activation\CommandLineActivationHandler.cs" />
     <Compile Include="Activation\SchemeActivationConfig.cs" />
