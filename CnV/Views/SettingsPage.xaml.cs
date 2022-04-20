@@ -825,13 +825,7 @@ namespace CnV
 					instance = new Settings();
 				
 				//shown = true;
-				switch (raidsVisible)
-				{
-					case 0: instance.raidsVisibleCheckbox.IsChecked = false; break;
-					case 1: instance.raidsVisibleCheckbox.IsChecked = true; break;
-					case -1: instance.raidsVisibleCheckbox.IsChecked = null; break;
-
-				}
+			
 			///	instance.stackRoot.MaxWidth = instance.ActualWidth;
 			//	instance.UpdateLayout();
 				var result = await instance.ShowAsync2();

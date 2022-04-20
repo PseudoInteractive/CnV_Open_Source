@@ -29,7 +29,7 @@ namespace CnV
 			
 		}
 
-		NotifyList<QuestGroup> questGroups = new(QuestGroup.all.Where(a => a.n is not null));
+		NotifyList<QuestGroup> questGroups = new(QuestGroup.all.Where(a => a.id != 10 && a.n is not null).Prepend(QuestGroup.all[10]) ); // put tutorial first 
 
 	
 		private Quest quest => cvsGroups.View.CurrentItem as Quest; 
