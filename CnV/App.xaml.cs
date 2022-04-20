@@ -485,7 +485,7 @@ namespace CnV
 
 					await OnLaunchedOrActivated(args.UWPLaunchActivatedEventArgs);
 					//if(uwpArgs.Kind == Windows.ApplicationModel.Activation.ActivationKind.Launch)
-					AppS.QueueOnUIThread(Services.StoreHelper.instance.DownloadAndInstallAllUpdatesAsync);
+	//				AppS.QueueOnUIThread(Services.StoreHelper.instance.DownloadAndInstallAllUpdatesAsync);
 				}
 				//);
 

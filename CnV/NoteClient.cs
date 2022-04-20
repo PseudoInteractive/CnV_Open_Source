@@ -56,11 +56,11 @@ namespace CnV
 		//	}
 		//}
 		// /* TODO: Hello [Avatar, 10/29/2021] */:
-		// [Conditional("TRACE")]
-		public static void L(string s)
-		{
-			ChatTab.L(s);
-		}
+		//// [Conditional("TRACE")]
+		//public static void L(string s)
+		//{
+		//	ChatTab.L(s);
+		//}
 		
 		public static void ShowQuiet(string s,Debug.Priority priority = Debug.Priority.medium,bool useInfoBar = false,int timeout = 5000)
 		{
@@ -70,7 +70,7 @@ namespace CnV
 	//	static DateTime nextInAppNote = new DateTime(0);
 	//static MarkdownTextBlock markDownText;
 	//	static CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-		internal static async partial void Show(string s, Debug.Priority priority=Debug.Priority.medium, bool useInfoBar = false, int timeout = 5000, bool showDebugOutput=true, bool showNote=true)
+		internal static async void Show(string s, Debug.Priority priority=Debug.Priority.medium, bool useInfoBar = false, int timeout = 5000, bool showDebugOutput=true, bool showNote=true)
 		{
 			try
 			{

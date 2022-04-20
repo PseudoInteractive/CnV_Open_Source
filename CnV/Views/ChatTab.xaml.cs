@@ -88,32 +88,65 @@ namespace CnV.Views
 
 	public sealed partial class ChatTab:UserTab
 	{
-		public static ChatTab alliance;// = new ChatTab() { Tag = nameof(alliance) };
-		public static ChatTab world;// = new ChatTab() { Tag = nameof(world) };
-		public static ChatTab officer;// = new ChatTab() { Tag = nameof(officer) };
+	//	public static ChatTab alliance;// = new ChatTab() { Tag = nameof(alliance) };
+	//	public static ChatTab world;// = new ChatTab() { Tag = nameof(world) };
+	//	public static ChatTab officer;// = new ChatTab() { Tag = nameof(officer) };
 									  // public static ChatTab whisper = new ChatTab() { Tag = nameof(whisper) };
 
-		public static ChatTab debug;// = new ChatTab() { Tag = nameof(debug) };
-		public static ImmutableDictionary<ulong,ChatTab> discordChatTabs = ImmutableDictionary<ulong,ChatTab>.Empty;
+		//public static ChatTab debug;// = new ChatTab() { Tag = nameof(debug) };
+		//public static ImmutableDictionary<ulong,ChatTab> discordChatTabs = ImmutableDictionary<ulong,ChatTab>.Empty;
 		public static ImmutableArray<ChatTab> all = ImmutableArray<ChatTab>.Empty;
 		public DiscordChannel discordChannel; // 0 if not a discord Id
 
 		public static void Ctor()
 		{
-			alliance = new ChatTab() { Tag = nameof(alliance) };
-			world = new ChatTab() { Tag = nameof(world) };
-			officer = new ChatTab() { Tag = nameof(officer) };
+	//		alliance = new ChatTab() { Tag = nameof(alliance) };
+			//world = new ChatTab() { Tag = nameof(world) };
+		//	officer = new ChatTab() { Tag = nameof(officer) };
 			// public static ChatTab whisper = new ChatTab() { Tag = nameof(whisper) };
-			debug = new ChatTab() { Tag = nameof(debug) };
+		//	debug = new ChatTab() { Tag = nameof(debug) };
 
 			all = (new ChatTab[] { }).ToImmutableArray();
 		}
-		public string whisperTarget; // null if no target
+		public readonly string? whisperTarget = null; // null if no target
 		public DateTimeOffset lastRead;
-		public static string[] chatToId = { nameof(world),"whisper",nameof(alliance),nameof(officer) };
+		//public static string[] chatToId = { nameof(world),"whisper",nameof(alliance),nameof(officer) };
 		//        public DumbCollection<ChatEntry> logEntries = new DumbCollection<ChatEntry>(new ChatEntry[] { new ChatEntry("Hello") });
 		// public DumbCollection<ChatEntryGroup> Groups { get; set; } = new DumbCollection<ChatEntryGroup>();// new[] { new ChatEntryGroup() {time=AUtil.dateTimeZero} });
 		public NotifyCollection<ChatEntry> items { get; set; } = new();
+
+		public static async void PostPlayerOnlineMessage(string player,string message)
+		{
+			
+			
+				try
+				{
+					for(int i = 0;i<20;++i)
+					{
+						if(all.Any())
+						{
+							AppS.QueueOnUIThread(() =>
+							{
+								if(all.Length>0)
+									all[all.Length-1].Post(new ChatEntry(player,message,Sim.simTime,ChatEntry.typeWorld),true);
+							});
+							break;
+						}
+						else
+						{
+							await Task.Delay(500);
+						}
+					}
+
+				}
+				catch(Exception _ex)
+				{
+					LogEx(_ex);
+
+				}
+		}
+
+
 		override public Task VisibilityChanged(bool visible,bool longTerm)
 		{
 			if(items.Count > 0 && visible)
@@ -143,6 +176,15 @@ namespace CnV.Views
 			all = all.Add(tab);
 			tab.ShowOrAdd();
 			return true;
+		}
+		internal static void RemoveChatTabs()
+		{
+			while(all.Length > 0)
+			{
+				var tab = all[0];
+				all = all.RemoveAt(0);
+				tab.Close();
+			}
 		}
 
 
@@ -204,7 +246,7 @@ namespace CnV.Views
 				var text = entry.text;
 				if(isNew)
 				{
-					if(this != debug && (text.Contains(Player.myName,StringComparison.OrdinalIgnoreCase) || text.Contains("@here",StringComparison.OrdinalIgnoreCase)))
+					if( (text.Contains(Player.myName,StringComparison.OrdinalIgnoreCase) || text.Contains("@here",StringComparison.OrdinalIgnoreCase)))
 					{
 						ToastNotificationsService.instance.ShowNotification(entry.ToString(),"mention");
 						Note.Show(entry.ToString());
@@ -245,47 +287,47 @@ namespace CnV.Views
 		}
 		//     private static readonly SemaphoreSlim _logSemaphore = new SemaphoreSlim(1, 1);
 
-		public static void L(string s)
-		{
+		//public static void L(string s)
+		//{
 
-			if(debug == null || !debug.isOpen)
-				return;
-			//              await _logSemaphore.WaitAsync();
-			// try
-			////  {
-			AppS.DispatchOnUIThreadIdle(() =>
-			{
+		//	if(debug == null || !debug.isOpen)
+		//		return;
+		//	//              await _logSemaphore.WaitAsync();
+		//	// try
+		//	////  {
+		//	AppS.DispatchOnUIThreadIdle(() =>
+		//	{
 
-				try
-				{
-					//  var str = $"{Tick.MSS()}:{s}";
-					//  instance.logEntries
+		//		try
+		//		{
+		//			//  var str = $"{Tick.MSS()}:{s}";
+		//			//  instance.logEntries
 
-					debug.Post(new ChatEntry(null,s,Sim.simTime),true);
-				}
-				catch(Exception e)
-				{
-					LogEx(e);
-				}
-			});
+		//			debug.Post(new ChatEntry(null,s,Sim.simTime),true);
+		//		}
+		//		catch(Exception e)
+		//		{
+		//			LogEx(e);
+		//		}
+		//	});
 
-			//finally
-			//{
-			//    _logSemaphore.Release();
-			//}
-			//await Task.Delay(500);
+		//	//finally
+		//	//{
+		//	//    _logSemaphore.Release();
+		//	//}
+		//	//await Task.Delay(500);
 
-			//await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(DispatcherQueuePriority.Low, () =>
-			//{
-			//    lock (logLock)
-			//    {
+		//	//await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(DispatcherQueuePriority.Low, () =>
+		//	//{
+		//	//    lock (logLock)
+		//	//    {
 
-			//        var ui = instance.logBox.TryGetElement(entries.Count - 1);
-			//        if (ui != null)
-			//            ui.StartBringIntoView();
-			//      }
-			//});
-		}
+		//	//        var ui = instance.logBox.TryGetElement(entries.Count - 1);
+		//	//        if (ui != null)
+		//	//            ui.StartBringIntoView();
+		//	//      }
+		//	//});
+		//}
 		private void MarkdownTextBlock_LinkClicked(object sender,LinkClickedEventArgs e)
 		{
 			Note.MarkDownLinkClicked(sender,e);
@@ -301,7 +343,8 @@ namespace CnV.Views
 		{
 			var chatEntry = sender as HyperlinkButton;
 			if(chatEntry != null)
-				PasteToChatInput($"/w {chatEntry.Content.ToString()} ",false);
+				Sim.ShowPlayer(chatEntry.Content.ToString());
+					//	PasteToChatInput($"/w {chatEntry.Content.ToString()} ",false);
 
 		}
 
@@ -429,15 +472,15 @@ namespace CnV.Views
 									}
 									SendAsync(str);
 								}
-								else
-								{
-									int cotgId = isWhisperChannel ? 1 : chatToId.IndexOf(s);
-									if(cotgId >= 0)
-									{
-										Sim.SendChat(cotgId + 1,str);
-									}
+								//else
+								//{
+								//	int cotgId = isWhisperChannel ? 1 : chatToId.IndexOf(s);
+								//	if(cotgId >= 0)
+								//	{
+								//		Sim.SendChat(cotgId + 1,str);
+								//	}
 
-								}
+								//}
 
 								//{
 								//	var count = items.Count;
@@ -466,28 +509,27 @@ namespace CnV.Views
 					break;
 				}
 			}
-			if(t ==null)
-				t = alliance;
-			t.Post(chat,isNew);
+			if(t !=null)
+				t.Post(chat,isNew);
 
 		}
 
-		public static ChatTab GetWhisperTab(string player,bool activate)
-		{
-			foreach(var w in all)
-			{
-				if(w.whisperTarget != null && w.whisperTarget == player)
-				{
-					if(activate)
-						TabPage.Show(w);
-					return w;
-				}
-			}
-			var ch = new ChatTab() { Tag = player,whisperTarget = player };
-			all = all.Add(ch);
-			ch.ShowOrAdd(activate,false);
-			return ch;
-		}
+		//public static ChatTab GetWhisperTab(string player,bool activate)
+		//{
+		//	foreach(var w in all)
+		//	{
+		//		if(w.whisperTarget != null && w.whisperTarget == player)
+		//		{
+		//			if(activate)
+		//				TabPage.Show(w);
+		//			return w;
+		//		}
+		//	}
+		//	var ch = new ChatTab() { Tag = player,whisperTarget = player };
+		//	all = all.Add(ch);
+		//	ch.ShowOrAdd(activate,false);
+		//	return ch;
+		//}
 
 		private static ChatEntry GetChatMessage(JsonElement msg)
 		{
@@ -514,15 +556,15 @@ namespace CnV.Views
 		// also for whisper
 		public static void PasteToChatInput(string coords,bool afterInput = true)
 		{
-			if(coords[0] == '/')
-			{
-				var parseEnd = coords.IndexOf(' ',3);
-				var player = coords.Substring(3,parseEnd - 3);
-				AppS.CopyTextToClipboard(player);
-				var tab = ChatTab.GetWhisperTab(player,true);
-				tab.Paste(coords,false);
-				return;
-			}
+			//if(coords[0] == '/')
+			//{
+			//	var parseEnd = coords.IndexOf(' ',3);
+			//	var player = coords.Substring(3,parseEnd - 3);
+			//	AppS.CopyTextToClipboard(player);
+			//	var tab = ChatTab.GetWhisperTab(player,true);
+			//	tab.Paste(coords,false);
+			//	return;
+			//}
 			//                afterInput = false;
 			foreach(var tab in all)
 				tab.Paste(coords,afterInput);

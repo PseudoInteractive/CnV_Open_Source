@@ -45,8 +45,14 @@ namespace CnV
 				art.leave.Visibility = Visibility.Collapsed;
 
 			}
-			art.invites.ItemsSource = p.allianceInvites;
-//			art.invites.ItemsSource = Alliance.all.Where(a=>a.id != 0).Select(a=> new CnVEventAllianceInvite(p.id,a.id,AllianceTitle.leader,false)).ToArray();
+			if(!AppS.isTest)
+			{
+				art.invites.ItemsSource = p.allianceInvites;
+			}
+			else
+			{
+				art.invites.ItemsSource = Alliance.all.Where(a => a.id != 0).Select(a => new CnVEventAllianceInvite(p.id,a.id,AllianceTitle.leader,false)).ToArray();
+			}
 		//	if(p.alliance.isValid)
 		//		art.alliance.SelectedItem =p.alliance;
 		//	art.allianceTitle.SelectedIndex = (int) p.allianceTitle;
@@ -86,8 +92,9 @@ namespace CnV
 			// Do we need a delay in here?
 
 			new CnVEventAlliance(p.id,sel,title).EnqueueAsap();
+			await t0;
 			await Task.Delay(1000);
-			await Task.WhenAll(t0, CnVChatClient.UpdatePlayerAlliance(p));
+			await CnVChatClient.Reconnect();
 		}
 
 		private void InviteClick(object sender,ItemClickEventArgs e)
