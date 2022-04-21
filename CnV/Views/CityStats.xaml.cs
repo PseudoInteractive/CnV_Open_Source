@@ -38,7 +38,9 @@ namespace CnV
 			this.InitializeComponent();
 			//buildQueue.CollectionChanged+=BuildQueue_CollectionChanged;
 		}
-		
+
+		static TTip tip0 = new TTip("TT_BuildQueue_1");
+
 		public event PropertyChangedEventHandler? PropertyChanged;
 		public void OnPropertyChanged(string? member = null)
 		{
@@ -1387,4 +1389,5 @@ namespace CnV
 		}
 		
 	}
+	
 }

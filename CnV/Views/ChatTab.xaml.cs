@@ -34,29 +34,33 @@ namespace CnV.Views
 		public const byte typeAnnounce = 6;
 		public sbyte allignment;
 		public HorizontalAlignment MsgAlignment => (AMath.random.Next(3) - 1) switch { -1 => HorizontalAlignment.Left, 1 => HorizontalAlignment.Right, _ => HorizontalAlignment.Center };
-		public ServerTime time;
+		public DateTimeOffset time;
 #if DEBUG
 		public string arrivedString => time.ToString("dd HH':'mm':'ss");
 #else
 		public string arrivedString => time.ToString("HH':'mm':'ss");
 #endif
-		public ImageSource avatar { get; set; }
+		public Uri avatar { get; set; }
 
 
 		public string text { get; set; } = string.Empty;
 		const int maxMessageLength = 32 * 1024;
-		static ImageSource GetAvatar(string player)
+		static Uri GetAvatar(string player)
 		{
-			return Player.FromNameOrNull(player)?.avatarImage;
+			var p = Player.FromNameOrNull(player);
+			if(p is null || p.avatarUrl.IsNullOrEmpty())
+				return null;
+
+			return new(p.avatarUrl,UriKind.Absolute);
 		}
-		public ChatEntry(string _player,string _a,ServerTime _time = default)
+		public ChatEntry(string _player,string _a,DateTimeOffset _time = default)
 		{
 			avatar = GetAvatar(_player);
 			text = Note.TranslateCOTGChatToMarkdown(_a.Truncate(maxMessageLength));
 			time = _time;
 			player = _player;
 		}
-		public ChatEntry(string _player,string _text,ServerTime _time,byte _type)
+		public ChatEntry(string _player,string _text,DateTimeOffset _time,byte _type)
 		{
 			avatar = GetAvatar(_player);
 			text = _text.Truncate(maxMessageLength);
@@ -129,7 +133,7 @@ namespace CnV.Views
 							AppS.QueueOnUIThread(() =>
 							{
 								if(all.Length>0)
-									all[all.Length-1].Post(new ChatEntry(player,message,Sim.simTime,ChatEntry.typeWorld),isNew:true,deferNotify:false);
+									all[all.Length-1].Post(new ChatEntry(player,message,Sim.serverTime,ChatEntry.typeWorld),isNew:true,deferNotify:false);
 							});
 							break;
 						}
@@ -231,16 +235,21 @@ namespace CnV.Views
 				//	}
 				//}
 				var insert = items.Count;
-				if(!isNew)
+			//	if(!isNew)
 				{
 					for(;insert > 0 && items[insert - 1].time > at;--insert) { }
 					if(insert > 0)
 					{
 						var lastChat = items[insert - 1];
 						if(lastChat.player == entry.player
+							&& lastChat.time == at
 							&& string.Equals(lastChat.text,entry.text,StringComparison.Ordinal)
 							&& lastChat.type == entry.type)
+
+						{
+							Log($"Duplicate chat {entry}");
 							return;
+						}
 					}
 				}
 				items.Insert(insert,entry,!deferNotify);

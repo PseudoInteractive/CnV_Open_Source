@@ -124,6 +124,10 @@
 						<TextBlock x:Name="queueText" TextAlignment="Right" VerticalAlignment="Center" RightTapped="QueueRightTapped" Text ="Queue" Margin="0"  Style="{StaticResource BodyTextBlockStyle}"   />
 					</Border>
 				</Expander.Header>
+				<Expander.Resources>
+					<cnv:TTipX  x:Name="TT_BuildQueue_1"   Subtitle="Your build queue"  />
+					<cnv:TTipX  x:Name="TT_BuildQueue_2"   Subtitle="Your build queue"  />
+				</Expander.Resources>
 				<ListView x:Name="buildQueueListView" x:FieldModifier="public"  
 						  SelectionMode="Extended" 
 						  Margin="0" Padding="0" HorizontalAlignment="Stretch" 

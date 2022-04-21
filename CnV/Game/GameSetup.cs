@@ -52,20 +52,20 @@ namespace CnV
 				var t1 = Task.Run(() => TileData.Ctor(false));
 				
 				var t2 = CityCustom.Load();
+;				var t3 = TTip.persist.Load();
 				BuildQueue.Initialize();
-				await t1.ConfigureAwait(false);
 
 				// World cannot load until tiles are loaded
 				
-				await t2.ConfigureAwait(false); ; // city custom can end here
-
+				await Task.WhenAll( t2,t3,t1).ConfigureAwait(false); ; // city custom can end here
+				
 				AppS.SetState( AppS.State.active );
 
 				ShellPage.WorkUpdate("Connect to server");
 				if(AppS.isSinglePlayer)
 				{
 					// Kick off sim ourselves
-					await Sim.StartSim(null);
+					await Sim.StartSim(null).ConfigureAwait(false);
 				}
 				else
 				{
@@ -73,7 +73,7 @@ namespace CnV
 					// Message from server will kick off sim
 					while(Sim.simPhase == Sim.SimPhase.init)
 					{
-						await Task.Delay(500);
+						await Task.Delay(500).ConfigureAwait(false);
 
 					}
 				}
@@ -114,7 +114,7 @@ namespace CnV
 
 				while(!City.myCities.Any())
 				{
-					await Task.Delay(500);
+					await Task.Delay(500).ConfigureAwait(false);
 					ShellPage.RefreshX();
 				}
 				//UpdatePPDT();
@@ -179,7 +179,10 @@ namespace CnV
 			//	reinforcementsTask = new(interval:64.0f,()=> ReinforcementsOverview.instance.Post(),initialDelay:4.0f );
 			//	senInfoTask        = new( interval: 68f, City.UpdateSenatorInfo, 3.0f);
 				Sim.isInitialized      = true;
-				
+				while(!Sim.isPastWarmup)
+				{
+					await Task.Delay(250).ConfigureAwait(false);
+				}
 				
 			}
 		catch(Exception ex)

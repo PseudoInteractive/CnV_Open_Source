@@ -42,7 +42,11 @@ sent or received, and those values are bound in the DataTemplate.-->
 					                       VerticalAlignment="Center" HorizontalAlignment="Center" Content="{x:Bind player, Mode=OneTime}" 
 					                        Tapped ="HyperlinkButton_Tapped" 
 					                       RightTapped="HyperlinkButton_RightTapped" FontSize="{ThemeResource ChatFontSize}"  Margin="2,0,4,0" Padding="2,0,4,0"  />
-					<Image Grid.Column="1" Stretch="Fill"  MaxHeight="{StaticResource ChatImageHeight}"  Source="{x:Bind avatar}" Margin="2,0,2,0" VerticalAlignment="Center"/>
+					<Image Grid.Column="1" Stretch="Fill"  MaxHeight="{StaticResource ChatImageHeight}"  Margin="2,0,2,0" VerticalAlignment="Center">
+						<Image.Source>
+							<BitmapImage UriSource="{x:Bind avatar}" />
+						</Image.Source>
+					</Image>
 					<tk:MarkdownTextBlock Grid.Column="3" x:Name="message" Text="{x:Bind text,Mode=OneTime}"  FontSize="{StaticResource ChatFontSize}" Margin="0,0,0,0"  Padding="0,0,0,0"    
                                              InlineCodeBackground="Black"  VerticalAlignment="Center" TableCellPadding="0,0,0,0" IsTextSelectionEnabled="True"
                                               TextWrapping="Wrap" LinkClicked="{x:Bind cnv:Note.MarkDownLinkClicked}"  />

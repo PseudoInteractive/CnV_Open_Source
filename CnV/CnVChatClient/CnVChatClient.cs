@@ -93,7 +93,7 @@ namespace CnVDiscord
 
 			for(;;)
 			{
-				if(!initialized && !isShuttingDown && !isBusy)
+				if(!initialized && !isShuttingDown && !isBusy && !AppS.isShuttingDown)
 				{
 					// Connect to the server using gRPC channel.
 					try
@@ -210,7 +210,7 @@ namespace CnVDiscord
 		public void OnReceiveMessages(ICnVChatClient.OnReceiveMessagesArgs messageArgs)
 		{
 			Log("Got Messages " + messageArgs.discordMessages.Length);
-			AppS.QueueOnUIThread(() =>
+			//AppS.QueueOnUIThread(() =>
 			{
 				var isNew = messageArgs.discordMessages.Length==1; // Does the server ever batch them up?
 				for(int i = 0;i<messageArgs.discordMessages.Length;++i)
@@ -231,13 +231,15 @@ namespace CnVDiscord
 						var longer = Player.all.FirstOrDefault(a => a.shortName == name);
 						if(longer is not null)
 							name = longer.name;
-						Log($"Missing discordName: {message.Author.Username}=>{name} {message.Author.Id} {authorId} HasOverride:{senderOverrides != null} ");
+						else 
+							Log($"Missing discordName: {message.Author.Username}=>{name} {message.Author.Id} {authorId} HasOverride:{senderOverrides != null} ");
 
 					}
 					
 					AddMessage(name,message,isNew:isNew,deferNotify:!isNew);
 				}
-			});
+			}
+			//);
 		}
 		public static string DisplayName(DiscordUser user)
 		{
@@ -251,7 +253,7 @@ namespace CnVDiscord
 		{
 			try
 			{
-				Assert(AppS.IsOnUIThread());
+			//	Assert(AppS.IsOnUIThread());
 				//if(!Player.fromDiscordId.TryGetValue(senderOverride,out var p))
 				//	p = Player.me;
 				//var name = p.name; // todo: use clients
@@ -290,7 +292,7 @@ namespace CnVDiscord
 
 					content = content.Replace(mention,mentionGame);
 				}
-				var chat = new ChatEntry(name,content,IServerTime.UtcToServerTime(message.Timestamp),ChatEntry.typeAlliance);
+				var chat = new ChatEntry(name,content,IServerTime.UtcToServerDateTime(message.Timestamp),ChatEntry.typeAlliance);
 				//Note.Show(chat.ToString());
 //				AppS.DispatchOnUIThread(() => ChatTab.Post(message.ChannelId,chat,isNew,notify));
 				ChatTab.Post(message.ChannelId,chat,isNew,deferNotify);

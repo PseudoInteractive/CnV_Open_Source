@@ -874,16 +874,16 @@ namespace CnV
 									//}
 									break;
 								}
-							case "incoming":
-								{
-									AppS.QueueIdleTask(IncomingOverview.ProcessTask, 1000);
-									break;
-								}
-							case "outgoing":
-								{
-									AppS.QueueIdleTask(OutgoingOverview.ProcessTask, 1000);
-									break;
-								}
+							//case "incoming":
+							//	{
+							//		AppS.QueueIdleTask(IncomingOverview.ProcessTask, 1000);
+							//		break;
+							//	}
+							//case "outgoing":
+							//	{
+							//		AppS.QueueIdleTask(OutgoingOverview.ProcessTask, 1000);
+							//		break;
+							//	}
 							//case "gstcb":
 							//	{
 							//		Note.Show(jsp.ToString());

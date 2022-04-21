@@ -22,6 +22,7 @@
 	<TieredCompilation>True</TieredCompilation>
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+    <PublishProfile>win10-$(Platform).pubxml</PublishProfile>
     <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
 	  
     <Configurations>Debug;Release;SinglePlayer</Configurations>
@@ -168,6 +169,7 @@
     <Compile Include="Views\PlayerTab.xaml.cs" />
     <Compile Include="Xaml\IconText.cs" />
     <Compile Include="Xaml\TTip.cs" />
+    <Compile Include="Xaml\TTipX.xaml.cs" />
     <Manifest Include="$(ApplicationManifest)" />
     <Compile Include="Activation\CommandLineActivationHandler.cs" />
     <Compile Include="Activation\SchemeActivationConfig.cs" />
@@ -635,6 +637,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Xaml\TTipX.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
 	<None Remove="Assets\cnvIcon.ico" />
@@ -687,6 +692,7 @@
     <None Remove="Views\WebViewPage.xaml" />
     <None Remove="Wiki\fixes.md" />
     <None Remove="Win32Native.txt" />
+    <None Remove="Xaml\TTipX.xaml" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -743,26 +749,25 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Optimize>False</Optimize>
     <WarningLevel>4</WarningLevel>
-    <DefineConstants>$(DefineConstants);CNV;CNVCLIENT;APPCENTER</DefineConstants>
+    <DefineConstants>$(DefineConstants);CNV;CNVCLIENT;APPCENTER;DISABLE_XAML_GENERATED_MAIN</DefineConstants>
     <Deterministic>True</Deterministic>
     <FileAlignment>4096</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='SinglePlayer|x64'">
-    <Optimize>True</Optimize>
+    <Optimize>False</Optimize>
     <WarningLevel>4</WarningLevel>
-    <DefineConstants>$(DefineConstants);CNV;CNVCLIENT;APPCENTER;RELEASE</DefineConstants>
+    <DefineConstants>$(DefineConstants);CNV;CNVCLIENT;APPCENTER;DISABLE_XAML_GENERATED_MAIN;DEBUG</DefineConstants>
     <Deterministic>True</Deterministic>
     <FileAlignment>4096</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Optimize>True</Optimize>
     <WarningLevel>4</WarningLevel>
-    <DefineConstants>$(DefineConstants);CNV;CNVCLIENT;APPCENTER</DefineConstants>
+    <DefineConstants>$(DefineConstants);CNV;CNVCLIENT;APPCENTER;DISABLE_XAML_GENERATED_MAIN</DefineConstants>
     <Deterministic>True</Deterministic>
     <FileAlignment>4096</FileAlignment>
     <LayoutDir />
   </PropertyGroup>
-  <ProjectExtensions />
   <ItemGroup>
     <EmbeddedResource Include="Wiki\fixes.md" />
   </ItemGroup>
@@ -778,6 +783,7 @@
     <Reference Include="MonoGame.Framework">
       <HintPath>..\ext\net6.0-windows10.0.22000.0\MonoGame.Framework.dll</HintPath>
     </Reference>
+    <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="Assets\cnvIcon.ico">

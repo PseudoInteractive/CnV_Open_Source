@@ -27,7 +27,8 @@ using static GameClient;
 	{
 		{
 			int splits = (timeSinceLastFrame*targetStepsPerSecond).RoundToInt().Max(1);
-			var dt = (float)(timeSinceLastFrame.Min(1) / splits);
+			Assert(timeSinceLastFrame <= 0.25f);
+			var dt = (float)(timeSinceLastFrame / splits);
 			for(int step = 0;step<splits;++step)
 			{
 				var viewVW0 = viewVW;
@@ -69,7 +70,7 @@ using static GameClient;
 		{
 
 			//		var _serverNow = CnVServer.serverTime;
-			var dt = (float)timeSinceLastFrame.Min(0.25f);// ((float)(timerT - animationT)).Min(0.25f);// (float)gameTime.ElapsedGameTime.TotalSeconds; // max delta is 1s
+			var dt = (float)timeSinceLastFrame.Min(1.0f/16.0f);// ((float)(timerT - animationT)).Min(0.25f);// (float)gameTime.ElapsedGameTime.TotalSeconds; // max delta is 1s
 			{                                                      //	lastDrawTime = _serverNow;
 				var hover = lastCanvasC;
 				if(hover != 0 && World.GetInfoFromCid(hover).type != 0)

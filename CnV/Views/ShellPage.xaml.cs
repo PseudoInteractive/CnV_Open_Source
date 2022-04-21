@@ -560,12 +560,9 @@ namespace CnV.Views
 
 				}
 				WorkUpdate("Init");
-				await CnVClient.InitializeGame();
+				await Task.Run( CnVClient.InitializeGame );
 		//		Player.activePlayerChanged += (p0,p1) => AppS.UpdateAppTitle();
-				while(!Sim.isPastWarmup)
-				{
-					await Task.Delay(250);
-				}
+				
 				//AppS.QueueOnUIThread(() =>
 				//{
 					AppS.UpdateAppTitle();

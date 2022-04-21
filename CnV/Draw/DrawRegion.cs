@@ -174,7 +174,7 @@ internal partial class GameClient
 	public static Matrix projection;
 	internal static double timeSinceLastFrame;
 	static float pitch;
-	internal const float targetStepsPerSecond = 256;
+	internal const float targetStepsPerSecond = 128;
 	public static int drawCounter;
 	public static float fadeCounter = 1;
 	internal static HashSet<int> drawTradesHash = new();
@@ -244,7 +244,7 @@ internal partial class GameClient
 			//	tipTextFormat.FontStretch = fontStretch;
 			//	tipTextFormatCentered.FontStretch = fontStretch;
 			//}
-			animationTWrap = ((animationT*(1.0/3.0)).Frac()); // wraps every 3 seconds, 0..1
+			//animationTWrap = ().Frac()); // wraps every 3 seconds, 0..1
 
 			device.Textures[7] = fontTexture;
 
@@ -263,8 +263,8 @@ internal partial class GameClient
 	//		device.Textures[4] = TileData.topLevelTileset.material.texture;
 	//		device.Textures[5] = TileData.topLevelTileset.material.texture1;
 			//				float accentAngle = animT * MathF.PI * 2;
-			int tick = (Environment.TickCount >> 3) & 0xfffff;
-			var animTLoop = animationTWrap.Wave();
+			var tick = (elapsed.TotalSeconds*0.125f);
+			var animTLoop = (animationT*(1.0/3.0)).Wave();
 			int cx0 = 0, cy0 = 0, cx1 = 0, cy1 = 0;
 			var rectSpan = animTLoop.Lerp(rectSpanMin,rectSpanMax);
 
@@ -1000,7 +1000,7 @@ internal partial class GameClient
 										var c0 = real.CidToWorldV();
 										foreach(var a in cluster.attacks)
 										{
-											var t = (tick * a.CidToRandom().Lerp(1.5f / 512.0f,1.75f / 512f)) + 0.25f;
+											var t = (tick + a.CidToRandom()).Wave(1.5f / 512.0f + 0.25f,1.75f / 512f + 0.25f);
 											var r = t.Ramp();
 											var c1 = a.CidToWorldV();
 											var spot = Spot.GetOrAdd(a);
@@ -1205,7 +1205,7 @@ internal partial class GameClient
 											// don't double draw
 											if(drawArmyHash.Add(i.GetHashCode()))
 											{
-												var t = (tick * i.sourceCid.CidToRandom().Lerp(1.5f / 512.0f,2.0f / 512f)) + 0.25f;
+												var t = (tick +i.sourceCid.CidToRandom()).Wave(1.5f / 512.0f+0.25f,2.0f / 512f+ 0.25f) ;
 												var r = t.Ramp();
 												var nSprite = i.troops.Count;
 
@@ -1399,7 +1399,7 @@ internal partial class GameClient
 											// don't double up
 											if(drawTradesHash.Add(i.GetHashCode()))
 											{
-												var t = (tick * i.sourceCid.CidToRandom().Lerp(1.5f / 512.0f,2.0f / 512f)) + 0.25f;
+												var t = (tick + i.sourceCid.CidToRandom()).Wave(1.5f / 512.0f+0.25f,2.0f / 512f+0.25f);
 												var r = t.Ramp();
 												(int x, int y) _c0, _c1;
 												if(isIncoming ^ i.isReturning)
@@ -2006,12 +2006,14 @@ internal partial class GameClient
 		if(IsSegmentCulledWC(c0,c1))
 			return;
 		var lineRate = lineAnimationRate;
+		var animWave = false;
 		float progress;
-		if(timeToArrival <= 0.0f)
+		if(timeToArrival <= 0.0f )
 		{
 			progress = 1.0f;
 			timeToArrival = 0;
-			lineRate = (animationT/16.0f).Wave().Lerp(-lineAnimationRate,lineAnimationRate)*(1f/128.0f);
+			lineRate = lineAnimationRate*0.25f;// (animationT/16.0f).Wave(-lineAnimationRate,lineAnimationRate)*(1f/128.0f);
+			animWave = true;
 		}
 		else
 		{
@@ -2055,9 +2057,9 @@ internal partial class GameClient
 			lineThickness *= 1.25f;
 		var shadowColor = ShadowColor(alpha,highlight);
 		if(wantShadow)
-			DrawLine(Layer.effectShadow,c0,c1,GetLineUs(c0,c1,lineThickness,lineRate),shadowColor,zEffectShadow,thickness: lineThickness);
+			DrawLine(Layer.effectShadow,c0,c1,GetLineUs(c0,c1,lineThickness,lineRate,animWave),shadowColor,zEffectShadow,thickness: lineThickness);
 
-		DrawLine(Layer.action + 2,c0,c1,GetLineUs(c0,c1,lineThickness,lineRate),color,zEffects,thickness: lineThickness);
+		DrawLine(Layer.action + 2,c0,c1,GetLineUs(c0,c1,lineThickness,lineRate,animWave),color,zEffects,thickness: lineThickness);
 		//if(applyStopDistance)
 		//{
 		//	DrawSquare(Layer.action + 3,c0,color,zEffects);
@@ -2182,9 +2184,9 @@ internal partial class GameClient
 		}
 	}
 
-	static (float u, float v) GetLineUs(Vector2 c0,Vector2 c1,float thickness,float animationSpeed = lineAnimationRate)
+	static (float u, float v) GetLineUs(Vector2 c0,Vector2 c1,float thickness,float animationSpeed, bool wave)
 	{
-		var offset = (animationSpeed * animationT).Wrap01();
+		var offset = wave ? (animationSpeed * animationT).Wave() : (animationSpeed * animationT).Wrap01();
 		return (offset, offset-(c0 - c1).Length()* lineWToUs/thickness);
 
 	}

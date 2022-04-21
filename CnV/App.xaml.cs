@@ -585,6 +585,7 @@ namespace CnV
 
 			try
 			{
+			
 				if (DeploymentManager.GetStatus().Status != DeploymentStatus.Ok)
 				{
 					// Initialize does a status check, and if the status is not Ok it will attempt to get

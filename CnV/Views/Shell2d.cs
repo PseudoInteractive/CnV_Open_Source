@@ -154,7 +154,7 @@ namespace CnV.Views
 		  // if(isOverCanvas)
 		    try
 			  {
-			  if(!ChatTabHasFocus())
+			  if(!AppS.focusedOnTextBox)
 			  {
 				//  Note.Show("Focus");
 				  canvas.Focus(FocusState.Programmatic);
@@ -445,19 +445,19 @@ namespace CnV.Views
 			return _KeyDown(key);
 		}
 
-		internal static bool ChatTabHasFocus()
-		{
-			foreach (var tab in ChatTab.all)
-			{
-				if (tab.input.FocusState != FocusState.Unfocused)
-				{
-				//	Note.Show($"Chat Focus {tab.Name} {tab.input.FocusState}");
-					return true;
-				}
-			}
+		//internal static bool ChatTabHasFocus()
+		//{
+		//	foreach (var tab in ChatTab.all)
+		//	{
+		//		if (tab.input.FocusState != FocusState.Unfocused)
+		//		{
+		//		//	Note.Show($"Chat Focus {tab.Name} {tab.input.FocusState}");
+		//			return true;
+		//		}
+		//	}
 
-			return false;
-		}
+		//	return false;
+		//}
 
 		public static bool _KeyDown(VirtualKey key)
 		{
