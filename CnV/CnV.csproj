@@ -22,7 +22,6 @@
 	<TieredCompilation>True</TieredCompilation>
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
-    <PublishProfile>win10-$(Platform).pubxml</PublishProfile>
     <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
 	  
     <Configurations>Debug;Release;SinglePlayer</Configurations>
