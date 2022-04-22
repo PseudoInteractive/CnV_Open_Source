@@ -15,6 +15,11 @@
 	Background="{x:Null}"
 	Loaded="UserControl_Loaded"
     mc:Ignorable="d">
+	<UserControl.Resources>
+		<cnv:TTipX  x:Name="TT_Buildings_1"   Subtitle="Your build queue.&#10;Drag items away to cancel&#10;right click items for more options" Target="{x:Bind expBuildQueue}" />
+		<cnv:TTipX  x:Name="TT_Buildings_2"   Subtitle="Building counts for your city.&#10;Click here to set autobuild settings" Target="{x:Bind buildingsHeader}" />
+
+	</UserControl.Resources>
 
 	<ScrollViewer  x:Name="scroll"
 					Background="{x:Null}"  
@@ -124,10 +129,6 @@
 						<TextBlock x:Name="queueText" TextAlignment="Right" VerticalAlignment="Center" RightTapped="QueueRightTapped" Text ="Queue" Margin="0"  Style="{StaticResource BodyTextBlockStyle}"   />
 					</Border>
 				</Expander.Header>
-				<Expander.Resources>
-					<cnv:TTipX  x:Name="TT_Buildings_1"   Subtitle="This is your build queue.&#10;Drag items away to cancel, right click items for mode options" Target="{x:Bind expBuildQueue}" />
-					<cnv:TTipX  x:Name="TT_Buildings_2"   Subtitle="These are the buildings in your city.&#10;Click here to set autobuild settings" Target="{x:Bind buildingsHeader}" />
-				</Expander.Resources>
 				<ListView x:Name="buildQueueListView" x:FieldModifier="public"  
 						  SelectionMode="Extended" 
 						  Margin="0" Padding="0" HorizontalAlignment="Stretch" 

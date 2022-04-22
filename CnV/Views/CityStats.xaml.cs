@@ -38,12 +38,13 @@ namespace CnV
 			this.InitializeComponent();
 			//buildQueue.CollectionChanged+=BuildQueue_CollectionChanged;
 		}
-
+#if false
 		static TTip _BuildQueue_1 = new TTip("TT_Buildings_1",() =>
 		
 			City.GetBuild().buildQueue.Length > 0
 		 );
 		static TTip _BuildQueue_2 = new TTip("TT_Buildings_2");
+#endif
 
 		public event PropertyChangedEventHandler? PropertyChanged;
 		public void OnPropertyChanged(string? member = null)

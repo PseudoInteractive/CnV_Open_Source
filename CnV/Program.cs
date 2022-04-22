@@ -50,12 +50,21 @@ namespace CnV
                     new App();
                 });
             }
+			else
+			{
+				// Closed?
+				 System.Diagnostics.Trace.WriteLine("Already running");
+			}
         }
 		
 
-		 private static void OnActivated(object sender, AppActivationArguments args)
+		 private static async void OnActivated(object sender, AppActivationArguments args)
         {
-			 System.Diagnostics.Debug.WriteLine($"Activated: {args.Kind}");
+			if(await AppS.DoYesNoBox("CnV is already runnning", "Would you like to close it") == 1)
+			{
+				AppS.Exit();
+
+			}
          }
 
 
@@ -66,7 +75,7 @@ namespace CnV
 			  AppActivationArguments args = AppInstance.GetCurrent().GetActivatedEventArgs();
 
             ExtendedActivationKind kind = args.Kind;
-			 System.Diagnostics.Debug.WriteLine($"Launch {kind}");
+			 System.Diagnostics.Trace.WriteLine($"Launch {kind}");
 			bool isRedirect = false;
 
 

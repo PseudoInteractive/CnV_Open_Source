@@ -52,9 +52,20 @@ namespace CnV
 		public void DoRefine(int id)
 		{
 			var res = new Resources();
+			var city = City.GetBuild();
 			res[id] = items[id].count;
-			new CnVEventRefine(City.build,res).EnqueueAsap();
-			items[id].count = 0;
+			var cost = res * -1000;
+			if(!(city.SampleResources() + cost).allPositive)
+			{
+				AppS.MessageBox("Not enough res for refine");
+			}
+			else
+			{
+
+				new CnVEventRefine(city.c,res).EnqueueAsap();
+				items[id].count = 0;
+			}
+
 			OnPropertyChanged();
 			
 		}
