@@ -306,7 +306,7 @@ namespace CnV
 							}
 							else
 							{
-								Status($"Left click modify {b.def.Bn}, Right click to select a quick build tool",dryRun);
+								Status($"Left click modify {b.def.Bn}, Right click to select a quick build tool\nUpgrade cost:\n{b.BuildOrUpgradeCost().Format()}\n{b.UpgradeTimeRequired().Format()}",dryRun);
 							}
 
 							break;

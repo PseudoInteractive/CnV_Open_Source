@@ -39,7 +39,11 @@ namespace CnV
 			//buildQueue.CollectionChanged+=BuildQueue_CollectionChanged;
 		}
 
-		static TTip tip0 = new TTip("TT_BuildQueue_1");
+		static TTip _BuildQueue_1 = new TTip("TT_Buildings_1",() =>
+		
+			City.GetBuild().buildQueue.Length > 0
+		 );
+		static TTip _BuildQueue_2 = new TTip("TT_Buildings_2");
 
 		public event PropertyChangedEventHandler? PropertyChanged;
 		public void OnPropertyChanged(string? member = null)
@@ -1173,14 +1177,15 @@ namespace CnV
 			args.Handled    = true;
 			var flyout = new MenuFlyout();
 
-			if(!army.isReturn)
+			if(!army.isReturn || army.isRaid)
 			{
 				flyout.AddItem("Return",Symbol.Undo,() =>
 				{
 					new CnVEventReturnTroops(army).EnqueueAsap();
 				});
 			}
-			flyout.AddItem("Speedup",Symbol.Forward,SpeedupDefense);
+			if( army.canUseWings)
+				flyout.AddItem("Speedup",Symbol.Forward,SpeedupDefense);
 
 			flyout.AddItem("Return All",Symbol.Delete,() =>
 			{
@@ -1217,6 +1222,14 @@ namespace CnV
 					if(!Artifact.Get(artifact).IsOkayToUse(toUse))
 						return;
 					SocketClient.DeferSendStart();
+
+					// do we need to return first
+					Assert(army.isDefense);
+					// return troops first
+					if( army.arrived)
+					{
+						new CnVEventReturnTroops(army).EnqueueAsap(); 
+					}
 
 					try
 					{
@@ -1256,7 +1269,8 @@ namespace CnV
 			{
 				new CnVEventReturnTroops(army).EnqueueAsap();
 			});
-			flyout.AddItem("Speedup",Symbol.Forward,SpeedupDefense);
+			if( army.canUseWings)
+				flyout.AddItem("Speedup",Symbol.Forward,SpeedupDefense);
 
 			flyout.ShowContext(sender,args);
 		}

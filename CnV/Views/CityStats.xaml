@@ -125,8 +125,8 @@
 					</Border>
 				</Expander.Header>
 				<Expander.Resources>
-					<cnv:TTipX  x:Name="TT_BuildQueue_1"   Subtitle="Your build queue"  />
-					<cnv:TTipX  x:Name="TT_BuildQueue_2"   Subtitle="Your build queue"  />
+					<cnv:TTipX  x:Name="TT_Buildings_1"   Subtitle="This is your build queue.&#10;Drag items away to cancel, right click items for mode options" Target="{x:Bind expBuildQueue}" />
+					<cnv:TTipX  x:Name="TT_Buildings_2"   Subtitle="These are the buildings in your city.&#10;Click here to set autobuild settings" Target="{x:Bind buildingsHeader}" />
 				</Expander.Resources>
 				<ListView x:Name="buildQueueListView" x:FieldModifier="public"  
 						  SelectionMode="Extended" 
@@ -172,7 +172,7 @@
 
 			<Expander    Expanding="Expander_Expanding" x:Name="expBuildings" IsExpanded="True" Background="{StaticResource ExpanderBrushContent}" >
 				<Expander.Header   >
-					<Border Background="{x:Bind cnv:ImageHelper.GetAsBrush('UI/menues/main_menu/bgr_quickuse_buildqueue.png') }"
+					<Border x:Name="buildingsHeader" Background="{x:Bind cnv:ImageHelper.GetAsBrush('UI/menues/main_menu/bgr_quickuse_buildqueue.png') }"
 							Tapped="AutobuildTapped"
 							ToolTipService.ToolTip="Click to set autobuild settings"
 							BorderThickness="0" Padding="1" CornerRadius="{StaticResource baseCR}" >

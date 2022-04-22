@@ -287,7 +287,8 @@ public static partial class ADataGrid
 			grid.AllowGrouping = true;
 			grid.AllowFiltering = true;
 			//				grid.AllowFrozenGroupHeaders = false;
-			grid.ColumnWidthMode = Syncfusion.UI.Xaml.Grids.ColumnWidthMode.AutoLastColumnFill;
+//			grid.ColumnWidthMode = Syncfusion.UI.Xaml.Grids.ColumnWidthMode.AutoLastColumnFill;
+			grid.ColumnWidthMode = Syncfusion.UI.Xaml.Grids.ColumnWidthMode.SizeToCells;
 			grid.CellToolTipOpening += UserTab.CellToolTipOpening;
 			//if(sourceType is not null) //  || grid.ItemsSource is not null)
 		//		grid.SourceType = sourceType;// ?? UserTab.GetContainerType(grid.ItemsSource);

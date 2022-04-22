@@ -106,7 +106,8 @@ namespace CnVDiscord
 								PooledConnectionIdleTimeout = Timeout.InfiniteTimeSpan,
 								KeepAlivePingDelay = TimeSpan.FromSeconds(60),
 								KeepAlivePingTimeout = TimeSpan.FromSeconds(30),
-								KeepAlivePingPolicy = HttpKeepAlivePingPolicy.Always
+								KeepAlivePingPolicy = HttpKeepAlivePingPolicy.Always,
+							
 							}
 						});
 
@@ -160,7 +161,7 @@ namespace CnVDiscord
 					reconnectWaitCancel = new();
 				try
 				{
-					await Task.Delay(TimeSpan.FromMinutes(5.0f),reconnectWaitCancel.Token);
+					await Task.Delay(TimeSpan.FromMinutes(3.0f),reconnectWaitCancel.Token);
 
 				}
 				catch(Exception _ex)

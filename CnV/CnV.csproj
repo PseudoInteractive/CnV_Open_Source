@@ -70,15 +70,13 @@
     <PackageReference Include="MessagePack" Version="2.3.85" />
     <PackageReference Include="MessagePack.Experimental" Version="2.3.85" />
     <PackageReference Include="MessagePack.ImmutableCollection" Version="2.4.14-alpha" />
-    <PackageReference Include="MagicOnion.Client" Version="4.3.1" />
     <PackageReference Include="MessagePackAnalyzer" Version="2.4.14-alpha">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.AppCenter" Version="4.5.0" />
     <PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.5.0" />
     <PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.5.0" />
-    <PackageReference Include="Microsoft.ApplicationInsights.WorkerService" Version="2.21.0-beta1" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="7.0.0-preview.3.22175.4" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0-preview.3.22175.4" />
     <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.Primitives" Version="7.0.0-preview.3.22175.4" />
@@ -774,6 +772,7 @@
   <ItemGroup>
     <Folder Include="Base\" />
     <Folder Include="Helpers\" />
+    <Folder Include="Properties\ServiceDependencies\local\" />
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
