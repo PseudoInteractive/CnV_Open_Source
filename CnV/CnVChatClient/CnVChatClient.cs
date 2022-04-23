@@ -326,14 +326,15 @@ namespace CnVDiscord
 				try
 				{
 					
-					await ShutDown(false);
+					await ShutDown(AppS.isShuttingDown);
 
 				}
 				catch(Exception ex2)
 				{
 					Log(ex2.Message);
 				}
-				isShuttingDown=false; // start up again later
+				if(!AppS.isShuttingDown)
+					isShuttingDown=false; // start up again later
 			}
 			//LogEx(ex);
 		}

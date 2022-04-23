@@ -1474,7 +1474,7 @@ namespace CnV
 			return rv;
 		}
 
-		private static void C_ExecuteRequested(XamlUICommand sender,ExecuteRequestedEventArgs args) => throw new NotImplementedException();
+	//	private static void C_ExecuteRequested(XamlUICommand sender,ExecuteRequestedEventArgs args) => throw new NotImplementedException();
 
 		// must be on the right thread for this
 		//public static void Set(this InputCursor c) 

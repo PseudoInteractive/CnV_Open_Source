@@ -92,8 +92,8 @@ public sealed partial class TradeSettingsDialog:DialogG, INotifyPropertyChanged
 	private void DoneClick(object sender,Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
 		var city = this.city;
-		var mo = city.GetMOForWrite();
-		var priorHash = mo.tradeHashCode;
+		var priorHash = city.GetMOForRead().tradeHashCode;
+		var mo = new CityMO();
 		mo.sendCities=new(woodDest.cid,stoneDest.cid,ironDest.cid,foodDest.cid);
 		mo.requestCities=new(woodSource.cid,stoneSource.cid,ironSource.cid,foodSource.cid);
 		mo.resSend = new(
@@ -108,6 +108,7 @@ public sealed partial class TradeSettingsDialog:DialogG, INotifyPropertyChanged
 		foodReq.Value.RoundToInt());
 		mo.RemoveTradesTo(city.cid);
 		var newHash = mo.tradeHashCode;
+		Note.Show($"Trade settings changed: {newHash != priorHash}");
 		if(newHash != priorHash)
 		{
 			(new CnVEventCityTradeSettings(city.c)
