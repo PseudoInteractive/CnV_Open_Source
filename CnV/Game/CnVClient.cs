@@ -20,50 +20,7 @@ namespace CnV
 
 	internal  static partial class CnVClient
 	{
-		static readonly float[] researchRamp = { 0, 1, 3, 6, 10, 15, 20, 25, 30, 35, 40, 45, 50 };
-		private static void BonusesUpdated()
-		{
-			cartTravel = 10.0f / (1.0 + faith.merius * 0.5 / 100 + researchRamp[research[28]] / 100);
-			shipTravel = 5.0f / (1.0 + faith.merius * 0.5 / 100 + researchRamp[research[27]] / 100);
-
-			// these are all scaled by 100 to reduce rounding errors
-			ttSpeedBonus[0] = 100; // no speed reserach for guard
-			ttSpeedBonus[1] = 100 + faith.domdis * 0.5f  + researchRamp[research[12]];
-			ttSpeedBonus[2] = 100 + faith.ibria * 0.5f  + researchRamp[research[8]];
-			ttSpeedBonus[3] = 100 + faith.ibria * 0.5f  + researchRamp[research[8]];
-			ttSpeedBonus[4] = 100 + faith.ibria * 0.5f  + researchRamp[research[8]];
-			ttSpeedBonus[5] = 100 + faith.ibria * 0.5f  + researchRamp[research[8]];
-			ttSpeedBonus[6] = 100 + faith.ibria * 0.5f  + researchRamp[research[8]];
-			ttSpeedBonus[7] = 100 + faith.ibria * 0.5f  + researchRamp[research[11]];
-			ttSpeedBonus[8] = 100 + faith.ibria * 0.5f + researchRamp[research[9]];
-			ttSpeedBonus[9] = 100 + faith.ibria * 0.5f  + researchRamp[research[9]];
-			ttSpeedBonus[10] = 100 + faith.ibria * 0.5f  + researchRamp[research[9]];
-			ttSpeedBonus[11] = 100 + faith.ibria * 0.5f  + researchRamp[research[9]];
-			ttSpeedBonus[12] = 100 + faith.domdis * 0.5f + researchRamp[research[12]];
-			ttSpeedBonus[13] = 100 + faith.domdis * 0.5f + researchRamp[research[12]];
-			ttSpeedBonus[14] = 100 + faith.domdis * 0.5f + researchRamp[research[13]];
-			ttSpeedBonus[15] = 100 + faith.domdis * 0.5f + researchRamp[research[13]];
-			ttSpeedBonus[16] = 100 + faith.domdis * 0.5f + researchRamp[research[13]];
-			ttSpeedBonus[17] = 100 + faith.evara * 0.5f + researchRamp[research[14]];
-
-
-			ttCombatBonus[0] = 1 + faith.naera * 0.5f / 100 + researchRamp[research[29]] / 100;
-			ttCombatBonus[1] = 1 + faith.naera * 0.5f / 100 + researchRamp[research[42]] / 100;
-			ttCombatBonus[2] = 1 + faith.naera * 0.5f / 100 + researchRamp[research[30]] / 100;
-			ttCombatBonus[3] = 1 + faith.naera * 0.5f / 100 + researchRamp[research[31]] / 100;
-			ttCombatBonus[4] = 1 + faith.naera * 0.5f / 100 + researchRamp[research[32]] / 100;
-			ttCombatBonus[5] = 1 + faith.vexemis * 0.5f / 100 + researchRamp[research[33]] / 100;
-			ttCombatBonus[6] = 1 + faith.vexemis * 0.5f / 100 + researchRamp[research[34]] / 100;
-			ttCombatBonus[7] = 1 + faith.vexemis * 0.5f / 100 + researchRamp[research[46]] / 100;
-			ttCombatBonus[8] = 1 + faith.naera * 0.5f / 100 + researchRamp[research[35]] / 100;
-			ttCombatBonus[9] = 1 + faith.naera * 0.5f / 100 + researchRamp[research[36]] / 100;
-			ttCombatBonus[10] = 1 + faith.vexemis * 0.5f / 100 + researchRamp[research[37]] / 100;
-			ttCombatBonus[11] = 1 + faith.vexemis * 0.5f / 100 + researchRamp[research[38]] / 100;
-			ttCombatBonus[14] = 1 + faith.ylanna * 0.5f / 100 + researchRamp[research[44]] / 100;
-			ttCombatBonus[15] = 1 + faith.ylanna * 0.5f / 100 + researchRamp[research[43]] / 100;
-			ttCombatBonus[16] = 1 + faith.cyndros * 0.5f / 100 + researchRamp[research[45]] / 100;
-			ttCombatBonus[17] = 1; // no combat research for senator
-		}
+	
 
 		
 		static private int[] lastCln = null;
@@ -91,20 +48,20 @@ namespace CnV
 
 				var bonusesUpdated = false;
 				// research?
-				if(jse.TryGetProperty("rs", out var rss))
-				{
-					foreach(var rs in rss.EnumerateObject())
-					{
-						var id = int.Parse(rs.Name);
-						if(id < researchCount)
-							research[id] = (byte)rs.Value.GetInt("l"); // this will wrap for senator level (research not supported here)
-						else
-						{
-							Assert(false);
-						}
-					}
-					bonusesUpdated = true;
-				}
+				//if(jse.TryGetProperty("rs", out var rss))
+				//{
+				//	foreach(var rs in rss.EnumerateObject())
+				//	{
+				//		var id = int.Parse(rs.Name);
+				//		if(id < researchCount)
+				//			research[id] = (byte)rs.Value.GetInt("l"); // this will wrap for senator level (research not supported here)
+				//		else
+				//		{
+				//			Assert(false);
+				//		}
+				//	}
+				//	bonusesUpdated = true;
+				//}
 				//if(jse.TryGetProperty("tcps", out var tcps))
 				//{
 				//	TradeSettings.all = JsonSerializer.Deserialize<TradeSettings[]>(tcps.ToString(), JSON.jsonSerializerOptions);
@@ -202,22 +159,22 @@ namespace CnV
 
 				}
 
-				if(jse.TryGetProperty("fa", out var fa))
-				{
-					faith.evara = fa.GetAsByte("1");
-					faith.vexemis = fa.GetAsByte("2"); // 2
-					faith.domdis = fa.GetAsByte("3");
-					faith.cyndros = fa.GetAsByte("4");
-					faith.merius = fa.GetAsByte("5");
-					faith.ylanna = fa.GetAsByte("6");
-					faith.ibria = fa.GetAsByte("7");
-					faith.naera = fa.GetAsByte("8");
+				//if(jse.TryGetProperty("fa", out var fa))
+				//{
+				//	faith.evara = fa.GetAsByte("1");
+				//	faith.vexemis = fa.GetAsByte("2"); // 2
+				//	faith.domdis = fa.GetAsByte("3");
+				//	faith.cyndros = fa.GetAsByte("4");
+				//	faith.merius = fa.GetAsByte("5");
+				//	faith.ylanna = fa.GetAsByte("6");
+				//	faith.ibria = fa.GetAsByte("7");
+				//	faith.naera = fa.GetAsByte("8");
 
-					bonusesUpdated = true;
+				//	bonusesUpdated = true;
 
-				}
-				if(bonusesUpdated)
-					BonusesUpdated();
+				//}
+				//if(bonusesUpdated)
+				//	BonusesUpdated();
 
 				var lists = new List<CityList>();
 				if(jse.TryGetProperty("cl", out var cityListNames))

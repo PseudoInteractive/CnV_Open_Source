@@ -68,7 +68,7 @@ namespace CnV.Views
 				var groundValid = false;
 				foreach (var i in newSel.troopsHome)
 				{
-					if (i.attack > 50 * 1000)
+					if (i.GetAttack(Player.active) > 50 * 1000)
 					{
 						if (i.isNaval)
 							waterValid = true;

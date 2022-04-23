@@ -104,7 +104,7 @@ namespace CnV
 						continue;
 				}
 
-				blc.travelMinutes = (float) ( worldC.DistanceToCidD(blc.spot.cid) * Troops.cartTravel);
+				blc.travelMinutes = (float)city.player.CartTravelTime( worldC.DistanceToCidD(blc.spot.cid) ).TotalMinutes;
 				rv.Add(blc);
 			}
 

@@ -576,35 +576,35 @@ public static partial class CityUI
 
 
 
-	public static async void DiscordClaim(WorldC cid)
-	{
-		if(!DGame.isValidForIncomingNotes)
-		{
-			Log("Invalid");
-			return;
-		}
-		try
-		{
-			Note.Show($"Registering claim on {cid.ToStringCoords()}");
-			var client = Sim.genericClient;
+//	public static async void DiscordClaim(WorldC cid)
+//	{
+//		if(!DGame.isValidForIncomingNotes)
+//		{
+//			Log("Invalid");
+//			return;
+//		}
+//		try
+//		{
+//			Note.Show($"Registering claim on {cid.ToStringCoords()}");
+//			//var client = Sim.genericClient;
 
 
-			var message = new DGame.Message() { username = "Cord Claim", content = $"{cid.ToStringCoords()} claimed by {Player.myName}", avatar_url = "" };
+//			var message = new DGame.Message() { username = "Cord Claim", content = $"{cid.ToStringCoords()} claimed by {Player.myName}", avatar_url = "" };
 
-			//var content =  JsonContent.Create(message);
-			//, JSON.jsonSerializerOptions), Encoding.UTF8,
-			//	   "application/json");
+//			//var content =  JsonContent.Create(message);
+//			//, JSON.jsonSerializerOptions), Encoding.UTF8,
+//			//	   "application/json");
 
-			var result = await client.PostAsJsonAsync(DGame.discordHook, message);
-			result.EnsureSuccessStatusCode();
-		}
-		catch(Exception ex)
-		{
-			LogEx(ex);
-		}
+//			var result = await client.PostAsJsonAsync(DGame.discordHook, message);
+//			result.EnsureSuccessStatusCode();
+//		}
+//		catch(Exception ex)
+//		{
+//			LogEx(ex);
+//		}
 
 
-	}
+//	}
 
 }
 

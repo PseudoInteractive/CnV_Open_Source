@@ -263,7 +263,7 @@ internal partial class GameClient
 	//		device.Textures[4] = TileData.topLevelTileset.material.texture;
 	//		device.Textures[5] = TileData.topLevelTileset.material.texture1;
 			//				float accentAngle = animT * MathF.PI * 2;
-			var tick = (elapsed.TotalSeconds*0.125f);
+			var tick = (elapsed.TotalSeconds);
 			var animTLoop = (animationT*(1.0/3.0)).Wave();
 			int cx0 = 0, cy0 = 0, cx1 = 0, cy1 = 0;
 			var rectSpan = animTLoop.Lerp(rectSpanMin,rectSpanMax);
@@ -1000,7 +1000,8 @@ internal partial class GameClient
 										var c0 = real.CidToWorldV();
 										foreach(var a in cluster.attacks)
 										{
-											var t = (tick + a.CidToRandom()).Wave(1.5f / 512.0f + 0.25f,1.75f / 512f + 0.25f);
+										//	var t = (tick + a.CidToRandom()).Wave(1.5f / 512.0f + 0.25f,1.75f / 512f + 0.25f);
+											var t = (tick * a.CidToRandom().Lerp(1.0f ,1.25f));
 											var r = t.Ramp();
 											var c1 = a.CidToWorldV();
 											var spot = Spot.GetOrAdd(a);
@@ -1203,13 +1204,15 @@ internal partial class GameClient
 												//       c.A = (byte)((int)c.A * 3 / 8); // reduce alpha if not selected
 											}
 											// don't double draw
-											if(drawArmyHash.Add(i.GetHashCode()))
+											var hash = i.GetHashCode();
+											if(drawArmyHash.Add(hash))
 											{
-												var t = (tick +i.sourceCid.CidToRandom()).Wave(1.5f / 512.0f+0.25f,2.0f / 512f+ 0.25f) ;
+												var t = (tick  * ((hash&0xffff)/65536f).Lerp(0.375f,0.5f)  );
+											//	var t = (tick +i.sourceCid.CidToRandom()).Wave(1.5f / 512.0f+0.25f,2.0f / 512f+ 0.25f) ;
 												var r = t.Ramp();
 												var nSprite = i.troops.Count;
 
-												(int iType, float alpha) = GetTroopBlend(t,nSprite);
+												(int iType, float alpha) = GetTroopBlend((float)t,nSprite);
 												(int x, int y) _c0, _c1;
 												if(isIncoming ^ i.isReturn)
 												{
@@ -1399,7 +1402,8 @@ internal partial class GameClient
 											// don't double up
 											if(drawTradesHash.Add(i.GetHashCode()))
 											{
-												var t = (tick + i.sourceCid.CidToRandom()).Wave(1.5f / 512.0f+0.25f,2.0f / 512f+0.25f);
+												var t = (tick * i.sourceCid.CidToRandom().Lerp(1.0f,1.375f));
+												//var t = (tick + i.sourceCid.CidToRandom()).Wave(1.5f / 512.0f+0.25f,2.0f / 512f+0.25f);
 												var r = t.Ramp();
 												(int x, int y) _c0, _c1;
 												if(isIncoming ^ i.isReturning)
