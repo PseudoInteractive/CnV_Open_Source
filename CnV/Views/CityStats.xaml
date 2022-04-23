@@ -147,13 +147,13 @@
 						  MaxHeight="200"  >
 					<ListView.ItemTemplate>
 						<DataTemplate x:DataType="cnv:BuildItem">
-							<Grid  Padding="1" ContextRequested="{x:Bind ContextRequested}" >
+							<Grid  Padding="1" ContextRequested="{x:Bind ContextRequested}" ToolTipService.ToolTip="{x:Bind resTip,Mode=OneWay}" >
 								<Grid.ColumnDefinitions>
 									<ColumnDefinition Width="*"/>
 								</Grid.ColumnDefinitions>
 								<Image Source="{x:Bind image}" Width="32" Height="32" HorizontalAlignment="Left" />
 								<TextBlock Text="{x:Bind opText}" Margin="36,0,0,0"  	/>
-								<TextBlock Text="{x:Bind timeText,Mode=OneWay}" HorizontalAlignment="Right" Margin="0,0,4,0"	/>
+								<TextBlock Text="{x:Bind timeText,Mode=OneWay}" HorizontalAlignment="Right" Margin="0,0,4,0" Foreground="{x:Bind timeColor,Mode=OneWay}"	/>
 							</Grid>
 						</DataTemplate>
 

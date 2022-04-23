@@ -56,63 +56,16 @@ namespace CnV.Views
 			p.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
 			return visible;
 		}
-		//public static bool TryFindBuildingInLayout(City city,int bid,out int _xy)
-		//{
-		//	if( !isPlanner )
-		//	{
-		//		return TryFindBuildingInLayout
-		//		return city.
-		//	}
-		//	var bc = City.buildingsCache;
-		//	for (int x = span0; x <= span1; ++x)
-		//	{
-		//		for (int y = span0; y <= span1; ++y)
-		//		{
-		//			var id  = XYToId( (x, y) );
-		//			var bd1 = bc[id];
-		//			if(bd1 =bid )
-		//			{
-		//				_xy = id;
-		//				return true;
-		//			}	
-		//		}
-		//	}
-		//	_xy = 0;
-		//	return false;
-		//}
-		//static bool TryFindBuildingInLayout(City bid, out int _xy)
-		//{
-		//	if (!isPlanner)
-		//	{
-		//		return
-		//	}
-		//	var bc = City.buildingsCache;
-		//	for (int x = span0; x <= span1; ++x)
-		//	{
-		//		for (int y = span0; y <= span1; ++y)
-		//		{
-		//			var id = XYToId((x, y));
-		//			var bd1 = bc[id];
-		//			if (bd1 = bid)
-		//			{
-		//				_xy = id;
-		//				return true;
-		//			}
-		//		}
-		//	}
-		//	_xy = 0;
-		//	return false;
-		//}
-		//static bool TryRemoveBuildingInLayout(int bid)
-		//{
-		//	if(TryFindBuildingInLayout(bid, out var id))
-		//	{
-		//		CityBuild.remove
-		//		return true;
-		//	}
-		//	return false;
+		
+		private void SharestringToClipboardClick(object sender,RoutedEventArgs e)
+		{
 
-		//}
+			var s = City.GetBuild();
+			var t = City.LayoutToShareString( City.LayoutFromBuildings(s.GetLayoutBuildings(),true,s.buildings),s.isOnWater);
+			AppS.CopyTextToClipboard(t);
+			Note.Show(t);
+		}
+
 
 		static int GetScore(City city, Building[]cityB ,(int x,int y) xy, int bid, int sorcTowerCount, int academyCount )
 		{
@@ -200,180 +153,67 @@ namespace CnV.Views
 			
 			var city = City.GetBuild();
 			
-			var bds = city.GetLayoutBuildings();
-			var tsMultipler = 1;
-			var stTownHall = BuildingDef.FromId(bidTownHall).St[10];
-			int carts = 0,ships=0,ts=0, cs=100,rsInf = 0, rsBlessed=0,rsMagic=0,rsArt=0,rsNavy=0,rsCav=0, stWood = stTownHall, stIron = stTownHall, stStone = stTownHall, stFood= stTownHall;
-			for (int x = span0; x <= span1; ++x)
-			{
-				for (int y = span0; y <= span1; ++y)
-				{
-					var cc = new BuildC(x, y);
-					var bd = bds[cc];
-					var bid = bd.bid;
-					var bdef = BuildingDef.FromId(bid);
-					switch (bid)
-					{
-						case bidCastle:
-							tsMultipler = 4;
-							break;
-						case bidTrainingGround:
-							rsInf += AddMilBuilding(bdef, bd, bds, x, y);
-							break;
-						case bidAcademy:
-							rsBlessed += AddMilBuilding(bdef, bd, bds, x, y);
-							break;
-						case bidStable:
-							rsCav += AddMilBuilding(bdef, bd, bds, x, y);
-							break;
-						case bidSorcTower:
-							rsMagic += AddMilBuilding(bdef, bd, bds, x, y);
-							break;
-						case bidShipyard:
-							rsNavy += AddMilBuilding(bdef, bd, bds, x, y);
-							break;
-						case bidBlacksmith:
-							rsArt += AddMilBuilding(bdef, bd, bds, x, y);
-							break;
-						case bidMarketplace:
-							carts += bdef.Trn[bd.bl];
-							 break;
-						case bidPort:
-							ships += bdef.Trn[bd.bl];
-							break;
-						case bidCottage:
-							cs += bdef.Cs[bd.bl];
-							break;
-						case bidBarracks:
-							ts += bdef.Tc[bd.bl];
-							break;
-						case bidStorehouse: {
-								var str = bdef.St[bd.bl];
-								stWood += str;
-								stStone += str;
-								stFood += str;
-								stIron += str;
-								for (int dx = -1; dx <= 1; ++dx)
-								{
-									for (int dy = -1; dy <= 1; ++dy)
-									{
-										var cc1 = (x + dx, y + dy);
-										if (!IsValidCityCoord(cc1))
-											continue;
+			var bds = city.GetLayoutBuildingsWithRes();
+			var s = City.StaticUpdateBuildingStats(city,bds);
 
-										var bd1 = bds[XYToId(cc1)];
-										switch (bd1.bid)
-										{
-											case bidSmelter:
-												stIron += bd1.def.St[bd1.bl] * str / 100;
-												break;
-											case bidSawmill:
-												stWood += bd1.def.St[bd1.bl] * str / 100;
-												break;
-											case bidStonemason:
-												stStone += bd1.def.St[bd1.bl] * str / 100;
-												break;
-											case bidGrainMill:
-												stFood += bd1.def.St[bd1.bl] * str / 100;
-												break;
-										}
-									}
-								}
 
-							}
-							break;
-						default:
-							break;
-					}
-				}
-			}
-
-			instance.ships.Text = $"{ships:N0}";
-			instance.carts.Text = $"{carts:N0}";
+			instance.ships.Text = $"{s.ships:N0}";
+			instance.carts.Text = $"{s.carts:N0}";
 			
-			instance.maxTS.Text = $"{ts * tsMultipler:N0}";
+			instance.maxTS.Text = $"{s.maxTs:N0}";
 
-			instance.stWood.Text = $"{stWood:N0}";
-			instance.stStone.Text = $"{stStone:N0}";
-			instance.stIron.Text = $"{stIron:N0}";
-			instance.stFood.Text = $"{stFood:N0}";
-			instance.cs.Text = $"{cs:N0}%";
+			instance.storage.Text = s.storage.Format("\n");
+			instance.production.Text = s.production.Format("\n");
+			instance.cs.Text = $"{s.cs:N0}%";
 
-			if (SetParentVisible(rsInf != 0, instance.rsInf) )
+			if (SetParentVisible(s.rsInf != 0, instance.rsInf) )
 			{
-				rsInf += 100;
-				var gain = 100.0 / rsInf.Max(1);
-				instance.rsInf.Text = $"{rsInf:N0}%";
+				var gain = 100.0 /s. rsInf.Max(1);
+				instance.rsInf.Text = $"{s.rsInf:N0}%";
 				instance.rtVanq.Text = AUtil.FormatDurationFromSeconds(TroopInfo.all[ttVanquisher].ps * gain);
 				instance.rtRanger.Text = AUtil.FormatDurationFromSeconds(TroopInfo.all[ttRanger].ps * gain);
 				instance.rtTriari.Text = AUtil.FormatDurationFromSeconds(TroopInfo.all[ttTriari].ps * gain);
 			}
-			if (SetParentVisible(rsMagic != 0, instance.rsMagic))
+			if (SetParentVisible(s.rsMagic != 0, instance.rsMagic))
 			{
-				rsMagic += 100;
-				var gain = 100.0 / rsMagic.Max(1);
-				instance.rsMagic.Text = $"{rsMagic:N0}%";
+				var gain = 100.0 / s.rsMagic.Max(1);
+				instance.rsMagic.Text = $"{s.rsMagic:N0}%";
 				instance.rtSorc.Text = AUtil.FormatDurationFromSeconds(TroopInfo.all[ttSorcerer].ps * gain);
 				instance.rtDruid.Text = AUtil.FormatDurationFromSeconds(TroopInfo.all[ttDruid].ps * gain);
 			}
-			if (SetParentVisible(rsCav != 0, instance.rsCav))
+			if (SetParentVisible(s.rsCav != 0, instance.rsCav))
 			{
-					rsCav += 100;
-				var gain = 100.0 / rsCav.Max(1);
-				instance.rsCav.Text = $"{rsCav:N0}%";
+				var gain = 100.0 / s.rsCav.Max(1);
+				instance.rsCav.Text = $"{s.rsCav:N0}%";
 				instance.rtScout.Text = AUtil.FormatDurationFromSeconds(TroopInfo.all[ttScout].ps * gain);
 				instance.rtArb.Text = AUtil.FormatDurationFromSeconds(TroopInfo.all[ttArbalist].ps * gain);
 				instance.rtHorse.Text = AUtil.FormatDurationFromSeconds(TroopInfo.all[ttHorseman].ps * gain);
 			}
-			if (SetParentVisible(rsArt != 0, instance.rsArt))
+			if (SetParentVisible(s.rsArt != 0, instance.rsArt))
 			{
-				rsArt += 100;
-				var gain = 100.0 / rsArt.Max(1);
-				instance.rsArt.Text = $"{rsArt:N0}%";
+				var gain = 100.0 / s.rsArt.Max(1);
+				instance.rsArt.Text = $"{s.rsArt:N0}%";
 				instance.rtRam.Text = AUtil.FormatDurationFromSeconds(TroopInfo.all[ttRam].ps * gain);
 				instance.rtBal.Text = AUtil.FormatDurationFromSeconds(TroopInfo.all[ttBallista].ps * gain);
 				instance.rtCat.Text = AUtil.FormatDurationFromSeconds(TroopInfo.all[ttScorpion].ps * gain);
 			}
-			if (SetParentVisible(rsNavy != 0, instance.rsNavy))
+			if (SetParentVisible(s.rsNavy != 0, instance.rsNavy))
 			{
-				rsNavy += 100;
-				var gain = 100.0 / rsNavy.Max(1);
-				instance.rsNavy.Text = $"{rsNavy:N0}%";
+				var gain = 100.0 / s.rsNavy.Max(1);
+				instance.rsNavy.Text = $"{s.rsNavy:N0}%";
 				instance.rtStinger.Text = AUtil.FormatDurationFromSeconds(TroopInfo.all[ttStinger].ps * gain);
 				instance.rtGalley.Text = AUtil.FormatDurationFromSeconds(TroopInfo.all[ttGalley].ps * gain);
 				instance.rtWarship.Text = AUtil.FormatDurationFromSeconds(TroopInfo.all[ttWarship].ps * gain);
 			}
-			if (SetParentVisible(rsBlessed != 0, instance.rsBlessed))
+			if (SetParentVisible(s.rsBlessed != 0, instance.rsBlessed))
 			{
-				rsBlessed += 100;
-				var gain = 100.0 / rsBlessed.Max(1);
-				instance.rsBlessed.Text = $"{rsBlessed:N0}%";
+				var gain = 100.0 / s.rsBlessed.Max(1);
+				instance.rsBlessed.Text = $"{s.rsBlessed:N0}%";
 				instance.rtPriestess.Text = AUtil.FormatDurationFromSeconds(TroopInfo.all[ttPriestess].ps * gain);
 				instance.rtPrae.Text = AUtil.FormatDurationFromSeconds(TroopInfo.all[ttPraetor].ps * gain);
 				instance.rtSen.Text = AUtil.FormatDurationFromSeconds(TroopInfo.all[ttSenator ].ps * gain);
 			}
-			static int AddMilBuilding(in BuildingDef bdef,in Building bd, Building[] bds, int x, int y)
-			{
-				var rv = bdef.Ts[bd.bl];
-				for (int dx = -1; dx <= 1; ++dx)
-				{
-					for (int dy = -1; dy <= 1; ++dy)
-					{
-						var cc1 = (x + dx, y + dy);
-						if (!IsValidCityCoord(cc1))
-							continue;
-						var bd1 = bds[XYToId(cc1)];
-						if (bd1.bid == bidBarracks)
-						{
-							
-							rv += bd1.def.Ts[bd1.bl];
-						}
-
-					}
-				}
-
-				return rv;
-			}
+			
 
 		//	City.buildingCache.Return(bds);
 			return Task.CompletedTask;
@@ -678,11 +518,14 @@ namespace CnV.Views
 			Rotate(City.GetBuild(),false, true);
 		}
 
-		private void UseBuildingsClick(object sender,RoutedEventArgs e)
+		private async void UseBuildingsClick(object sender,RoutedEventArgs e)
 		{
 			var s = City.GetBuild();
-			s.SetLayoutFromBuildings(s.postQueueBuildings,false);
+			s.layout =  await LayoutFromBuildings(s.postQueueBuildings);
+			s.BuildingsChanged();
 
 		}
+
+		
 	}
 }

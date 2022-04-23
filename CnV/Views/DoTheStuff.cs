@@ -117,7 +117,7 @@ public static class DoTheStuff
 			{
 				if(bc.cabins >= Settings.startCabinCount || bc.buildingCount >= bc.buildingLimit - 2)
 				{
-					Note.Show($"Building {city.buildStage.AsString()} - {city}");
+					Note.Show($"Building {city.buildStage.EnumName()} - {city}");
 					return true;
 				}
 			}

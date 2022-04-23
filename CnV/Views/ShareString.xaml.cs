@@ -404,10 +404,10 @@ namespace CnV.Views
 		{
 		}
 
-		private void UseBuildingsClick(object sender,RoutedEventArgs e)
+		private async void UseBuildingsClick(object sender,RoutedEventArgs e)
 		{
 			var s = City.GetBuild();
-			shareString.Text=City.LayoutToShareString(City.LayoutFromBuildings(s.postQueueBuildings,false),s.isOnWater);
+			shareString.Text=City.LayoutToShareString(await City.LayoutFromBuildings(s.postQueueBuildings),s.isOnWater);
 		}
 		public void SetCheckboxesFromTags(Tags tags)
 		{

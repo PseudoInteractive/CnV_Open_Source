@@ -16,6 +16,7 @@ using static CnV.View;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Microsoft.UI;
+using Humanizer;
 //using CommunityToolkit.WinUI.UI;
 //using CommunityToolkit.WinUI.UI.Controls;
 using static CnV.City;
@@ -27,6 +28,8 @@ using Windows.ApplicationModel.DataTransfer;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 using static CnV.CityStats;
+using EnumsNET;
+using static CnV.BuildQueueItem;
 
 namespace CnV
 {
@@ -199,7 +202,7 @@ namespace CnV
 				var city = instance.city;
 				var displayQueue = city.buildQueue;
 				lastSynchronizedQueue = displayQueue;
-				int lg = displayQueue.Length;
+				//int lg = displayQueue.Length;
 				var bq = instance.buildQueue;
 				//for(int i = bq.Count;--i>= 0;)
 				//{
@@ -210,7 +213,19 @@ namespace CnV
 				//	}
 				//}
 				var anyRemoved=SyncLists(displayQueue,bq,(rt,city)=>new BuildItem(rt,city),(a,b)=>a == b.op );
-
+				var lg = displayQueue.Length;
+				if(lg == bq.Count())
+				{
+					var status = city.GetBuildQueueStatuses();
+					for(int i = 0;i<lg;++i)
+					{
+						if(bq[i].status != status[i])
+						{
+							bq[i].status = status[i];
+							bq[i].OnPropertyChanged();
+						}
+					}
+				}
 				// keep first in view
 				//if(anyRemoved && bq.Any() )
 				//{
@@ -979,6 +994,22 @@ namespace CnV
 		public BitmapImage image { get; set; }
 		public string opText { get; set; }
 		public string timeText { get; set; }
+		public BuildQueueItem.Status status;
+		public Brush timeColor => AppS.Brush( status switch 
+		{ Status.building => Colors.White,
+			Status.valid => Colors.Green,
+			Status.invalid => Colors.Red,
+			_=> Colors.Gray
+		});
+
+		public string resTip => $"{ status.EnumTitle()}\n{
+			(op.op switch
+			{
+				Op.upgrade or Op.build => (-op.BuildOrUpgradeResourceBalance()).Format(),
+				Op.demo or Op.downgrade => op.DemoOrDowngradeResourceBalance().Format(),
+				_ => null
+			}) }";
+
 		public BuildQueueItem op;
 
 		internal City city;

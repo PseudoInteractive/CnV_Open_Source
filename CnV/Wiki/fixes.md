@@ -7,6 +7,9 @@
         - With a trackpad this lets you pan around using two fingers
     - Zoom: Zoom works best for normal mice
         - With trackpad + 2 finger swipe this will result in a zoom
-## 1.6.3 [4/3/2021]
+## 1.1.63 [4/3/2021]
+	- Fixed a number of functions in the raid tab
+	- Allow people to raid a dungeon directly by clicking on it
+## 1.1.94 [4/3/2021]
 	- Fixed a number of functions in the raid tab
 	- Allow people to raid a dungeon directly by clicking on it

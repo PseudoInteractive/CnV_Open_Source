@@ -24,12 +24,14 @@
 					<Button Content="Flip Vertical" ToolTipService.ToolTip="Flip buildings vertically, used to position corner buildings to where there are fewer resources" Style="{StaticResource ButtonMedium}" Click="FlipVClick" />
 					<Button Content="Rotate Center" ToolTipService.ToolTip="Rotates buildings in the center" Style="{StaticResource ButtonMedium}" Click="RotateCenterClick" />
 					<Button Content="Rotate Outer" ToolTipService.ToolTip="Rotates buildings outside of the center, do not use with water" Style="{StaticResource ButtonMedium}" Click="RotateOuterClick" />
+					<Button Content="To Clipboard" ToolTipService.ToolTip="Copies layout to clipboard" Style="{StaticResource ButtonMedium}" Click="SharestringToClipboardClick" />
 					<Button Content="Smart Rearrange" ToolTipService.ToolTip="Moves buildings whose positions don't matter to where existing corresponding buildings are located or to locations without res nodes" Style="{StaticResource ButtonMedium}" Click="SmartRearrange" />
 					<Button Content="Back To Build" ToolTipService.ToolTip="Return to normal building" Style="{StaticResource ButtonMedium}" Click="Done" />
 				</tk:WrapPanel>
 			</Border>
+			<TextBox x:Name="cs" Header="Construction Speed"  Style="{StaticResource RightAlignBox}"  />
 			<Border Style="{StaticResource BorderReveal}">
-				<tk:WrapPanel Orientation="Horizontal"
+				<tk:WrapPanel Orientation="Horizontal" HorizontalSpacing="8"
 						   Margin="4">
 					<TextBox x:Name="rsInf" Header="Recruit Inf"  Style="{StaticResource RightAlignBox}"  />
 					<TextBox x:Name="rtVanq" Header="Vanq" Style="{StaticResource RightAlignBox}"  />
@@ -38,7 +40,7 @@
 				</tk:WrapPanel>
 			</Border>
 			<Border Style="{StaticResource BorderReveal}">
-				<tk:WrapPanel Orientation="Horizontal"
+				<tk:WrapPanel Orientation="Horizontal" HorizontalSpacing="8"
 						   Margin="4">
 					<TextBox x:Name="rsMagic" Header="Recruit Magic"  Style="{StaticResource RightAlignBox}"  />
 					<TextBox x:Name="rtSorc" Header="Sorc"  Style="{StaticResource RightAlignBox}"  />
@@ -46,7 +48,7 @@
 				</tk:WrapPanel>
 			</Border>
 			<Border Style="{StaticResource BorderReveal}">
-				<tk:WrapPanel Orientation="Horizontal"
+				<tk:WrapPanel Orientation="Horizontal" HorizontalSpacing="8"
 						   Margin="4">
 					<TextBox x:Name="rsBlessed" Header="Recruit Blessed"  Style="{StaticResource RightAlignBox}"  />
 					<TextBox x:Name="rtPriestess" Header="Priestess"  Style="{StaticResource RightAlignBox}"  />
@@ -55,7 +57,7 @@
 				</tk:WrapPanel>
 			</Border>
 			<Border Style="{StaticResource BorderReveal}">
-				<tk:WrapPanel Orientation="Horizontal"
+				<tk:WrapPanel Orientation="Horizontal" HorizontalSpacing="8"
 						   Margin="4">
 					<TextBox x:Name="rsCav" Header="Recruit Cav"  Style="{StaticResource RightAlignBox}"  />
 					<TextBox x:Name="rtScout" Header="Scout"  Style="{StaticResource RightAlignBox}"  />
@@ -64,7 +66,7 @@
 				</tk:WrapPanel>
 			</Border>
 			<Border Style="{StaticResource BorderReveal}">
-				<tk:WrapPanel Orientation="Horizontal" Margin="4">
+				<tk:WrapPanel Orientation="Horizontal" Margin="4"  HorizontalSpacing="8">
 					<TextBox x:Name="rsArt" Header="Recruit Arti"  Style="{StaticResource RightAlignBox}"  />
 					<TextBox x:Name="rtRam" Header="Ram"  Style="{StaticResource RightAlignBox}"  />
 					<TextBox x:Name="rtBal" Header="Ballista"  Style="{StaticResource RightAlignBox}"  />
@@ -72,33 +74,24 @@
 				</tk:WrapPanel>
 			</Border>
 			<Border Style="{StaticResource BorderReveal}">
-				<tk:WrapPanel Orientation="Horizontal"   Margin="4">
+				<tk:WrapPanel Orientation="Horizontal"   Margin="4"  HorizontalSpacing="8">
 					<TextBox x:Name="rsNavy" Header="Recruit Navy"  Style="{StaticResource RightAlignBox}"  />
 					<TextBox x:Name="rtStinger" Header="Stinger"  Style="{StaticResource RightAlignBox}"  />
 					<TextBox x:Name="rtGalley" Header="Galley"  Style="{StaticResource RightAlignBox}"  />
 					<TextBox x:Name="rtWarship" Header="Warship"  Style="{StaticResource RightAlignBox}"  />
 				</tk:WrapPanel>
 			</Border>
+			<Border>
+			<TextBox x:Name="maxTS" Header="Troop Space"  Style="{StaticResource RightAlignBox}"  />
+			</Border>
 			<Border Style="{StaticResource BorderReveal}">
-				<tk:WrapPanel Orientation="Horizontal"  Margin="4">
+				<tk:WrapPanel Orientation="Horizontal"  Margin="4" HorizontalSpacing="8" >
 					<TextBox x:Name="carts" Header="Carts"  Style="{StaticResource RightAlignBox}"  />
 					<TextBox x:Name="ships" Header="Ships"  Style="{StaticResource RightAlignBox}"  />
 				</tk:WrapPanel>
 			</Border>
-			<Border Style="{StaticResource BorderReveal}">
-				<tk:WrapPanel Orientation="Horizontal"  Margin="4">
-					<TextBox x:Name="maxTS" Header="Troop Space"  Style="{StaticResource RightAlignBox}"  />
-					<TextBox x:Name="cs" Header="Construction Speed"  Style="{StaticResource RightAlignBox}"  />
-				</tk:WrapPanel>
-			</Border>
-			<Border Style="{StaticResource BorderReveal}">
-				<tk:WrapPanel Orientation="Horizontal"   Margin="4">
-					<TextBox x:Name="stWood" Header="Wood Storage"  Style="{StaticResource RightAlignBox}"  />
-					<TextBox x:Name="stStone" Header="Stone Storage"  Style="{StaticResource RightAlignBox}"  />
-					<TextBox x:Name="stIron" Header="Iron Storage"  Style="{StaticResource RightAlignBox}"  />
-					<TextBox x:Name="stFood" Header="Food Storage"  Style="{StaticResource RightAlignBox}"  />
-				</tk:WrapPanel>
-			</Border>
+			<TextBox x:Name="storage" Header="Storage"  Style="{StaticResource RightAlignBox}"  TextWrapping="Wrap" />
+			<TextBox x:Name="production" Header="Prouction"  Style="{StaticResource RightAlignBox}"  TextWrapping="Wrap" />
 		</StackPanel>
 
 	</Grid>
