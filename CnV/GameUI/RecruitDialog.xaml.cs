@@ -83,7 +83,7 @@ namespace CnV
 		internal void Recruit(object sender,RoutedEventArgs e)
 		{
 			var tt = this.tt;
-			var freeSpace = (int)(city.stats.maxTs - city.troopsOwnedTS());
+			var freeSpace = city.availableTsSpace;
 			if(freeSpace < tt.ts)
 			{
 				AppS.MessageBox("Not enough troop space");
@@ -122,7 +122,7 @@ namespace CnV
 			if(req.gold > 0)
 				m = m.Min(city.player.gold / req.gold);
 
-			var freeSpace = (int)(city.stats.maxTs - city.troopsOwnedTS());
+			var freeSpace = city.availableTsSpace;
 			m = m.Min(freeSpace / Troops.ttTs[type]);
 			count = (uint)m;
 			OnPropertyChanged();

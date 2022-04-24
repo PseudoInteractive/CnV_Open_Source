@@ -10,6 +10,10 @@
 ## 1.1.63 [4/3/2021]
 	- Fixed a number of functions in the raid tab
 	- Allow people to raid a dungeon directly by clicking on it
-## 1.1.94 [4/3/2021]
-	- Fixed a number of functions in the raid tab
-	- Allow people to raid a dungeon directly by clicking on it
+## 1.1.96 [4/3/2021]
+	- From the planner tab you can export sharestrings complete with resources and cabins
+	- When selecting "Use Buildings" for Layout, there is an option to include cabins
+	- Planner tab shows resource production that would result from the layout with all level 10 buildings
+	- Status indicators in build queue telling you which items things are blocked and why
+	- Build Queue tooltips show resources required
+	

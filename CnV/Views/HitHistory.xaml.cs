@@ -32,7 +32,7 @@ namespace CnV.Views
 				else
 				{
 					var cid = sel.cid;
-					historyGrid.ItemsSource = BattleReport.all.Where(s => s.targetCid == cid).ToArray();
+					historyGrid.ItemsSource = BattleReport.all.Where(s => s.targetCid == cid || s.sourceCid==cid ).ToArray();
 				}
 				if(IncomingTab.IsVisible())
 			{

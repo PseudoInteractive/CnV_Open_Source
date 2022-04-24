@@ -63,8 +63,9 @@
 
 			<Expander IsExpanded="True" Expanding="Expander_Expanding" Visibility="{x:Bind incomingVisible,Mode=OneWay}"  x:Name="expIncoming" HorizontalAlignment="Stretch" Background="{StaticResource ExpanderBrushContent}"   >
 				<Expander.Header   >
-					
+					<Border Background="Maroon" BorderThickness="0" Padding="3" CornerRadius="{StaticResource baseCR}" >
 						<TextBlock Text ="Incoming" Margin="0"   Style="{StaticResource TextBlockMedium}"  HorizontalAlignment="Right"  />
+					</Border>
 				</Expander.Header>
 				<ListView 
 						  SelectionMode="Single"  
