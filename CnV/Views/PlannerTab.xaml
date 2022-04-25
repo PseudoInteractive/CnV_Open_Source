@@ -42,6 +42,13 @@
 			<Border Style="{StaticResource BorderReveal}">
 				<tk:WrapPanel Orientation="Horizontal" HorizontalSpacing="8"
 						   Margin="4">
+					<TextBox x:Name="rsGuard" Header="Recruit Guards"  Style="{StaticResource RightAlignBox}"  />
+					<TextBox x:Name="rtGuard" Header="Guard" Style="{StaticResource RightAlignBox}"  />
+				</tk:WrapPanel>
+			</Border>
+			<Border Style="{StaticResource BorderReveal}">
+				<tk:WrapPanel Orientation="Horizontal" HorizontalSpacing="8"
+						   Margin="4">
 					<TextBox x:Name="rsMagic" Header="Recruit Magic"  Style="{StaticResource RightAlignBox}"  />
 					<TextBox x:Name="rtSorc" Header="Sorc"  Style="{StaticResource RightAlignBox}"  />
 					<TextBox x:Name="rtDruid" Header="Druid"  Style="{StaticResource RightAlignBox}"  />

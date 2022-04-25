@@ -20,6 +20,7 @@ namespace CnV.Views
 {
 	using Game;
 	using Data;
+	using Microsoft.UI.Xaml.Controls;
 
 	public sealed partial class PlannerTab : UserTab
 	{
@@ -49,8 +50,11 @@ namespace CnV.Views
 
 			this.InitializeComponent();
 		}
-		static bool SetParentVisible( bool visible, FrameworkElement e)
+		static bool SetParentVisible( int rs , TextBox e)
 		{
+			var visible = rs!=0;
+			if(visible)
+				e.Text = $"{rs:N0}%";
 			var p = e.Parent as FrameworkElement;
 			p = p.Parent as FrameworkElement; // two levels up
 			p.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
@@ -166,52 +170,57 @@ namespace CnV.Views
 			instance.production.Text = s.production.Format("\n");
 			instance.cs.Text = $"{s.cs:N0}%";
 
-			if (SetParentVisible(s.rsInf != 0, instance.rsInf) )
+			if (SetParentVisible(s.rsGuard, instance.rsGuard) )
 			{
-				var gain = 100.0 /s. rsInf.Max(1);
-				instance.rsInf.Text = $"{s.rsInf:N0}%";
-				instance.rtVanq.Text = AUtil.FormatDurationFromSeconds(TroopInfo.all[ttVanquisher].ps * gain);
-				instance.rtRanger.Text = AUtil.FormatDurationFromSeconds(TroopInfo.all[ttRanger].ps * gain);
-				instance.rtTriari.Text = AUtil.FormatDurationFromSeconds(TroopInfo.all[ttTriari].ps * gain);
+				var gain = 100.0 /s. rsGuard.Max(1);
+				SetRecruitBox(instance.rtGuard,ttGuard,gain);
 			}
-			if (SetParentVisible(s.rsMagic != 0, instance.rsMagic))
+
+			if (SetParentVisible(s.rsInf, instance.rsInf) ) {
+				var gain = 100.0 /s.rsInf.Max(1);
+				//	instance.rsInf.Text = $"{s.rsInf:N0}%";
+				SetRecruitBox(instance.rtVanq,ttVanq, gain);
+				SetRecruitBox(instance.rtRanger,ttRanger, gain);
+				SetRecruitBox(instance.rtTriari,ttTriari, gain);
+			}
+			if (SetParentVisible(s.rsMagic, instance.rsMagic))
 			{
 				var gain = 100.0 / s.rsMagic.Max(1);
-				instance.rsMagic.Text = $"{s.rsMagic:N0}%";
-				instance.rtSorc.Text = AUtil.FormatDurationFromSeconds(TroopInfo.all[ttSorcerer].ps * gain);
-				instance.rtDruid.Text = AUtil.FormatDurationFromSeconds(TroopInfo.all[ttDruid].ps * gain);
+			//	instance.rsMagic.Text = $"{s.rsMagic:N0}%";
+				SetRecruitBox(instance.rtSorc,ttSorcerer, gain);
+				SetRecruitBox(instance.rtDruid,ttDruid, gain);
 			}
-			if (SetParentVisible(s.rsCav != 0, instance.rsCav))
+			if (SetParentVisible(s.rsCav , instance.rsCav))
 			{
 				var gain = 100.0 / s.rsCav.Max(1);
-				instance.rsCav.Text = $"{s.rsCav:N0}%";
-				instance.rtScout.Text = AUtil.FormatDurationFromSeconds(TroopInfo.all[ttScout].ps * gain);
-				instance.rtArb.Text = AUtil.FormatDurationFromSeconds(TroopInfo.all[ttArbalist].ps * gain);
-				instance.rtHorse.Text = AUtil.FormatDurationFromSeconds(TroopInfo.all[ttHorseman].ps * gain);
+			//	instance.rsCav.Text = $"{s.rsCav:N0}%";
+				SetRecruitBox(instance.rtScout,ttScout,gain);
+				SetRecruitBox(instance.rtArb,ttArbalist,gain);
+				SetRecruitBox(instance.rtHorse,ttHorseman, gain);
 			}
-			if (SetParentVisible(s.rsArt != 0, instance.rsArt))
+			if (SetParentVisible(s.rsArt , instance.rsArt))
 			{
 				var gain = 100.0 / s.rsArt.Max(1);
-				instance.rsArt.Text = $"{s.rsArt:N0}%";
-				instance.rtRam.Text = AUtil.FormatDurationFromSeconds(TroopInfo.all[ttRam].ps * gain);
-				instance.rtBal.Text = AUtil.FormatDurationFromSeconds(TroopInfo.all[ttBallista].ps * gain);
-				instance.rtCat.Text = AUtil.FormatDurationFromSeconds(TroopInfo.all[ttScorpion].ps * gain);
+		//		instance.rsArt.Text = $"{s.rsArt:N0}%";
+				SetRecruitBox(instance.rtRam,ttRam,gain);
+				SetRecruitBox(instance.rtBal,ttBallista,gain);
+				SetRecruitBox(instance.rtCat,ttScorpion,gain);
 			}
-			if (SetParentVisible(s.rsNavy != 0, instance.rsNavy))
+			if (SetParentVisible(s.rsNavy, instance.rsNavy))
 			{
 				var gain = 100.0 / s.rsNavy.Max(1);
-				instance.rsNavy.Text = $"{s.rsNavy:N0}%";
-				instance.rtStinger.Text = AUtil.FormatDurationFromSeconds(TroopInfo.all[ttStinger].ps * gain);
-				instance.rtGalley.Text = AUtil.FormatDurationFromSeconds(TroopInfo.all[ttGalley].ps * gain);
-				instance.rtWarship.Text = AUtil.FormatDurationFromSeconds(TroopInfo.all[ttWarship].ps * gain);
+	//			instance.rsNavy.Text = $"{s.rsNavy:N0}%";
+				SetRecruitBox(instance.rtStinger,ttStinger,gain);
+				SetRecruitBox(instance.rtGalley,ttGalley,gain);
+				SetRecruitBox(instance.rtWarship,ttWarship,gain);
 			}
-			if (SetParentVisible(s.rsBlessed != 0, instance.rsBlessed))
+			if (SetParentVisible(s.rsBlessed, instance.rsBlessed))
 			{
 				var gain = 100.0 / s.rsBlessed.Max(1);
-				instance.rsBlessed.Text = $"{s.rsBlessed:N0}%";
-				instance.rtPriestess.Text = AUtil.FormatDurationFromSeconds(TroopInfo.all[ttPriestess].ps * gain);
-				instance.rtPrae.Text = AUtil.FormatDurationFromSeconds(TroopInfo.all[ttPraetor].ps * gain);
-				instance.rtSen.Text = AUtil.FormatDurationFromSeconds(TroopInfo.all[ttSenator ].ps * gain);
+//				instance.rsBlessed.Text = $"{s.rsBlessed:N0}%";
+				SetRecruitBox(instance.rtPriestess,ttPriestess,gain);
+				SetRecruitBox(instance.rtPrae,ttPraetor,gain);
+				SetRecruitBox(instance.rtSen,ttSenator ,gain);
 			}
 			
 
@@ -219,7 +228,12 @@ namespace CnV.Views
 			return Task.CompletedTask;
 
 		}
-	
+
+		private static void SetRecruitBox(TextBox rtb,TType tt,double gain) {
+			rtb.Text = AUtil.FormatDurationFromSeconds(TroopInfo.all[tt].ps * gain);
+			rtb.Header = TTGlyph(tt);
+		}
+
 		public static bool IsValidCityCoord((int x, int y) cc)
 		{
 			return (cc.x >= span0) && (cc.y>=span0) && (cc.x <= span1) && (cc.y <= span1);

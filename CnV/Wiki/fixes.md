@@ -27,3 +27,5 @@
 	- When you want to exit Historic mode and resume play, press the "Play button" (in the time panel)
 	- Moving forward in time is fast, but moving back in time is slow.
 		- To find events in the past, go back extra far and then pan forward in time until you find what you want.
+## 1.1.98 [4/24/2021]
+	- City Guards have more support (you can recruit them)

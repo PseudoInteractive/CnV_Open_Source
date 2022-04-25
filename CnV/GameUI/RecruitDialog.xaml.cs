@@ -77,6 +77,7 @@ namespace CnV
 		internal TType type;
 		internal uint count;
 		internal TroopTypeCount tt => new(type,count);
+		internal TroopTypeCount tt1 => new(type,count.Max(1));
 		internal ImageSource image => Troops.Image(type);
 		internal TroopInfo info => TroopInfo.all[type];
 		internal bool isEnabled => city.CanRecruit(type);
@@ -128,7 +129,7 @@ namespace CnV
 			OnPropertyChanged();
 		}
 
-		public string recruitTime => city.CanRecruit(type) ? tt.RecruitTimeRequired(city).Format() : string.Empty;
+		public string recruitTime => city.CanRecruit(type) ? tt1.RecruitTimeRequired(city).Format() : string.Empty;
 		public event PropertyChangedEventHandler? PropertyChanged;
 		public void OnPropertyChanged(string? member = null)
 		{
