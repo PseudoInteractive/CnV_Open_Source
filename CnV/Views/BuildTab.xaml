@@ -173,9 +173,9 @@
 										   ColumnWidthMode="Auto"
 											HeaderText="twr" />
 				<sf:GridCheckBoxColumn MappingName="ministersOn"
-										  winui:ToolTipService.ToolTip="Ministers On. Might need to visit city to update"
+										  winui:ToolTipService.ToolTip="Whether Ministers are on or temporarily disabled"
 										   ColumnWidthMode="Auto"
-											HeaderText="mnO" />
+											HeaderText="mOn" />
 			</sf:SfDataGrid.Columns>
 			
 		</sf:SfDataGrid>

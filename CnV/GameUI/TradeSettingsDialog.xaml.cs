@@ -65,6 +65,7 @@ public sealed partial class TradeSettingsDialog:DialogG, INotifyPropertyChanged
 		stoneSend.Value = mo.resSend[1];
 		ironSend.Value = mo.resSend[2];
 		foodSend.Value = mo.resSend[3];
+		protectResources.IsChecked = mo.protectResources;
 		OnPropertyChanged();
 
 
@@ -94,6 +95,7 @@ public sealed partial class TradeSettingsDialog:DialogG, INotifyPropertyChanged
 		var city = this.city;
 		var priorHash = city.GetMOForRead().tradeHashCode;
 		var mo = new CityMO();
+		mo.protectResources = protectResources.IsChecked.GetValueOrDefault();
 		mo.sendCities=new(woodDest.cid,stoneDest.cid,ironDest.cid,foodDest.cid);
 		mo.requestCities=new(woodSource.cid,stoneSource.cid,ironSource.cid,foodSource.cid);
 		mo.resSend = new(
@@ -111,15 +113,7 @@ public sealed partial class TradeSettingsDialog:DialogG, INotifyPropertyChanged
 		Note.Show($"Trade settings changed: {newHash != priorHash}");
 		if(newHash != priorHash)
 		{
-			(new CnVEventCityTradeSettings(city.c)
-			{
-				resRequest = mo.resRequest,
-				requestCities = mo.requestCities,
-				resSend = mo.resSend,
-				sendCities = mo.sendCities,
-				cartReserve = mo.cartReserve,
-				shipReserve=mo.shipReserve
-			}).EnqueueAsap();
+			new CnVEventCityTradeSettings(city.c,mo).EnqueueAsap();
 		}
 
 		Done();

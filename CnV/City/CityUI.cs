@@ -223,7 +223,7 @@ public static partial class CityUI
 				aWar.AddItem("Outgoing",me.ShowOutgoing);
 			//	if (Raid.test)
 			aWar.AddItem("Send Defence",            (_, _) => City.GetBuild().SendDefence(WorldC.FromCid(cid) ));
-			aWar.AddItem("Recruit Sen",             (_, _) => Recruit.Send(cid, ttSenator, 1, true));
+		//	aWar.AddItem("Recruit Sen",             (_, _) => Recruit.Send(cid, ttSenator, 1, true));
 			aWar.AddItem("Show Reinforcements",     (_, _) => ReinforcementsTab.ShowReinforcements(cid, null));
 			aWar.AddItem("Show All Reinforcements", (_, _) => ReinforcementsTab.ShowReinforcements(0,   null));
 			aExport.AddItem("Defense Sheet", me.ExportToDefenseSheet);
@@ -232,8 +232,8 @@ public static partial class CityUI
 			if (me.canVisit)
 			{
 				AApp.AddItem(flyout, "Do the stuff",  (_, _) => me.DoTheStuff());
-				AApp.AddItem(flyout, "Food Warnings", (_, _) => CitySettings.SetFoodWarnings(cid));
-			//	flyout.AddItem("Ministers", me.ministersOn, (me as City).SetMinistersOn);
+			//	AApp.AddItem(flyout, "Food Warnings", (_, _) => CitySettings.SetFoodWarnings(cid));
+				flyout.AddItem("Ministers", me.ministersOn, me.SetMinistersOn);
 			}
 		}
 		else if (me.isDungeonOrBoss)
@@ -736,6 +736,10 @@ public partial class City
 				return;
 			case nameof(City.AutoTowers):
 				AutoTowers = !autoTowers;
+				wantSelect = false;
+				return;
+			case nameof(City.ministersOn):
+				SetMinistersOn(!ministersOn);
 				wantSelect = false;
 				return;
 			case nameof(City.raidCarry):
