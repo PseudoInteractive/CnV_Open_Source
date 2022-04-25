@@ -68,6 +68,7 @@ public partial class UserTab:UserControl, IANotifyPropertyChanged
 				new AllianceTab(),
 				new NearDefenseTab(),
 				new NearRes(),
+				new ChartDialog(),
 				new NPCHistory(),
 		};
 

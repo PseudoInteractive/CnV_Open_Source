@@ -18,7 +18,6 @@ namespace CnV.Views
 
 	using Windows.Storage;
 	using Windows.Storage.Pickers;
-	using Windows.Storage.Search;
 	// using PInvoke
 
 	//	using System.Diagnostics;
@@ -38,12 +37,10 @@ namespace CnV.Views
 		public const int canvasZDefault = 11;
 		public const int canvasZBack = 0;
 		public static CnVSwapChainPanel canvas => GameClient.canvas;
-		public int layout
-		{
+		public int layout {
 			get => Settings.layout;
 			set {
-				if(Settings.layout != value)
-				{
+				if(Settings.layout != value) {
 					Settings.layout = value;
 					updateHtmlOffsets.SystemUpdated();
 				}
@@ -58,9 +55,8 @@ namespace CnV.Views
 		}
 		const float minTimeScale = 0.125f;
 		const float maxTimeScale = 1024.0f;
-		
-		static float RoundNicely(float d)
-		{
+
+		static float RoundNicely(float d) {
 			var absD = d.Abs();
 
 			if(absD > 100)
@@ -78,8 +74,7 @@ namespace CnV.Views
 
 		static internal Grid rootGrid;
 
-		internal float timeScale
-		{
+		internal float timeScale {
 			get {
 				return IServerTime.timeScale;
 			}
@@ -97,17 +92,14 @@ namespace CnV.Views
 
 			public object Convert(object value,Type targetType,object parameter,string language) => SliderToTimeScale((double)value).ToString();
 
-			public object ConvertBack(object value,Type targetType,object parameter,string language)
-			{
+			public object ConvertBack(object value,Type targetType,object parameter,string language) {
 				{ LogEx(new NotImplementedException("Convert")); return null; }
 			}
 		}
 		TimeScaleToolTipConverter timeScaleToolTipConverter = new TimeScaleToolTipConverter();
-		private void TimeScalueSliderValueChanged(object sender,RangeBaseValueChangedEventArgs e)
-		{
-			if(!e.OldValue.AlmostEquals(e.NewValue,1.0f/2.0f))
-			{
-			
+		private void TimeScalueSliderValueChanged(object sender,RangeBaseValueChangedEventArgs e) {
+			if(!e.OldValue.AlmostEquals(e.NewValue,1.0f/2.0f)) {
+
 
 				var v = SliderToTimeScale(e.NewValue);
 				if(Sim.isInitialized)
@@ -116,29 +108,34 @@ namespace CnV.Views
 			}
 
 		}
-		internal void TimeScaleChangeNotify()
-		{
-			Debounce.Q(50,runOnUIThread: true,action: () =>
-			  {
+		internal void TimeScaleChangeNotify() {
+			Debounce.Q(50,runOnUIThread: true,action: () => {
 
-			
-				
-				  var v = IServerTime.timeScale;
-				  //if(!timeScaleNumberBox.Value.IsEqualTo(v,1.0f/8.0f))
-				  //{
-					 // timeScaleNumberBox.Value = v;
-				  //}
-				  var sliderValue = TimeScaleToSlider(v);
-				  if(!timeScaleSlider.Value.AlmostEquals(sliderValue,0.25f))
-				  {
-					  timeScaleSlider.Value = sliderValue;
-				  }
-				  var symbol = v == 0 ? Symbol.Play : Symbol.Stop;
-				  var icon = timeTogglePlayIcon;
-				  if(icon.Symbol != symbol)
-					  icon.Symbol = symbol;
-				  OnPropertyChanged();
-			  });
+
+
+				var v = IServerTime.timeScale;
+				//if(!timeScaleNumberBox.Value.IsEqualTo(v,1.0f/8.0f))
+				//{
+				// timeScaleNumberBox.Value = v;
+				//}
+				var sliderValue = TimeScaleToSlider(v);
+				if(!timeScaleSlider.Value.AlmostEquals(sliderValue,0.25f)) {
+					timeScaleSlider.Value = sliderValue;
+				}
+				//var symbol = v == 0 ? Symbol.Play : Symbol.Stop;
+				//var icon = timeTogglePlayIcon;
+				//if(icon.Symbol != symbol)
+				//	icon.Symbol = symbol;
+				OnPropertyChanged();
+			});
+		}
+		internal static void HistoricModeUIUpdate() {
+			AppS.QueueOnUIThread(() => {
+				instance.timePlay.IsEnabled = Sim.isHistoric;
+				instance.timeForward.IsEnabled = Sim.isHistoric;
+				instance.timeScaleSlider.IsEnabled = Sim.isHistoric;
+				instance.timeScaleNumberBox.IsEnabled = Sim.isHistoric;
+			});
 		}
 		//internal void TimeScaleValueChanged(NumberBox sender,NumberBoxValueChangedEventArgs e)
 		//{
@@ -149,7 +146,7 @@ namespace CnV.Views
 		//	}
 		//	if(!e.OldValue.IsEqualTo(e.NewValue,1.0f/4.0f))
 		//	{
-			
+
 		//		if(Sim.isInitialized)
 		//			IServerTime.SetTimeScale((float)e.NewValue);
 		//	}
@@ -184,8 +181,7 @@ namespace CnV.Views
 		public static float webZoomLast; // for lazy setting of HTML zoom
 		public static TextBlock gridTip;
 
-		int GridRowIndex(RowDefinition row,int offset)
-		{
+		int GridRowIndex(RowDefinition row,int offset) {
 			return grid.RowDefinitions.IndexOf(row)+offset;
 		}
 
@@ -197,69 +193,57 @@ namespace CnV.Views
 
 		//	protected override void OnKeyDown(KeyRoutedEventArgs e) => Trace($"Key: {e.Key} {e.OriginalKey} {e.OriginalSource.ToString()}");
 		//		protected override void OnPreviewKeyDown(KeyRoutedEventArgs e) => Trace($"KeyP: {e.Key} {e.OriginalKey} {e.OriginalSource.ToString()}");
-		public static void WorkStart(string desc)
-		{
-			AppS.DispatchOnUIThreadLow(() =>
-										{
-											if(!workQueue.Any())
-											{
-												(instance.progressContainer).Visibility = Visibility.Visible;
-												(instance.workContainer).Visibility = Visibility.Visible;
-												instance.progress.IsActive = true;
-												// FIX
-												workStarted              = DateTime.UtcNow;
-												instance.work.Text       = desc;
-											}
+		public static void WorkStart(string desc) {
+			AppS.DispatchOnUIThreadLow(() => {
+				if(!workQueue.Any()) {
+					(instance.progressContainer).Visibility = Visibility.Visible;
+					(instance.workContainer).Visibility = Visibility.Visible;
+					instance.progress.IsActive = true;
+					// FIX
+					workStarted              = DateTime.UtcNow;
+					instance.work.Text       = desc;
+				}
 
-											workQueue.Add(desc);
-										});
+				workQueue.Add(desc);
+			});
 		}
 
 		// Todo:  Queue updates with tasks
-		public static void WorkUpdate(string desc)
-		{
+		public static void WorkUpdate(string desc) {
 
 			AppS.DispatchOnUIThreadLow(() => { instance.work.Text = desc; });
 		}
 
-		public static void WorkEnd(string desc=null)
-		{
-			AppS.DispatchOnUIThreadLow(() =>
-										{
-											if(!workQueue.Any())
-											{
-												Log("End end called too often");
-											}
-											else
-											{
-												if(DateTime.UtcNow - workStarted > TimeSpan.FromMinutes(5))
-												{
-													Log("rogue work item");
-													workQueue.Clear();
-												}
-												else
-												{
-													if(desc  is null)
-														workQueue.RemoveAt(0);
-													else
-														workQueue.Remove(desc);
-												}
-											}
+		public static void WorkEnd(string desc = null) {
+			AppS.DispatchOnUIThreadLow(() => {
+				if(!workQueue.Any()) {
+					Log("End end called too often");
+				}
+				else {
+					if(DateTime.UtcNow - workStarted > TimeSpan.FromMinutes(5)) {
+						Log("rogue work item");
+						workQueue.Clear();
+					}
+					else {
+						if(desc is null)
+							workQueue.RemoveAt(0);
+						else
+							workQueue.Remove(desc);
+					}
+				}
 
-											if(!workQueue.Any())
-											{
-												instance.progress.IsActive = false;
+				if(!workQueue.Any()) {
+					instance.progress.IsActive = false;
 
-												(instance.progressContainer).Visibility = Visibility.Collapsed;
-												(instance.workContainer).Visibility = Visibility.Collapsed;
+					(instance.progressContainer).Visibility = Visibility.Collapsed;
+					(instance.workContainer).Visibility = Visibility.Collapsed;
 
-											}
-											else
-											{
-												workStarted        = DateTime.UtcNow;
-												instance.work.Text = workQueue.First();
-											}
-										});
+				}
+				else {
+					workStarted        = DateTime.UtcNow;
+					instance.work.Text = workQueue.First();
+				}
+			});
 		}
 
 
@@ -273,8 +257,7 @@ namespace CnV.Views
 
 
 
-		public ShellPage()
-		{
+		public ShellPage() {
 			//			instance = this;
 			InitializeComponent();
 			//		RequestedTheme = ElementTheme.Dark; // default theme
@@ -296,10 +279,8 @@ namespace CnV.Views
 		public static bool canvasVisible = true;
 		//public static bool isFocused => isHitTestVisible && AppS.isForeground;
 
-		private async void OnLoaded(object sender,RoutedEventArgs e)
-		{
-			try
-			{
+		private async void OnLoaded(object sender,RoutedEventArgs e) {
+			try {
 				gameUIFrame = _gameUIFrame;
 				rootGrid = _rootGrid;
 				instance = this;
@@ -367,7 +348,7 @@ namespace CnV.Views
 				Canvas.SetZIndex(CityBuild.instance,13);
 				var c = CreateCanvasControl();
 
-//				var cachePlayerTask = Task.Run(PlayerGameEntity.UpdateCache);
+				//				var cachePlayerTask = Task.Run(PlayerGameEntity.UpdateCache);
 				// canvas.ContextFlyout = CityFlyout;
 
 				//	grid.Children.Add(c.canvas);
@@ -479,30 +460,25 @@ namespace CnV.Views
 				AppS.SetState(AppS.State.setup);
 
 				Log("Game Create!");
-				
 
-				try
-				{
+
+				try {
 					GameClient.Create(_canvas);
 				}
-				catch(Exception ex)
-				{
+				catch(Exception ex) {
 					LogEx(ex);
 					await AppS.Fatal(ex.ToString());
 				}
 
 
 				// Links will not work until after the game is set up
-				try
-				{
-					if(SystemInformation.Instance.IsAppUpdated && !Sim.isSub)
-					{
+				try {
+					if(SystemInformation.Instance.IsAppUpdated && !Sim.isSub) {
 						AppS.DispatchOnUIThread(Settings.ShowWhatsNew);
 					}
 
 				}
-				catch(Exception __ex)
-				{
+				catch(Exception __ex) {
 					Debug.Log(__ex.ToString());
 				}
 
@@ -513,8 +489,7 @@ namespace CnV.Views
 				//		chatTabs.SizeChanged+=((o,args) => ShellPage.updateHtmlOffsets.SizeChanged());
 
 				var okay = await signinTask;
-				if(okay)
-				{
+				if(okay) {
 					// don't await
 #if APPCENTER
 
@@ -531,16 +506,20 @@ namespace CnV.Views
 
 					await PlayerTables.InitializeAndUpdateCurrentPlayer(azureId: CnVSignin.azureId,discordId: CnVSignin.discordId,discordUserName: CnVSignin.name,avatarUrlHash: CnVSignin.avatarUrlHash);
 					//if (okay2)
-					try
-					{
+					try {
+						if(Player.me.gender == Gender.na) {
+							var rv = await AppS.DoYesNoBox("Gender","Which would you like to be?","Female","Male","Nonbinary");
+							Player.me.gender = rv switch { 0 => Gender.male, 1 => Gender.female, _ => Gender.both };
+							await (new PlayerGameEntity(Player.me.pid) {  sex=(int)Player.me.gender}).UpsertAsync();
+						}
+
 						var okay3 = await APlayFab.Init();
 						Assert(okay3);
 
 
 
 					}
-					catch(Exception exception)
-					{
+					catch(Exception exception) {
 						LogEx(exception);
 						throw;
 					}
@@ -553,19 +532,18 @@ namespace CnV.Views
 					//	await CnVSignin.SignOut();
 					//}
 				}
-				else
-				{
+				else {
 					AppS.Failed("Signin didn't happen.  :( ");
 					await CnVSignin.SignOut();
 
 				}
 				WorkUpdate("Init");
-				await Task.Run( CnVClient.InitializeGame );
-		//		Player.activePlayerChanged += (p0,p1) => AppS.UpdateAppTitle();
-				
+				await Task.Run(CnVClient.InitializeGame);
+				//		Player.activePlayerChanged += (p0,p1) => AppS.UpdateAppTitle();
+
 				//AppS.QueueOnUIThread(() =>
 				//{
-					AppS.UpdateAppTitle();
+				AppS.UpdateAppTitle();
 
 
 				//	//							AppS.appWindow.SetIcon(new IconId(0));
@@ -575,7 +553,7 @@ namespace CnV.Views
 				FindName(nameof(cityStats));
 				KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Left,NavStack.BackInvoked,
 																VirtualKeyModifiers.Menu));
-				KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F1, (_,m)=> { m.Handled=true; ErrorReport(); },
+				KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F1,(_,m) => { m.Handled=true; ErrorReport(); },
 																VirtualKeyModifiers.Menu));
 				// KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.GoBack,NavStack.BackInvoked));
 
@@ -583,31 +561,27 @@ namespace CnV.Views
 																VirtualKeyModifiers.Menu));
 				// KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.GoForward, NavStack.ForwardInvoked));
 
-				for(var i = 0;i < Settings.layoutOffsets.Length;++i)
-				{
+				for(var i = 0;i < Settings.layoutOffsets.Length;++i) {
 					KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Number0 + (int)i,
 																		LayoutAccelerator_Invoked,
 																		VirtualKeyModifiers.Control));
 				}
-				
+
 
 				KeyboardAccelerators.Add(BuildKeyboardAccelerator(key: VirtualKey.Enter,modifiers:
-																VirtualKeyModifiers.Menu,OnKeyboardAcceleratorInvoked: (_,a) =>
-																{
+																VirtualKeyModifiers.Menu,OnKeyboardAcceleratorInvoked: (_,a) => {
 																	a.Handled=true;
 																	Settings.fullScreen = !Settings.fullScreen.GetValueOrDefault();
 																	AppS.appWindow.SetPresenter(Settings.fullScreen.GetValueOrDefault() ? Microsoft.UI.Windowing.AppWindowPresenterKind.FullScreen : Microsoft.UI.Windowing.AppWindowPresenterKind.Overlapped);
 																}));
 				KeyboardAccelerators.Add(BuildKeyboardAccelerator(key: VirtualKey.F12,modifiers:
-																VirtualKeyModifiers.Control,OnKeyboardAcceleratorInvoked: (_,a) =>
-																{
+																VirtualKeyModifiers.Control,OnKeyboardAcceleratorInvoked: (_,a) => {
 																	a.Handled=true;
 																	AppS.isTest ^= true;
 																	Trace(AppS.isTest.ToString());
 																}));
 				KeyboardAccelerators.Add(BuildKeyboardAccelerator(key: VirtualKey.F12,modifiers:
-																VirtualKeyModifiers.Control|VirtualKeyModifiers.Shift,OnKeyboardAcceleratorInvoked: (_,a) =>
-																{
+																VirtualKeyModifiers.Control|VirtualKeyModifiers.Shift,OnKeyboardAcceleratorInvoked: (_,a) => {
 																	a.Handled=true;
 																	Sim.AddSubs();
 																}));
@@ -620,26 +594,24 @@ namespace CnV.Views
 				await Task.Delay(500);
 				ShellPage.RefreshX();
 
-				AppS.DispatchOnUIThread( ShellPage.SetupNonCoreInput );
+				AppS.DispatchOnUIThread(ShellPage.SetupNonCoreInput);
 				AppS.QueueIdleTask(DailyDialog.DailyRewardTask);
 				{
 					var p = Player.me;
-					if(!p.hasAlliance && p.allianceInvites.Any())
-					{
-						AppS.QueueOnUIThread( JoinAlliance.ShowInstance );
+					if(!p.hasAlliance && p.allianceInvites.Any()) {
+						AppS.QueueOnUIThread(JoinAlliance.ShowInstance);
 
 					}
 				}
-//				if(AppS.processingTasksStarted == false)
+				//				if(AppS.processingTasksStarted == false)
 				{
-					
 
-				//	Task.Run(AppS.ProcessThrottledTasks);
+
+					//	Task.Run(AppS.ProcessThrottledTasks);
 					Task.Run(AppS.ProcessIdleTasks);
 				}
 			}
-			catch(Exception ex)
-			{
+			catch(Exception ex) {
 				LogEx(ex);
 				await AppS.Fatal(ex.ToString());
 			}
@@ -650,16 +622,14 @@ namespace CnV.Views
 		}
 
 
-		internal async static void ErrorReport()
-		{
-			
+		internal async static void ErrorReport() {
+
 
 
 			{
 				var dialog = new ErrorReport();
 				var a = await dialog.ShowAsync2();
-				if(a == ContentDialogResult.Primary)
-				{
+				if(a == ContentDialogResult.Primary) {
 					AAnalytics.ErrorReport(dialog.notes.Text);
 					AppS.MessageBox("Error Report Sent");
 				}
@@ -788,8 +758,7 @@ namespace CnV.Views
 		//	//e.Handled = true;
 		//}
 
-		private void Refresh_Invoked(KeyboardAccelerator sender,KeyboardAcceleratorInvokedEventArgs args)
-		{
+		private void Refresh_Invoked(KeyboardAccelerator sender,KeyboardAcceleratorInvokedEventArgs args) {
 			WorkStart("Refresh");
 			sender.Modifiers.UpdateKeyModifiers();
 			Refresh();
@@ -799,8 +768,7 @@ namespace CnV.Views
 			// args.Handled = true;
 		}
 
-		private void LayoutAccelerator_Invoked(KeyboardAccelerator sender,KeyboardAcceleratorInvokedEventArgs args)
-		{
+		private void LayoutAccelerator_Invoked(KeyboardAccelerator sender,KeyboardAcceleratorInvokedEventArgs args) {
 			sender.Modifiers.UpdateKeyModifiers();
 			Log($"Accel: {sender.Key} {sender.ScopeOwner}");
 			var layout = args.KeyboardAccelerator.Key - VirtualKey.Number0;
@@ -908,8 +876,7 @@ namespace CnV.Views
 																					KeyboardAcceleratorInvokedEventArgs>
 																			OnKeyboardAcceleratorInvoked,
 																	VirtualKeyModifiers modifiers =
-																			VirtualKeyModifiers.None)
-		{
+																			VirtualKeyModifiers.None) {
 			var keyboardAccelerator = new KeyboardAccelerator() { Key = key,Modifiers = modifiers };
 			keyboardAccelerator.Invoked   += OnKeyboardAcceleratorInvoked;
 			return keyboardAccelerator;
@@ -927,8 +894,7 @@ namespace CnV.Views
 
 		//}
 
-		public void Refresh(object o,RoutedEventArgs e)
-		{
+		public void Refresh(object o,RoutedEventArgs e) {
 			Refresh();
 		}
 
@@ -945,8 +911,7 @@ namespace CnV.Views
 		//	//await task0;
 		//}
 
-		public static void RefreshAndReloadWorldData()
-		{
+		public static void RefreshAndReloadWorldData() {
 			//using var work = new WorkScope("Refresh..");
 			//World.lastUpdatedContinent = -1;
 			//if (World.completed)
@@ -957,12 +922,10 @@ namespace CnV.Views
 			//TileData.Ctor(true);
 		}
 
-		public static async Task RefreshX()
-		{
-			try
-			{
+		public static async Task RefreshX() {
+			try {
 				using var work = new WorkScope("Refresh All");
-			//	var t = RefreshWorldData();
+				//	var t = RefreshWorldData();
 				World.InvalidateCities();
 				ShellPage.CityListNotifyChange(true);
 				foreach(var city in City.allSpots)
@@ -972,27 +935,23 @@ namespace CnV.Views
 				RefreshTabs.Go();
 				//await t;
 			}
-			catch(Exception _ex)
-			{
+			catch(Exception _ex) {
 				LogEx(_ex);
 
 			}
 
 		}
 
-		public void RefreshX(object sender,RightTappedRoutedEventArgs e)
-		{
+		public void RefreshX(object sender,RightTappedRoutedEventArgs e) {
 			RefreshX();
 		}
 
 		public static Debounce RefreshTabs = new(_RefreshTabs) { };
 
-		public static Task _RefreshTabs()
-		{
+		public static Task _RefreshTabs() {
 			// fall through from shift-refresh. Shift refresh does both
 			//	City.UpdateSenatorInfo();
-			foreach(var tab in UserTab.userTabs)
-			{
+			foreach(var tab in UserTab.userTabs) {
 				if(tab.isFocused)
 					tab.refresh.Go();
 			}
@@ -1023,10 +982,8 @@ namespace CnV.Views
 		//	}
 		//}
 
-		private static void Refresh()
-		{
-			try
-			{
+		private static void Refresh() {
+			try {
 				RefreshX();
 				//using var s = new WorkScope("Refresh...");
 				//foreach(var city in City.myCities)
@@ -1034,8 +991,7 @@ namespace CnV.Views
 				//NotifyCollectionBase.ResetAll(false);
 				//RefreshTabs.Go();
 			}
-			catch(Exception _ex)
-			{
+			catch(Exception _ex) {
 				LogEx(_ex);
 
 			}
@@ -1046,10 +1002,8 @@ namespace CnV.Views
 		private void OnPropertyChanged(string propertyName = "") =>
 				PropertyChanged?.Invoke(this,new PropertyChangedEventArgs(propertyName));
 
-		private void Set<T>(ref T storage,T value,[CallerMemberName] string propertyName = null)
-		{
-			if(Equals(storage,value))
-			{
+		private void Set<T>(ref T storage,T value,[CallerMemberName] string propertyName = null) {
+			if(Equals(storage,value)) {
 				return;
 			}
 
@@ -1076,8 +1030,7 @@ namespace CnV.Views
 
 
 
-		public static void ShowTipRefresh()
-		{
+		public static void ShowTipRefresh() {
 			//if (TipsSeen.instance.refresh==false)
 			//{
 			//    TipsSeen.instance.refresh = true;
@@ -1107,8 +1060,7 @@ namespace CnV.Views
 		//{
 		//}
 
-		private void FlyoutClosing(FlyoutBase sender,FlyoutBaseClosingEventArgs args)
-		{
+		private void FlyoutClosing(FlyoutBase sender,FlyoutBaseClosingEventArgs args) {
 			// Log("Why is this closing?");
 		}
 
@@ -1167,36 +1119,29 @@ namespace CnV.Views
 		//    }
 		//}
 
-		private void TipTest(object sender,RoutedEventArgs e)
-		{
+		private void TipTest(object sender,RoutedEventArgs e) {
 			ShowTipRefresh();
 		}
 
-		private void ShowSettings(object sender,RoutedEventArgs e)
-		{
+		private void ShowSettings(object sender,RoutedEventArgs e) {
 			Settings.Show();
 		}
 
 		public static ComboBox CityListBox => instance.cityListBox;
 
 		// private DumbCollection<CityList> cityListSelections => CityList.selections;
-		private void CityListBox_SelectionChanged(object sender,SelectionChangedEventArgs e)
-		{
-			try
-			{
-				if(e.AddedItems.Any())
-				{
+		private void CityListBox_SelectionChanged(object sender,SelectionChangedEventArgs e) {
+			try {
+				if(e.AddedItems.Any()) {
 					var newSel = e.AddedItems?.FirstOrDefault();
 					var priorSel = e.RemovedItems?.FirstOrDefault();
-					if(newSel != priorSel && priorSel != null)
-					{
+					if(newSel != priorSel && priorSel != null) {
 						// Log("City Sel changed");
 						CityListNotifyChange(false);
 					}
 				}
 			}
-			catch(Exception _ex)
-			{
+			catch(Exception _ex) {
 				LogEx(_ex);
 
 			}
@@ -1204,38 +1149,29 @@ namespace CnV.Views
 
 
 
-		public void ChangeCityClick(int delta)
-		{
-			try
-			{
+		public void ChangeCityClick(int delta) {
+			try {
 				var items = City.gridCitySource.c;
 				City newSel;
-				if(items.Length <= 1)
-				{
-					if(items.Length == 0)
-					{
+				if(items.Length <= 1) {
+					if(items.Length == 0) {
 						return;
 					}
 
 					newSel = items.First();
 				}
-				else
-				{
+				else {
 					int id = items.IndexOf(City.GetBuild());
-					if(id == -1)
-					{
+					if(id == -1) {
 						id = 0;
 					}
-					else
-					{
+					else {
 						id += delta;
-						if(id < 0)
-						{
+						if(id < 0) {
 							id += items.Length;
 						}
 
-						if(id >= items.Length)
-						{
+						if(id >= items.Length) {
 							id -= items.Length;
 						}
 
@@ -1248,34 +1184,27 @@ namespace CnV.Views
 				// ElementSoundPlayer.Play(delta > 0 ? ElementSoundKind.MoveNext : ElementSoundKind.MovePrevious);
 				NavStack.Push(newSel.cid);
 			}
-			catch(Exception _ex)
-			{
+			catch(Exception _ex) {
 				LogEx(_ex);
 
 			}
 		}
 
-		private void PriorCityClick(object sender,RoutedEventArgs e)
-		{
+		private void PriorCityClick(object sender,RoutedEventArgs e) {
 			ChangeCityClick(-1);
 		}
 
-		private void NextCityClick(object sender,RoutedEventArgs e)
-		{
+		private void NextCityClick(object sender,RoutedEventArgs e) {
 			ChangeCityClick(+1);
 		}
 
-		private void BackRightTapped(object sender,RightTappedRoutedEventArgs e)
-		{
-			try
-			{
+		private void BackRightTapped(object sender,RightTappedRoutedEventArgs e) {
+			try {
 				var menu = new MenuFlyout();
 				bool any = false;
-				for(int i = 1;i < 25;++i)
-				{
+				for(int i = 1;i < 25;++i) {
 					var str = NavStack.GetSpotName(-i);
-					if(str == null)
-					{
+					if(str == null) {
 						break;
 					}
 
@@ -1283,32 +1212,26 @@ namespace CnV.Views
 					menu.Items.Add(AApp.CreateMenuItem(str,NavStack.instance,-i));
 				}
 
-				if(!any)
-				{
+				if(!any) {
 					menu.Items.Add(AApp.CreateMenuItem("no more :(",() => { }));
 				}
 
 				menu.ShowAt(sender as FrameworkElement);
 			}
-			catch(Exception _ex)
-			{
+			catch(Exception _ex) {
 				LogEx(_ex);
 
 			}
 		}
 
-		private void ForwardRightTapped(object sender,RightTappedRoutedEventArgs e)
-		{
-			try
-			{
+		private void ForwardRightTapped(object sender,RightTappedRoutedEventArgs e) {
+			try {
 				var menu = new MenuFlyout();
 				menu.SetXamlRoot();
 				bool any = false;
-				for(int i = 1;i < 25;++i)
-				{
+				for(int i = 1;i < 25;++i) {
 					var str = NavStack.GetSpotName(i);
-					if(str == null)
-					{
+					if(str == null) {
 						break;
 					}
 
@@ -1316,33 +1239,26 @@ namespace CnV.Views
 					menu.Items.Add(AApp.CreateMenuItem(str,NavStack.instance,i));
 				}
 
-				if(!any)
-				{
+				if(!any) {
 					menu.Items.Add(AApp.CreateMenuItem("this is the most recent :(",() => { }));
 				}
 
 				menu.ShowAt(sender as FrameworkElement);
 			}
-			catch(Exception _ex)
-			{
+			catch(Exception _ex) {
 				LogEx(_ex);
 
 			}
 		}
 
-		private void coords_KeyDown(object sender,KeyRoutedEventArgs e)
-		{
-			try
-			{
+		private void coords_KeyDown(object sender,KeyRoutedEventArgs e) {
+			try {
 				var str = sender as TextBox;
 				Assert(str != null);
-				if(str != null)
-				{
-					if(e.Key == Windows.System.VirtualKey.Enter)
-					{
+				if(str != null) {
+					if(e.Key == Windows.System.VirtualKey.Enter) {
 						var cid = str.Text.FromCoordinate();
-						if(cid > 0)
-						{
+						if(cid > 0) {
 							//NavStack.Push(cid);
 							//SpotTab.TouchSpot(cid,AppS.keyModifiers);
 							City.ProcessCoordClick(cid,true,AppS.keyModifiers);
@@ -1350,8 +1266,7 @@ namespace CnV.Views
 					}
 				}
 			}
-			catch(Exception _ex)
-			{
+			catch(Exception _ex) {
 				LogEx(_ex);
 
 			}
@@ -1361,23 +1276,22 @@ namespace CnV.Views
 		//{
 		//	ContinentTagFilter.Show();
 		//}
-		public static void ContinentFilterClick(object sender,RoutedEventArgs e)
-		{
+		public static void ContinentFilterClick(object sender,RoutedEventArgs e) {
 			ContinentTagFilter.Show();
-		//	/*
+			//	/*
 
-		//	var button = sender as Microsoft.UI.Xaml.Controls.DropDownButton;
-		//	var flyout = new MenuFlyout();
+			//	var button = sender as Microsoft.UI.Xaml.Controls.DropDownButton;
+			//	var flyout = new MenuFlyout();
 
-		//	var isAll = Spot.isContinentFilterAll;
-		//	for (int id = 0; id < World.continentCount; ++id)
-		//	{
-		//		var xy = World.PackedContinentToXY(id);
-		//		var but = new ToggleMenuFlyoutItem() { IsChecked = !isAll && Spot.TestContinentFilterPacked(id), Text = ZString.Format("{0}{1}", xy.y, xy.x) };
-		//		but.FontSize = button.FontSize;
-		//		but.FontFamily = button.FontFamily;
-		//		but.Margin = new Thickness(2.0f);
-		//		flyout.Items.Add(but);
+			//	var isAll = Spot.isContinentFilterAll;
+			//	for (int id = 0; id < World.continentCount; ++id)
+			//	{
+			//		var xy = World.PackedContinentToXY(id);
+			//		var but = new ToggleMenuFlyoutItem() { IsChecked = !isAll && Spot.TestContinentFilterPacked(id), Text = ZString.Format("{0}{1}", xy.y, xy.x) };
+			//		but.FontSize = button.FontSize;
+			//		but.FontFamily = button.FontFamily;
+			//		but.Margin = new Thickness(2.0f);
+			//		flyout.Items.Add(but);
 		}
 
 		//	flyout.CopyXamlRoomFrom(button);
@@ -1437,12 +1351,9 @@ namespace CnV.Views
 		//	}
 		//}
 
-		private void FocusClick(object sender,RoutedEventArgs e)
-		{
-			try
-			{
-				if(Spot.focus == 0)
-				{
+		private void FocusClick(object sender,RoutedEventArgs e) {
+			try {
+				if(Spot.focus == 0) {
 					return;
 				}
 
@@ -1453,60 +1364,49 @@ namespace CnV.Views
 
 				Spot.ProcessCoordClick(Spot.focus,false,AppS.keyModifiers,true); // then normal click
 			}
-			catch(Exception _ex)
-			{
+			catch(Exception _ex) {
 				LogEx(_ex);
 
 			}
 		}
 
-		internal static void CityRightTapped(object sender,RightTappedRoutedEventArgs e)
-		{
-			try
-			{
+		internal static void CityRightTapped(object sender,RightTappedRoutedEventArgs e) {
+			try {
 				var ui = sender as UIElement;
 				Spot.GetFocus()?.ShowContextMenu(ui,e.GetPosition(ui));
 			}
-			catch(Exception _ex)
-			{
+			catch(Exception _ex) {
 				LogEx(_ex);
 
 			}
 		}
 
-		internal static void BuildHomeClick(object sender,RoutedEventArgs e)
-		{
-			try
-			{
-				if(City.build == 0)
-				{
+		internal static void BuildHomeClick(object sender,RoutedEventArgs e) {
+			try {
+				if(City.build == 0) {
 					return;
 				}
 
 				Spot.ProcessCoordClick(City.build,false,AppS.keyModifiers,true); // then normal click
 			}
-			catch(Exception _ex)
-			{
+			catch(Exception _ex) {
 				LogEx(_ex);
 
 			}
 		}
 
-		internal static void BuildHomeRightTapped(object sender,RightTappedRoutedEventArgs e)
-		{
-			try
-			{
+		internal static void BuildHomeRightTapped(object sender,RightTappedRoutedEventArgs e) {
+			try {
 				var ui = sender as UIElement;
 				City.GetBuild()?.ShowContextMenu(ui,e.GetPosition(ui));
 			}
-			catch(Exception _ex)
-			{
+			catch(Exception _ex) {
 				LogEx(_ex);
 
 			}
 		}
 
-		
+
 
 		//private void windowLayout_SelectionChanged(object sender,SelectionChangedEventArgs e)
 		//{
@@ -1544,14 +1444,12 @@ namespace CnV.Views
 		//public static ref int popupLeftMargin => ref View.popupLeftMargin;
 		//public static ref int popupTopMargin => ref View.popupTopMargin;
 
-		public static void UpdateWebViewOffsets(int leftOffset,int topOffset)
-		{
+		public static void UpdateWebViewOffsets(int leftOffset,int topOffset) {
 			if(popupLeftOffset != leftOffset ||
-				popupTopOffset  != topOffset)
-			{
+				popupTopOffset  != topOffset) {
 				popupLeftOffset = leftOffset;
 				popupTopOffset  = topOffset;
-			
+
 			}
 
 		}
@@ -1559,7 +1457,7 @@ namespace CnV.Views
 
 
 
-	
+
 
 		//private void FriendListSubmitted(ComboBox sender, ComboBoxTextSubmittedEventArgs args)
 		//{
@@ -1575,26 +1473,22 @@ namespace CnV.Views
 		//	}
 		//}
 
-		private void chatResizeTapped(object sender,TappedRoutedEventArgs e)
-		{
+		private void chatResizeTapped(object sender,TappedRoutedEventArgs e) {
 			//			var height = new( chatGrid.RowDefinitions[0].Height.Value switch { 1=>2,2=>3,3=>4,4=>5,_=>1});
 			var flyout = new MenuFlyout();
 			flyout.SetXamlRoot();
-			flyout.AddItem("Tall",() =>
-								   {
-									   chatGrid.RowDefinitions[0].Height = new GridLength(1,GridUnitType.Star);
-									   chatGrid.RowDefinitions[1].Height = new GridLength(5,GridUnitType.Star);
-								   });
-			flyout.AddItem("Medium",() =>
-								   {
-									   chatGrid.RowDefinitions[0].Height = new GridLength(4,GridUnitType.Star);
-									   chatGrid.RowDefinitions[1].Height = new GridLength(2,GridUnitType.Star);
-								   });
-			flyout.AddItem("Small",() =>
-								   {
-									   chatGrid.RowDefinitions[0].Height = new GridLength(5,GridUnitType.Star);
-									   chatGrid.RowDefinitions[1].Height = new GridLength(1,GridUnitType.Star);
-								   });
+			flyout.AddItem("Tall",() => {
+				chatGrid.RowDefinitions[0].Height = new GridLength(1,GridUnitType.Star);
+				chatGrid.RowDefinitions[1].Height = new GridLength(5,GridUnitType.Star);
+			});
+			flyout.AddItem("Medium",() => {
+				chatGrid.RowDefinitions[0].Height = new GridLength(4,GridUnitType.Star);
+				chatGrid.RowDefinitions[1].Height = new GridLength(2,GridUnitType.Star);
+			});
+			flyout.AddItem("Small",() => {
+				chatGrid.RowDefinitions[0].Height = new GridLength(5,GridUnitType.Star);
+				chatGrid.RowDefinitions[1].Height = new GridLength(1,GridUnitType.Star);
+			});
 			flyout.ShowAt(chatGrid,e.GetPosition(chatGrid));
 		}
 
@@ -1653,82 +1547,67 @@ namespace CnV.Views
 		//			}
 		//		}
 
-		private void FilterRightTapped(object sender,RightTappedRoutedEventArgs e)
-		{
+		private void FilterRightTapped(object sender,RightTappedRoutedEventArgs e) {
 			ContinentTagFilter.Show(true);
 		}
 
-		private void GridSpliterOnPointerReleased(object sender,PointerRoutedEventArgs e)
-		{
+		private void GridSpliterOnPointerReleased(object sender,PointerRoutedEventArgs e) {
 			//	updateHtmlOffsets.Go(true);
 		}
 
-		private void TimeBackClick(object sender,RoutedEventArgs e)
-		{
-			if(!AppS.isSinglePlayer)
-			{
-				AppS.MessageBox("Only works in single player mode");
-				return;
-			}
-		
-			Sim.ResetSim(Sim.simTime - TimeSpanS.FromMinutes(gotoTimeOffset.Value));
+		private void TimeBackClick(object sender,RoutedEventArgs e) {
+			var t = Sim.simTime - TimeSpanS.FromHours(gotoTimeOffset.Value);
+
+
+			Sim.GotoTime(t);
 		}
 
-		private async void TimeResetClick(object sender,RoutedEventArgs e)
-		{
-			if (await AppS.DoYesNoBox("Rewind","This takes you back to the start, are you sure?").ConfigureAwait(false) != 1)
+		private async void TimeResetClick(object sender,RoutedEventArgs e) {
+			if(await AppS.DoYesNoBox("Rewind","This takes you back to the start, are you sure?").ConfigureAwait(false) != 1)
 				return;
-			Sim.ResetSim(AppS.isSinglePlayer ? Sim.serverStartTime : null);
+			Sim.GotoTime(Sim.serverStartTime);
 		}
 
-		private void TimeForwardClick(object sender,RoutedEventArgs e)
-		{
-			var dt = TimeSpanS.FromMinutes(gotoTimeOffset.Value);
+		private async void TimeForwardClick(object sender,RoutedEventArgs e) {
+			var dt = TimeSpanS.FromHours(gotoTimeOffset.Value);
 
-			if(!AppS.isSinglePlayer  )
-			{
-				if(AppS.isTest)
-				{
-					(new SocketSimControlArgs() { timeScale = IServerTime.timeScale, deltaServerTickOffset=dt }).SendToServer();
+			if(!AppS.isSinglePlayer) {
+				if(AppS.isTest) {
+					(new SocketSimControlArgs() { timeScale = IServerTime.timeScale,deltaServerTickOffset=dt }).SendToServer();
+					return;
 				}
-				else
-				{
-					AppS.MessageBox("Only works in single player mode");
-				}
-				return;
-
 			}
-			Sim.RunAtStepEnd( ()=> Sim.SetTargetTime(Sim.simTime +dt) );
+			Sim.GotoTime(Sim.simTime +dt);
 		}
 
-		private void TimeTogglePlay(object sender,RoutedEventArgs e)
-		{
-			if(!AppS.isSinglePlayer)
-			{
-				AppS.MessageBox("Only works in single player mode");
-				return;
-			}
-			if(IServerTime.timeScale == 0)
-			{
+		private void TimeTogglePlay(object sender,RoutedEventArgs e) {
+			//if(!AppS.isSinglePlayer) {
+			//	AppS.MessageBox("Only works in single player mode");
+			//	return;
+			//}
+			if(IServerTime.timeScale == 0) {
 				IServerTime.SetTimeScale(1.0f);
 			}
-			else
-			{
+			else {
 				IServerTime.SetTimeScale(0.0f);
 			}
 		}
 
-		private void TimeToggleClearFuture(object sender,RoutedEventArgs e)
-		{
-			if(!AppS.isSinglePlayer)
-			{
-				AppS.MessageBox("Only works in single player mode");
+		// From Historic
+		private void TimeResumeInteractive(object sender,RoutedEventArgs e) {
+			//if(!AppS.isSinglePlayer) {
+			//	AppS.MessageBox("Only works in single player mode");
+			//	return;
+			//}
+			//Sim.ClearFutureEvents();
+			if(!Sim.isHistoric) {
+				Note.Show("No need to leave, you are already in the present.");
 				return;
 			}
-			Sim.ClearFutureEvents();
+			Sim.HistoricEnd();
 		}
 
-		
+
 
 
 
@@ -1753,75 +1632,66 @@ namespace CnV.Views
 		//	UpdateMousePosition( c.Position );
 		//}
 
-		public static void CityListNotifyChange(bool itemsChanged)
-		{
+		public static void CityListNotifyChange(bool itemsChanged) {
 			if(!Sim.isPastWarmup)
 				return;
-			AppS.QueueOnUIThread( () =>
-								{
-									//               Log("CityListChange");
+			AppS.QueueOnUIThread(() => {
+				//               Log("CityListChange");
 
-									var selectedCityList = ShellPage.instance.cityListBox.SelectedItem as CityList;
-									City[] l;
-									if(selectedCityList == null || selectedCityList.id == -1) // "all"
-									{
-										l = City.subCities;
-									}
-									else
-									{
-										var cityList = selectedCityList; // CityList.Find(selectedCityList);
-										var filtered = new List<City>();
-										foreach(var cid in cityList.cities)
-										{
-											if(City.TryGet(cid,out var c))
-											{
-												filtered.Add(c);
-											}
-										}
+				var selectedCityList = ShellPage.instance.cityListBox.SelectedItem as CityList;
+				City[] l;
+				if(selectedCityList == null || selectedCityList.id == -1) // "all"
+				{
+					l = City.subCities;
+				}
+				else {
+					var cityList = selectedCityList; // CityList.Find(selectedCityList);
+					var filtered = new List<City>();
+					foreach(var cid in cityList.cities) {
+						if(City.TryGet(cid,out var c)) {
+							filtered.Add(c);
+						}
+					}
 
-										l = cityList.cities.Select(cid => cid.AsCity()).ToArray();
-									}
+					l = cityList.cities.Select(cid => cid.AsCity()).ToArray();
+				}
 
-									l = l.Where(a => a.testContinentAndTagFilter)
-										.OrderBy((a) => a,new CityList.CityComparer()).ToArray();
-								//	CityStats.instance.cityBox.ItemsSource = l;
-									City.gridCitySource.Set(l,true,itemsChanged);
-									City.gridCitySourceWithNone.Set( l.Prepend(City.invalid) );
-									// todo change this
-									Spot.selected = Spot.selected.Where(cid => City.TestContinentAndFlagFilter(cid))
-										.ToHashSet(); // filter selected
-								//	CityUI.cityListChanged?.Invoke(l);
-									CityUI.SyncCityBox();
-									//   if (MainPage.IsVisible())
+				l = l.Where(a => a.testContinentAndTagFilter)
+					.OrderBy((a) => a,new CityList.CityComparer()).ToArray();
+				//	CityStats.instance.cityBox.ItemsSource = l;
+				City.gridCitySource.Set(l,true,itemsChanged);
+				City.gridCitySourceWithNone.Set(l.Prepend(City.invalid));
+				// todo change this
+				Spot.selected = Spot.selected.Where(cid => City.TestContinentAndFlagFilter(cid))
+					.ToHashSet(); // filter selected
+								  //	CityUI.cityListChanged?.Invoke(l);
+				CityUI.SyncCityBox();
+				//   if (MainPage.IsVisible())
 
 
 
 
-									//if (IncomingTab.instance.isVisible)
-									//   IncomingTab.instance.refresh.Go();
+				//if (IncomingTab.instance.isVisible)
+				//   IncomingTab.instance.refresh.Go();
 
 
 
-								});
+			});
 		}
 
-	
 
-		private void GridSplitter_ManipulationCompleted(object sender,ManipulationCompletedRoutedEventArgs e)
-		{
+
+		private void GridSplitter_ManipulationCompleted(object sender,ManipulationCompletedRoutedEventArgs e) {
 			//Note.Show("ManipulationCompleted");
 			updateHtmlOffsets.UserUpdated();
 		}
 
-		private void SendError(object sender,RoutedEventArgs e)
-		{
+		private void SendError(object sender,RoutedEventArgs e) {
 			ErrorReport();
 		}
 
-		private async void SaveTimeline(object sender,RoutedEventArgs e)
-		{
-			try
-			{
+		private async void SaveTimeline(object sender,RoutedEventArgs e) {
+			try {
 				FileSavePicker savePicker = new FileSavePicker();
 				savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
 				// Dropdown of file types the user can save the file as
@@ -1831,77 +1701,66 @@ namespace CnV.Views
 
 				WinRT.Interop.InitializeWithWindow.Initialize(savePicker,WinRT.Interop.WindowNative.GetWindowHandle(AppS.window));
 				StorageFile file = await savePicker.PickSaveFileAsync();
-				if(file != null)
-				{
+				if(file != null) {
 					// Prevent updates to the remote version of the file until we finish making changes and call CompleteUpdatesAsync.
 					var path = file.Path;
 					DataFiles.SaveBinary(path,Sim.PersistEvents());
 					Note.Show("Saved timeline");
 				}
-				else
-				{
+				else {
 				}
 			}
-			catch(Exception _ex)
-			{
+			catch(Exception _ex) {
 				LogEx(_ex);
 
 			}
 		}
 
-		private async void LoadTimeline(object sender,RoutedEventArgs e)
-		{
-			try
-			{
-							if(!AppS.isSinglePlayer)
-			{
-				AppS.MessageBox("Only works in single player mode");
-				return;
-			}
+		private async void LoadTimeline(object sender,RoutedEventArgs e) {
+			try {
+				if(!AppS.isSinglePlayer) {
+					AppS.MessageBox("Only works in single player mode");
+					return;
+				}
 
 				FileOpenPicker savePicker = new FileOpenPicker();
 				savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
 				// Dropdown of file types the user can save the file as
-				savePicker.FileTypeFilter.Add( ".mpk" );
+				savePicker.FileTypeFilter.Add(".mpk");
 				// Default file name if the user does not type one in or select a file to replace
-			
+
 				WinRT.Interop.InitializeWithWindow.Initialize(savePicker,WinRT.Interop.WindowNative.GetWindowHandle(AppS.window));
 				StorageFile file = await savePicker.PickSingleFileAsync();
-				if(file != null)
-				{
+				if(file != null) {
 					// Prevent updates to the remote version of the file until we finish making changes and call CompleteUpdatesAsync.
 					var path = file.Path;
-					
+
 					Note.Show("Load timeline");
-					Sim.ResetSim(eventStream:DataFiles.LoadBinary(path));
+					Sim.ResetSim(eventStream: DataFiles.LoadBinary(path));
 				}
-				else
-				{
+				else {
 				}
 			}
-			catch(Exception _ex)
-			{
+			catch(Exception _ex) {
 				LogEx(_ex);
 
 			}
 		}
 
-		private void FormAlliance(object sender,RoutedEventArgs e)
-		{
-			if(Player.active.title.rank < (byte)TitleName.Dame)
-			{
+		private void FormAlliance(object sender,RoutedEventArgs e) {
+			if(Player.active.title.rank < (byte)TitleName.Dame) {
 				AppS.MessageBox("Must be Dame/Knight to create alliance");
 			}
-			else
-			{
+			else {
 				CreateAlliance.ShowInstance();
 			}
 		}
 
-		private void ShowAllianceInvites(object sender,RoutedEventArgs e)
-		{
+		private void ShowAllianceInvites(object sender,RoutedEventArgs e) {
 			CnV.JoinAlliance.ShowInstance();
 		}
+
+
 
 		//private void GotoTimeOffset(object sender,RoutedEventArgs e)
 		//{
@@ -1910,15 +1769,12 @@ namespace CnV.Views
 		//	CnVServer.GoToTime(CnVServer.simTime + dt);
 		//}
 
-		private void CityListSubmitted(ComboBox sender,ComboBoxTextSubmittedEventArgs args)
-		{
+		private void CityListSubmitted(ComboBox sender,ComboBoxTextSubmittedEventArgs args) {
 			var text = args.Text.ToLower();
 			var items = CityList.selections;
-			foreach(var it in items)
-			{
+			foreach(var it in items) {
 				// its good
-				if(it.name == text)
-				{
+				if(it.name == text) {
 					return;
 				}
 			}
@@ -1934,10 +1790,8 @@ namespace CnV.Views
 			//	}
 			//}
 			// try contains
-			foreach(var it in items)
-			{
-				if(it.name.ToLower().Contains(text))
-				{
+			foreach(var it in items) {
+				if(it.name.ToLower().Contains(text)) {
 					sender.Text         = it.name;
 					sender.SelectedItem = it;
 					return;

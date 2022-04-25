@@ -471,7 +471,7 @@ namespace CnV
 		}
 		//public void OnPropertyChanged() =>
 		//		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
-
+		
 
 		// called from Sim
 		public void UpdateUI()
@@ -504,10 +504,13 @@ namespace CnV
 						var bdd = !hasBeenDisplayed ? GetBuildingCounts(city) : default;
 						var t = Sim.simTime;
 #if DEBUG
-						ShellPage.instance.timeDisplay.Text = $"{t.FormatWithYear()}\nFrame {GameClient.renderFrame/60} d0:{AppS.dispatches0} d1:{AppS.dispatches1}";
+						ShellPage.instance.timeDisplay.Text = $"{t.FormatWithYear()}\n{GameClient.renderFrame/60} 0:{AppS.dispatches0} 1:{AppS.dispatches1}";
 #else
 						ShellPage.instance.timeDisplay.Text = t.FormatWithYear();
 #endif
+						var timeBrush = AppS.Brush( Sim.isWarmup? (Sim.isHistoric ? Colors.Orange: Colors.Gray ): Sim.isHistoric ? Colors.Yellow : Colors.White);
+						if(ShellPage.instance.timeDisplay.Foreground != timeBrush)
+							ShellPage.instance.timeDisplay.Foreground=timeBrush;
 						if(expResource.IsExpanded)
 						{
 							var resources = city.SampleResources();

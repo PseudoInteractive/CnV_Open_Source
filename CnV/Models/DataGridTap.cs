@@ -38,6 +38,18 @@ namespace CnV;
 				//	Note.Show($"Cell Tap {e.Column.HeaderText??"NA"}  {e.RowColumnIndex} {e.RowColumnIndex} {e.Record.ToString} ");
 				switch (e.Record)
 				{
+					case Player player: {
+						if(ChartDialog.ShowPlayerMetric(e.Column.MappingName,false))
+							return;
+						break;
+
+					};
+					case Alliance alliance: {
+						if(ChartDialog.ShowPlayerMetric(e.Column.MappingName,true))
+							return;
+						break;
+
+					};
 					case City city:
 					{
 						city.CityRowClick(e);

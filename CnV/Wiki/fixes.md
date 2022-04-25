@@ -16,4 +16,14 @@
 	- Planner tab shows resource production that would result from the layout with all level 10 buildings
 	- Status indicators in build queue telling you which items things are blocked and why
 	- Build Queue tooltips show resources required
-	
+## 1.1.98 [4/24/2021]
+## New: Player and alliance stats plots
+	- Click on certain stats (TS, Points, Raiding) in the player or alliance tabs to see charts plotting stats over time
+	- Double click on a data point (or click on a date at the bottom, which is easier to hit) to view what the world was like at that time
+	- This will put you into historic mode
+## New: Historic Mode
+    - Historic mode allows you to view the world at any point in time and watch events unfold at up to 256x server time
+	- Control time using the panel at the lower left
+	- When you want to exit Historic mode and resume play, press the "Play button" (in the time panel)
+	- Moving forward in time is fast, but moving back in time is slow.
+		- To find events in the past, go back extra far and then pan forward in time until you find what you want.

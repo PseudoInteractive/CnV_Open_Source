@@ -71,7 +71,7 @@ namespace CnV
 		internal static void ZirconiaChanged() => Changed(nameof(zirconiaS));
 		internal static void RefinesChanged() => Changed(nameof(RefineS));
 
-		public string title => Title.TADesc(player.TALevel);
+		public string title => player.Title;
 
 		private void AllTapped(object sender,TappedRoutedEventArgs e) =>
 			ResContextRequest(sender as UIElement,null);

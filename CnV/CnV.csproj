@@ -37,6 +37,7 @@
     <EmbeddedResource Remove="Content\**" />
     <EmbeddedResource Remove="gamebin\**" />
     <EmbeddedResource Remove="gameobj\**" />
+    <EmbeddedResource Remove="Helpers\**" />
     <EmbeddedResource Remove="JS\**" />
     <None Remove="AppPackages\**" />
     <None Remove="BundleArtifacts\**" />
@@ -44,6 +45,7 @@
     <None Remove="Content\**" />
     <None Remove="gamebin\**" />
     <None Remove="gameobj\**" />
+    <None Remove="Helpers\**" />
     <None Remove="JS\**" />
     <PRIResource Remove="Content\**" />
     <PRIResource Remove="gamebin\**" />
@@ -107,6 +109,7 @@
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.3" />
 	<PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
     <PackageReference Include="PlayFabAllSDK" Version="1.108.220118" />
+    <PackageReference Include="Syncfusion.Chart.WinUI" Version="20.1.0.50" />
     <PackageReference Include="Syncfusion.Editors.WinUI" Version="20.1.0.50" />
     <PackageReference Include="Syncfusion.Grid.WinUI" Version="20.1.0.50" />
     <PackageReference Include="Syncfusion.Licensing" Version="20.1.0.50" />
@@ -135,6 +138,7 @@
     <Compile Include="GameUI\Artifacts.xaml.cs" />
     <Compile Include="GameUI\AutobuildDialog.xaml.cs" />
     <Compile Include="GameUI\BattleReportDialog.xaml.cs" />
+    <Compile Include="GameUI\ChartDialog.xaml.cs" />
     <Compile Include="GameUI\CombatCalcDialog.xaml.cs" />
     <Compile Include="GameUI\CreateAlliance.xaml.cs" />
     <Compile Include="GameUI\DailyDialog.xaml.cs" />
@@ -397,6 +401,9 @@
     <Page Include="GameUI\BattleReportDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="GameUI\ChartDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="GameUI\CombatCalcDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -646,6 +653,7 @@
 	<None Remove="GameUI\Artifacts.xaml" />
 	<None Remove="GameUI\AutobuildDialog.xaml" />
 	<None Remove="GameUI\BattleReportDialog.xaml" />
+	<None Remove="GameUI\ChartDialog.xaml" />
 	<None Remove="GameUI\CombatCalcDialog.xaml" />
 	<None Remove="GameUI\CreateAlliance.xaml" />
 	<None Remove="GameUI\DailyDialog.xaml" />
@@ -770,7 +778,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Base\" />
-    <Folder Include="Helpers\" />
     <Folder Include="Properties\ServiceDependencies\local\" />
     <Folder Include="Resources\" />
   </ItemGroup>
@@ -796,5 +803,8 @@
   </ItemGroup>
   <Import Project="..\..\CnVShared\CnVShared.projitems" Label="Shared" />
   <Import Project="..\..\cnvResource\CnVResource.projitems" Label="Shared" />
+  <ItemGroup>
+    <PRIResource Remove="Helpers\**" />
+  </ItemGroup>
 
  </Project>

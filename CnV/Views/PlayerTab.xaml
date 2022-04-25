@@ -114,7 +114,7 @@
 				                      TextAlignment="Center"
 									  DisplayNumberFormat="N0"
 											 />
-				<sf:GridNumericColumn MappingName="cavernLoot"
+				<sf:GridNumericColumn MappingName="raiding"
 				                      TextAlignment="Center"
 									  DisplayNumberFormat="N0"
 											 />

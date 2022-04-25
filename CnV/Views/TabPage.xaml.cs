@@ -282,6 +282,7 @@ namespace CnV.Views
 			{ "player", "\uE902" },
 			{ "Outgoing","\uE189" },
 			{ "Hits","\uEA69" },
+			{ "Chart","\uEA69" },
 			{ "Heat", "\uF738" },
 			{ "PlayerChange", "\uE822" }
 		};
