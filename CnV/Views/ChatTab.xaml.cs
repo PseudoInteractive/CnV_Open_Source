@@ -32,6 +32,13 @@ namespace CnV.Views
 		public const byte typeAlliance = 4;
 		public const byte typeOfficer = 5;
 		public const byte typeAnnounce = 6;
+
+		static internal byte GetDefaultPostType(string tag) => tag switch {
+			"alliance" => typeAlliance,
+			"officer" => typeOfficer,
+		_ => typeWorld,
+			
+		};
 		public sbyte allignment;
 		public HorizontalAlignment MsgAlignment => (AMath.random.Next(3) - 1) switch { -1 => HorizontalAlignment.Left, 1 => HorizontalAlignment.Right, _ => HorizontalAlignment.Center };
 		public DateTimeOffset time;
@@ -103,6 +110,7 @@ namespace CnV.Views
 		public DiscordChannel discordChannel; // 0 if not a discord Id
 
 		internal bool itemsDirty;
+		internal byte defaultPostType;
 		public static void Ctor()
 		{
 	//		alliance = new ChatTab() { Tag = nameof(alliance) };
@@ -128,12 +136,13 @@ namespace CnV.Views
 				{
 					for(int i = 0;i<20;++i)
 					{
-						if(all.Any())
+						var world = all.FirstOrDefault(a => a.defaultPostType == ChatEntry.typeWorld );
+
+						if(world is not null)
 						{
 							AppS.QueueOnUIThread(() =>
 							{
-								if(all.Length>0)
-									all[all.Length-1].Post(new ChatEntry(player,message,Sim.serverTime,ChatEntry.typeWorld),isNew:true,deferNotify:false);
+								world.Post(new ChatEntry(player,message,Sim.serverTime,ChatEntry.typeAnnounce),isNew:true,deferNotify:false);
 							});
 							break;
 						}
@@ -177,7 +186,7 @@ namespace CnV.Views
 			//	existing.items.Clear(); // reset and re fetch
 				return false;
 			}
-			var tab = new ChatTab() { discordChannel = channel,Tag = channel.Name };
+			var tab = new ChatTab() { discordChannel = channel,Tag = channel.Name,defaultPostType = ChatEntry.GetDefaultPostType(channel.Name) };
 			all = all.Add(tab);
 			tab.ShowOrAdd();
 			return true;
@@ -514,7 +523,7 @@ namespace CnV.Views
 		
 		}
 
-		internal static void Post(ulong channelId,ChatEntry chat,bool isNew,bool deferNotify)
+		internal static void Post(DiscordId channelId,ChatEntry chat,bool isNew,bool deferNotify)
 		{
 			ChatTab t = null;
 			foreach(var tab in all)
@@ -527,6 +536,19 @@ namespace CnV.Views
 			}
 			if(t !=null)
 				t.Post(chat,isNew,deferNotify);
+
+		}
+		internal static ChatTab FindDiscordChatTab(DiscordId channelId)
+		{
+		
+			foreach(var tab in all)
+			{
+				if(tab.discordChannel?.Id == channelId)
+				{
+					return tab;
+				}
+			}
+			return null;
 
 		}
 		internal static DebounceA PostsCompleteNotify = new( () =>
@@ -900,12 +922,12 @@ namespace CnV.Views
 		{
 
 			brushes = new SolidColorBrush[ChatEntry.typeAnnounce + 1];
-			brushes[1] = brushes[0] = new SolidColorBrush() { Color = Colors.Orange };
-			brushes[2] = new SolidColorBrush() { Color = Colors.MediumPurple };
-			brushes[3] = new SolidColorBrush() { Color = Colors.BlueViolet };
-			brushes[4] = new SolidColorBrush() { Color = Colors.ForestGreen };
-			brushes[5] = new SolidColorBrush() { Color = Colors.Cyan };
-			brushes[ChatEntry.typeAnnounce] = new SolidColorBrush() { Color = Colors.Red };
+			brushes[1] = brushes[0] = AppS.Brush( Colors.Yellow );
+			brushes[2] = AppS.Brush( Colors.MediumPurple );
+			brushes[3] = AppS.Brush( Colors.BlueViolet );
+			brushes[4] = AppS.Brush(Colors.ForestGreen );
+			brushes[5] = AppS.Brush( Colors.Cyan );
+			brushes[ChatEntry.typeAnnounce] = AppS.Brush( Colors.Aquamarine );
 
 		}
 		public object Convert(object value,Type targetType,object parameter,string language)

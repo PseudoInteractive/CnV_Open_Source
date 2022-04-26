@@ -254,49 +254,52 @@ namespace CnVDiscord
 		{
 			try
 			{
-			//	Assert(AppS.IsOnUIThread());
-				//if(!Player.fromDiscordId.TryGetValue(senderOverride,out var p))
-				//	p = Player.me;
-				//var name = p.name; // todo: use clients
-				//if (p.avatarBrush is null && p.avatarUrl is not null )
-				//{
-				//	var url = p.avatarUrl;
+				var tab = ChatTab.FindDiscordChatTab(message.ChannelId);
+				if(tab is not null) {
 
 
-				//	var _name = name; 
+					//	Assert(AppS.IsOnUIThread());
+					//if(!Player.fromDiscordId.TryGetValue(senderOverride,out var p))
+					//	p = Player.me;
+					//var name = p.name; // todo: use clients
+					//if (p.avatarBrush is null && p.avatarUrl is not null )
+					//{
+					//	var url = p.avatarUrl;
 
-				//	await AppS.DispatchOnUIThreadTask( () =>
-				//		{
-				//			p.avatarBrush= new BitmapImage(new Uri(url));
-				//			return Task.CompletedTask;
-				//		})
-				//		;
-				//}
-				//				var avatarUrl = $"![Helpers Image]({p.avatarUrl})";
 
-				var content = message.Content;
+					//	var _name = name; 
 
-				foreach(var i in message.MentionedUsers)
-				{
-					var mention = i.Mention;
-					var displayName = DisplayName(i);
-					var mentionGame = $"[{displayName}](/p/{displayName})";
-					content = content.Replace(mention,mentionGame);
-					if(content.Contains('!'))
-					{
-						int q = 0;
+					//	await AppS.DispatchOnUIThreadTask( () =>
+					//		{
+					//			p.avatarBrush= new BitmapImage(new Uri(url));
+					//			return Task.CompletedTask;
+					//		})
+					//		;
+					//}
+					//				var avatarUrl = $"![Helpers Image]({p.avatarUrl})";
+
+					var content = message.Content;
+
+					foreach(var i in message.MentionedUsers) {
+						var mention = i.Mention;
+						var displayName = DisplayName(i);
+						var mentionGame = $"[{displayName}](/p/{displayName})";
+						content = content.Replace(mention,mentionGame);
+						if(content.Contains('!')) {
+							int q = 0;
+						}
+						if(mention.Contains('!'))
+							mention = mention.Replace("!","");
+						else
+							mention = regexMention.Replace(mention,"<@!$1>");
+
+						content = content.Replace(mention,mentionGame);
 					}
-					if(mention.Contains('!'))
-						mention = mention.Replace("!","");
-					else
-						mention = regexMention.Replace(mention,"<@!$1>");
-
-					content = content.Replace(mention,mentionGame);
+					var chat = new ChatEntry(name,content,IServerTime.UtcToServerDateTime(message.Timestamp),tab.defaultPostType);
+					//Note.Show(chat.ToString());
+					//				AppS.DispatchOnUIThread(() => ChatTab.Post(message.ChannelId,chat,isNew,notify));
+					tab.Post(chat,isNew,deferNotify);
 				}
-				var chat = new ChatEntry(name,content,IServerTime.UtcToServerDateTime(message.Timestamp),ChatEntry.typeAlliance);
-				//Note.Show(chat.ToString());
-//				AppS.DispatchOnUIThread(() => ChatTab.Post(message.ChannelId,chat,isNew,notify));
-				ChatTab.Post(message.ChannelId,chat,isNew,deferNotify);
 			}
 			catch(Exception ex)
 			{

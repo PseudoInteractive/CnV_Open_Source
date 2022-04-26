@@ -10,10 +10,11 @@ using Microsoft.AppCenter.Crashes;
 #endif
 
 using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Storage;
+//using Windows.Storage;
 using static CnV.AppS;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.Windows.AppLifecycle;
 //using Microsoft.UI.Xaml.Controls;
 //using Microsoft.Web.WebView2.Core;
 //using ZLogger;
@@ -27,9 +28,9 @@ using Microsoft.UI.Input;
 //using Microsoft.Extensions.Logging;
 //using Microsoft.Extensions.Options;
 //using Microsoft.UI.Input.Experimental;
-using Windows.ApplicationModel;
-using Windows.ApplicationModel.Activation;
-using Windows.ApplicationModel.DataTransfer;
+//using Microsoft.ApplicationModel;
+//using Microsoft.ApplicationModel.Activation;
+//using Microsoft.ApplicationModel.DataTransfer;
 using Windows.Globalization.NumberFormatting;
 using Windows.System;
 //using Windows.UI.Core;
@@ -50,6 +51,7 @@ namespace CnV
 
 	using Microsoft.UI.Windowing;
 	using Microsoft.Windows.ApplicationModel.WindowsAppRuntime;
+	using Microsoft.Windows.AppLifecycle;
 	//// using PInvoke
 	using Services;
 
@@ -422,33 +424,33 @@ namespace CnV
 
 
 					//var view = DisplayInformation.GetForCurrentView();
-					var uwpArgs = AppInstance.GetActivatedEventArgs(); //args.UWPLaunchActivatedEventArgs;
-					if(uwpArgs.Kind == Windows.ApplicationModel.Activation.ActivationKind.Protocol)
-					{
-						var eventArgs = uwpArgs as ProtocolActivatedEventArgs;
-						Log("Args!! " + eventArgs.Uri);
-						var s = System.Web.HttpUtility.ParseQueryString(eventArgs.Uri.Query);
+					//var uwpArgs = AppInstance.GetCurrent().GetActivatedEventArgs(); //args.UWPLaunchActivatedEventArgs;
+					//if(uwpArgs.Kind == ExtendedActivationKind.Protocol)
+					//{
+					//	var eventArgs = uwpArgs;
+					//	Log("Args!! " + eventArgs.Uri);
+					//	var s = System.Web.HttpUtility.ParseQueryString(eventArgs.Uri.Query);
 
-						Debug.Log(s);
-						// format $"cnv:launch?w={world}&s=1&n=1"
-						// are / chars inserted?
-						//  if (s.Length >= 3)
-						{
-							//if (AMath.TryParseInt(s["s"], out int _s))
-							//	CnVServer.subId = _s;
+					//	Debug.Log(s);
+					//	// format $"cnv:launch?w={world}&s=1&n=1"
+					//	// are / chars inserted?
+					//	//  if (s.Length >= 3)
+					//	{
+					//		//if (AMath.TryParseInt(s["s"], out int _s))
+					//		//	CnVServer.subId = _s;
 
-							////var n = s["p"];
-							////if (n != null)
-							////	Player.subOwner = n;
+					//		////var n = s["p"];
+					//		////if (n != null)
+					//		////	Player.subOwner = n;
 
-							//if (AMath.TryParseInt(s["w"], out int _w))
-							//	CnVServer.world = _w;
+					//		//if (AMath.TryParseInt(s["w"], out int _w))
+					//		//	CnVServer.world = _w;
 
-							//						if(AMath.TryParseInt(s["n"],out int _n)) // new instance
-							//							key = "cotgaMulti" + DateTimeOffset.UtcNow.UtcTicks;
+					//		//						if(AMath.TryParseInt(s["n"],out int _n)) // new instance
+					//		//							key = "cotgaMulti" + DateTimeOffset.UtcNow.UtcTicks;
 
-						}
-					}
+					//	}
+					//}
 
 					//// Get the screen resolution (APIs available from 14393 onward).
 					//var resolution = new Size(view.ScreenWidthInRawPixels, view.ScreenHeightInRawPixels);
@@ -483,7 +485,11 @@ namespace CnV
 
 					// if (!args.PrelaunchActivated)
 
-					await OnLaunchedOrActivated(args.UWPLaunchActivatedEventArgs);
+					await OnLaunchedOrActivated(args);
+//					var w2 = new Window();
+//w2.Content = new TextBlock() { Text = "Hello" };
+//w2.Activate();
+
 					//if(uwpArgs.Kind == Windows.ApplicationModel.Activation.ActivationKind.Launch)
 	//				AppS.QueueOnUIThread(Services.StoreHelper.instance.DownloadAndInstallAllUpdatesAsync);
 				}
@@ -580,7 +586,7 @@ namespace CnV
 		}
 
 
-		private async Task OnLaunchedOrActivated(Windows.ApplicationModel.Activation.IActivatedEventArgs args)
+		private async Task OnLaunchedOrActivated(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
 		{
 
 			try
@@ -610,8 +616,8 @@ namespace CnV
 				this.DebugSettings.BindingFailed+=DebugSettings_BindingFailed1;
 
 #endif
-				var wasRunning = args.PreviousExecutionState   == ApplicationExecutionState.Running
-								|| args.PreviousExecutionState == ApplicationExecutionState.Suspended;
+				var wasRunning = false;// args.PreviousExecutionState   == ApplicationExecutionState.Running
+						//		|| args.PreviousExecutionState == ApplicationExecutionState.Suspended;
 				Assert(!wasRunning);
 				if(!wasRunning)
 				{
@@ -622,7 +628,7 @@ namespace CnV
 					//		window.WantClose+=Window_Closing;
 					//window.Activated+=Window_Activated;
 				}
-				SystemInformation.Instance.TrackAppUse(args);
+		//		SystemInformation.Instance.TrackAppUse(args.UWPLaunchActivatedEventArgs);
 				// can this be async?
 				//typeof(Telerik.UI.Xaml.Controls.RadDataForm).Assembly.GetType("Telerik.UI.Xaml.Controls.TelerikLicense").GetField("messageDisplayed",BindingFlags.NonPublic|BindingFlags.Static).SetValue(null,true,BindingFlags.Static|BindingFlags.NonPublic,null,null);
 
@@ -637,12 +643,9 @@ namespace CnV
 				}
 				const bool isInteractive = true;
 
-				AAnalytics.Track("Activate",new Dictionary<string,string> { { "kind",args.Kind.ToString() },
-				{ "prior", args.Kind.ToString() },
-				{"args" , args switch
-				{ ILaunchActivatedEventArgs a=>a.Arguments,
-					IProtocolActivatedEventArgs p=>p.Uri.ToString(),
-					_=>"{}"} } });
+				AAnalytics.Track("Activate",new Dictionary<string,string> { { "kind",AppInstance.GetCurrent().GetActivatedEventArgs().ToString() },
+				
+				{"args" , args.Arguments } });
 				//if(IsInteractive(activationArgs))
 				{
 					// Initialize services that you need before app activation
@@ -675,10 +678,10 @@ namespace CnV
 				if(isInteractive)
 				{
 					var activation = args;
-					if(activation.PreviousExecutionState == ApplicationExecutionState.Terminated)
-					{
-						//        await Singleton<SuspendAndResumeService>.Instance.RestoreSuspendAndResumeData();
-					}
+					//if(activation.PreviousExecutionState == ApplicationExecutionState.Terminated)
+					//{
+					//	//        await Singleton<SuspendAndResumeService>.Instance.RestoreSuspendAndResumeData();
+					//}
 
 					var title = AppS.appWindow.TitleBar;
 					if(title is not null)
@@ -1228,7 +1231,7 @@ namespace CnV
 		{
 			try
 			{
-				return (await Clipboard.GetContent().GetTextAsync()) ?? string.Empty;
+				return (await Windows.ApplicationModel.DataTransfer.Clipboard.GetContent().GetTextAsync()) ?? string.Empty;
 			}
 			catch(Exception ex)
 			{
@@ -1265,9 +1268,9 @@ namespace CnV
 		public static InputCursor cursorUpgrade = InputSystemCursor.Create(InputSystemCursorShape.UpArrow);
 		public static InputCursor cursorDowngrade = InputSystemCursor.Create(InputSystemCursorShape.SizeNorthSouth);
 
-		public static ApplicationDataContainer ClientSettings()
+		public static Windows.Storage.ApplicationDataContainer ClientSettings()
 		{
-			var appData = ApplicationData.Current;
+			var appData = Windows.Storage.ApplicationData.Current;
 			if(appData.RoamingStorageQuota > 4)
 				return appData.RoamingSettings;
 			else
@@ -1277,9 +1280,9 @@ namespace CnV
 		public static async Task<byte[]> GetContent(string filename)
 		{
 			var uri = new Uri("ms-appx:///" + filename);
-			var file = await StorageFile.GetFileFromApplicationUriAsync(uri);
+			var file = await Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(uri);
 
-			var buffer = await FileIO.ReadBufferAsync(file);
+			var buffer = await Windows.Storage.FileIO.ReadBufferAsync(file);
 
 			return buffer.ToArray();
 		}

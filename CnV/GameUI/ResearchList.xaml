@@ -51,7 +51,7 @@
 		</Grid>
 
 
-		<SemanticZoom Height="600" IsZoomedInViewActive="False" x:Name="semanticZoom" >
+		<SemanticZoom MaxHeight="600" IsZoomedInViewActive="False" x:Name="semanticZoom" >
 			<SemanticZoom.Resources>
 
 				<DataTemplate x:Key="ZoomedInGroupHeaderTemplate" x:DataType="cnv:TechTreeHeadLine">

@@ -32,7 +32,50 @@ namespace CnV.Views
 		public bool isBuilding => bid != 0;
 		public BitmapImage image;
 		public float opacity=1;
-		public string toolTip;
+		public string tip;
+		internal string tooltip {
+			get 
+				{
+				var city = City.GetBuild();
+				if(isBuilding) {
+					var def = BuildingDef.FromId(bid);
+					var op = new BuildQueueItem(0,1,bid,CityView.selectedPoint);
+					return $"{def.Ds}\n{-op.BuildOrUpgradeResourceBalance()}\n{op.TimeRequired(city)}\nKeep Level: {def.Thl}";
+				}
+				if(CityView.selectedPoint.isInCity) 
+				{
+					
+					var bd = city.postQueueBuildings[CityView.selectedPoint];
+					var def = BuildingDef.FromId(bd.bid);
+					switch(action) {
+
+						case CityBuildAction.destroy: 
+								if( bd.bl > 0) {
+
+								var op = new BuildQueueItem(bd.bl,0,bd.bid,CityView.selectedPoint);
+								return $"Destroy {def.Bn}\n{op.DemoOrDowngradeResourceBalance()}\n{op.TimeRequired(city)}";
+							}
+							break;
+						case CityBuildAction.build:
+							Assert(false);
+							break;
+						
+						case CityBuildAction.upgrade: if(bd.bl < 10){
+								var op = new BuildQueueItem(bd.bl,(byte)(bd.bl+1).Min(10),bd.bid,CityView.selectedPoint);
+								return $"Upgrade {def.Bn}\n{-op.BuildOrUpgradeResourceBalance()}\n{op.TimeRequired(city)}";
+							}
+							break;
+						case CityBuildAction.downgrade: if(bd.bl > 0){
+								var op = new BuildQueueItem(bd.bl,(byte)(bd.bl-1).Max(0),bd.bid,CityView.selectedPoint);
+								return $"Downgrade {def.Bn}\n{op.DemoOrDowngradeResourceBalance()}\n{op.TimeRequired(city)}";
+							}
+							break;
+						
+					}
+				}
+				return tip; 
+			}
+		}
 		public string header;
 		//public Color textColor;
 		public CityBuild.CityBuildAction action = CityBuild.CityBuildAction.invalid;
@@ -54,7 +97,7 @@ namespace CnV.Views
 				bid = _bid;
 				var def = BuildingDef.FromId(_bid);
 				header = def.Bn;
-				toolTip = def.Ds;
+				var toolTip = def.Ds;
 				image = GetBuildingImage( bid , width);
 				//	Command = BuildMenuItemCommand.instance;
 				var match = shortKeyRegEx.Match(toolTip);
@@ -69,7 +112,7 @@ namespace CnV.Views
 			header = name;
 			this.action = action;
 			image = ImageHelper.Get(icon,width);
-			this.toolTip = toolTip;
+			this.tip = toolTip;
 		}
 
 		internal void UpdateValidity(bool seemsValid, int townHallLevel)

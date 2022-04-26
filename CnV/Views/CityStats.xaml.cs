@@ -189,7 +189,25 @@ namespace CnV
 			
 
 		}
-
+		public string recruitTooltip { get {
+				string rv = "Recruit Queue, click to recruit.";
+				if(city.stats.rsInf>0)
+					rv += $"\nInfantry: {city.stats.rsInf}";
+				if(city.stats.rsCav>0)
+					rv += $"\nCavalry: {city.stats.rsCav}";
+				if(city.stats.rsMagic>0)
+					rv += $"\nMagic: {city.stats.rsMagic}";
+				if(city.stats.rsArt>0)
+					rv += $"\nArt: {city.stats.rsArt}";
+				if(city.stats.rsBlessed>0)
+					rv += $"\nBlessed: {city.stats.rsBlessed}";
+				if(city.stats.rsNavy>0)
+					rv += $"\nNavy: {city.stats.rsNavy}";
+				if(city.stats.rsGuard>0)
+					rv += $"\nGuard: {city.stats.rsGuard}";
+				return rv;
+			}
+		}
 		static void UpdateBuildQueue()
 		{
 			// Don't notify whole we are doing stuff
