@@ -33,11 +33,9 @@ using static CnV.BuildQueueItem;
 
 namespace CnV
 {
-	public sealed partial class CityStats:UserControl,INotifyPropertyChanged
-	{
+	public sealed partial class CityStats:UserControl, INotifyPropertyChanged {
 		public static CityStats instance;
-		public CityStats()
-		{
+		public CityStats() {
 			this.InitializeComponent();
 			//buildQueue.CollectionChanged+=BuildQueue_CollectionChanged;
 		}
@@ -50,47 +48,38 @@ namespace CnV
 #endif
 
 		public event PropertyChangedEventHandler? PropertyChanged;
-		public void OnPropertyChanged(string? member = null)
-		{
-			if (this.PropertyChanged is not null) 
+		public void OnPropertyChanged(string? member = null) {
+			if(this.PropertyChanged is not null)
 				AppS.QueueOnUIThread(() => PropertyChanged?.Invoke(this,new(member)));
 		}
-		public static void Changed(string? member = null)
-		{
+		public static void Changed(string? member = null) {
 			if(instance is not null)
 				instance.OnPropertyChanged(member);
 		}
-		private void CityBox_SelectionChanged(object sender,SelectionChangedEventArgs e)
-		{
+		private void CityBox_SelectionChanged(object sender,SelectionChangedEventArgs e) {
 			var sel = cityBox.SelectedItem as City;
-			if(sel != null && sel.cid != City.build)
-			{
+			if(sel != null && sel.cid != City.build) {
 				City.ProcessCoordClick(sel.cid,false,AppS.keyModifiers);
 			}
 		}
-		
 
-		private void CitySubmitted(ComboBox sender,ComboBoxTextSubmittedEventArgs args)
-		{
+
+		private void CitySubmitted(ComboBox sender,ComboBoxTextSubmittedEventArgs args) {
 			var text = args.Text.ToLower();
 
 			Log($"Summitted {text}");
 
 			var items = City.gridCitySource;
-			foreach(var it in items)
-			{
+			foreach(var it in items) {
 				// its good
-				if(it.nameAndRemarks == text)
-				{
+				if(it.nameAndRemarks == text) {
 					return;
 				}
 			}
 
 
-			foreach(var it in items)
-			{
-				if(it.nameAndRemarks.ToLower().StartsWith(text))
-				{
+			foreach(var it in items) {
+				if(it.nameAndRemarks.ToLower().StartsWith(text)) {
 					sender.Text = it.nameAndRemarks;
 					sender.SelectedItem = it;
 					args.Handled = true;
@@ -98,10 +87,8 @@ namespace CnV
 				}
 			}
 			// try contains
-			foreach(var it in items)
-			{
-				if(it.nameAndRemarks.ToLower().Contains(text))
-				{
+			foreach(var it in items) {
+				if(it.nameAndRemarks.ToLower().Contains(text)) {
 					Log($"Contains {it}");
 
 					sender.Text         = it.nameAndRemarks;
@@ -112,55 +99,55 @@ namespace CnV
 			}
 			// todo!
 		}
-//		private static void BuildQueue_CollectionChanged(object? sender,NotifyCollectionChangedEventArgs e)
-//		{
-//			// invalidate
-		
-//			instance?.buildCityChangeDebounce.Go();
-////			displayQueue = BuildQueueType.Empty;
-//			//Log(e.Action);
-//			//LogJson(e);
-//			// This is coming from the UI to us
-//			// Validate that the queue is still valid
+		//		private static void BuildQueue_CollectionChanged(object? sender,NotifyCollectionChangedEventArgs e)
+		//		{
+		//			// invalidate
 
-//			//switch(e.Action)
-//			//{
-//			//	case NotifyCollectionChangedAction.Move:
-//			//		{
-						
-//			//			var city = instance.city;
-//			//			if(city.AttempMove(e.OldStartingIndex,e.NewStartingIndex))
-//			//			{
-//			//			}
-//			//			NotifyBuildQueueChange();
-//			//			break;
-//			//		}
-//			//	case NotifyCollectionChangedAction.Remove:
-//			//		{
-//			//			return;
-//			//			var city = instance.city;
-//			//			if(city.AttempRemove(e.OldStartingIndex))
-//			//			{
-//			//			}
-//			//			NotifyBuildQueueChange();
-//			//			break;
-//			//		}
-//			//	case NotifyCollectionChangedAction.Add:
-//			//		{
+		//			instance?.buildCityChangeDebounce.Go();
+		////			displayQueue = BuildQueueType.Empty;
+		//			//Log(e.Action);
+		//			//LogJson(e);
+		//			// This is coming from the UI to us
+		//			// Validate that the queue is still valid
 
-//			//			return;
-//			//			var city = instance.city;
-//			//			if(city.AttemptAdd(e.NewStartingIndex, e.NewItems.Cast<BuildItem>().Select( a => a.op ).ToArray() ))
-//			//			{
-//			//			}
-//			//			NotifyBuildQueueChange();
-//			//			break;
-//			//		}
-//			//	default:
-//			//		Assert(false);
-//			//		break;
-//			//}
-//		}
+		//			//switch(e.Action)
+		//			//{
+		//			//	case NotifyCollectionChangedAction.Move:
+		//			//		{
+
+		//			//			var city = instance.city;
+		//			//			if(city.AttempMove(e.OldStartingIndex,e.NewStartingIndex))
+		//			//			{
+		//			//			}
+		//			//			NotifyBuildQueueChange();
+		//			//			break;
+		//			//		}
+		//			//	case NotifyCollectionChangedAction.Remove:
+		//			//		{
+		//			//			return;
+		//			//			var city = instance.city;
+		//			//			if(city.AttempRemove(e.OldStartingIndex))
+		//			//			{
+		//			//			}
+		//			//			NotifyBuildQueueChange();
+		//			//			break;
+		//			//		}
+		//			//	case NotifyCollectionChangedAction.Add:
+		//			//		{
+
+		//			//			return;
+		//			//			var city = instance.city;
+		//			//			if(city.AttemptAdd(e.NewStartingIndex, e.NewItems.Cast<BuildItem>().Select( a => a.op ).ToArray() ))
+		//			//			{
+		//			//			}
+		//			//			NotifyBuildQueueChange();
+		//			//			break;
+		//			//		}
+		//			//	default:
+		//			//		Assert(false);
+		//			//		break;
+		//			//}
+		//		}
 
 		public City city => City.GetBuild();
 		//internal void NotifyBuildCityChange()
@@ -172,21 +159,20 @@ namespace CnV
 		//	Invalidate();
 
 		//}
-		
+
 
 		internal static BuildQueueType lastSynchronizedQueue = BuildQueueType.Empty;
 		internal static RecruitQueueType lastSynchronizedRecruitQueue = RecruitQueueType.Empty;
-		static void BuildCityChanged()
-		{
+		static void BuildCityChanged() {
 			UpdateBuildQueue();
 			UpdateCommandItems();
 			UpdateRecruitQueue();
 			UpdateTradeItems();
-			
+
 			ClearLastDisplayed();
 			Changed();
-			
-			
+
+
 
 		}
 		public string recruitTooltip { get {
@@ -208,15 +194,13 @@ namespace CnV
 				return rv;
 			}
 		}
-		static void UpdateBuildQueue()
-		{
+		static void UpdateBuildQueue() {
 			// Don't notify whole we are doing stuff
-			try
-			{
-			//	Trace("Update build Queue");
-			//	instance.buildQueue.CollectionChanged -= BuildQueue_CollectionChanged;
+			try {
+				//	Trace("Update build Queue");
+				//	instance.buildQueue.CollectionChanged -= BuildQueue_CollectionChanged;
 				//var firstVisible = instance.buildQueueListView.vis
-				
+
 				var city = instance.city;
 				var displayQueue = city.buildQueue;
 				lastSynchronizedQueue = displayQueue;
@@ -230,15 +214,12 @@ namespace CnV
 				//		bq.RemoveAt(i);
 				//	}
 				//}
-				var anyRemoved=SyncLists(displayQueue,bq,(rt,city)=>new BuildItem(rt,city),(a,b)=>a == b.op );
+				var anyRemoved = SyncLists(displayQueue,bq,(rt,city) => new BuildItem(rt,city),(a,b) => a == b.op);
 				var lg = displayQueue.Length;
-				if(lg == bq.Count())
-				{
+				if(lg == bq.Count()) {
 					var status = city.GetBuildQueueStatuses();
-					for(int i = 0;i<lg;++i)
-					{
-						if(bq[i].status != status[i])
-						{
+					for(int i = 0;i<lg;++i) {
+						if(bq[i].status != status[i]) {
 							bq[i].status = status[i];
 							bq[i].OnPropertyChanged();
 						}
@@ -250,19 +231,16 @@ namespace CnV
 				//	instance.buildQueueListView.ScrollIntoView(bq.First());
 				//}
 			}
-			catch ( Exception ex)
-			{
+			catch(Exception ex) {
 				LogEx(ex);
 			}
 			// restore callback
-		//	instance.buildQueue.CollectionChanged += BuildQueue_CollectionChanged;
+			//	instance.buildQueue.CollectionChanged += BuildQueue_CollectionChanged;
 
 		}
-		static void UpdateRecruitQueue()
-		{
+		static void UpdateRecruitQueue() {
 			// Don't notify whole we are doing stuff
-			try
-			{
+			try {
 
 				//var firstVisible = instance.buildQueueListView.vis
 				var city = instance.city;
@@ -280,11 +258,10 @@ namespace CnV
 				//}
 
 				// Add or update
-				bool anyRemoved=SyncLists(displayQueue,bq,(rt,city)=>new RecruitItem(rt,city),(a,b)=>a == b.op );
+				bool anyRemoved = SyncLists(displayQueue,bq,(rt,city) => new RecruitItem(rt,city),(a,b) => a == b.op);
 
 				Assert(bq.Count == lg);
-				for(int i = 0;i<lg;++i)
-				{
+				for(int i = 0;i<lg;++i) {
 					Assert(bq[i].op == displayQueue[i]);
 				}
 				// keep first in view
@@ -293,16 +270,14 @@ namespace CnV
 				//	instance.RecruitQueueListView.ScrollIntoView(bq.First());
 				//}
 			}
-			catch ( Exception ex)
-			{
+			catch(Exception ex) {
 				LogEx(ex);
 			}
 			// restore callback
 
 		}
 
-		private static bool SyncLists<TR,TX>(IList<TR> rtQ,ObservableCollection<TX> xQ, Func<TR,City,TX> factory, Func<TR,TX,bool> equals )
-		{
+		private static bool SyncLists<TR, TX>(IList<TR> rtQ,ObservableCollection<TX> xQ,Func<TR,City,TX> factory,Func<TR,TX,bool> equals) {
 			var city = instance.city;
 			var lg = rtQ.Count;
 			var anyRemoved = false;
@@ -311,10 +286,8 @@ namespace CnV
 			{
 			__restartRemove:
 				int i = 0;
-				foreach(var x in xQ)
-				{
-					if(!rtQ.Any(a => equals(a,x)))
-					{
+				foreach(var x in xQ) {
+					if(!rtQ.Any(a => equals(a,x))) {
 						xQ.RemoveAt(i);
 						anyRemoved=true;
 						goto __restartRemove;
@@ -323,27 +296,21 @@ namespace CnV
 				}
 			}
 
-			for(int i = 0;i<lg;++i)
-			{
+			for(int i = 0;i<lg;++i) {
 				var op = rtQ[i];
 				int cur = -1;
-				for(int j = i;j<xQ.Count;++j)
-				{
-					if(equals(op,xQ[j]) )
-					{
+				for(int j = i;j<xQ.Count;++j) {
+					if(equals(op,xQ[j])) {
 						cur = j;
 						break;
 					}
 				}
-				if(cur == -1)
-				{
+				if(cur == -1) {
 					var bi = factory(op,city);
 					xQ.Insert(i,bi);
 				}
-				else
-				{
-					if(cur != i)
-					{
+				else {
+					if(cur != i) {
 						xQ.Move(cur,i);
 
 					}
@@ -352,21 +319,18 @@ namespace CnV
 			}
 			Assert(xQ.Count == rtQ.Count);
 			Assert(xQ.Count == lg);
-			for(int i=0;i<lg;++i)
-			{
+			for(int i = 0;i<lg;++i) {
 				Assert(equals(rtQ[i],xQ[i]));
 			}
 			return anyRemoved;
 		}
 
-		static void UpdateCommandItems()
-		{
+		static void UpdateCommandItems() {
 			// Don't notify whole we are doing stuff
-			try
-			{
-				
+			try {
+
 				//var firstVisible = instance.buildQueueListView.vis
-				
+
 				var city = instance.city;
 				{
 					var displayQueue = city.outgoing.OrderBy(a => a.arrival).ToArray();
@@ -374,10 +338,8 @@ namespace CnV
 					var bq = instance.commandItems;
 
 					var anyRemoved = SyncLists(displayQueue,bq,(rt,city) => new CommandItem(rt),(a,b) => a == b.army);
-					if(commandsDirty)
-					{
-						foreach(var i in bq)
-						{
+					if(commandsDirty) {
+						foreach(var i in bq) {
 							//i.UpdateAction();
 							i.OnPropertyChanged();
 						}
@@ -385,14 +347,14 @@ namespace CnV
 					}
 				}
 				{
-					var displayQueue = city.incoming.Where(a=>a.isDefense).OrderBy(a => a.arrival).ToArray();
+					var displayQueue = city.incoming.Where(a => a.isDefense).OrderBy(a => a.arrival).ToArray();
 					int lg = displayQueue.Length;
 					var bq = instance.reinforcementItems;
 
 					var anyRemoved = SyncLists(displayQueue,bq,(rt,city) => new CommandItem(rt),(a,b) => a == b.army);
 				}
 				{
-					var displayQueue = city.incoming.Where(a=>a.isAttack).OrderBy(a => a.arrival).ToArray();
+					var displayQueue = city.incoming.Where(a => a.isAttack).OrderBy(a => a.arrival).ToArray();
 					int lg = displayQueue.Length;
 					var bq = instance.incomingItems;
 
@@ -404,34 +366,30 @@ namespace CnV
 				//	instance.CommandsListView.ScrollIntoView(bq.First());
 				//}
 			}
-			catch ( Exception ex)
-			{
+			catch(Exception ex) {
 				LogEx(ex);
 			}
 			// restore callback
 
 		}
-		static void UpdateTradeItems()
-		{
+		static void UpdateTradeItems() {
 			// Don't notify while we are doing stuff
-			try
-			{
-				
+			try {
+
 				//var firstVisible = instance.buildQueueListView.vis
-				
+
 				var city = instance.city;
-				var displayQueue = city.tradesOut.Concat(city.tradesIn).OrderBy(a=>a.isReturning ? a.returnTime : a.arrival).ToArray();
+				var displayQueue = city.tradesOut.Concat(city.tradesIn).OrderBy(a => a.isReturning ? a.returnTime : a.arrival).ToArray();
 				int lg = displayQueue.Length;
 				var bq = instance.tradeItems;
 
-				var anyRemoved=SyncLists(displayQueue,bq,(rt,city)=>new TradeItem(rt),(a,b)=>a == b.trade );
+				var anyRemoved = SyncLists(displayQueue,bq,(rt,city) => new TradeItem(rt),(a,b) => a == b.trade);
 
-				
-				
+
+
 
 			}
-			catch ( Exception ex)
-			{
+			catch(Exception ex) {
 				LogEx(ex);
 			}
 			// restore callback
@@ -445,13 +403,19 @@ namespace CnV
 
 		internal Visibility TroopsHomeVisible => city?.troopsOwned != new TroopTypeCounts(city.troopsHere) ? Visibility.Visible : Visibility.Collapsed;
 
-		internal Visibility incomingVisible => city.incoming.Any(a=>a.isAttack) ? Visibility.Visible : Visibility.Collapsed;
+		internal Visibility incomingVisible => city.incoming.Any(a => a.isAttack) ? Visibility.Visible : Visibility.Collapsed;
 
-		internal Visibility IncomingReinforcementsVisible => city.allReinforcements.Any()==true? Visibility.Visible : Visibility.Collapsed;
+		internal Visibility IncomingReinforcementsVisible => city.allReinforcements.Any()==true ? Visibility.Visible : Visibility.Collapsed;
 
 		public string commandsTitle => $"Commands {city.activeCommands}/{city.commandSlots}";
-		public string tradesTitle => $"Trades {tradeItems.Count}";
-		public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
+		public string tradesTitle {
+		get{
+			var rv = $"Trades {tradeItems.Count} {CnV.Resources.cartGlyph}{city.CartsHome}/{city.carts}";
+			if(city.ships >0 ) 
+					rv += $"{CnV.Resources.shipGlyph}{city.shipsHome}/{city.ships}";
+				return rv;
+} }
+public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 
 		public string recruitTitle => city?.amuletTime > 0 ? $"Recruit +{city.amuletTime}" : "Recruit";
 		//public SolidColorBrush ResourceForeground(int resId) => new SolidColorBrush(Windows.UI.Color.FromArgb(255,(byte)(31+64*resId),128,128) );
@@ -1386,18 +1350,21 @@ namespace CnV
 				isIncoming ?  "Region/UI/icon_player_resource_inc.png" : "Region/UI/icon_player_resource_outgoing.png"  );
 			
 		}
-		
-		public void ContextRequested(UIElement sender,ContextRequestedEventArgs args)
-		{
+
+		public void ContextRequested(UIElement sender,ContextRequestedEventArgs args) {
 			args.Handled    = true;
 			var flyout = new MenuFlyout();
+
+			if(trade.canCancel && !trade.isCancelled && !trade.isReturning) {
+
 			
-			flyout.AddItem("Return",Symbol.Undo,() =>
-			{
+			flyout.AddItem("Return",Symbol.Undo,() => {
 
 				new CnVEventCancelTrade(trade.sourceC,trade).EnqueueAsap();
-				
+
 			});
+		}	
+
 			flyout.AddItem("Speedup",Symbol.Forward,() =>
 			{
 				try

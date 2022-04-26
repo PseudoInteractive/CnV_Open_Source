@@ -2,7 +2,7 @@
 <StoreAssociation xmlns="http://schemas.microsoft.com/appx/2010/storeassociation">
   <Publisher>CN=BE72B2C5-14F0-4AD5-84D4-EAA91D8D0812</Publisher>
   <PublisherDisplayName>Alliances</PublisherDisplayName>
-  <DeveloperAccountType>MSA</DeveloperAccountType>
+  <DeveloperAccountType>AAD</DeveloperAccountType>
   <GeneratePackageHash>http://www.w3.org/2001/04/xmlenc#sha256</GeneratePackageHash>
   <SupportedLocales>
     <Language Code="af" InMinimumRequirementSet="true" />
@@ -381,5 +381,13 @@
     <MainPackageIdentityName>33626dsw.ConquestAndVirtue</MainPackageIdentityName>
     <MainPackageIdentityName>33626dsw.CrownOfTheGods</MainPackageIdentityName>
   </AccountPackageIdentityNames>
-  <PackageInfoList LandingUrl="https://developer.microsoft.com/dashboard/Application?appId=9NC40PRJ3ZG4" />
+  <PackageInfoList LandingUrl="https://developer.microsoft.com/dashboard/Application?appId=9NC40PRJ3ZG4">
+    <BundleInfo>
+      <PackageInfo>
+        <OsMinVersion>0.0.0.0</OsMinVersion>
+        <PackageArchitecture>X64</PackageArchitecture>
+        <PackageMaxArchitectureVersion>1.1.101.0</PackageMaxArchitectureVersion>
+      </PackageInfo>
+    </BundleInfo>
+  </PackageInfoList>
 </StoreAssociation>

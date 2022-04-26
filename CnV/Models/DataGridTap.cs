@@ -63,7 +63,7 @@ namespace CnV;
 						switch(e.Column.MappingName)
 						{
 							case nameof(BossReport.bossC):
-							case nameof(BossReport.icon):
+						
 								Spot.ProcessCoordClick(br.bossC, false, AppS.keyModifiers, false);
 								break;
 							case nameof(BossReport.city):
@@ -72,6 +72,9 @@ namespace CnV;
 
 							case nameof(BossReport.Player):
 								br.Player.Click();
+								break;
+							case nameof(BossReport.icon):
+								BossReportDialog.ShowInstance(br);
 								break;
 
 						}

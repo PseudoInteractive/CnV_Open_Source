@@ -23,6 +23,7 @@
 		<sf:SfDataGrid 
 			Grid.Row="1"
 			x:Name="grid"
+			x:FieldModifier="internal"
 AllowFocusOnInteraction="True"
 Loaded="DataGridLoaded"				
 

@@ -82,21 +82,21 @@ namespace CnV.Views
 		//	}
 		//}
 
-		public async Task InitTradeSettings(City city, int _sourceHub, int _targetHub,ResourceFilter reqFilter,ResourceFilter targetFilter) 
+		public void InitTradeSettings(City city, int _sourceHub, int _targetHub,ResourceFilter reqFilter,ResourceFilter targetFilter) 
 		{
-			var curSettings = await CitySettings.GetTradeResourcesSettings(city.cid);
+			var curSettings = city.GetMOForRead(); ;
 			this.reqFilter = reqFilter;
 			this.sendFilter = targetFilter;
 			reqHub.city = _sourceHub == 0? null : City.Get(_sourceHub);
 			sendHub.city = _targetHub==0?null:City.Get(_targetHub);
 			cartReserve = curSettings.cartReserve;
 			shipReserve = curSettings.shipReserve;
-			if (curSettings.req.isNonZero)
+			if (curSettings.resRequest.isNonZero)
 			{
-				this.req.wood = curSettings.req.wood;
-				this.req.stone = curSettings.req.stone;
-				this.req.iron = curSettings.req.iron;
-				this.req.food = curSettings.req.food;
+				this.req.wood = curSettings.resRequest.wood;
+				this.req.stone = curSettings.resRequest.stone;
+				this.req.iron = curSettings.resRequest.iron;
+				this.req.food = curSettings.resRequest.food;
 			}
 			else if(req.isNull)
 			{
@@ -106,21 +106,21 @@ namespace CnV.Views
 				req.food = 200 * 1000;
 			}
 
-			if (curSettings.max.isNonZero)
+			if (curSettings.resSend.isNonZero)
 			{
-				this.max.wood = curSettings.max.wood;
-				this.max.stone = curSettings.max.stone;
-				this.max.iron = curSettings.max.iron;
-				this.max.food = curSettings.max.food;
+				this.max.wood = curSettings.resSend.wood;
+				this.max.stone = curSettings.resSend.stone;
+				this.max.iron = curSettings.resSend.iron;
+				this.max.food = curSettings.resSend.food;
 			}
 			else
 			{
 				if(max.isNull)
 				{
-					max.wood = (300 * 1000).Max(curSettings.storage.wood*3/4);
-					max.stone = (300 * 1000).Max(curSettings.storage.stone* 3 / 4);
-					max.iron = (300 * 1000).Max(curSettings.storage.iron * 3 / 4);
-					max.food = (350 * 1000).Max(curSettings.storage.food * 3 / 4);
+					max.wood = (300 * 1000).Max(city.stats.storage.wood*3/4);
+					max.stone = (300 * 1000).Max(city.stats.storage.stone* 3 / 4);
+					max.iron = (300 * 1000).Max(city.stats.storage.iron * 3 / 4);
+					max.food = (350 * 1000).Max(city.stats.storage.food * 3 / 4);
 				}
 			}
 

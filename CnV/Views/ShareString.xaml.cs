@@ -627,7 +627,7 @@ namespace CnV.Views
 			{
 				tradeStale=false;
 				var city = City.Get(cid);
-				await TradeOverview.UpdateTradeStuffIfNeeded().ConfigureAwait(false);
+			//	await TradeOverview.UpdateTradeStuffIfNeeded().ConfigureAwait(false);
 				var tags = await TagsFromCheckboxes();
 				var isHubOrStorage = tags.HasFlag(Tags.Hub) | tags.HasFlag(Tags.Storage);
 
@@ -638,14 +638,14 @@ namespace CnV.Views
 				{
 					bestReqHub =   await CityUI.FindBestHubWithChoice(cid,"Find Request Hub",null,isHubOrStorage).ConfigureAwait(false);
 					if( !isHubOrStorage)
-						bestSendHub =   await CitySettings.FindBestHub(cid,false).ConfigureAwait(false);
+						bestSendHub =   CitySettings.FindBestHub(cid,false);
 				}
 				else
 				{
 
 				}
 
-				await res.InitTradeSettings(city,bestReqHub,bestSendHub,ResourceFilter._true,isHubOrStorage ? ResourceFilter._null : ResourceFilter._true);
+				res.InitTradeSettings(city,bestReqHub,bestSendHub,ResourceFilter._true,isHubOrStorage ? ResourceFilter._null : ResourceFilter._true);
 				OnPropertyChanged();
 			}
 		}

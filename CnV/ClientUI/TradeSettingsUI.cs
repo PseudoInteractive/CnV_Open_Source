@@ -31,7 +31,7 @@ public partial class CityUI
 
 
 			var settings = new ResSettings();
-			await settings.InitTradeSettings(city, _sourceHub, _targetHub, reqFilter, targetFilter);
+			settings.InitTradeSettings(city, _sourceHub, _targetHub, reqFilter, targetFilter);
 		//	await AUtil.AwaitChangesComplete();
 
 			var dialog = new ContentDialog()
@@ -62,12 +62,12 @@ public partial class CityUI
 			}
 		}
 	}
-	public static async void SetTargetHub(int cid, int targetHub)
+	public static  void SetTargetHub(int cid, int targetHub)
 	{
 		SetTradeSettings(cid, sourceHub: null, targetHub: targetHub, targetFilter: ResourceFilter._true);
 
 	}
-	public static async void SetSourceHub(int cid, int targetHub)
+	public static  void SetSourceHub(int cid, int targetHub)
 	{
 		SetTradeSettings(cid, sourceHub: targetHub, targetHub: targetHub, reqFilter: ResourceFilter._true);
 
@@ -78,7 +78,7 @@ public partial class CityUI
 		isHubOrStorage ??= city.isHubOrStorage;
 		offContinent ??= (city.isHubOrStorage && city.isOnWater) ? (await AppS.DoYesNoBox(title, $"Find hub for {city} from another Continent?",
 																		yes: "Off Continent", no: "Same Continent", cancel: null)) == 1 : false;
-		return await CitySettings.FindBestHub(cid,
+		return CitySettings.FindBestHub(cid,
 											offContinent.GetValueOrDefault());
 	}
 	public static Task SetClosestHub(int cid)

@@ -93,7 +93,6 @@ namespace CnV.Views
 			{
 				Log($"Update {DateTime.Now}");
 
-				await TradeOverview.UpdateTradeStuffIfNeeded();
 
 				int shipReserve = Settings.nearResShipReserve;
 				int cartReserve = Settings.nearResCartReserve;
@@ -161,11 +160,7 @@ namespace CnV.Views
 							//var info = sup.info;
 							var city = sup.city;
 							var shipping = GetTransport( city);//, viaWater ? (city.shipsHome - shipReserve).Max0() * 10000 : (city.cartsHome - cartReserve).Max0() * 1000;
-							var send = r;
-							if(shipping < r.sum)
-							{
-								send *= (shipping / (double)r.sum.Max(1));
-							}
+							var send = r.LimitToTranspost(shipping);
 							send = send.Min(sup.city.sampleResources.SubSat(Settings.nearResReserve));
 							Assert( send.sum <= shipping);
 	
@@ -294,17 +289,7 @@ namespace CnV.Views
 			var res = supporter.city.sampleResources.Sub(reserve).Max(0);
 		//	var viaWater = NearRes.instance.viaWater;
 			var shipping = GetTransport(city);//viaWater ? (city.shipsHome - Settings.nearResShipReserve).Max0() * 10000 : (city.cartsHome - Settings.nearResCartReserve).Max0() * 1000;
-			if (shipping > res.sum)
-			{
-				supporter.res = res;  // we can send all of it
-			}
-			else
-			{
-				var ratio = shipping / (double)res.sum.Max(1);
-
-				supporter.res = res.ScaleAndTruncate(ratio);
-
-			}
+			supporter.res = res.LimitToTranspost(shipping);
 
 
 			DoRefresh();
@@ -450,27 +435,16 @@ namespace CnV.Views
 				//var viaWater = NearRes.instance.viaWater;
 			//	var info = selected.info;
 				var transport = GetTransport(selected.city);
-				if(viaWater)
-					transport -= (selected.res[id] + 9999) / 10000 * 10000;
-				else
-					transport -= (selected.res[id] + 999) / 1000 * 1000;
-				var sumOther = 0;
-				for(int i = 0;i<4;++i)
+				transport -= selected.res[id];
+				Assert(transport >= 0);
+				var resOther = selected.res;
+				resOther[id] = 0;
+				resOther.LimitToTranspostInPlace(transport); 
+				for(int i = 0;i < 4;++i)
 				{
 					if(i == id)
 						continue;
-					sumOther += selected.res[i];
-				}
-				if(sumOther > transport)
-				{
-					var scale = transport / (double)sumOther.Max(1);
-					for(int i = 0;i < 4;++i)
-					{
-						if(i == id)
-							continue;
-						selected.res[i] = (int)(selected.res[i] * scale);
-					}
-
+					selected.res[i] = resOther[i];
 				}
 				selected.NotifyChange();
 				RefreshSupportByRes();

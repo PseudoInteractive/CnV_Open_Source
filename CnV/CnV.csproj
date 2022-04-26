@@ -6,7 +6,7 @@
     <TargetPlatformVersion>10.0.22000.0</TargetPlatformVersion>
 	<TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
     <RootNamespace>CnV</RootNamespace>
-    <Platforms>x64</Platforms>
+    <Platforms>x64;ARM64</Platforms>
     <MonoGamePlatform>WindowsStoreApp</MonoGamePlatform>
     <RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
     <UseWinUI>True</UseWinUI>
@@ -20,7 +20,7 @@
 	<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
 	<AppxBundle>Always</AppxBundle>
 	<TieredCompilation>True</TieredCompilation>
-    <AppxBundlePlatforms>x64</AppxBundlePlatforms>
+    <AppxBundlePlatforms>x64|arm64</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
 	  
@@ -56,71 +56,70 @@
   <ItemGroup>
 	<PackageReference Include="Azure.Data.Tables" Version="12.3.0" />
     <PackageReference Include="Azure.Storage.Blobs" Version="12.11.0-beta.2" />
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0-preview3" />
     <PackageReference Include="CommunityToolkit.WinUI.Notifications" Version="7.1.2" />
     <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
     <PackageReference Include="DirectXTexNet" Version="1.0.3" />
-    <PackageReference Include="DSharpPlus" Version="4.2.0-nightly-01056" />
-    <PackageReference Include="DSharpPlus.CommandsNext" Version="4.2.0-nightly-01056" />
-    <PackageReference Include="DSharpPlus.Interactivity" Version="4.2.0-nightly-01056" />
-    <PackageReference Include="DSharpPlus.SlashCommands" Version="4.2.0-nightly-01056" />
+    <PackageReference Include="DSharpPlus" Version="4.2.0" />
     <PackageReference Include="Enums.NET" Version="4.0.0" />
     <PackageReference Include="Grpc.Net.Client" Version="2.41.0-pre1" />
     <PackageReference Include="Grpc.Net.Client" Version="2.42.0-pre1" />
     <PackageReference Include="Humanizer.Core" Version="2.13.14" />
     <PackageReference Include="MessagePack" Version="2.3.85" />
-    <PackageReference Include="MessagePack.Experimental" Version="2.3.85" />
-    <PackageReference Include="MessagePack.ImmutableCollection" Version="2.4.14-alpha" />
     <PackageReference Include="MessagePackAnalyzer" Version="2.4.14-alpha">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.AppCenter" Version="4.5.0" />
     <PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.5.0" />
     <PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.5.0" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0-preview.3.22175.4" />
     <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.Primitives" Version="7.0.0-preview.3.22175.4" />
-    <PackageReference Include="Microsoft.Identity.Client" Version="4.43.1" />
+    <PackageReference Include="Microsoft.Identity.Client" Version="4.43.1">
+      <TreatAsUsed>true</TreatAsUsed>
+    </PackageReference>
     <PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="2.20.0" />
     <PackageReference Include="Microsoft.Toolkit" Version="7.1.2" />
-    <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
 	<PackageReference Include="Azure.Data.Tables" Version="12.5.0" />
     <PackageReference Include="Azure.Storage.Blobs" Version="12.12.0-beta.1" />
     <PackageReference Include="CommunityToolkit.WinUI.Notifications" Version="7.1.2" />
     <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
-    <PackageReference Include="DSharpPlus" Version="4.2.0" />
-    <PackageReference Include="DSharpPlus.CommandsNext" Version="4.2.0" />
-    <PackageReference Include="DSharpPlus.Interactivity" Version="4.2.0" />
-    <PackageReference Include="DSharpPlus.SlashCommands" Version="4.2.0" />
     <PackageReference Include="Enums.NET" Version="4.0.0" />
     <PackageReference Include="Grpc.Net.Client" Version="2.41.0-pre1" />
     <PackageReference Include="Grpc.Net.Client" Version="2.45.0" />
     <PackageReference Include="Humanizer.Core" Version="2.14.1" />
     <PackageReference Include="MessagePack" Version="2.4.14-alpha" />
-    <PackageReference Include="MessagePack.Experimental" Version="2.4.14-alpha" />
     <PackageReference Include="MagicOnion.Client" Version="4.4.1" />
     <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.4" />
-    <PackageReference Include="Microsoft.Toolkit" Version="7.1.2" />
-    <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.2" />
+    <PackageReference Include="Microsoft.Toolkit" Version="7.1.2">
+      <TreatAsUsed>true</TreatAsUsed>
+    </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.197" />	  
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.3" />
 	<PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
     <PackageReference Include="PlayFabAllSDK" Version="1.108.220118" />
-    <PackageReference Include="Syncfusion.Chart.WinUI" Version="20.1.0.50" />
-    <PackageReference Include="Syncfusion.Editors.WinUI" Version="20.1.0.50" />
-    <PackageReference Include="Syncfusion.Grid.WinUI" Version="20.1.0.50" />
-    <PackageReference Include="Syncfusion.Licensing" Version="20.1.0.50" />
-	<PackageReference Include="SharpDX" Version="4.2.0" />
-    <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
+    <PackageReference Include="Syncfusion.Chart.WinUI" Version="20.1.0.51" />
+    <PackageReference Include="Syncfusion.Editors.WinUI" Version="20.1.0.51" />
+    <PackageReference Include="Syncfusion.Grid.WinUI" Version="20.1.0.51" />
+    <PackageReference Include="Syncfusion.Licensing" Version="20.1.0.51" />
+	<PackageReference Include="SharpDX" Version="4.2.0">
+	  <TreatAsUsed>true</TreatAsUsed>
+	</PackageReference>
+    <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0">
+      <TreatAsUsed>true</TreatAsUsed>
+    </PackageReference>
     <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
-    <PackageReference Include="SharpDX.DXGI" Version="4.2.0" />
+    <PackageReference Include="SharpDX.DXGI" Version="4.2.0">
+      <TreatAsUsed>true</TreatAsUsed>
+    </PackageReference>
     <PackageReference Include="SharpDX.MediaFoundation" Version="4.2.0" />
     <PackageReference Include="SharpGen.Runtime.COM" Version="2.0.0-beta.10" />
-    <PackageReference Include="System.Collections.Immutable" Version="7.0.0-preview.3.22175.4" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="7.0.0-preview.2.22152.2" />
+    <PackageReference Include="System.Collections.Immutable" Version="7.0.0-preview.3.22175.4">
+      <TreatAsUsed>true</TreatAsUsed>
+    </PackageReference>
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="7.0.0-preview.2.22152.2">
+      <TreatAsUsed>true</TreatAsUsed>
+    </PackageReference>
     <PackageReference Include="System.Runtime.Experimental" Version="6.0.2" />
     <PackageReference Include="System.Text.Json" Version="7.0.0-preview.3.22175.4" />
 	<PackageReference Include="ZString" Version="2.4.4" />
@@ -138,6 +137,7 @@
     <Compile Include="GameUI\Artifacts.xaml.cs" />
     <Compile Include="GameUI\AutobuildDialog.xaml.cs" />
     <Compile Include="GameUI\BattleReportDialog.xaml.cs" />
+    <Compile Include="GameUI\BossReportDialog.xaml.cs" />
     <Compile Include="GameUI\ChartDialog.xaml.cs" />
     <Compile Include="GameUI\CombatCalcDialog.xaml.cs" />
     <Compile Include="GameUI\CreateAlliance.xaml.cs" />
@@ -401,6 +401,9 @@
     <Page Include="GameUI\BattleReportDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="GameUI\BossReportDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="GameUI\ChartDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -653,6 +656,7 @@
 	<None Remove="GameUI\Artifacts.xaml" />
 	<None Remove="GameUI\AutobuildDialog.xaml" />
 	<None Remove="GameUI\BattleReportDialog.xaml" />
+	<None Remove="GameUI\BossReportDialog.xaml" />
 	<None Remove="GameUI\ChartDialog.xaml" />
 	<None Remove="GameUI\CombatCalcDialog.xaml" />
 	<None Remove="GameUI\CreateAlliance.xaml" />
@@ -758,6 +762,13 @@
     <Deterministic>True</Deterministic>
     <FileAlignment>4096</FileAlignment>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
+    <Optimize>False</Optimize>
+    <WarningLevel>4</WarningLevel>
+    <DefineConstants>$(DefineConstants);CNV;CNVCLIENT;APPCENTER;DISABLE_XAML_GENERATED_MAIN</DefineConstants>
+    <Deterministic>True</Deterministic>
+    <FileAlignment>4096</FileAlignment>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='SinglePlayer|x64'">
     <Optimize>False</Optimize>
     <WarningLevel>4</WarningLevel>
@@ -765,7 +776,22 @@
     <Deterministic>True</Deterministic>
     <FileAlignment>4096</FileAlignment>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='SinglePlayer|ARM64'">
+    <Optimize>False</Optimize>
+    <WarningLevel>4</WarningLevel>
+    <DefineConstants>$(DefineConstants);CNV;CNVCLIENT;APPCENTER;DISABLE_XAML_GENERATED_MAIN;DEBUG</DefineConstants>
+    <Deterministic>True</Deterministic>
+    <FileAlignment>4096</FileAlignment>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Optimize>True</Optimize>
+    <WarningLevel>4</WarningLevel>
+    <DefineConstants>$(DefineConstants);CNV;CNVCLIENT;APPCENTER;DISABLE_XAML_GENERATED_MAIN</DefineConstants>
+    <Deterministic>True</Deterministic>
+    <FileAlignment>4096</FileAlignment>
+    <LayoutDir />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
     <Optimize>True</Optimize>
     <WarningLevel>4</WarningLevel>
     <DefineConstants>$(DefineConstants);CNV;CNVCLIENT;APPCENTER;DISABLE_XAML_GENERATED_MAIN</DefineConstants>

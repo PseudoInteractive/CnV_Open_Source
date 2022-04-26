@@ -41,10 +41,7 @@ namespace CnV
 
 		private void SetDefault()
 		{
-			res = source.SampleResources();
-			var gain = bandWidth / (double)res.sum;
-			if(gain < 1.0f)
-				res *= gain;
+			res = source.SampleResources().LimitToTranspost(bandWidth);
 
 			OnPropertyChanged();
 		}

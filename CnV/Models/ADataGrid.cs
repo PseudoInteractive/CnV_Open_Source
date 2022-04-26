@@ -313,7 +313,7 @@ public static partial class ADataGrid
 		public static StorageFolder folder => ApplicationData.Current.LocalFolder;
 	}
 
-	public static async void SetFocus(this xDataGrid grid, object p)
+	public static async Task SetFocus(this xDataGrid grid, object p)
 	{
 		await Task.Delay(500);
 		grid.CurrentItem = p;

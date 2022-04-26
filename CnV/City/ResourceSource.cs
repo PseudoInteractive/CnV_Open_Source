@@ -53,7 +53,7 @@ namespace CnV
 		}
 		public int ResMax(int type)
 		{
-			return (city.sampleResources[type]- Settings.nearResReserve[type]).Min(NearRes.instance.GetTransport(city)); // TODO
+			return (city.sampleResources[type]- Settings.nearResReserve[type]).Clamp(0,NearRes.instance.GetTransport(city)); // TODO
 		}
 
 		public DateTimeOffset eta { get => Sim.serverTime + travel; set => _ = value; }
