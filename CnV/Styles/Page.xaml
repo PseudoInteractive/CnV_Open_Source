@@ -37,6 +37,7 @@
         <Setter Property="Background" Value="{x:Null}"/>
 		<Setter Property="Margin" Value="0" />
 		<Setter Property="BorderThickness" Value="0" />
+		<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
 		<Setter Property="Padding" Value="0" />
 		<Setter Property="IsTabStop" Value="True" />
 		<Setter Property="TabFocusNavigation" Value="Cycle" />
@@ -45,6 +46,7 @@
 		<Setter Property="IsDefaultShadowEnabled" Value="True" />
 		<Setter Property="MaxWidth" Value="800" />
 		<Setter Property="MaxHeight" Value="740" />
+		<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
 		<Setter Property="IsTabStop" Value="True" />
 		<Setter Property="TabFocusNavigation" Value="Cycle" />
 	</Style>
@@ -150,9 +152,12 @@
 				<Setter Property="FontWeight" Value="Normal" />
 
 			</Style>
-			<Style  TargetType="sf:GridCell" BasedOn="{StaticResource SfTextCell}"/>
+	<Style  TargetType="sf:GridCell" BasedOn="{StaticResource SfTextCell}">
+		<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
+	</Style>
 	<Style  TargetType="sf:GridTextColumn" BasedOn="{StaticResource SfTextCell}">
 		<Setter Property="ShowHeaderToolTip" Value="True"/>
+
 	
 	</Style>
 
@@ -170,9 +175,11 @@
 			</Style>
 			<Style  TargetType="sf:GridTemplateColumn" BasedOn="{StaticResource SfGridColumnBase}">
 				<Setter Property="AllowSorting" Value="False"/>
+				
 				<Setter Property="AllowFiltering" Value="False"/>
 			</Style>
 			<Style  TargetType="sf:GridNumericColumn" BasedOn="{StaticResource SfGridColumnBase}">
+				
         <Setter Property="ShowHeaderToolTip" Value="True"/>
     </Style>
 	<Style  TargetType="sf:GridCheckBoxColumn" BasedOn="{StaticResource SfGridColumnBase}">
@@ -248,14 +255,16 @@
 
 			<Style TargetType="Border" x:Key="BorderReveal"  >
 				<Setter Property="BorderThickness" Value="1" />
-				<Setter Property="Margin" Value="2"/>
-				<Setter Property="Padding" Value="4"/>
-				<Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundAccentRevealBorderBrush}"/>
+				<Setter Property="Margin" Value="1"/>
+				<Setter Property="Padding" Value="1"/>
+		<Setter Property="CornerRadius" Value="4" />
+		<Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"/>
 			</Style>
+	<Style TargetType="Border" BasedOn="{StaticResource BorderReveal}" >
+		
+	</Style>
 
-
-
-			<converter:SmallTimeConverter x:Key="SmallTimeConverter" />
+	<converter:SmallTimeConverter x:Key="SmallTimeConverter" />
 			<converter:DateTimeConverter x:Key="DateTimeConverter" />
 			<converter:IntConverter x:Key="IntConverter" />
 			<converter:TimeConverter x:Key="TimeConverter" />

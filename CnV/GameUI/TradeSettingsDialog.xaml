@@ -11,59 +11,118 @@
     mc:Ignorable="d">
 
 	<Grid HorizontalAlignment="Stretch" Margin="8" >
-		
+
 		<Grid.RowDefinitions>
 			<RowDefinition Height="auto" />
 			<RowDefinition Height="auto"/>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="auto"/>
 		</Grid.RowDefinitions>
-		<Grid HorizontalAlignment="Stretch" >
-			<Grid.RowDefinitions>
-				<RowDefinition />
-				<RowDefinition/>
-				<RowDefinition/>
-				<RowDefinition/>
-				<RowDefinition/>
-			</Grid.RowDefinitions>
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="*"/>
-				<ColumnDefinition Width="*"/>
-				<ColumnDefinition Width="*"/>
-				<ColumnDefinition Width="*"/>
-			</Grid.ColumnDefinitions>
-			<StackPanel Grid.ColumnSpan="4" HorizontalAlignment="Stretch">
-				<view:CityControl Label="Wood Source"  x:Name="woodSource" LabelWidth="140" />
-				<view:CityControl Label="Stone Source" x:Name="stoneSource" LabelWidth="140" />
-				<view:CityControl Label="Iron Source" x:Name="ironSource" LabelWidth="140"/>
-				<view:CityControl Label="Food Source" x:Name="foodSource" LabelWidth="140" />
-			</StackPanel>
-			<NumberBox Grid.Column="0" Grid.Row="1" x:Name="woodReq" Margin="8" Header="&#xA040; Request" 
+		<StackPanel BorderThickness="1" Margin="0,4" BorderBrush="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}" ToolTipService.ToolTip="Resources that this city requests from its hub" >
+			<TextBlock Style="{StaticResource TextBlockLarge}" Margin="4" Text="Wanted Resources and Source Hub" />
+
+			<Grid  >
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
+
+				<NumberBox Grid.Column="0"  x:Name="woodReq" Margin="8,2"  Description="&#xA040; Want"
 					   SmallChange="10000" />
-			<NumberBox Grid.Column="1" Grid.Row="1" x:Name="stoneReq" Margin="8" Header="&#xA041; Request"
+				<NumberBox Grid.Column="1"  x:Name="stoneReq" Margin="8,2" Description="&#xA041; Want"
 					   SmallChange="10000"/>
-			<NumberBox Grid.Column="2" Grid.Row="1" x:Name="ironReq" Margin="8" Header="&#xA042; Request"
+				<NumberBox Grid.Column="2"  x:Name="ironReq" Margin="8,2" Description="&#xA042; Want"
 					   SmallChange="10000" />
-			<NumberBox Grid.Column="3" Grid.Row="1" x:Name="foodReq" Margin="8" Header="&#xA043; Request"
+				<NumberBox Grid.Column="3"  x:Name="foodReq" Margin="8,2" Description="&#xA043; Want"
 					   SmallChange="10000" />
+			</Grid >
+			<Grid  >
+				<Grid.RowDefinitions>
+					<RowDefinition Height="auto" />
+					<RowDefinition Height="auto"/>
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
+				<view:CityControl Label="Wood Source" Grid.Column="0" x:Name="woodSource" LabelWidth="110" Margin="8,2"  />
+				<view:CityControl Label="Stone Source" Grid.Column="1" x:Name="stoneSource" LabelWidth="110" Margin="8,2"/>
+				<view:CityControl Label="Iron Source" Grid.Column="0" Grid.Row="1"  x:Name="ironSource" LabelWidth="110" Margin="8,2"/>
+				<view:CityControl Label="Food Source" Grid.Column="1" Grid.Row="1" x:Name="foodSource" LabelWidth="110" Margin="8,2"/>
+			</Grid >
 
+		</StackPanel>
+		<StackPanel Grid.Row="1" BorderThickness="1" Margin="0,4" BorderBrush="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}" ToolTipService.ToolTip="Resources that this city sends to its hub on overflow" >
+			<TextBlock Style="{StaticResource TextBlockLarge}" Text="Overflow Resources and Destination" Margin="4" />
 
-			<NumberBox Grid.Column="0" Grid.Row="2" x:Name="woodSend" Margin="8" Header="&#xA040; Max"
-					   SmallChange="10000" />
-			<NumberBox Grid.Column="1" Grid.Row="2" x:Name="stoneSend" Margin="8" Header="&#xA041; Max"
-					   SmallChange="10000" />
-			<NumberBox Grid.Column="2" Grid.Row="2" x:Name="ironSend" Margin="8" Header="&#xA042; Max"
-					   SmallChange="10000" />
-			<NumberBox Grid.Column="3" Grid.Row="2" x:Name="foodSend"  Margin="8" Header="&#xA043; Max"
-					   SmallChange="10000" />
-			<StackPanel Grid.ColumnSpan="4" Grid.Row="3" HorizontalAlignment="Stretch">
-				<view:CityControl Label="Wood Target" x:Name="woodDest" LabelWidth="140" />
-				<view:CityControl Label="Stone Target" x:Name="stoneDest" LabelWidth="140"  />
-				<view:CityControl Label="Iron Target" x:Name="ironDest" LabelWidth="140"  />
-				<view:CityControl  Label="Food Target" x:Name="foodDest" LabelWidth="140"  />
-			</StackPanel>
+			<Grid  >
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
 
-		</Grid>
-		<CheckBox Grid.Row="1" x:Name="protectResources"  Content="Protect resources" ToolTipService.ToolTip="If set, city only send resources in excess of its send levels (i.e. protect resources below the send level from requests)" />
-		<Button Grid.Row="1"   Content="Done" HorizontalAlignment="Right" Click="DoneClick" Margin="8,4,8,4" />
-		
+				<NumberBox Grid.Column="0"  x:Name="woodSend" Margin="8,2"  Description="&#xA040; Max"
+					   SmallChange="10000" />
+				<NumberBox Grid.Column="1"  x:Name="stoneSend" Margin="8,2" Description="&#xA041; Max"
+					   SmallChange="10000"/>
+				<NumberBox Grid.Column="2"  x:Name="ironSend" Margin="8,2" Description="&#xA042; Max"
+					   SmallChange="10000" />
+				<NumberBox Grid.Column="3"  x:Name="foodSend" Margin="8,2" Description="&#xA043; Max"
+					   SmallChange="10000" />
+			</Grid >
+			<Grid  >
+				<Grid.RowDefinitions>
+					<RowDefinition Height="auto" />
+					<RowDefinition Height="auto"/>
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
+				<view:CityControl Label="Wood Dest" Grid.Column="0" x:Name="woodDest" LabelWidth="110" Margin="8,2"  />
+				<view:CityControl Label="Stone Dest" Grid.Column="1" x:Name="stoneDest" LabelWidth="110" Margin="8,2"/>
+				<view:CityControl Label="Iron Dest" Grid.Column="0" Grid.Row="1"  x:Name="ironDest" LabelWidth="110" Margin="8,2"/>
+				<view:CityControl Label="Food Dest" Grid.Column="1" Grid.Row="1" x:Name="foodDest" LabelWidth="110" Margin="8,2"/>
+			</Grid >
+
+		</StackPanel>
+
+		<Grid HorizontalAlignment="Stretch" Grid.Row="2" BorderThickness="1" Margin="0,4"
+				  BorderBrush="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"
+				  ToolTipService.ToolTip="Cities can request resources from the Trade Market, other players with extra resources can fulfill these request for gold" >
+				<Grid.RowDefinitions>
+					<RowDefinition />
+					<RowDefinition />
+					<RowDefinition/>
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="*"/>
+				</Grid.ColumnDefinitions>
+				<TextBlock Style="{StaticResource TextBlockLarge}" Text="Market Trade Requests" Margin="4" Grid.ColumnSpan="4" />
+				<NumberBox Grid.Column="0" Grid.Row="1" x:Name="woodRequest" Margin="8,2" Description="&#xA040; Request" 
+					   SmallChange="10000" />
+				<NumberBox Grid.Column="1" Grid.Row="1"  x:Name="stoneRequest" Margin="8,2" Description="&#xA041; Request"
+					   SmallChange="10000" />
+				<NumberBox Grid.Column="2" Grid.Row="1"  x:Name="ironRequest" Margin="8,2" Description="&#xA042; Request"
+					   SmallChange="10000" />
+				<NumberBox Grid.Column="3" Grid.Row="1"  x:Name="foodRequest"  Margin="8,2" Description="&#xA043; Request"
+					   SmallChange="10000" />
+				<NumberBox Grid.Column="0" Grid.Row="2" x:Name="payRate" Margin="8,2" Header="Gold offered per unit" ToolTipService.ToolTip="Amount of gold to pay per resource, 2 would mean you will pay 2000 gold for 1000 iron"
+					   SmallChange="100" />
+				<NumberBox Grid.Column="1" Grid.Row="2" x:Name="maxTravel" Margin="8,2" Header="Max Travel (hours)"  ToolTipService.ToolTip="Max resource transit time for request"
+					   SmallChange="0.125" />
+
+			</Grid>
+		<CheckBox Grid.Row="3" x:Name="protectResources"  Content="Protect resources" ToolTipService.ToolTip="If set, city only send resources in excess of its send levels (i.e. protect resources below the send level from requests)" />
+
+		<Button Grid.Row="3"   Content="Done" HorizontalAlignment="Right" Click="DoneClick" Margin="8,4" />
+
 	</Grid>
 </cnv:DialogG>

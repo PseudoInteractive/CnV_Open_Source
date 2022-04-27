@@ -17,7 +17,7 @@
 			<ColumnDefinition Width="Auto" />
 		</Grid.ColumnDefinitions>
 
-		<TextBlock Text="{x:Bind Label, Mode=OneWay}" Style="{StaticResource TextBlockMedium}" Width="{x:Bind LabelWidth}" />
+		<TextBlock Text="{x:Bind Label, Mode=OneWay}" Style="{StaticResource TextBlockMedium}" MaxWidth="{x:Bind LabelWidth}" Width="{x:Bind LabelWidth}" />
 
 
 

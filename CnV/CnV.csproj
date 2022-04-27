@@ -94,6 +94,7 @@
       <TreatAsUsed>true</TreatAsUsed>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
+    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="1.6.1" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.197" />	  
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.3" />
 	<PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
@@ -811,12 +812,21 @@
 	 <Reference Include="Cyotek.Drawing.BitmapFont">
       <HintPath>..\ext\Cyotek.Drawing.BitmapFont.dll</HintPath>
     </Reference>
-    <Reference Include="MonoGame.Framework">
-      <HintPath>..\ext\net6.0-windows10.0.22000.0\MonoGame.Framework.dll</HintPath>
-    </Reference>
-    <ProjectCapability Include="Msix" />
+
   </ItemGroup>
-  <ItemGroup>
+	<ItemGroup Condition="'$(Platform)'=='ARM64'">
+		
+		<Reference Include="MonoGame.Framework">
+			<HintPath>..\ext\arm64\MonoGame.Framework.dll</HintPath>
+		</Reference>
+	</ItemGroup>
+	<ItemGroup Condition="'$(Platform)'=='x64'">
+
+		<Reference Include="MonoGame.Framework">
+			<HintPath>..\ext\x64\MonoGame.Framework.dll</HintPath>
+		</Reference>
+	</ItemGroup>
+	<ItemGroup>
     <Content Update="Assets\cnvIcon.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
