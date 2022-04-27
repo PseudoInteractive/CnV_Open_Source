@@ -218,10 +218,12 @@ namespace CnV
 				var lg = displayQueue.Length;
 				if(lg == bq.Count()) {
 					var status = city.GetBuildQueueStatuses();
-					for(int i = 0;i<lg;++i) {
-						if(bq[i].status != status[i]) {
-							bq[i].status = status[i];
-							bq[i].OnPropertyChanged();
+					if(status.Length == lg) {
+						for(int i = 0;i<lg;++i) {
+							if(bq[i].status != status[i]) {
+								bq[i].status = status[i];
+								bq[i].OnPropertyChanged();
+							}
 						}
 					}
 				}
