@@ -115,7 +115,7 @@
 				<NumberBox Grid.Column="3" Grid.Row="1"  x:Name="foodRequest"  Margin="8,2" Description="&#xA043; Request"
 					   SmallChange="10000" />
 				<NumberBox Grid.Column="0" Grid.Row="2" x:Name="payRate" Margin="8,2" Header="Gold offered per unit" ToolTipService.ToolTip="Amount of gold to pay per resource, 2 would mean you will pay 2000 gold for 1000 iron"
-					   SmallChange="100" />
+					   SmallChange="0.125" />
 				<NumberBox Grid.Column="1" Grid.Row="2" x:Name="maxTravel" Margin="8,2" Header="Max Travel (hours)"  ToolTipService.ToolTip="Max resource transit time for request"
 					   SmallChange="0.125" />
 

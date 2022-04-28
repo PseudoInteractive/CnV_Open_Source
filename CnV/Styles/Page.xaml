@@ -139,8 +139,25 @@
 			<Style BasedOn="{StaticResource ToggleButton}" TargetType="ToggleButton">
 			</Style>
 
+	<Style x:Key="sfRowStyle" TargetType="sf:DataGridRowControl">
+		<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
+		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+		<Setter Property="FontStretch" Value="Condensed" />
+		<Setter Property="FontWeight" Value="Normal" />
+	</Style>
+	<Style x:Key="sfHeaderStyle" TargetType="sf:GridHeaderCellControl">
+		<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
+		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+		<Setter Property="FontStretch" Value="Condensed" />
+		<Setter Property="FontWeight" Value="Normal" />
+	</Style>
 
-			<!--Toggle Button-->
+
+	<Style TargetType="sf:GridHeaderCellControl" BasedOn="{StaticResource sfHeaderStyle}" />
+
+	<Style BasedOn="{StaticResource sfRowStyle}" TargetType="sf:DataGridRowControl" />
+
+	<!--Toggle Button-->
 
 			<!--Syncfusion text-->
 
@@ -154,6 +171,10 @@
 			</Style>
 	<Style  TargetType="sf:GridCell" BasedOn="{StaticResource SfTextCell}">
 		<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
+		<Setter Property="FontStretch" Value="Condensed"/>
+		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+		<Setter Property="FontWeight" Value="Normal" />
+		<Setter Property="Margin" Value="1" />
 	</Style>
 	<Style  TargetType="sf:GridTextColumn" BasedOn="{StaticResource SfTextCell}">
 		<Setter Property="ShowHeaderToolTip" Value="True"/>
@@ -179,6 +200,7 @@
 				<Setter Property="AllowFiltering" Value="False"/>
 			</Style>
 			<Style  TargetType="sf:GridNumericColumn" BasedOn="{StaticResource SfGridColumnBase}">
+				
 				
         <Setter Property="ShowHeaderToolTip" Value="True"/>
     </Style>

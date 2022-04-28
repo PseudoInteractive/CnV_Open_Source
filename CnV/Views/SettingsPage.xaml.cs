@@ -261,13 +261,13 @@ namespace CnV
 				//sendIron = st.Read(nameof(sendIron), true);
 				//sendFood = st.Read(nameof(sendFood), true);
 				//reserveCarts = st.Read(nameof(reserveCarts), reserveCarts);
-				DonationTab.reserveCarts = st.Read(nameof(DonationTab.reserveCarts), 800);
-				DonationTab.reserveCartsPCT = st.Read(nameof(DonationTab.reserveCartsPCT), 0.0625f);
-				DonationTab.reserveShips = st.Read(nameof(DonationTab.reserveShips), 10);
-				DonationTab.reserveShipsPCT = st.Read(nameof(DonationTab.reserveShipsPCT), 0f);
-				DonationTab.woodStoneRatio = st.Read(nameof(DonationTab.woodStoneRatio), -1f);
-				DonationTab.reserveWood = st.Read(nameof(DonationTab.reserveWood), 0);
-				DonationTab.reserveStone = st.Read(nameof(DonationTab.reserveStone), 0);
+				//DonationTab.reserveCarts = st.Read(nameof(DonationTab.reserveCarts), 10);
+				//DonationTab.reserveCartsPCT = st.Read(nameof(DonationTab.reserveCartsPCT), 0.0625f);
+				//DonationTab.reserveShips = st.Read(nameof(DonationTab.reserveShips), 0);
+				//DonationTab.reserveShipsPCT = st.Read(nameof(DonationTab.reserveShipsPCT), 0f);
+				//DonationTab.woodStoneRatio = st.Read(nameof(DonationTab.woodStoneRatio), -1f);
+				//DonationTab.reserveWood = st.Read(nameof(DonationTab.reserveWood), 0);
+				//DonationTab.reserveStone = st.Read(nameof(DonationTab.reserveStone), 0);
 			//	Tips.ReadSeen();
 			//	World.LoadContinentHistory();
 				if(!Settings.loadedOnce)

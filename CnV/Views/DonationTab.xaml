@@ -6,66 +6,72 @@
       xmlns:game="using:CnV"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:cnv="using:CnV"
-      xmlns:my="using:Microsoft.UI.Xaml.Controls"
 	  xmlns:sf="using:Syncfusion.UI.Xaml.DataGrid"
       xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
       xmlns:local="using:CnV.Views"
         Tag="Donation"
-
+		Loaded="OnLoaded"
 			  IsTabStop="True"
     mc:Ignorable="d">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="66"/>
-            <RowDefinition Height="66" />
+            <RowDefinition Height="auto"/>
+			<RowDefinition Height="auto" />
             <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <tk:WrapPanel Orientation="Horizontal" Grid.Row="0" >
 
-			<ToggleSwitch Header="Wood vs Stone" IsOn="{x:Bind cnv:Settings.donationsProportionateToWhatsNeeded, Mode=TwoWay}" OnContent="Needed" OffContent="Have"
-						  ToolTipService.ToolTip="Ratio of wood vs stone to send.  On: Whats needed, Off: What's in storage" />
+			<!--<ToggleSwitch Header="Wood vs Stone" IsOn="{x:Bind cnv:Settings.donationsProportionateToWhatsNeeded, Mode=TwoWay}" OnContent="Needed" OffContent="Have"
+						  ToolTipService.ToolTip="Ratio of wood vs stone to send.  On: Whats needed, Off: What's in storage" />-->
 			<ToggleSwitch Header="Land or Water" IsOn="{x:Bind local:DonationTab.viaWater, Mode=TwoWay}" OnContent="Water" OffContent="Land"
 			               />
-			<my:NumberBox Header="Fixed Wood vs Stone?" Value="{x:Bind local:DonationTab.woodStoneRatio,Mode=TwoWay}"
+			<!--<NumberBox Header="Fixed Wood vs Stone?" Value="{x:Bind local:DonationTab.woodStoneRatio,Mode=TwoWay}"
 			              Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="If this is not -1, resources will be sent in a fixed ratio of wood vs stone, i.e. 0.5 means half of each, 0 means all stone, 1 means all wood" 
-			              NumberFormatter="{x:Bind cnv:App.formatter2Digit}" />
-			<my:NumberBox Header="Reserve Carts" Value="{x:Bind local:DonationTab.reserveCarts,Mode=TwoWay}"
+			              NumberFormatter="{x:Bind cnv:App.formatter2Digit}" />-->
+			<NumberBox Header="Reserve Carts" Value="{x:Bind cnv:Settings.tradeSendReserveCarts,Mode=TwoWay}"
 						  Style="{StaticResource NumberBoxCarts}" Width="100"
 						  
 						  />
-            <my:NumberBox Header="Reserve Carts %" Value="{x:Bind local:DonationTab.reserveCartsPCT,Mode=TwoWay}" 
+			<NumberBox Header="Reserve Carts %" Value="{x:Bind cnv:Settings.tradeSendReserveCartsPCT,Mode=TwoWay}" 
 					NumberFormatter="{x:Bind cnv:App.percentFormatter}" Width="120"
 				Style="{StaticResource NumberBoxPercent}" />
-            <my:NumberBox Header="Reserve Ships" Value="{x:Bind local:DonationTab.reserveShips,Mode=TwoWay}"
+			<NumberBox Header="Reserve Ships" Value="{x:Bind cnv:Settings.tradeSendReserveShips,Mode=TwoWay}"
 						  Style="{StaticResource NumberBoxShips}" Width="100"
 						          />
-			<my:NumberBox Header="Reserve Ships %" Value="{x:Bind local:DonationTab.reserveShipsPCT,Mode=TwoWay}" 
+			<NumberBox Header="Reserve Ships %" Value="{x:Bind cnv:Settings.tradeSendReserveShipsPCT,Mode=TwoWay}" 
 						   Style="{StaticResource NumberBoxPercent}" Width="120"
 						  NumberFormatter="{x:Bind cnv:App.percentFormatter}"
 						  />
-			
-            <my:NumberBox  Header="Reserve Wood" Value="{x:Bind local:DonationTab.reserveWood,Mode=TwoWay}"
+
+			<NumberBox  Header="&#xA040; Reserve" Value="{x:Bind cnv:Settings.tradeSendReserve.wood,Mode=TwoWay}"
                     Style="{StaticResource NumberBoxRes}" 
                       />
-            <my:NumberBox Header="Reserve Stone" Value="{x:Bind local:DonationTab.reserveStone,Mode=TwoWay}"
-                   Style="{StaticResource NumberBoxRes}" 
+			<NumberBox  Header="&#xA041; Reserve" Value="{x:Bind cnv:Settings.tradeSendReserve.stone,Mode=TwoWay}"
+                    Style="{StaticResource NumberBoxRes}" 
                       />
 
-        </tk:WrapPanel>
+			<NumberBox  Header="&#xA042; Reserve" Value="{x:Bind cnv:Settings.tradeSendReserve.iron,Mode=TwoWay}"
+                    Style="{StaticResource NumberBoxRes}" 
+                      />
+			<NumberBox  Header="&#xA043; Reserve" Value="{x:Bind cnv:Settings.tradeSendReserve.food,Mode=TwoWay}"
+                    Style="{StaticResource NumberBoxRes}" 
+                      />
+		</tk:WrapPanel>
 		<sf:SfDataGrid x:Name="donationGrid"
 		                x:FieldModifier="public"
-		                Grid.Row="2" Loaded="DataGridLoaded"
+		                Grid.Row="2" 
 								 							
-		                AllowFocusOnInteraction="True"
 		                AutoGenerateColumns="False"
-		                FontSize="{StaticResource MediumFontSize}"
+		               
 		                ItemsSource="{x:Bind donationGridSource}"
 		                RowHeight="{StaticResource MediumGridRowHeight}"
 		                AlternationCount="2"
 						AllowTriStateSorting="True"
 		                SelectionMode="Single"
 		                SelectionUnit="Row"
+			
+					   DetailsViewExpanding="donationGrid_DetailsViewExpanding"
 		                SelectionChanged="donationGrid_SelectionChanged"
 		>
 			<sf:SfDataGrid.Columns>
@@ -77,49 +83,126 @@
 				<sf:GridTextColumn MappingName="nameAndRemarks"
                                        
                                         />
+				<sf:GridNumericColumn  MappingName="cartsHome" HeaderText="carts"
+                                       TextAlignment="Right"
+                                       DisplayNumberFormat="N0"
+                                             />
+				<sf:GridNumericColumn  MappingName="shipsHome" HeaderText="ships"
+                                            DisplayNumberFormat="N0"
+                                            TextAlignment="Right"  
+                                             />
+				<sf:GridNumericColumn MappingName="wood" HeaderText="&#xA040;"
+				                            DisplayNumberFormat="N0"
+                                                     TextAlignment="Right"
+									  ToolTipService.ToolTip="Wood available to send"
+                                              />
+				<sf:GridNumericColumn MappingName="stone" HeaderText="&#xA041;"
+				                            DisplayNumberFormat="N0"
+                                                     TextAlignment="Right"
+                                              />
+				<sf:GridNumericColumn MappingName="iron" HeaderText="&#xA042;"
+				                            DisplayNumberFormat="N0"
+                                                     TextAlignment="Right"
+                                              />
+				<sf:GridNumericColumn MappingName="food" HeaderText="&#xA043;"
+				                            DisplayNumberFormat="N0"
+                                                     TextAlignment="Right"
+                                              />
 				<sf:GridHyperlinkColumn MappingName="xy"
                                         />
 				<sf:GridNumericColumn  MappingName="cont"
                                        TextAlignment="Center"
                                              />
-				<sf:GridNumericColumn  MappingName="CartsHome"
-                                       TextAlignment="Right"
-                                       DisplayNumberFormat="N0"
+
+
+	
+				
+			</sf:SfDataGrid.Columns>
+			<sf:SfDataGrid.DetailsViewDefinition>
+				<!--  FirstLevelNestedGrid1 is created here  -->
+				<sf:GridViewDefinition RelationalColumn="Targets">
+					<sf:GridViewDefinition.DataGrid>
+						<sf:SfDataGrid x:Name="donationTargetsGrid" 
+									   AutoGenerateColumns="False"
+							SelectionMode="Extended"
+									   FontFamily="{StaticResource CnvIcons}"
+							SelectionUnit="Row"
+							AutoGenerateRelations="False"
+							ShowToolTip="True"
+							
+									   >
+							<sf:SfDataGrid.Columns >
+
+
+								<sf:GridImageColumn MappingName="icon"
+				                    AllowFiltering="False"
+									AllowSorting="False"
+											HeaderText="I"
+											Width="32"
+											
+											 />
+								<sf:GridHyperlinkColumn MappingName="goldReward" HeaderText="&#xA044;"
+				                          
+                                                     TextAlignment="Right"
+                                              />
+
+								<sf:GridTimeColumn  MappingName="travelT"
+                                                      HeaderText="Travel"
+									DisplayTimeFormat="HH:mm:ss"
                                              />
-				<sf:GridNumericColumn MappingName="Wood"
+								<sf:GridNumericColumn MappingName="wood" HeaderText="&#xA040;"
 				                            DisplayNumberFormat="N0"
                                                      TextAlignment="Right"
-                                            
                                               />
-				<sf:GridNumericColumn MappingName="woodStorage"
-				                      TextAlignment="Right"
-                                            DisplayNumberFormat="N0"
-                                            
-                                            IsHidden="True" />
-				<sf:GridNumericColumn  MappingName="Stone"
-                                            DisplayNumberFormat="N0"
-                                           
-                                            TextAlignment="Right"
-                                             />
-				<sf:GridNumericColumn  MappingName="Carts"
-                                            
-                                           DisplayNumberFormat="N0"
-                                                      IsHidden="True"
-                                             />
-				<sf:GridNumericColumn  MappingName="ShipsHome"
-                                            DisplayNumberFormat="N0"
-                                            TextAlignment="Right"          
-                                             />
-				<sf:GridNumericColumn  MappingName="Ships"
-                                            DisplayNumberFormat="N0"
-                                                      IsHidden="True"
-                                             />
-				<sf:GridNumericColumn MappingName="points"
-                                                     IsHidden="True"
-                                             />
-			</sf:SfDataGrid.Columns>
+								<sf:GridNumericColumn MappingName="stone" HeaderText="&#xA041;"
+				                            DisplayNumberFormat="N0"
+                                                     TextAlignment="Right"
+                                              />
+								<sf:GridNumericColumn MappingName="iron" HeaderText="&#xA042;"
+				                            DisplayNumberFormat="N0"
+                                                     TextAlignment="Right"
+                                              />
+								<sf:GridNumericColumn MappingName="food" HeaderText="&#xA043;"
+				                            DisplayNumberFormat="N0"
+                                                     TextAlignment="Right"
+                                              />
+								<sf:GridTextColumn MappingName="target.player"
+										   HeaderText="player"
+										   TextAlignment="Left"
+										 
+										    />
+								<sf:GridTextColumn MappingName="nameAndRemarks"
+										   HeaderText="Name"
+										   TextAlignment="Left"
+										 
+										    />
+
+								<sf:GridHyperlinkColumn MappingName="xy"
+				                        TextAlignment="Center"
+				                     
+
+				/>
+								<sf:GridNumericColumn MappingName="cont"
+				                      TextAlignment="Center"
+										
+												 />
+
+								<sf:GridCheckBoxColumn MappingName="isOnWater"
+											  IsHidden="True"
+											   />
+
+							</sf:SfDataGrid.Columns>
+						</sf:SfDataGrid>
+					</sf:GridViewDefinition.DataGrid>
+				</sf:GridViewDefinition>
+				<!--  FirstLevelNestedGrid2 is created here  -->
+
+			</sf:SfDataGrid.DetailsViewDefinition>
+
+
 		</sf:SfDataGrid>
-		<sf:SfDataGrid x:Name="blessedGrid" x:FieldModifier="public"
+		
+		<!--<sf:SfDataGrid x:Name="blessedGrid" x:FieldModifier="public"
                         Grid.Row="3"
                         Loaded="DataGridLoaded"
                         AllowFocusOnInteraction="True"
@@ -129,6 +212,8 @@
                         RowHeight="{StaticResource MediumGridRowHeight}"
                         SelectionMode="Single"
                         SelectionUnit="Row"
+					   ItemsSource="{x:Bind donationOrders, Mode=OneWay}"
+					 
                         >
 
             <sf:SfDataGrid.Columns>
@@ -139,7 +224,7 @@
 				<sf:GridTextColumn  MappingName="Pri"
                                                       TextAlignment="Center"
                                              />
-				<sf:GridDateColumn MappingName="blessedUntil"
+				<sf:GridDateColumn UseBindingValue="True" ValueBinding="{Binding blessedUntil,Converter={StaticResource DateTimeConverter},Mode=OneWay}"
                                                     
                                         
                                                 TextAlignment="Center"
@@ -161,8 +246,9 @@
                                                       DisplayNumberFormat= "N0"
                                                       
                                              />
-				<sf:GridTextColumn  MappingName="travelTime"
+				<sf:GridTimeColumn  MappingName="travelT"
                                                       HeaderText="Travel"
+									DisplayTimeFormat="HH:mm:ss"
                                              />
 				<sf:GridNumericColumn  MappingName="level"
                                                       
@@ -187,7 +273,7 @@
                                                 TextAlignment="Center"
                                         />
 			</sf:SfDataGrid.Columns>
-        </sf:SfDataGrid>
+        </sf:SfDataGrid>-->
         <tk:GridSplitter Grid.Row="3"
                          ResizeDirection="Rows"
                                    						 				IsTabStop="True"

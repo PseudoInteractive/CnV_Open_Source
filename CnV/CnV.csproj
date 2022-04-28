@@ -14,7 +14,7 @@
     <EnableDefaultPageItems>false</EnableDefaultPageItems>
     <LangVersion>preview</LangVersion>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
-    <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+    <GenerateAppInstallerFile>True</GenerateAppInstallerFile>
 	<TieredCompilation>True</TieredCompilation>
 	<AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
 	<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
@@ -741,7 +741,7 @@
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
     <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
     <EnableNETAnalyzers>True</EnableNETAnalyzers>
-    <AnalysisLevel>preview</AnalysisLevel>
+    <AnalysisLevel>preview-all</AnalysisLevel>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <ImplicitUsings>True</ImplicitUsings>
     <Nullable>annotations</Nullable>
@@ -755,6 +755,7 @@
     <AppxPackageDir>S:\Source\cnv\appx\</AppxPackageDir>
     <ApplicationInsightsResourceId>/subscriptions/2a698fb0-55b8-4561-b722-2015b2c78d9c/resourceGroups/appcenter-export-Alliances/providers/microsoft.insights/components/AppCenterExport-Alliances</ApplicationInsightsResourceId>
     <UserSecretsId>390b80fc-ab7a-4c55-9a54-5947221eec7e</UserSecretsId>
+    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Optimize>False</Optimize>

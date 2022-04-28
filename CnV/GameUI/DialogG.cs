@@ -18,7 +18,8 @@ namespace CnV
 	public class DialogG :Microsoft.UI.Xaml.Controls.Expander
 	{
 		protected virtual string title => "Title";
-
+		internal virtual bool closeOnCitySwitch => true;
+		
 		protected TextBlock titleText;
 		protected Button closeButton;
 		public UIElementCollection TitleGrid
@@ -131,6 +132,19 @@ namespace CnV
 		}
 		
 		TaskCompletionSource<bool> showTask;
+
+		static internal void CitySwitched() {
+			AppS.QueueOnUIThread(() => {
+				lock(all) {
+					foreach(var d in all) {
+						if(d.closeOnCitySwitch)
+							d.Hide(false);
+
+					}
+
+				}
+			});
+		}
 
 		public Task<bool> Show(bool toggle)
 		{

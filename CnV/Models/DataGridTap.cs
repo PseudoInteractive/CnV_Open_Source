@@ -197,14 +197,14 @@ namespace CnV;
 
 						break;
 					}
-					case BlessedCity blessedCity:
+					case DonationOrder blessedCity:
 					{
-						blessedCity.ProcessTap(e.Column.HeaderText);
+						blessedCity.ProcessTap(e.Column.MappingName);
 						break;
 					}
 					case Supporter supporter:
 					{
-						supporter.ProcessedTapped(e.Column.HeaderText);
+						supporter.ProcessedTapped(e.Column.MappingName);
 						break;
 
 					}

@@ -171,6 +171,8 @@ namespace CnV
 
 			ClearLastDisplayed();
 			Changed();
+			// Close misc dialogs
+		
 
 
 
@@ -412,7 +414,7 @@ namespace CnV
 		public string commandsTitle => $"Commands {city.activeCommands}/{city.commandSlots}";
 		public string tradesTitle {
 		get{
-			var rv = $"Trades {tradeItems.Count} {CnV.Resources.cartGlyph}{city.CartsHome}/{city.carts}";
+			var rv = $"Trades {tradeItems.Count} {CnV.Resources.cartGlyph}{city.cartsHome}/{city.carts}";
 			if(city.ships >0 ) 
 					rv += $"{CnV.Resources.shipGlyph}{city.shipsHome}/{city.ships}";
 				return rv;
@@ -771,8 +773,10 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 		{
 			Assert(instance is null);
 			instance = this;
-			City.buildCityChanged+= (_,_)=>Invalidate();
-			
+			City.buildCityChanged+= (_,_) => {
+				Invalidate();
+				DialogG.CitySwitched();
+			};			
 			
 
 		}

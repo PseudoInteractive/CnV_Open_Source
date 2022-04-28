@@ -227,7 +227,7 @@ public static partial class CityUI
 			aWar.AddItem("Show Reinforcements",     (_, _) => ReinforcementsTab.ShowReinforcements(cid, null));
 			aWar.AddItem("Show All Reinforcements", (_, _) => ReinforcementsTab.ShowReinforcements(0,   null));
 			aExport.AddItem("Defense Sheet", me.ExportToDefenseSheet);
-			AApp.AddItem(flyout, "Send Res", (_, _) => SendResDialogue.ShowInstance(City.GetBuild(),me));
+			AApp.AddItem(flyout, "Send Res", (_, _) => SendResDialogue.ShowInstance(City.GetBuild(),me,null,null));
 			AApp.AddItem(flyout, "Near Res", me.ShowNearRes);
 			if (me.canVisit)
 			{

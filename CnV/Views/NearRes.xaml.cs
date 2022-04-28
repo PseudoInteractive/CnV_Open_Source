@@ -24,7 +24,7 @@ namespace CnV.Views
 				DoRefresh(true);
 			} }
 		public bool templeDonation;
-		public City target = City.GetBuild();
+		public City target = City.invalid;
 		public float filterTime = 6;
 		public float _filterTime { get => filterTime; set { filterTime = value; DoRefresh(); } }  // defenders outside of this window are not included
 		public int filterResHome { get; set; } = 1000;
@@ -310,11 +310,14 @@ namespace CnV.Views
 
 				string res = string.Empty;
 				var asDonation = this.SendAsDontation.IsOn;
-				if(asDonation && false)
-				{
-				//	await BlessedCity.SendDonation(s.city.cid,target.cid,s.res.wood,s.res.stone,viaWater);
+				if(asDonation) {
+					s.res.iron =s.res.food = 0;
 				}
-				else
+				//if(asDonation && false)
+				//{
+				////	await BlessedCity.SendDonation(s.city.cid,target.cid,s.res.wood,s.res.stone,viaWater);
+				//}
+				//else
 				{
 					if(source.underSiege)
 					{

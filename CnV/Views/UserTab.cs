@@ -58,6 +58,7 @@ public partial class UserTab:UserControl, IANotifyPropertyChanged
 				new BuildTab(),
 				new MainPage(),
 				new PlayerTab(),
+				new DonationTab(),
 				new IncomingTab(),
 				new HitHistoryTab(),
 				new AttackTab(),
@@ -347,10 +348,10 @@ public partial class UserTab:UserControl, IANotifyPropertyChanged
 			}
 			else if(e.Record is City city)
 			{
-				if(e.Column.MappingName is ( "nameAndRemarks"  ) )
+				if(e.Column.MappingName is ( "nameAndRemarks"  ) || e.Column.MappingName is ( nameof(City.icon)  ) )
 					e.ToolTip.Content = city.toolTip;
-				else if(e.Column.MappingName is ( nameof(City.icon)  ) )
-					e.ToolTip.Content = new Image { Source = city.icon };
+//				else if(e.Column.MappingName is ( nameof(City.icon)  ) )
+	//				e.ToolTip.Content = new Image { Source = city.icon };
 
 			}
 			else  if(e.Record is BattleReport b)
