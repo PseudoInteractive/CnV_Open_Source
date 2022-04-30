@@ -376,6 +376,7 @@
 
 			<wct:WrapPanel Orientation="Horizontal"
 						   Margin="4">
+				<cnv:PlayerListBox x:Name="PlayerFilter" Width="400" />
 				
 				<Button Content="Watch incoming for players"
 						Click="WatchIncomingForPlayers"

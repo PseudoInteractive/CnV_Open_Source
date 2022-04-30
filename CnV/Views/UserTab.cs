@@ -70,6 +70,7 @@ public partial class UserTab:UserControl, IANotifyPropertyChanged
 				new NearDefenseTab(),
 				new NearRes(),
 				new ChartDialog(),
+				new TimelineView(),
 				new NPCHistory(),
 		};
 

@@ -41,7 +41,7 @@ namespace CnV
 		internal string labelTime => $"{Label} time";
 		internal string labelDate => $"{Label} date";
 
-		internal static DateTimeOffset TranslateTime(ServerTime t) => new DateTime(t.dateTime.Ticks,DateTimeKind.Local);
+		internal static DateTimeOffset TranslateTime(ServerTime t) => t.dateTime;
 		internal void SetDateTime(ServerTime t)
 		{
 			var tDefault = TranslateTime(t);

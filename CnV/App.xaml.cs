@@ -95,10 +95,10 @@ namespace CnV
 #if APPCENTER
 			if(AAnalytics.initialized)
 				return;
-			if(AppCenter.Configured)
-			{
-				return;
-			}
+			//if(AppCenter.Configured)
+			//{
+			//	return;
+			//}
 			//AppCenter.SetMaxStorageSizeAsync(16 * 1024 * 1024).ContinueWith((storageTask) => {
 			//	// The storageTask.Result is false when the size cannot be honored.
 			//});
@@ -486,6 +486,7 @@ namespace CnV
 					// if (!args.PrelaunchActivated)
 
 					await OnLaunchedOrActivated(args);
+				//	InitAppCenter();
 //					var w2 = new Window();
 //w2.Content = new TextBlock() { Text = "Hello" };
 //w2.Activate();
@@ -638,7 +639,7 @@ namespace CnV
 
 				if(!wasRunning)
 				{
-					InitAppCenter();
+					
 					await Sim.LoadJsons();
 				}
 				const bool isInteractive = true;
@@ -668,7 +669,7 @@ namespace CnV
 
 					}
 				}
-
+			
 				// Depending on activationArgs one of ActivationHandlers or DefaultActivationHandler
 				// will navigate to the first page
 				//	await HandleActivationAsync(activationArgs);
@@ -694,6 +695,7 @@ namespace CnV
 					//await Task.Delay(500);
 					Log("Activate!");
 					AppS.appWindow.Show(true);
+						
 					AppS.presenter.Maximize();
 					//await Task.Delay(500);
 					Log("Max");

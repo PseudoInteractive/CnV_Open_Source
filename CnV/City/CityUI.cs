@@ -19,6 +19,7 @@ using Syncfusion.UI.Xaml.DataGrid;
 using Syncfusion.UI.Xaml.Grids.ScrollAxis;
 using static CnV.City;
 using static CnV.CityUI;
+using Microsoft.UI.Xaml.Media;
 
 public static partial class CityUI
 {
@@ -685,7 +686,7 @@ public partial class City
 
 	internal void Settle(WorldC worldC)
 	{
-		SendTroops.ShowInstance(this,City.Get(worldC), isSettle:true,viaWater:cont != worldC.continentDigits );
+		SendTroops.ShowInstance(this,City.Get(worldC), isSettle:true,viaWater:cont != worldC.continentDigits,type:ArmyType.defense );
 	}
 	internal void Raid(WorldC worldC)
 	{
@@ -818,5 +819,7 @@ public partial class City
 			await ClearResUI();
 		});
 	}
+	
+
 
 }

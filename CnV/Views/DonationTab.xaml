@@ -71,7 +71,7 @@
 		                SelectionMode="Single"
 		                SelectionUnit="Row"
 			
-					   DetailsViewExpanding="donationGrid_DetailsViewExpanding"
+					  
 		                SelectionChanged="donationGrid_SelectionChanged"
 		>
 			<sf:SfDataGrid.Columns>
@@ -120,7 +120,7 @@
 			</sf:SfDataGrid.Columns>
 			<sf:SfDataGrid.DetailsViewDefinition>
 				<!--  FirstLevelNestedGrid1 is created here  -->
-				<sf:GridViewDefinition RelationalColumn="Targets">
+				<sf:GridViewDefinition RelationalColumn="donationTargets">
 					<sf:GridViewDefinition.DataGrid>
 						<sf:SfDataGrid x:Name="donationTargetsGrid" 
 									   AutoGenerateColumns="False"

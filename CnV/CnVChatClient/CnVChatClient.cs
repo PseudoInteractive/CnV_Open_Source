@@ -21,7 +21,7 @@ namespace CnVDiscord
 		private static CancellationTokenSource shutdownCancellation = new CancellationTokenSource();
 		private static ChannelBase channel;
 		public ICnVChatClientConnection connection;
-		public static async Task Setup()
+		public static void Setup()
 		{
 #if CNV
 			if(instance!=null)
@@ -30,8 +30,7 @@ namespace CnVDiscord
 			instance = new();
 
 			// Any Magic Onion?
-			if(!await instance.Initialize())
-				return;
+			instance.Run();
 #endif
 		}
 		public static async Task ShutDown(bool permanent)
@@ -77,7 +76,7 @@ namespace CnVDiscord
 		}
 
 		static CancellationTokenSource reconnectWaitCancel = new();
-		public async Task<bool> Initialize()
+		public async Task<bool> Run()
 		{
 #if CNV
 			Assert(channel == null);
