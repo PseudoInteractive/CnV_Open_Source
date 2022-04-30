@@ -14,7 +14,7 @@ namespace CnV
 		internal bool viaWater;
 		internal bool isSettle;
 		internal Army prior;
-		protected override string title => $"{(isSettle ? "Setting" : Army.typeStrings[(int)type])} => {target}";
+		protected override string title => $"{(isSettle ? "Settle" : target.isBoss ? "NPC Hit": Army.typeStrings[(int)type])} => {target}";
 		internal static SendTroops? instance;
 		internal City city;
 		internal City target;
@@ -95,6 +95,7 @@ namespace CnV
 				rv.isSettle = prior.isSettle;
 				rv.viaWater = prior.isViaWater;
 				rv.type = prior.type;
+				rv.UpdateTroopItems();
 				rv.arrival.SetDateTime(prior.arrival);
 			}
 			else {
@@ -103,8 +104,9 @@ namespace CnV
 				rv.isSettle = prior?.isSettle??isSettle;
 				rv.viaWater = prior?.isViaWater ?? viaWater;
 				rv.type = type;
+				rv.UpdateTroopItems();
 			}
-			rv.UpdateTroopItems();
+			
 			if(isSettle)
 				rv.troopItems[Troops.ttMagistra].count = 1;
 

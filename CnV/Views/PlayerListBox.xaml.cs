@@ -41,7 +41,7 @@ namespace CnV
 
 		private void _SelectionChanged(object sender,Syncfusion.UI.Xaml.Editors.ComboBoxSelectionChangedEventArgs e) {
 			players = TokenBox.SelectedItems.Cast<Player>().ToArray();
-			Changed.Invoke(this,new() { players=players });
+			Changed?.Invoke(this,new() { players=players });
 		}
 
 		

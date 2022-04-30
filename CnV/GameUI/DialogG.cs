@@ -64,7 +64,7 @@ namespace CnV
 			grid.ColumnDefinitions.Add(new() { Width=GridLength.Auto});
 			titleText = new TextBlock()
 			{
-				Text=title,
+				
 				Style = App.instance.Resources["TextBlockMedium"]  as Style,
 				VerticalAlignment=VerticalAlignment.Center,
 				Padding = new(),

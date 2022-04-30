@@ -41,7 +41,7 @@ namespace CnV
 		internal string labelTime => $"{Label} time";
 		internal string labelDate => $"{Label} date";
 
-		internal static DateTimeOffset TranslateTime(ServerTime t) => t.dateTime;
+		internal static DateTime TranslateTime(ServerTime t) => t.dateTimeDT;
 		internal void SetDateTime(ServerTime t)
 		{
 			var tDefault = TranslateTime(t);
@@ -58,11 +58,22 @@ namespace CnV
 		{
 			// We pretend that this is local
 			// 
-			var tDefault = TranslateTime(Sim.simTime);
-			if(date.SelectedDate is null)
+			var tDefault = Sim.simTime.dateTimeDT;
+
+			if(time.SelectedTime is null) {
 				date.SelectedDate = tDefault;
-			if(time.SelectedTime is null)
 				time.SelectedTime = tDefault;
+			}
+		}
+		private void date_DropDownOpened(object sender,EventArgs e)
+		{
+			// We pretend that this is local
+			// 
+			var tDefault = Sim.simTime.dateTimeDT;
+			if(date.SelectedDate is null) {
+				date.SelectedDate = tDefault;
+				time.SelectedTime = tDefault;
+			}
 		}
 
 		internal static ObservableCollection<ServerTime> recent = new( new[] { ServerTime.zero } );

@@ -12,55 +12,86 @@
 	Loaded="OnLoaded"
 	Tag="Timeline"
     mc:Ignorable="d">
-
+	<UserControl.Resources>
+		<DataTemplate x:Key="agendaTemplate" x:DataType="sfs:ScheduleAppointment"   >
+			<Border BorderThickness="0" Background = "{x:Bind AppointmentBackground}"
+								 VerticalAlignment="Stretch"
+								 HorizontalAlignment="Stretch" 
+									ToolTipService.ToolTip="{x:Bind Notes}" >
+				<TextBlock
+									Text = "{x:Bind Subject}"
+									Foreground="{x:Bind Foreground}"
+									VerticalAlignment="Center"
+									TextTrimming="CharacterEllipsis"
+									TextWrapping="Wrap"
+									Style="{StaticResource TextBlockSmall}"
+									TextAlignment="Left"/>
+			</Border>
+		</DataTemplate>
+	</UserControl.Resources>
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="auto" />
 			<RowDefinition Height="*" />
 		</Grid.RowDefinitions>
+		
 		<StackPanel Orientation="Horizontal" >
 			<!--<ComboBox ItemsSource="{x:Bind resourceGroupTypes}" SelectedItem="{x:Bind ResourceGrouping,Mode=TwoWay}" Header="Grouping" Width="200" />-->
 			<cnv:PlayerListBox x:Name="PlayerFilter" Width="300" Header="Filter" Changed="PlayerFilterChanged" />
 		</StackPanel>
 
 		<sfs:SfScheduler x:Name="schedule" Grid.Row="1" 
-						 AllowedViewTypes="TimelineDay,TimelineMonth,TimelineWeek,Day,Month,Week"
-						
-						
+						 AllowedViewTypes="TimelineDay,TimelineWeek,Day,Month,Week"
+						AllowViewNavigation="true"
+						 
+						ShowDatePickerButton="False"
 						 FontFamily="{StaticResource CnvIcons}"
 						 FontStretch="Condensed"
-						 ViewType="Week"
-						 ResourceGroupType="Resource"
-						 FirstDayOfWeek="{x:Bind firstDayOfWeek,Mode=OneWay}"
-						 ResourceCollection="{x:Bind resources,Mode=OneWay}"
+						 ViewType="Month"
+						 
+						 ResourceGroupType="None"
+						DisplayDate="{x:Bind initialDisplayDate,Mode=OneTime}"
+						ResourceCollection="{x:Bind resources}"
 						 QueryAppointments="QueryAppointments"
 						 AppointmentTapped="ItemTapped"
-						 ReminderAlertOpening="scheduler_ReminderAlertOpening"
-						 ItemsSource="{x:Bind appointments, Mode=OneWay}">
+						AppointmentEditFlag="Add,DragDrop,Edit"
+						 EnableReminder="False"
+						 
+						
+						>
 			<sfs:SfScheduler.DragDropSettings>
 				<sfs:DragDropSettings TimeIndicatorFormat = "HH:mm:ss" />
 			</sfs:SfScheduler.DragDropSettings>
 			<sfs:SfScheduler.TimelineViewSettings>
-				<sfs:TimelineViewSettings TimeRulerFormat="HH:mm" RowAutoHeight="True" />
+				<sfs:TimelineViewSettings TimeRulerFormat="HH:mm" RowMinHeight="64"  AppointmentTemplate="{StaticResource agendaTemplate}" />
 			</sfs:SfScheduler.TimelineViewSettings>
 			<sfs:SfScheduler.DaysViewSettings>
-				<sfs:DaysViewSettings TimeRulerFormat="HH:mm"  />
+				<sfs:DaysViewSettings TimeRulerFormat="HH:mm"  AppointmentTemplate="{StaticResource agendaTemplate}"  />
 			</sfs:SfScheduler.DaysViewSettings>
 			<sfs:SfScheduler.MonthViewSettings>
-				<sfs:MonthViewSettings LeadingDaysVisibility="Visible" AppointmentDisplayMode="Appointment"  TrailingDaysVisibility="Visible"  ShowAgendaView="True"  />
+				<sfs:MonthViewSettings  AppointmentDisplayMode="Appointment"  AppointmentDisplayCount="6"  ShowAgendaView="True" AppointmentTemplate="{StaticResource agendaTemplate}"  >
+					
+				</sfs:MonthViewSettings>
 			</sfs:SfScheduler.MonthViewSettings>
 
 			<sfs:SfScheduler.ResourceHeaderTemplate>
 				<DataTemplate x:DataType="sfs:SchedulerResource" >
-					<Grid Background="Transparent" BorderBrush="{x:Bind Background }" BorderThickness="0,2,0,0">
-						<StackPanel VerticalAlignment="Center" Orientation="Vertical">
-							<Image HorizontalAlignment="Center" VerticalAlignment="Center"
-                                                           Width="55" Height="55"
+
+					<Grid  BorderBrush="{x:Bind Background }" BorderThickness="0,2,0,0" >
+						<Grid.RowDefinitions>
+							<RowDefinition Height="*" />
+							<RowDefinition Height="auto" />
+						</Grid.RowDefinitions>
+						<Image HorizontalAlignment="Left" VerticalAlignment="Stretch"
+                                                         
+							   Stretch="Uniform"
+							   Margin="0"
+							   
                                                            Source="{x:Bind cnv:TimelineView.PlayerImage(Id) }" />
-							<TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" 
-                                                       FontSize="15" Text="{x:Bind Name}"/>
-						</StackPanel>
-					</Grid>
+							<TextBlock Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" 
+                                                       Text="{x:Bind Name}" Style="{StaticResource TextBlockSmall}" />
+						</Grid>
+				
 				</DataTemplate>
 			</sfs:SfScheduler.ResourceHeaderTemplate>
 

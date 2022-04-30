@@ -12,6 +12,9 @@
             x:Name="TokenBox"
             ItemsSource="{x:Bind cnv:Player.allSorted}"
 			SelectionMode="Multiple"
+			IsMultiSelectCheckBoxEnabled="True"
+			DelimiterText=","
+	
 			IsFilteringEnabled="True"
 			IsTextSearchEnabled="True"
 			MultiSelectionDisplayMode="Token"
@@ -20,9 +23,10 @@
             TextMemberPath="name"
 		    DisplayMemberPath="name"
 			SelectionChanged="_SelectionChanged"
-	
+			TokenItemTemplate="{StaticResource playerComboTemplate}"
 			>
-	<sfe:sf
+	
+	
 
 
 </sfe:SfComboBox>

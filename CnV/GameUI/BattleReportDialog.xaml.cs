@@ -23,7 +23,7 @@ namespace CnV
 	using static Troops;
 	public sealed partial class BattleReportDialog:DialogG
 	{
-		protected override string title => "Battle Report";
+		protected override string title => $"Battle Report {b.arrival.Format()}";
 		internal BattleReport b;
 		internal string attackType
 		{

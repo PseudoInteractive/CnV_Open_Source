@@ -16,9 +16,9 @@
 			<RowDefinition Height="auto"/>
 			<RowDefinition Height="auto"/>
 		</Grid.RowDefinitions>
-		<sfe:SfDatePicker x:Name="date" Description="{x:Bind labelDate}" AllowNull="True" PlaceholderText="Today" DisplayDateFormat="MM/dd" 
+		<sfe:SfDatePicker x:Name="date" Header="{x:Bind labelDate}" AllowNull="True" DropDownOpened="date_DropDownOpened" PlaceholderText="Today" DisplayDateFormat="MM/dd" 
 							/>
-		<sfe:SfTimePicker Grid.Column="1" x:Name="time"  Description="{x:Bind labelTime}"  DropDownOpened="time_DropDownOpened"
+		<sfe:SfTimePicker Grid.Column="1" x:Name="time"  Header="{x:Bind labelTime}"  DropDownOpened="time_DropDownOpened"
 				ClockIdentifier="24HourClock" AllowNull="True" PlaceholderText="ASAP" DisplayTimeFormat="HH:mm:ss"  />
 		<Button Grid.Row="1" Content="Now" Click="NowClick"  />
 		<ComboBox Grid.Column="1" Grid.Row="1" ItemsSource="{x:Bind cnv:DateTimeBox.recent ,Mode=OneWay}" SelectionChanged="RecentChanged"  />

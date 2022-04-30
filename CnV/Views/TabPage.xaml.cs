@@ -270,7 +270,8 @@ namespace CnV.Views
 			{ "NearRes", Symbol.Favorite },
 			{ "officer" ,Symbol.Admin },
 			{ "WebView", Symbol.World },
-			{ "BossHits", Symbol.Play }
+			{ "BossHits", Symbol.Play },
+			{ "Timeline", Symbol.Calendar }
 		};
 
 		static Dictionary<string,string> tabFontIcons = new Dictionary<string,string> {
@@ -362,10 +363,10 @@ namespace CnV.Views
 			// If the app is running on a version earlier than 18362, simply no-op.
 			// If your app needs to support multiple windows on earlier versions of Win10, you can use CoreWindow/ApplicationView.
 			// More information about showing multiple views can be found here: https://docs.microsoft.com/windows/uwp/design/layout/show-multiple-views
-			if(!ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract",8))
-			{
-				return;
-			}
+			//if(!ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract",8))
+			//{
+			//	return;
+			//}
 
 			//         AppWindow newWindow = await AppWindow.TryCreateAsync();
 			//newWindow.PersistedStateId = $"tabWindow{tabWindows.Count}";
