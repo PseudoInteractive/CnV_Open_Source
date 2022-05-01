@@ -70,8 +70,8 @@ namespace CnV;
 								Spot.ProcessCoordClick(br.cityC, false, AppS.keyModifiers, false);
 								break;
 
-							case nameof(BossReport.Player):
-								br.Player.Click();
+							case nameof(BossReport.player):
+								br.player.Click();
 								break;
 							case nameof(BossReport.icon):
 								BossReportDialog.ShowInstance(br);

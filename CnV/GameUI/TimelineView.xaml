@@ -14,10 +14,10 @@
     mc:Ignorable="d">
 	<UserControl.Resources>
 		<DataTemplate x:Key="agendaTemplate" x:DataType="sfs:ScheduleAppointment"   >
-			<Border BorderThickness="0" Background = "{x:Bind AppointmentBackground}"
+			<Border BorderThickness="0" Background = "{x:Bind cnv:TimelineView.GetColor(Id,AppointmentBackground) }"
 								 VerticalAlignment="Stretch"
 								 HorizontalAlignment="Stretch" 
-									ToolTipService.ToolTip="{x:Bind Notes}" >
+									ToolTipService.ToolTip="{x:Bind cnv:TimelineView.GetNotes(Id,Notes)}" >
 				<TextBlock
 									Text = "{x:Bind Subject}"
 									Foreground="{x:Bind Foreground}"
@@ -38,6 +38,7 @@
 		<StackPanel Orientation="Horizontal" >
 			<!--<ComboBox ItemsSource="{x:Bind resourceGroupTypes}" SelectedItem="{x:Bind ResourceGrouping,Mode=TwoWay}" Header="Grouping" Width="200" />-->
 			<cnv:PlayerListBox x:Name="PlayerFilter" Width="300" Header="Filter" Changed="PlayerFilterChanged" />
+			<CheckBox Content="Artifacts" IsChecked="{x:Bind ShowArtifacts,Mode=TwoWay}" />
 		</StackPanel>
 
 		<sfs:SfScheduler x:Name="schedule" Grid.Row="1" 
@@ -51,7 +52,7 @@
 						 
 						 ResourceGroupType="None"
 						DisplayDate="{x:Bind initialDisplayDate,Mode=OneTime}"
-						ResourceCollection="{x:Bind resources}"
+					
 						 QueryAppointments="QueryAppointments"
 						 AppointmentTapped="ItemTapped"
 						AppointmentEditFlag="Add,DragDrop,Edit"

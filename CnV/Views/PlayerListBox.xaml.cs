@@ -25,10 +25,10 @@ namespace CnV
 	public sealed partial class PlayerListBox:SfComboBox
 	{
 		public class ChangedEventArgs {
-			internal Player[] players;
+			internal PlayerId[] players;
 		}
 
-		internal Player[] players = Array.Empty<Player>();
+		internal PlayerId[] players = Array.Empty<PlayerId>();
 		internal event EventHandler<ChangedEventArgs> Changed;
 		public PlayerListBox() {
 			this.InitializeComponent();
@@ -37,10 +37,10 @@ namespace CnV
 
 	
 
-	
+		// Todo: Set players
 
 		private void _SelectionChanged(object sender,Syncfusion.UI.Xaml.Editors.ComboBoxSelectionChangedEventArgs e) {
-			players = TokenBox.SelectedItems.Cast<Player>().ToArray();
+			players = TokenBox.SelectedItems.Select(a=> (a as Player).id).ToArray();
 			Changed?.Invoke(this,new() { players=players });
 		}
 
