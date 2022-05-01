@@ -1,70 +1,60 @@
-﻿using System.Collections.Generic;
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using static CnV.Troops;
-using System.Threading.Tasks;
-using static CnV.TroopTypeCountHelper;
 using CommunityToolkit.WinUI.UI.Controls;
 
 namespace CnV.Views
 {
 	using Game;
-	using Services;
 
-	public sealed partial class NearDefenseTab : UserTab
+	public sealed partial class NearDefenseTab:UserTab
 	{
 
-        public static NearDefenseTab instance;
-        public static bool IsVisible() => instance.isFocused;
-        public bool waitReturn { get; set; }
+		public static NearDefenseTab instance;
+		public static bool IsVisible() => instance.isFocused;
+		public bool waitReturn { get; set; }
 		public bool sendViaWater { get; set; }
 
 		public static NotifyCollection<City> defendants = new();
 		public static NotifyCollection<Supporter> supporters = new();
 
 		public static bool includeOffense;
-        public float filterTime=6;
-        public int filterTSTotal=10000;
-        public int filterTSHome;
+		public float filterTime = 6;
+		public int filterTSTotal = 10000;
+		public int filterTSHome;
 		public bool portal { get; set; }
 		public bool onlyHome { get; set; } = true;
 
 		public float _filterTime { get => filterTime; set { filterTime = value; refresh.Go(); } }  // defenders outside of this window are not included
-        public int _filterTSTotal { get => filterTSTotal; set { filterTSTotal = value; refresh.Go(); } }
-        public int _filterTSHome { get => filterTSHome; set { filterTSHome = value; refresh.Go(); } } // need at this this many ts at home to be considered for def
-     //   public ServerTime arriveAt { get; set; } = default;
-        public static SupportByTroopType [] supportByTroopTypeEmpty = Array.Empty<SupportByTroopType>();
-        public static int[] splitArray = { 1, 2, 3, 4, 5 };
-        public static bool Include(TroopTypeCount tt) => includeOffense || tt.isDef;
+		public int _filterTSTotal { get => filterTSTotal; set { filterTSTotal = value; refresh.Go(); } }
+		public int _filterTSHome { get => filterTSHome; set { filterTSHome = value; refresh.Go(); } } // need at this this many ts at home to be considered for def
+																									  //   public ServerTime arriveAt { get; set; } = default;
+		public static SupportByTroopType[] supportByTroopTypeEmpty = Array.Empty<SupportByTroopType>();
+		public static int[] splitArray = { 1,2,3,4,5 };
+		public static bool Include(TroopTypeCount tt) => includeOffense || tt.isDef;
 
 
-        public static void GetSelected(List<int> rv)
-        {
-            var i = instance;
-            if (!NearDefenseTab.IsVisible())
-                return;
-            
-            foreach(var sel in  i.supportGrid.SelectedItems)
-            {
-                var s = sel as Supporter;
-                Assert(s != null);
-                rv.AddIfAbsent(s.cid);
-            }
-        }
-		internal void SetArrived(ServerTime t)
-		{
+		public static void GetSelected(List<int> rv) {
+			var i = instance;
+			if(!NearDefenseTab.IsVisible())
+				return;
+
+			foreach(var sel in i.supportGrid.SelectedItems) {
+				var s = sel as Supporter;
+				Assert(s != null);
+				rv.AddIfAbsent(s.cid);
+			}
+		}
+		internal void SetArrived(ServerTime t) {
 			sendAtUI.SetDateTime(t);
 		}
-        public async override Task VisibilityChanged(bool visible, bool longTerm)
-		{
-            if (visible)
-            {
-	           
-				if (defendants.Count == 0)
-				{
+		public async override Task VisibilityChanged(bool visible,bool longTerm) {
+			if(visible) {
+
+				if(defendants.Count == 0) {
 					var focus = Spot.GetFocus();
-					if (focus.isCityOrCastle)
+					if(focus.isCityOrCastle)
 						defendants.Add(focus,true);
 					else
 						defendants.Add(City.GetBuild(),true);
@@ -72,7 +62,7 @@ namespace CnV.Views
 
 				var viaWater = sendViaWater;// && defendants.Any(d => d.isOnWater);
 
-//				if (defendants != null && defendant.isCityOrCastle)
+				//				if (defendants != null && defendant.isCityOrCastle)
 				{
 					var portal = this.portal;
 
@@ -86,267 +76,226 @@ namespace CnV.Views
 					var s = new List<Supporter>();
 					//                supportGrid.ItemsSource = null;
 					{
-					foreach (var city in City.gridCitySource)
-					{
-						Assert(city is City);
-						if ((includeOffense ? city.tsHome : city.tsDefCityHome) < filterTSHome |
-							 (includeOffense ? city.tsTotal : city.tsDefCityTotal) < filterTSTotal)
-							continue;
-						if (viaWater && !city.isOnWater)
-							continue;
+						foreach(var city in City.gridCitySource) {
+							Assert(city is City);
+							if((includeOffense ? city.tsHome : city.tsDefCityHome) < filterTSHome |
+								 (includeOffense ? city.tsTotal : city.tsDefCityTotal) < filterTSTotal)
+								continue;
+							if(viaWater && !city.isOnWater)
+								continue;
 
-						var travelTime = new TimeSpanS(0);
-						var canTravelViaWater=city.isOnWater && defendants.Any(a=>a.isOnWater);
+							var travelTime = new TimeSpanS(0);
+							var canTravelViaWater = city.isOnWater && defendants.Any(a => a.isOnWater);
 
 
 							int validCount = 0;
-							if (!portal)
-							{
-								validCount = FindValidDefendants(viaWater, onlyHome, city, ref travelTime).Count;
-								if (validCount == 0)
+							if(!portal) {
+								validCount = FindValidDefendants(viaWater,onlyHome,city,ref travelTime).Count;
+								if(validCount == 0)
 									continue;
 							}
-							else
-							{
+							else {
 								validCount = defendants.Count;
 							}
 
-						// re-use if possible
-						var supporter = supporters.c.FirstOrDefault((a) => a.city == city);
-						if (supporter == null)
-						{
-							supporter = new Supporter() { city = city };
-						}
-						var troops = (onlyHome ? city.troopsHome : city.troopsOwned);
-						s.Add(supporter);
-						supporter.tSend.Clear();
+							// re-use if possible
+							var supporter = supporters.c.FirstOrDefault((a) => a.city == city);
+							if(supporter == null) {
+								supporter = new Supporter() { city = city };
+							}
+							var troops = (onlyHome ? city.troopsHome : city.troopsOwned);
+							s.Add(supporter);
+							supporter.tSend.Clear();
 
-						supporter.validTargets = validCount;
-						if (viaWater)
-						{
-							var ttGalleys = troops.FirstOrDefault((tt) => tt.type == ttGalley);
-							// handle Galleys
-							if (ttGalleys.count > 0 )
-							{
-								var galleys = ttGalleys.count;
-								var landTroops = troops.TS( (tt) => IsLandRaider(tt) );
-								var requiredGalleys = (landTroops + 499) / 500;
-								var sendGain = 1.0;
-								if (galleys >= requiredGalleys)
-								{
-									galleys = requiredGalleys;
-								}
-								else
-								{
-									sendGain = galleys * 500.0 / landTroops;
-								}
-								supporter.tSend |= new TroopTypeCount(ttGalley, galleys);
-								foreach (var tt in troops)
-								{
-									if (tt.type == ttStinger)
-									{
-										supporter.tSend += tt;
+							supporter.validTargets = validCount;
+							if(viaWater) {
+								var ttGalleys = troops.FirstOrDefault((tt) => tt.type == ttGalley);
+								// handle Galleys
+								if(ttGalleys.count > 0) {
+									var galleys = ttGalleys.count;
+									var landTroops = troops.TS((tt) => IsLandRaider(tt));
+									var requiredGalleys = (landTroops + 499) / 500;
+									var sendGain = 1.0;
+									if(galleys >= requiredGalleys) {
+										galleys = requiredGalleys;
 									}
-									else
-									{
-										if (!IsLandRaider(tt.type) || !Include(tt))
-											continue;
-										supporter.tSend += new TroopTypeCount(tt.type, (uint)(sendGain * tt.count)); // round down
+									else {
+										sendGain = galleys * 500.0 / landTroops;
+									}
+									supporter.tSend |= new TroopTypeCount(ttGalley,galleys);
+									foreach(var tt in troops) {
+										if(tt.type == ttStinger) {
+											supporter.tSend += tt;
+										}
+										else {
+											if(!IsLandRaider(tt.type) || !Include(tt))
+												continue;
+											supporter.tSend += new TroopTypeCount(tt.type,(uint)(sendGain * tt.count)); // round down
+										}
 									}
 								}
+								else {
+									supporter.tSend += troops.Where((tt) => tt.type == ttStinger); // take stingers
+								}
 							}
-							else
-							{
-								supporter.tSend += troops.Where( (tt) => tt.type == ttStinger ); // take stingers
+							else {
+								supporter.tSend += troops.Where(tt => (includeOffense || tt.isDef) && (canTravelViaWater||!tt.isNaval));
 							}
+							supporter.travel = (travelTime);  // penality for targtes that we cannot make it to
 						}
-						else
-						{
-							supporter.tSend += troops.Where( tt => (includeOffense || tt.isDef) && (canTravelViaWater||!tt.isNaval) );
-						}
-						supporter.travel = (travelTime);  // penality for targtes that we cannot make it to
 					}
-				}
-                    if (portal)
-                    {
-                        if(onlyHome)
-                            supporters.Set(s.OrderByDescending(a => a.tsHome),true);
-                        else
-                            supporters.Set(s.OrderByDescending(a => a.tsTotal),true);
-                    }
-                    else
-                        supporters.Set(s.OrderBy(a => a.travel.TotalHours - a.validTargets ),true);
-					
+					if(portal) {
+						if(onlyHome)
+							supporters.Set(s.OrderByDescending(a => a.tsHome),true);
+						else
+							supporters.Set(s.OrderByDescending(a => a.tsTotal),true);
+					}
+					else
+						supporters.Set(s.OrderBy(a => a.travel.TotalHours - a.validTargets),true);
+
 					defendants.NotifyReset();
-                }
+				}
 
 
-            }
-            else
-            {
+			}
+			else {
 				supporters.Clear(true);
-				AppS.DispatchOnUIThreadLow( ()=>
-				
-                troopTypeGrid.ItemsSource=supportByTroopTypeEmpty
-           );     //              supportGrid.ItemsSource = null;
+				AppS.DispatchOnUIThreadLow(() =>
 
-            }
-			await base.VisibilityChanged(visible, longTerm: longTerm);
-        }
+				troopTypeGrid.ItemsSource=supportByTroopTypeEmpty
+		   );     //              supportGrid.ItemsSource = null;
 
-		private List<Spot> FindValidDefendants(bool viaWater, bool onlyHome, City city, ref TimeSpanS dt)
-		{
-			if (portal)
+			}
+			await base.VisibilityChanged(visible,longTerm: longTerm);
+		}
+
+		private List<Spot> FindValidDefendants(bool viaWater,bool onlyHome,City city,ref TimeSpanS dt) {
+			if(portal)
 				return defendants.ToList<Spot>();
 
 			var rv = new List<Spot>();
-			foreach (var d in defendants)
-			{
+			foreach(var d in defendants) {
 
-				if (city.ComputeTravelTime(d.cid, onlyHome, includeOffense,includeOffense,includeOffense, viaWater, TimeSpanS.FromHours(filterTime), ref dt))
-				{
+				if(city.ComputeTravelTime(d.cid,onlyHome,includeOffense,includeOffense,includeOffense,viaWater,TimeSpanS.FromHours(filterTime),ref dt)) {
 					rv.Add(d);
 				}
 			}
 			return rv;
 		}
 
-		public NearDefenseTab()
-        {
-            Assert(instance == null);
-            instance = this;
-            this.InitializeComponent();
+		public NearDefenseTab() {
+			Assert(instance == null);
+			instance = this;
+			this.InitializeComponent();
 			SetupDataGrid(defendantGrid);
 
 		}
 
-      
 
-        private void Coord_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            var image = sender as FrameworkElement;
-            
-            var supporter = image.DataContext as Supporter;
-            Spot.ProcessCoordClick(supporter.city.cid, false, AppS.keyModifiers,false);
 
-        }
+		private void Coord_Tapped(object sender,TappedRoutedEventArgs e) {
+			var image = sender as FrameworkElement;
 
-        private void Image_RightTapped(object sender, RightTappedRoutedEventArgs e)
-        {
-            var image = sender as FrameworkElement;
-            var supporter = image.DataContext as Supporter;
-            supporter.city.ShowContextMenu(supportGrid, e.GetPosition(supportGrid));
-        }
+			var supporter = image.DataContext as Supporter;
+			Spot.ProcessCoordClick(supporter.city.cid,false,AppS.keyModifiers,false);
 
-        private void supportGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
+		}
+
+		private void Image_RightTapped(object sender,RightTappedRoutedEventArgs e) {
+			var image = sender as FrameworkElement;
+			var supporter = image.DataContext as Supporter;
+			supporter.city.ShowContextMenu(supportGrid,e.GetPosition(supportGrid));
+		}
+
+		private void supportGrid_SelectionChanged(object sender,SelectionChangedEventArgs e) {
 			if(isFocused)
-	            RefreshSupportByType();
-        }
-        public void RefreshSupportByType()
-        {
-            Log("Refresh");
-            var sel = supportGrid.SelectedItem;
-            if( sel is Supporter support )
-            {
-                var stt = new List<SupportByTroopType>();
-                foreach (var i in support.city.troopsOwned)
-                {
-                    if(Include(i))
-                       stt.Add(new SupportByTroopType() { type = i.type, supporter = support });
-                }
-                troopTypeGrid.ItemsSource = stt;
-            }
-            else
-            {
-                troopTypeGrid.ItemsSource = supportByTroopTypeEmpty; 
-            }
-        }
+				RefreshSupportByType();
+		}
+		public void RefreshSupportByType() {
+			Log("Refresh");
+			var sel = supportGrid.SelectedItem;
+			if(sel is Supporter support) {
+				var stt = new List<SupportByTroopType>();
+				foreach(var i in support.city.troopsOwned) {
+					if(Include(i))
+						stt.Add(new SupportByTroopType() { type = i.type,supporter = support });
+				}
+				troopTypeGrid.ItemsSource = stt;
+			}
+			else {
+				troopTypeGrid.ItemsSource = supportByTroopTypeEmpty;
+			}
+		}
 
-        private void TTSendRightTapped(object sender, RightTappedRoutedEventArgs e)
-        {
-            var text = sender as FrameworkElement;
-            var stt = text.DataContext as SupportByTroopType;
-            var flyout = new MenuFlyout();
-            flyout.SetXamlRoot(text);
-            AApp.AddItem(flyout, "Troops Home", (_, _) =>
-            {
-                var supporter = stt.supporter;
-                supporter.tSend |= new TroopTypeCount(stt.type, stt.supporter.city.troopsHome.GetCount(stt.type));
-                supporter.NotifyChange();
-            });
-            AApp.AddItem(flyout, "Total Troops", (_, _) =>
-            {
-                var supporter = stt.supporter;
-                supporter.tSend |= new TroopTypeCount(stt.type, stt.supporter.city.troopsOwned.GetCount(stt.type));
-                supporter.NotifyChange();
-            });
-            AApp.AddItem(flyout, "None", (_, _) =>
-            {
-                var supporter = stt.supporter;
-                supporter.tSend |= new TroopTypeCount(stt.type, 0);
-                supporter.NotifyChange();
-            });
+		private void TTSendRightTapped(object sender,RightTappedRoutedEventArgs e) {
+			var text = sender as FrameworkElement;
+			var stt = text.DataContext as SupportByTroopType;
+			var flyout = new MenuFlyout();
+			flyout.SetXamlRoot(text);
+			AApp.AddItem(flyout,"Troops Home",(_,_) => {
+				var supporter = stt.supporter;
+				supporter.tSend |= new TroopTypeCount(stt.type,stt.supporter.city.troopsHome.GetCount(stt.type));
+				supporter.NotifyChange();
+			});
+			AApp.AddItem(flyout,"Total Troops",(_,_) => {
+				var supporter = stt.supporter;
+				supporter.tSend |= new TroopTypeCount(stt.type,stt.supporter.city.troopsOwned.GetCount(stt.type));
+				supporter.NotifyChange();
+			});
+			AApp.AddItem(flyout,"None",(_,_) => {
+				var supporter = stt.supporter;
+				supporter.tSend |= new TroopTypeCount(stt.type,0);
+				supporter.NotifyChange();
+			});
 
-            flyout.ShowAt(text, e.GetPosition(text));
+			flyout.ShowAt(text,e.GetPosition(text));
 
-        }
+		}
 
-        private void TsSendRightTapped(object sender, RightTappedRoutedEventArgs e)
-        {
-            var text = sender as FrameworkElement;
-            var supporter = text.DataContext as Supporter;
-            var flyout = new MenuFlyout();
-            flyout.SetXamlRoot(text);
-            AApp.AddItem(flyout, "Troops Home", (_, _) =>
-            {
+		private void TsSendRightTapped(object sender,RightTappedRoutedEventArgs e) {
+			var text = sender as FrameworkElement;
+			var supporter = text.DataContext as Supporter;
+			var flyout = new MenuFlyout();
+			flyout.SetXamlRoot(text);
+			AApp.AddItem(flyout,"Troops Home",(_,_) => {
 				supporter.tSend = supporter.city.troopsHome;
-                supporter.NotifyChange();
-            });
-            AApp.AddItem(flyout, "Total Troops", (_, _) =>
-            {
+				supporter.NotifyChange();
+			});
+			AApp.AddItem(flyout,"Total Troops",(_,_) => {
 				supporter.tSend = supporter.city.troopsOwned;
-                supporter.NotifyChange();
-            });
-            AApp.AddItem(flyout, "None", (_, _) =>
-            {
+				supporter.NotifyChange();
+			});
+			AApp.AddItem(flyout,"None",(_,_) => {
 				supporter.tSend.Clear();
-                supporter.NotifyChange();
-            });
+				supporter.NotifyChange();
+			});
 
-            flyout.ShowAt(text, e.GetPosition(text));
+			flyout.ShowAt(text,e.GetPosition(text));
 
-        }
+		}
 
-        private async void SendClick(object sender, RoutedEventArgs e)
-        {
-            var text = sender as FrameworkElement;
-            var supporter = text.DataContext as Supporter;
-            var city = supporter.city;
-            if(city.commandSlots!=0 &&  supporter.split > city.freeCommandSlots)
-            {
-                Note.Show("To few command slots");
-                return;
-            }
-            var departAt = ServerTime.zero;
-            var _arriveAt = sendAtUI.dateTime;
-            if(waitReturn && !supporter.city.troopsHome.IsSuperSetOf(supporter.tSend))
-            {
+		private async void SendClick(object sender,RoutedEventArgs e) {
+			var text = sender as FrameworkElement;
+			var supporter = text.DataContext as Supporter;
+			var city = supporter.city;
+			if(city.commandSlots!=0 &&  supporter.split > city.freeCommandSlots) {
+				Note.Show("To few command slots");
+				return;
+			}
+			var departAt = ServerTime.zero;
+			var _arriveAt = sendAtUI.dateTime;
+			if(waitReturn && !supporter.city.troopsHome.IsSuperSetOf(supporter.tSend)) {
 				//RaidOverview.SendMaybe();
 
-				if (city.MightRaidsRepeat())
-                {
-                    Raiding.Return(city.cid, false,true);
-                }
+				if(city.MightRaidsRepeat()) {
+					Raiding.Return(city.cid,false,true);
+				}
 
-                departAt = city.GetRaidReturnTime() + TimeSpanS.FromSeconds(15);
-                var canArriveAt = departAt+ (supporter.travel );
-                if (_arriveAt.isNotZero && _arriveAt < canArriveAt)
-                {
-					var result = await AppS.DispatchOnUIThreadTask(async () =>
-					{
-						var msg = new ContentDialog()
-						{
+				departAt = city.GetRaidReturnTime() + TimeSpanS.FromSeconds(15);
+				var canArriveAt = departAt+ (supporter.travel);
+				if(_arriveAt.isNotZero && _arriveAt < canArriveAt) {
+					var result = await AppS.DispatchOnUIThreadTask(async () => {
+						var msg = new ContentDialog() {
 							Title = "Home Too late to make arrival time",
 							Content = "Would you like to schedule as soon as they return?",
 							PrimaryButtonText = "Yes",
@@ -354,39 +303,35 @@ namespace CnV.Views
 						};
 						ElementSoundPlayer.Play(ElementSoundKind.Show);
 
-						if (await msg.ShowAsync2() != ContentDialogResult.Primary)
-						{
+						if(await msg.ShowAsync2() != ContentDialogResult.Primary) {
 							return false;
 						}
 						_arriveAt = ServerTime.zero;
 						return true;
 					});
-					if (result == false)
+					if(result == false)
 						return;
 
-                }
-            }
+				}
+			}
 			var hours = new TimeSpanS(0);
-			var def = FindValidDefendants(sendViaWater && defendants.Any(d => d.isOnWater),  onlyHome, city, ref hours);
+			var def = FindValidDefendants(sendViaWater && defendants.Any(d => d.isOnWater),onlyHome,city,ref hours);
 			var success = true;
-			foreach (var d in def)
-			{
+			foreach(var d in def) {
 				var ts = supporter.tSend /  (def.Count);
 				var cid = d.cid;
-				if(_arriveAt.isNotZero )
-				{
-					success &= Army.Send(ts,Army.FlagSplits(supporter.split),City.Get(supporter.cid),cid,ArmyType.defense,sendViaWater ? ArmyTransport.water : ArmyTransport.land,_arriveAt);
+				if(_arriveAt.isNotZero) {
+					success &= await Army.Send(ts,Army.FlagSplits(supporter.split),City.Get(supporter.cid),cid,ArmyType.defense,sendViaWater ? ArmyTransport.water : ArmyTransport.land,_arriveAt);
 				}
-				else
-				{
-					success &= Army.Send(ts,Army.FlagSplits(supporter.split),City.Get(supporter.cid),cid,ArmyType.defense,sendViaWater ? ArmyTransport.water : ArmyTransport.land, (departAt - Sim.simTime).Max(0)  );
+				else {
+					success &= Army.Send(ts,Army.FlagSplits(supporter.split),City.Get(supporter.cid),cid,ArmyType.defense,sendViaWater ? ArmyTransport.water : ArmyTransport.land,(departAt - Sim.simTime).Max(0));
 				}
 				Assert(success);
 				Log($"Sent {ts} from {supporter.cid.AsCity()} to {cid.AsCity()} @{_arriveAt.ToString()}");
-			//	await Task.Delay(500);
+				//	await Task.Delay(500);
 			}
 
-			if (success)
+			if(success)
 				supporter.tSend.Clear();
 
 			supporter.OnPropertyChanged();
@@ -399,81 +344,71 @@ namespace CnV.Views
 		//}
 
 
-		private void supportGrid_Sorting(object sender,DataGridColumnEventArgs e)
-        {
-            var dg = supportGrid;
-            var tag = e.Column.Tag?.ToString();
-            //Use the Tag property to pass the bound column name for the sorting implementation
-            Comparison<Supporter> comparer =null;
-            switch (tag)
-            {
-                case nameof(Supporter.tsTotal): comparer = ( a,  b) => b.tsTotal.CompareTo(a.tsTotal);  break;
-                case nameof(Supporter.tsHome): comparer = (a, b) => b.tsHome.CompareTo(a.tsHome); break;
-                case nameof(Supporter.tsSend): comparer = (a, b) => b.tsSend.CompareTo(a.tsSend); break;
-                case nameof(Supporter.travel): comparer = (b, a) => b.travel.CompareTo(a.travel); break;
-                case nameof(Supporter.raidReturn): comparer = (b, a) => b.raidReturn.CompareTo(a.raidReturn); break;
-            }
+		private void supportGrid_Sorting(object sender,DataGridColumnEventArgs e) {
+			var dg = supportGrid;
+			var tag = e.Column.Tag?.ToString();
+			//Use the Tag property to pass the bound column name for the sorting implementation
+			Comparison<Supporter> comparer = null;
+			switch(tag) {
+				case nameof(Supporter.tsTotal): comparer = (a,b) => b.tsTotal.CompareTo(a.tsTotal); break;
+				case nameof(Supporter.tsHome): comparer = (a,b) => b.tsHome.CompareTo(a.tsHome); break;
+				case nameof(Supporter.tsSend): comparer = (a,b) => b.tsSend.CompareTo(a.tsSend); break;
+				case nameof(Supporter.travel): comparer = (b,a) => b.travel.CompareTo(a.travel); break;
+				case nameof(Supporter.raidReturn): comparer = (b,a) => b.raidReturn.CompareTo(a.raidReturn); break;
+			}
 
-            if (comparer != null)
-            {
-                //Implement sort on the column "Range" using LINQ
-                if (e.Column.SortDirection == null)
-                {
-                    e.Column.SortDirection = DataGridSortDirection.Descending;
-                  //  supporters.SortSmall(comparer);
-                 //   supporters.NotifyReset();
-                }
-                else if(e.Column.SortDirection == DataGridSortDirection.Descending)
-                {
-                    e.Column.SortDirection = DataGridSortDirection.Ascending;
-               //     supporters.SortSmall((b, a) => comparer(a,b) ); // swap order of comparison
-              //      supporters.NotifyReset();
-                }
-                else
-                {
-                    e.Column.SortDirection = null;
+			if(comparer != null) {
+				//Implement sort on the column "Range" using LINQ
+				if(e.Column.SortDirection == null) {
+					e.Column.SortDirection = DataGridSortDirection.Descending;
+					//  supporters.SortSmall(comparer);
+					//   supporters.NotifyReset();
+				}
+				else if(e.Column.SortDirection == DataGridSortDirection.Descending) {
+					e.Column.SortDirection = DataGridSortDirection.Ascending;
+					//     supporters.SortSmall((b, a) => comparer(a,b) ); // swap order of comparison
+					//      supporters.NotifyReset();
+				}
+				else {
+					e.Column.SortDirection = null;
 
-                }
-            }
-            // add code to handle sorting by other columns as required
+				}
+			}
+			// add code to handle sorting by other columns as required
 
-            // Remove sorting indicators from other columns
-            foreach (var dgColumn in dg.Columns)
-            {
-                if (dgColumn.Tag!=null && dgColumn.Tag.ToString() != tag)
-                {
-                    dgColumn.SortDirection = null;
-                }
-            }
-        }
+			// Remove sorting indicators from other columns
+			foreach(var dgColumn in dg.Columns) {
+				if(dgColumn.Tag!=null && dgColumn.Tag.ToString() != tag) {
+					dgColumn.SortDirection = null;
+				}
+			}
+		}
 
-        //private async void SendAtTapped(object sender, PointerRoutedEventArgs e)
-        //{
-        //    e.KeyModifiers.UpdateKeyModifiers();
-        //    e.Handled = true;
-        //    (var dateTime, var okay) = await DateTimePicker.ShowAsync("Send At");
-        //    if (okay)
-        //    {
-        //        arriveAt = (ServerTime)(dateTime);
-        //        OnPropertyChanged(nameof(arriveAt));
-        //    }
+		//private async void SendAtTapped(object sender, PointerRoutedEventArgs e)
+		//{
+		//    e.KeyModifiers.UpdateKeyModifiers();
+		//    e.Handled = true;
+		//    (var dateTime, var okay) = await DateTimePicker.ShowAsync("Send At");
+		//    if (okay)
+		//    {
+		//        arriveAt = (ServerTime)(dateTime);
+		//        OnPropertyChanged(nameof(arriveAt));
+		//    }
 
-        //}
+		//}
 
-       
-        private void PropChanged(object sender, RoutedEventArgs e)
-        {
-            refresh.Go();
-        }
 
-		private void troopTypeGrid_RightTapped(object sender, RightTappedRoutedEventArgs e)
-		{
+		private void PropChanged(object sender,RoutedEventArgs e) {
+			refresh.Go();
+		}
+
+		private void troopTypeGrid_RightTapped(object sender,RightTappedRoutedEventArgs e) {
 			Log(sender.ToString());
 			Log(e.OriginalSource.ToString());
 		}
 	}
 
-	
-    
+
+
 
 }

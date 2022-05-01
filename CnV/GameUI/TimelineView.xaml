@@ -39,6 +39,7 @@
 			<!--<ComboBox ItemsSource="{x:Bind resourceGroupTypes}" SelectedItem="{x:Bind ResourceGrouping,Mode=TwoWay}" Header="Grouping" Width="200" />-->
 			<cnv:PlayerListBox x:Name="PlayerFilter" Width="300" Header="Filter" Changed="PlayerFilterChanged" />
 			<CheckBox Content="Artifacts" IsChecked="{x:Bind ShowArtifacts,Mode=TwoWay}" />
+			<CheckBox Content="Quests" IsChecked="{x:Bind ShowQuests,Mode=TwoWay}" />
 		</StackPanel>
 
 		<sfs:SfScheduler x:Name="schedule" Grid.Row="1" 
@@ -55,10 +56,10 @@
 					
 						 QueryAppointments="QueryAppointments"
 						 AppointmentTapped="ItemTapped"
-						AppointmentEditFlag="Add,DragDrop,Edit"
+						AppointmentEditFlag="None"
 						 EnableReminder="False"
 						 
-						
+						ContextFlyoutOpening="ContextOpening"
 						>
 			<sfs:SfScheduler.DragDropSettings>
 				<sfs:DragDropSettings TimeIndicatorFormat = "HH:mm:ss" />
@@ -74,7 +75,22 @@
 					
 				</sfs:MonthViewSettings>
 			</sfs:SfScheduler.MonthViewSettings>
+			<sfs:SfScheduler.AppointmentContextFlyout>
+				<MenuFlyout>
+					<MenuFlyoutItem Text="Visit in Historic..."  Click="HistoricClick" >
+					
+					</MenuFlyoutItem>
+					
+				</MenuFlyout>
+			</sfs:SfScheduler.AppointmentContextFlyout>
+			<sfs:SfScheduler.CellContextFlyout>
+				<MenuFlyout>
+					<MenuFlyoutItem Text="Visit in Historic..."  Click="HistoricClick" >
 
+					</MenuFlyoutItem>
+
+				</MenuFlyout>
+			</sfs:SfScheduler.CellContextFlyout>
 			<sfs:SfScheduler.ResourceHeaderTemplate>
 				<DataTemplate x:DataType="sfs:SchedulerResource" >
 

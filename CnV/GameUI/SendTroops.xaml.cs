@@ -14,7 +14,7 @@ namespace CnV
 		internal bool viaWater;
 		internal bool isSettle;
 		internal Army prior;
-		protected override string title => $"{(isSettle ? "Settle" : target.isBoss ? "NPC Hit": Army.typeStrings[(int)type])} => {target}";
+		protected override string title => $"{(isSettle ? "Settle" : target.isBoss ? "NPC Hit" : Army.typeStrings[(int)type])} => {target}";
 		internal static SendTroops? instance;
 		internal City city;
 		internal City target;
@@ -37,31 +37,31 @@ namespace CnV
 		}
 
 		private void SendTroops_PropertyChanged(object? sender,PropertyChangedEventArgs e) {
-		
-				var arrival = this.arrival.dateTime;
-				var tt = travelTime;
-				if(arrival == default) {
-					travelInfo.Text= $"Travel time: {tt.Format()}\nArrival: {(Sim.simTime+tt)}";
+
+			var arrival = this.arrival.dateTime;
+			var tt = travelTime;
+			if(arrival == default) {
+				travelInfo.Text= $"Travel time: {tt.Format()}\nArrival: {(Sim.simTime+tt)}";
+			}
+			else {
+				var depart = (arrival-tt);
+				var rv = $"Travel time: {tt.Format()}\nDepart: {depart}";
+				if(depart <= Sim.simTime) {
+					rv += "(in the past)";
 				}
-				else {
-					var depart = (arrival-tt);
-					var rv= $"Travel time: {tt.Format()}\nDepart: {depart}";
-					if(depart < Sim.simTime) {
-						rv += "[Can not make it]";
-					}
-					travelInfo.Text= rv;
-				}
-			
-		
+				travelInfo.Text= rv;
+			}
+
+
 		}
 
 		private void UpdateTroopItems() {
 			var troopItems = new List<SendTroopItem>();
 			if(prior is not null) {
 				foreach(var t in prior.troops) {
-					var rv = new SendTroopItem(target: target,city: city,type: t.t,count:t.c);
-						troopItems.Add(rv);
-						rv.PropertyChanged += SendTroops_PropertyChanged;
+					var rv = new SendTroopItem(target: target,city: city,type: t.t,count: (int)t.c);
+					troopItems.Add(rv);
+					rv.PropertyChanged += SendTroops_PropertyChanged;
 				}
 			}
 			else {
@@ -82,7 +82,7 @@ namespace CnV
 		bool isDefense => type==ArmyType.defense && !isSettle;
 		int splits => isDefense || isCavernRaid ? splitsCombo.SelectedIndex+1 : 1;
 
-		public static void ShowInstance(City city=null,City target=null,bool isSettle=false,bool viaWater=false,ArmyType type=ArmyType.nop,Army?prior=null) {
+		public static void ShowInstance(City city = null,City target = null,bool isSettle = false,bool viaWater = false,ArmyType type = ArmyType.nop,Army? prior = null) {
 			if(city == target && prior is null) {
 				AppS.MessageBox("Cannot send to self");
 				return;
@@ -97,6 +97,8 @@ namespace CnV
 				rv.type = prior.type;
 				rv.UpdateTroopItems();
 				rv.arrival.SetDateTime(prior.arrival);
+				rv.buttoGo.Content = "Return";
+				rv.buttoGo.IsEnabled = prior.sourceCity.outgoing.Contains(prior);
 			}
 			else {
 				rv.city =prior?.sourceCity ?? city;
@@ -105,8 +107,11 @@ namespace CnV
 				rv.viaWater = prior?.isViaWater ?? viaWater;
 				rv.type = type;
 				rv.UpdateTroopItems();
+				rv.buttoGo.Content = "Send";
+				rv.buttoGo.IsEnabled=true;
+
 			}
-			
+
 			if(isSettle)
 				rv.troopItems[Troops.ttMagistra].count = 1;
 
@@ -198,25 +203,36 @@ namespace CnV
 			Changed();
 		}
 		private void MaxClick(object sender,RoutedEventArgs e) {
-			var t = city.troopsOwnedPlusRecruiting;
-			
-			foreach(var i in troopItems )
-				i.count = t.GetCount(i.type);
-			
+			var t = city.troopsOwned;
+
+			foreach(var i in troopItems)
+				i.count = (int)t.GetCount(i.type);
+
 			Changed();
 		}
 		private void HomeClick(object sender,RoutedEventArgs e) {
 			var t = city.troopsHome;
-			foreach(var i in troopItems )
-				i.count = t.GetCount(i.type);
+			foreach(var i in troopItems)
+				i.count = (int)t.GetCount(i.type);
 
 			Changed();
 		}
 
 		internal TimeSpanS travelTime => Army.JourneyTime(city,target.cid,transport,troops,isRaid);
-		
 
-				private void SendTroopsClick(object sender,RoutedEventArgs e) {
+
+		private async void SendTroopsClick(object sender,RoutedEventArgs e) {
+			if( prior is not null ) {
+				if(prior.sourceCity.outgoing.Contains(prior))
+				{
+					new CnVEventReturnTroops(prior).EnqueueAsap();
+				}
+				else {
+					AppS.MessageBox("Cannot be returned this way.");
+				}
+				Done();
+				return;
+			}
 			TroopTypeCounts ts = troops;
 
 			if(!IsValid(ts,true))
@@ -233,8 +249,12 @@ namespace CnV
 				var arrival = this.arrival.dateTime;
 
 				bool okay;
-				if(arrival != default)
-					okay = Army.Send(ts,flags,city,target.cid,type,transport,arrival);
+				if(arrival != default) {
+					okay = await Army.Send(ts,flags,city,target.cid,type,transport,arrival);
+					if(!okay) {
+
+					}
+				}
 				else
 					okay = Army.Send(ts,flags,city,target.cid,type,transport);
 				if(okay)
@@ -298,32 +318,32 @@ namespace CnV
 		internal City target;
 
 		internal TType type;
-		internal uint _count;
-		internal uint count {
+		internal int _count;
+		internal int count {
 			get => _count;
 			set {
-				if(_count != value) {
+				if(_count != value && value >=0) {
 					_count = value;
 					OnPropertyChanged(nameof(count));
 				}
 			}
 		}
 
-		public SendTroopItem(City city,City target,byte type,bool wantMax=false,uint? count=null) {
+		public SendTroopItem(City city,City target,byte type,bool wantMax = false,int? count = null) {
 			this.city=city;
 			this.target=target;
 			this.type=type;
-			this._count = count ??( wantMax ? city.troopsHome.GetCount(type) : 0u);
+			this._count = count ??(wantMax ? (int)city.troopsHome.GetCount(type) : 0);
 		}
 
-		internal TroopTypeCount tt => new(type,_count);
+		internal TroopTypeCount tt => new(type,(uint)_count.Max(0));
 		internal ImageSource image => Troops.Image(type);
 		internal TroopInfo info => TroopInfo.all[type];
 		internal void MaxClick(object sender,RoutedEventArgs e) {
-			count = city.troopsHome.GetCount(type);
-			
+			count = (int)city.troopsHome.GetCount(type);
+
 		}
-		public string troopsHome => $"{city.troopsHome.GetCount(type).Format()}/{city.troopsOwnedPlusRecruiting.GetCount(type).Format()}";
+		public string troopsHome => $"{city.troopsHome.GetCount(type).Format()}/{city.troopsOwned.GetCount(type).Format()}";
 
 		public event PropertyChangedEventHandler? PropertyChanged;
 		public void OnPropertyChanged(string? member = null) {

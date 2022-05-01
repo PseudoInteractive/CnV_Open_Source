@@ -2,6 +2,7 @@
 using Microsoft.UI.Xaml.Media;
 using Syncfusion.UI.Xaml.Scheduler;
 using Microsoft.UI;
+using Microsoft.UI.Xaml.Controls;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
@@ -15,7 +16,7 @@ namespace CnV
 
 		internal PlayerId[] playerFilter = Array.Empty<PlayerId>();
 		//public ObservableCollection<ScheduleAppointment> appointments = new();
-		public ObservableCollection<SchedulerResource> resources = new();
+		//	public ObservableCollection<SchedulerResource> resources = new();
 
 		//public ResourceGroupType[] resourceGroupTypes = { ResourceGroupType.None,ResourceGroupType.Resource,ResourceGroupType.Date };
 		//internal ResourceGroupType resourceGrouping = ResourceGroupType.None;
@@ -41,6 +42,15 @@ namespace CnV
 				}
 			}
 		}
+
+		public bool ShowQuests {
+			get => showQuests; set {
+				if(showQuests!=value) {
+					showQuests=value;
+					UpdateDataI();
+				}
+			}
+		}
 		public static string GetNotes(object i,string notes) {
 			return (i is ITimelineItem t) ? t.TlNotes() : notes;
 		}
@@ -60,7 +70,7 @@ namespace CnV
 					StartTime = t0+ TimeSpanS.FromHours(13),
 					Notes="Yay!",
 					EndTime = t0 + TimeSpanS.FromHours(15),
-					ResourceIdCollection = resC
+					//	ResourceIdCollection = resC
 				};
 				rv.Add(a);
 			}
@@ -123,8 +133,28 @@ namespace CnV
 				var players = new HashSet<Player>();
 
 				foreach(var e in Sim.GetAllEvents()) {
+
+
+
 					if(!(e.tlInclude && e.TlTimeRange().Overlaps(_timeRange) && (playerFilter.ContainsAny(e.TlReferences()))))
 						continue;
+
+					if(e is CnVEventReturnTroops rt) {
+						foreach(var ret in rt.returned) {
+							var bad = appointments.FindIndex(a => a.Id is CnVEventSendTroops st && st.troops == ret);
+							if(bad != -1) {
+								appointments.RemoveAt(bad);
+							}
+							else {
+								if(!ret.isRaid) {
+									//Assert(ret.isDefense); // retruning stationed defense
+								}
+
+							}
+
+						}
+						continue;
+					}
 					Player p0;
 					Player p1 = null;
 
@@ -179,10 +209,10 @@ namespace CnV
 
 					//players.Add(Player.active);
 				}
+				Note.Show($"Appointments: {appointments.Count()} Players: {players.Count()}");
 				schedule.ItemsSource = appointments;
 
 
-				Note.Show($"Appointments: {appointments.Count()} Players: {players.Count()}");
 				//	schedule.ResourceCollection = resources;
 				// players.SyncList(resources,(a,b) => a == b.Id,PlayerToResource);
 
@@ -197,7 +227,7 @@ namespace CnV
 			//			schedule.ShowBusyIndicator=false;
 		}
 
-		internal DayOfWeek firstDayOfWeek => (schedule.DisplayDate + TimeSpan.FromDays(1)).DayOfWeek;
+		//		internal DayOfWeek firstDayOfWeek => (schedule.DisplayDate + TimeSpan.FromDays(1)).DayOfWeek;
 
 		internal static ImageSource PlayerImage(object id) {
 			var p = id as Player;
@@ -276,6 +306,7 @@ namespace CnV
 		ServerTime visibleT0;
 		ServerTime visibleT1;
 		internal static bool showArtifacts;
+		internal static bool showQuests;
 
 		private void QueryAppointments(object sender,QueryAppointmentsEventArgs e) {
 			//		schedule.ShowBusyIndicator=true;
@@ -323,6 +354,29 @@ namespace CnV
 
 		}
 
+		private void ContextOpening(object sender,SchedulerContextFlyoutOpeningEventArgs e) {
+			
+			//ServerTime t;
+			//if(e.MenuType == SchedulerContextFlyoutType.Appointment) {
+			//	var menuItem = e.ContextMenu.Items[0] as MenuFlyoutItem;
+			//	var id = 
+			//	menuItem.IsEnabled=false;
+			//	t = e.MenuInfo.Appointment.StartTime;
+			//}
 
+			//menuItem.Click += (_,_) => Sim.GotoTime( t );
+		}
+
+		private void HistoricClick(object sender,RoutedEventArgs e) {
+			var mf = sender as MenuFlyoutItem;
+			var mi = mf.DataContext as SchedulerContextFlyoutInfo;
+			if(mi.Appointment is not null) {
+				Sim.GotoTime((ServerTime)mi.Appointment.StartTime - TimeSpanS.FromMinutes(1));
+			}
+			else if(mi.DateTime is not null) {
+				Sim.GotoTime(mi.DateTime.Value);
+
+			}
+		}
 	}
 }

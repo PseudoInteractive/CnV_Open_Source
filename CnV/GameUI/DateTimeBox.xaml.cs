@@ -98,9 +98,11 @@ namespace CnV
 
 		}
 
-		private void NowClick(object sender,RoutedEventArgs e)
+		private void ClearClick(object sender,RoutedEventArgs e)
 		{
-			SetDateTime(Sim.simTime);
+			date.SelectedDate=null;
+			time.SelectedTime = null;
+			OnPropertyChanged();
 		}
 		public event PropertyChangedEventHandler? PropertyChanged;
 		public void OnPropertyChanged(string? member = null)
@@ -108,5 +110,19 @@ namespace CnV
 			if (this.PropertyChanged is not null) 
 				AppS.DispatchOnUIThread(() => PropertyChanged?.Invoke(this,new(member)));
 		}
+		bool isLoaded;
+		private void Loaded(object sender,RoutedEventArgs e) {
+			if(isLoaded)
+				return;
+			isLoaded = true;
+			date.SelectedDateChanged+=DateTime_SelectedTimeChanged;
+			time.SelectedTimeChanged+=DateTime_SelectedTimeChanged;
+		}
+
+		private void DateTime_SelectedTimeChanged(object? sender,Syncfusion.UI.Xaml.Editors.SelectedDateTimeChangedEventArgs e) {
+			OnPropertyChanged();
+		}
+
+		
 	}
 }

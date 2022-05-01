@@ -153,7 +153,7 @@ namespace CnV
 			//			services = ConfigureServices();
 			RequestedTheme = ApplicationTheme.Dark;
 			InitializeComponent();
-			UnhandledException += App_UnhandledException;
+	//		UnhandledException += App_UnhandledException;
 
 
 
@@ -197,13 +197,13 @@ namespace CnV
 		//         return services.BuildServiceProvider();
 		//     }
 
-		private void App_UnhandledException(object sender,Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
-		{
-			e.Handled = true;
-			System.Diagnostics.Debug.WriteLine($"Unhandled Exception: " + e.Message);
-			System.Diagnostics.Debug.WriteLine(e.Exception.StackTrace);
+		//private void App_UnhandledException(object sender,Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
+		//{
+		//	e.Handled = true;
+		//	System.Diagnostics.Debug.WriteLine($"Unhandled Exception: " + e.Message);
+		//	System.Diagnostics.Debug.WriteLine(e.Exception.StackTrace);
 
-		}
+		//}
 
 		private void TaskScheduler_UnobservedTaskException(object sender,UnobservedTaskExceptionEventArgs e)
 		{
@@ -356,8 +356,8 @@ namespace CnV
 				if(AppS.RegisterException(e.Message))
 				{
 #if APPCENTER
-
-					Crashes.TrackError(e.Exception);
+					if(AAnalytics.initialized)
+						Crashes.TrackError(e.Exception);
 #endif
 					AAnalytics.Track("UnhandledException",
 									new Dictionary<string,string> { { "message",e.Message.Truncate(64) } });
