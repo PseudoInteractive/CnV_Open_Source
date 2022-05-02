@@ -105,7 +105,7 @@ namespace CnV
 		public static App instance;
 		public static string appLink = "cnv";
 
-		public static void InitAppCenter()
+		public static void InitAppCenter(string appArgs)
 		{
 #if APPCENTER
 			if(AAnalytics.initialized)
@@ -127,6 +127,10 @@ namespace CnV
 		
 		
 			AAnalytics.initialized = true;
+			var args = AppInstance.GetCurrent().GetActivatedEventArgs();
+			AAnalytics.Track("Activate",new Dictionary<string,string> { { "kind",args.Kind.ToString() },
+				
+				{"args" ,appArgs } });
 			//await Task.WhenAll(
 //			Analytics.SetEnabledAsync(true);
 	//		Crashes.SetEnabledAsync(true);
@@ -435,7 +439,6 @@ namespace CnV
 					FocusVisualKind = FocusVisualKind.Reveal;
 
 					window = new();
-	//				InitAppCenter();
 					AppS.globalQueue = window.DispatcherQueue;
 					//	window.
 
@@ -483,6 +486,8 @@ namespace CnV
 						WindowId myWndId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
 						AppS.appWindow= AppWindow.GetFromWindowId(myWndId);
 					}
+					InitAppCenter(args.Arguments);
+
 					AppS.appWindow.Title = "Conquest and Virtue Alpha sign in to Discord";
 					AppS.appWindow.SetIcon("assets\\cnvIcon.ico");
 					//				
@@ -685,10 +690,7 @@ namespace CnV
 
 					}
 				}
-				InitAppCenter();
-				AAnalytics.Track("Activate",new Dictionary<string,string> { { "kind",AppInstance.GetCurrent().GetActivatedEventArgs().ToString() },
-				
-				{"args" , args.Arguments } });
+			
 
 				// Depending on activationArgs one of ActivationHandlers or DefaultActivationHandler
 				// will navigate to the first page

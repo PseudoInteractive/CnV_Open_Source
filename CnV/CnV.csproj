@@ -69,11 +69,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.AppCenter" Version="4.5.1" />
-    <PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.5.1" />
-    <PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.5.1" />
-    <PackageReference Include="Microsoft.ApplicationInsights.WorkerService" Version="2.21.0-beta1" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.0" />
+    <PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.5.0" />
+    <PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.5.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0-preview.3.22175.4" />
     <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="7.0.0-preview.3.22178.4" />
     <PackageReference Include="Microsoft.Extensions.Primitives" Version="7.0.0-preview.3.22175.4" />
@@ -84,7 +81,7 @@
     <PackageReference Include="Microsoft.Toolkit" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
 	<PackageReference Include="Azure.Data.Tables" Version="12.5.0" />
-    <PackageReference Include="Azure.Storage.Blobs" Version="12.12.0-beta.1" />
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.12.0" />
     <PackageReference Include="CommunityToolkit.WinUI.Notifications" Version="7.1.2" />
     <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
     <PackageReference Include="Enums.NET" Version="4.0.0" />
@@ -122,6 +119,7 @@
     <PackageReference Include="System.Collections.Immutable" Version="7.0.0-preview.3.22175.4">
       <TreatAsUsed>true</TreatAsUsed>
     </PackageReference>
+    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="7.0.0-preview.3.22175.4" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="7.0.0-preview.2.22152.2">
       <TreatAsUsed>true</TreatAsUsed>
     </PackageReference>
