@@ -73,7 +73,7 @@ using static GameClient;
 			var dt = (float)timeSinceLastFrame.Min(1.0f/16.0f);// ((float)(timerT - animationT)).Min(0.25f);// (float)gameTime.ElapsedGameTime.TotalSeconds; // max delta is 1s
 			{                                                      //	lastDrawTime = _serverNow;
 				var hover = lastCanvasC;
-				if(hover != 0 && World.GetInfoFromCid(hover).type != 0)
+				if(hover != 0 && World.GetTile(hover.CidToWorldC()).type != 0)
 				{
 					if(!viewHovers.Exists(a => a.cid == lastCanvasC))
 					{

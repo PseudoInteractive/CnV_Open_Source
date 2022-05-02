@@ -208,18 +208,18 @@ namespace CnV;
 						break;
 
 					}
-					case Boss boss:
-					{
-						switch(e.Column.HeaderText)
-						{
+					//case Boss boss:
+					//{
+					//	switch(e.Column.HeaderText)
+					//	{
 
-							case nameof(boss.xy):
-								Spot.ProcessCoordClick(boss.cid, false, AppS.keyModifiers);
-								break;
-						}
+					//		case nameof(boss.xy):
+					//			Spot.ProcessCoordClick(boss.cid, false, AppS.keyModifiers);
+					//			break;
+					//	}
 
-						break;
-					}
+					//	break;
+					//}
 
 				}
 			}

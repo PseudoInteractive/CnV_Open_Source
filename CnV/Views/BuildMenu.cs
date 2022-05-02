@@ -41,7 +41,7 @@ namespace CnV.Views
 					var city = City.GetBuild();
 					if(isBuilding) {
 						var def = BuildingDef.FromId(bid);
-						var op = new BuildQueueItem(0,1,bid,CityView.selectedPoint);
+						var op = new BuildQueueItem(0,1,bid,CityView.selectedPoint,false);
 						return $"{def.Ds}\n{-op.BuildOrUpgradeResourceBalance()}\n{op.TimeRequired(city)}\nKeep Level: {def.Thl}";
 					}
 					if(CityView.selectedPoint.isInCity) {
@@ -54,7 +54,7 @@ namespace CnV.Views
 								case CityBuildAction.destroy:
 									if(bd.bl > 0) {
 
-										var op = new BuildQueueItem(bd.bl,0,bd.bid,CityView.selectedPoint);
+										var op = new BuildQueueItem(bd.bl,0,bd.bid,CityView.selectedPoint,true);
 										return $"Destroy {def.Bn}\n{op.DemoOrDowngradeResourceBalance()}\n{op.TimeRequired(city)}";
 									}
 									break;
@@ -64,13 +64,13 @@ namespace CnV.Views
 
 								case CityBuildAction.upgrade:
 									if(bd.bl < 10 && !bd.isRes) {
-										var op = new BuildQueueItem(bd.bl,(byte)(bd.bl+1).Min(10),bd.bid,CityView.selectedPoint);
+										var op = new BuildQueueItem(bd.bl,(byte)(bd.bl+1).Min(10),bd.bid,CityView.selectedPoint,false);
 										return $"Upgrade {def.Bn}\n{-op.BuildOrUpgradeResourceBalance()}\n{op.TimeRequired(city)}";
 									}
 									break;
 								case CityBuildAction.downgrade:
 									if(bd.bl > 0 && !bd.isRes) {
-										var op = new BuildQueueItem(bd.bl,(byte)(bd.bl-1).Max(0),bd.bid,CityView.selectedPoint);
+										var op = new BuildQueueItem(bd.bl,(byte)(bd.bl-1).Max(0),bd.bid,CityView.selectedPoint,true);
 										return $"Downgrade {def.Bn}\n{op.DemoOrDowngradeResourceBalance()}\n{op.TimeRequired(city)}";
 									}
 									break;

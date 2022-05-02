@@ -40,6 +40,7 @@
 			<cnv:PlayerListBox x:Name="PlayerFilter" Width="300" Header="Filter" Changed="PlayerFilterChanged" />
 			<CheckBox Content="Artifacts" IsChecked="{x:Bind ShowArtifacts,Mode=TwoWay}" />
 			<CheckBox Content="Quests" IsChecked="{x:Bind ShowQuests,Mode=TwoWay}" />
+			<CheckBox Content="Agenda" x:Name="showAgenda" />
 		</StackPanel>
 
 		<sfs:SfScheduler x:Name="schedule" Grid.Row="1" 
@@ -71,7 +72,8 @@
 				<sfs:DaysViewSettings TimeRulerFormat="HH:mm"  AppointmentTemplate="{StaticResource agendaTemplate}"  />
 			</sfs:SfScheduler.DaysViewSettings>
 			<sfs:SfScheduler.MonthViewSettings>
-				<sfs:MonthViewSettings  AppointmentDisplayMode="Appointment"  AppointmentDisplayCount="6"  ShowAgendaView="True" AppointmentTemplate="{StaticResource agendaTemplate}"  >
+				<sfs:MonthViewSettings  AppointmentDisplayMode="Appointment" ViewHeaderHeight="32"  AppointmentDisplayCount="4" 
+										ShowAgendaView="{x:Bind showAgenda.IsChecked.GetValueOrDefault(),Mode=OneWay}" AppointmentTemplate="{StaticResource agendaTemplate}"  >
 					
 				</sfs:MonthViewSettings>
 			</sfs:SfScheduler.MonthViewSettings>

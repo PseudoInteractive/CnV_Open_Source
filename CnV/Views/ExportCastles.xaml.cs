@@ -64,7 +64,7 @@ namespace CnV.Views
 			   var who = Settings.exportWho;
 			   var score = Settings.exportScore;
 			   ShellPage.WorkStart("Exporting");
-			  await Task.Run(async () => {
+			  await Task.Run( () => {
 				   List<AllianceId> alliances = new();
 				  if (exportAlliance != 0)
 				  {
@@ -129,10 +129,12 @@ namespace CnV.Views
 
 						   foreach (var _cid in p.cities)
 						   {
+							  Assert(false);
 							  var cid = _cid;
 							   if (!TestContinentFilter(cid))
 								   continue;
-							   var wi = World.GetInfoFromCid(cid);
+							   var wi =  World.GetTile(cid.CidToWorldC()) ;
+							  //var wi =  World.GetInfo(cid) ;
 							   if (castles!=0  && castles!= (wi.isCastle? 1: 2) )
 								   continue;
 							  if (onlyTemples && !wi.isTemple)
@@ -141,7 +143,8 @@ namespace CnV.Views
 								  continue;
 
 							   var s = Spot.GetOrAdd(cid);
-							   var c = await s.ClassifyEx(false);
+							  // Assert false
+							  var c = s.classification; // s.Classify(false);
 							  //if(score.GetValueOrDefault() == true)
 								 // await GetCity.Post()
 							  var isO = c.IsOffense();

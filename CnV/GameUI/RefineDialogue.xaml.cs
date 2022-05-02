@@ -53,6 +53,11 @@ namespace CnV
 		{
 			var res = new Resources();
 			var city = City.GetBuild();
+			if(!items[id].count.IsInRange(1,1_000_000)) {
+				
+				AppS.MessageBox("Value range is [1 .. 1m]");
+				return;
+			}
 			res[id] = items[id].count;
 			Assert(res.allPositive);
 			var cost = res * -1000;

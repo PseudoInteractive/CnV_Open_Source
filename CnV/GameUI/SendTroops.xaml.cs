@@ -55,10 +55,10 @@ namespace CnV
 
 		}
 
-		private void UpdateTroopItems() {
+		private void UpdateTroopItems(TroopTypeCounts?troops) {
 			var troopItems = new List<SendTroopItem>();
-			if(prior is not null) {
-				foreach(var t in prior.troops) {
+			if(troops is not null) {
+				foreach(var t in troops.Value) {
 					var rv = new SendTroopItem(target: target,city: city,type: t.t,count: (int)t.c);
 					troopItems.Add(rv);
 					rv.PropertyChanged += SendTroops_PropertyChanged;
@@ -82,10 +82,10 @@ namespace CnV
 		bool isDefense => type==ArmyType.defense && !isSettle;
 		int splits => isDefense || isCavernRaid ? splitsCombo.SelectedIndex+1 : 1;
 
-		public static void ShowInstance(City city = null,City target = null,bool isSettle = false,bool viaWater = false,ArmyType type = ArmyType.nop,Army? prior = null) {
+		public static Task<bool> ShowInstance(City city = null,City target = null,bool isSettle = false,bool viaWater = false,ArmyType type = ArmyType.nop,Army? prior = null,TroopTypeCounts?troops=null,ServerTime?arrival=null,ServerTime? depart=null) {
 			if(city == target && prior is null) {
 				AppS.MessageBox("Cannot send to self");
-				return;
+				return Task.FromResult(false);
 			}
 			var rv = instance ?? new SendTroops();
 			rv.prior = prior;
@@ -95,29 +95,40 @@ namespace CnV
 				rv.isSettle = prior.isSettle;
 				rv.viaWater = prior.isViaWater;
 				rv.type = prior.type;
-				rv.UpdateTroopItems();
+				rv.UpdateTroopItems(prior.troops);
 				rv.arrival.SetDateTime(prior.arrival);
 				rv.buttoGo.Content = "Return";
 				rv.buttoGo.IsEnabled = prior.sourceCity.outgoing.Contains(prior);
 			}
-			else {
-				rv.city =prior?.sourceCity ?? city;
+			else
+			{
+				
+
+				rv.city =city;
 				rv.target = target;
-				rv.isSettle = prior?.isSettle??isSettle;
-				rv.viaWater = prior?.isViaWater ?? viaWater;
+				rv.isSettle = isSettle;
+				rv.viaWater = viaWater;
 				rv.type = type;
-				rv.UpdateTroopItems();
+				rv.UpdateTroopItems(troops);
+				if(arrival is not null)
+					rv.arrival.SetDateTime(arrival.Value);
+				else if(depart is not null)
+					rv.arrival.SetDateTime(depart.Value + rv.travelTime);
+			
 				rv.buttoGo.Content = "Send";
 				rv.buttoGo.IsEnabled=true;
 
 			}
 
-			if(isSettle)
-				rv.troopItems[Troops.ttMagistra].count = 1;
-
+			if(isSettle) {
+				foreach(var i in rv.troopItems) {
+					if(i.type ==ttMagistra )
+						i.count = 1;
+				}
+			}
 			rv.raidPanel.Visibility = rv.isCavernRaid ? Visibility.Visible : Visibility.Collapsed;
 			rv.OnPropertyChanged();
-			rv.Show(false);
+			return rv.Show(false);
 
 		}
 

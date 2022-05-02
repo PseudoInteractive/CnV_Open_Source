@@ -41,13 +41,13 @@ namespace CnV
 		internal string labelTime => $"{Label} time";
 		internal string labelDate => $"{Label} date";
 
-		internal static DateTime TranslateTime(ServerTime t) => t.dateTimeDT;
+		internal static DateTime? TranslateTime(ServerTime t) => t.isZero ? null :  t.dateTimeDT;
 		internal void SetDateTime(ServerTime t)
 		{
 			var tDefault = TranslateTime(t);
 			if(date.SelectedDate != tDefault || time.SelectedTime != tDefault)
 			{
-				date.SelectedDate = tDefault;
+				date.SelectedDate =   tDefault;
 
 				time.SelectedTime = tDefault;
 

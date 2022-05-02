@@ -77,7 +77,6 @@ namespace CnV
 		{
 			get { return _activationService.Value; }
 		}
-
 		internal static void FilterNans(NumberBox sender,NumberBoxValueChangedEventArgs args)
 		{
 			if(Double.IsNaN(sender.Value) || Double.IsNaN(args.NewValue))
@@ -86,7 +85,23 @@ namespace CnV
 
 				sender.Value =0;
 			}
+			
 		}
+		internal static void FilterPositive(NumberBox sender,NumberBoxValueChangedEventArgs args)
+		{
+			if(Double.IsNaN(sender.Value) || Double.IsNaN(args.NewValue))
+			{
+				Log($"{args.NewValue} <= {args.OldValue} v: {sender.Value}");
+
+				sender.Value =0;
+			}
+			else if(sender.Value < 0) {
+				Note.Show($"{sender.Header} Cannot be negative");
+				sender.Value = 0;
+			}
+		}
+
+
 		public static App instance;
 		public static string appLink = "cnv";
 
@@ -102,8 +117,11 @@ namespace CnV
 			//AppCenter.SetMaxStorageSizeAsync(16 * 1024 * 1024).ContinueWith((storageTask) => {
 			//	// The storageTask.Result is false when the size cannot be honored.
 			//});
-
-			AppCenter.Start("0b4c4039-3680-41bf-b7d7-685eb68e21d2",typeof(Analytics)
+#if DEBUG
+			AppCenter.LogLevel = LogLevel.Verbose;
+#endif
+			AppCenter.Configure("windowsdesktop=0b4c4039-3680-41bf-b7d7-685eb68e21d2");
+			AppCenter.Start(typeof(Analytics)
 					   ,typeof(Crashes));
 			//	AppCenter.LogLevel = System.Diagnostics.Debugger.IsAttached ? Microsoft.AppCenter.LogLevel.Warn : Microsoft.AppCenter.LogLevel.None;
 		
@@ -417,6 +435,7 @@ namespace CnV
 					FocusVisualKind = FocusVisualKind.Reveal;
 
 					window = new();
+	//				InitAppCenter();
 					AppS.globalQueue = window.DispatcherQueue;
 					//	window.
 
@@ -644,9 +663,6 @@ namespace CnV
 				}
 				const bool isInteractive = true;
 
-				AAnalytics.Track("Activate",new Dictionary<string,string> { { "kind",AppInstance.GetCurrent().GetActivatedEventArgs().ToString() },
-				
-				{"args" , args.Arguments } });
 				//if(IsInteractive(activationArgs))
 				{
 					// Initialize services that you need before app activation
@@ -669,7 +685,11 @@ namespace CnV
 
 					}
 				}
-			
+				InitAppCenter();
+				AAnalytics.Track("Activate",new Dictionary<string,string> { { "kind",AppInstance.GetCurrent().GetActivatedEventArgs().ToString() },
+				
+				{"args" , args.Arguments } });
+
 				// Depending on activationArgs one of ActivationHandlers or DefaultActivationHandler
 				// will navigate to the first page
 				//	await HandleActivationAsync(activationArgs);

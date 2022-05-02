@@ -75,9 +75,9 @@ namespace CnV
 
 		internal City city; // convienience
 		internal TType type;
-		internal uint count;
-		internal TroopTypeCount tt => new(type,count);
-		internal TroopTypeCount tt1 => new(type,count.Max(1));
+		internal int count;
+		internal TroopTypeCount tt => new(type,(uint)count.Max(0));
+		internal TroopTypeCount tt1 => new(type,(uint)count.Max(1));
 		internal ImageSource image => Troops.Image(type);
 		internal TroopInfo info => TroopInfo.all[type];
 		internal bool isEnabled => city.CanRecruit(type);
@@ -125,7 +125,7 @@ namespace CnV
 
 			var freeSpace = city.availableTsSpace;
 			m = m.Min(freeSpace / Troops.ttTs[type]);
-			count = (uint)m;
+			count = m;
 			OnPropertyChanged();
 		}
 
@@ -139,7 +139,7 @@ namespace CnV
 
 		internal void CountChanged(NumberBox sender,NumberBoxValueChangedEventArgs args)
 		{
-			App.FilterNans(sender,args);
+			App.FilterPositive(sender,args);
 			OnPropertyChanged();
 		}
 

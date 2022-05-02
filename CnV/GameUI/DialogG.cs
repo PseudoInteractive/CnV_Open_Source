@@ -114,7 +114,11 @@ namespace CnV
 		{
 			App.FilterNans(sender,args);
 		}
-		
+		protected void FilterPositive(NumberBox sender,NumberBoxValueChangedEventArgs args)
+		{
+			App.FilterPositive(sender,args);
+			
+		}
 		private void Grid_Tapped(object sender,TappedRoutedEventArgs e)
 		{
 			Note.Show("Tapped");

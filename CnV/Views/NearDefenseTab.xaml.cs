@@ -32,7 +32,7 @@ namespace CnV.Views
 																									  //   public ServerTime arriveAt { get; set; } = default;
 		public static SupportByTroopType[] supportByTroopTypeEmpty = Array.Empty<SupportByTroopType>();
 		public static int[] splitArray = { 1,2,3,4,5 };
-		public static bool Include(TroopTypeCount tt) => includeOffense || tt.isDef;
+		public static bool Include(TType tt) => includeOffense || ttIsDef[tt];
 
 
 		public static void GetSelected(List<int> rv) {
@@ -128,7 +128,7 @@ namespace CnV.Views
 											supporter.tSend += tt;
 										}
 										else {
-											if(!IsLandRaider(tt.type) || !Include(tt))
+											if(!IsLandRaider(tt.type) || !Include(tt.type))
 												continue;
 											supporter.tSend += new TroopTypeCount(tt.type,(uint)(sendGain * tt.count)); // round down
 										}
@@ -217,7 +217,7 @@ namespace CnV.Views
 			if(sel is Supporter support) {
 				var stt = new List<SupportByTroopType>();
 				foreach(var i in support.city.troopsOwned) {
-					if(Include(i))
+					if(Include(i.type) || support.tSend.GetCount(i.type)>0 )
 						stt.Add(new SupportByTroopType() { type = i.type,supporter = support });
 				}
 				troopTypeGrid.ItemsSource = stt;
@@ -258,11 +258,11 @@ namespace CnV.Views
 			var flyout = new MenuFlyout();
 			flyout.SetXamlRoot(text);
 			AApp.AddItem(flyout,"Troops Home",(_,_) => {
-				supporter.tSend = supporter.city.troopsHome;
+				supporter.tSend =  supporter.city.troopsHome.Where(t => Include(t) );
 				supporter.NotifyChange();
 			});
 			AApp.AddItem(flyout,"Total Troops",(_,_) => {
-				supporter.tSend = supporter.city.troopsOwned;
+				supporter.tSend = supporter.city.troopsOwned.Where(t=>  Include(t) );
 				supporter.NotifyChange();
 			});
 			AApp.AddItem(flyout,"None",(_,_) => {
@@ -320,12 +320,8 @@ namespace CnV.Views
 			foreach(var d in def) {
 				var ts = supporter.tSend /  (def.Count);
 				var cid = d.cid;
-				if(_arriveAt.isNotZero) {
-					success &= await Army.Send(ts,Army.FlagSplits(supporter.split),City.Get(supporter.cid),cid,ArmyType.defense,sendViaWater ? ArmyTransport.water : ArmyTransport.land,_arriveAt);
-				}
-				else {
-					success &= Army.Send(ts,Army.FlagSplits(supporter.split),City.Get(supporter.cid),cid,ArmyType.defense,sendViaWater ? ArmyTransport.water : ArmyTransport.land,(departAt - Sim.simTime).Max(0));
-				}
+
+					success &= await SendTroops.ShowInstance(City.Get(supporter.cid),City.Get(cid),false,sendViaWater,ArmyType.defense,null,ts,_arriveAt,departAt);
 				Assert(success);
 				Log($"Sent {ts} from {supporter.cid.AsCity()} to {cid.AsCity()} @{_arriveAt.ToString()}");
 				//	await Task.Delay(500);

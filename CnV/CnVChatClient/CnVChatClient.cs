@@ -102,7 +102,7 @@ namespace CnVDiscord
 						{
 							HttpHandler = new SocketsHttpHandler
 							{
-							//	PooledConnectionIdleTimeout = Timeout.InfiniteTimeSpan,
+								PooledConnectionIdleTimeout = Timeout.InfiniteTimeSpan,
 								KeepAlivePingDelay = TimeSpan.FromSeconds(60),
 								KeepAlivePingTimeout = TimeSpan.FromSeconds(30),
 								KeepAlivePingPolicy = HttpKeepAlivePingPolicy.Always,

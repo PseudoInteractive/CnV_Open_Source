@@ -72,7 +72,7 @@
                     
                         FontSize="{StaticResource MediumFontSize}"
 								 
-                        ItemsSource="{x:Bind game:Boss.all, Mode=OneTime}"
+                        ItemsSource="{x:Bind game:Cavern.all, Mode=OneTime}"
 
 						RowHeight="{StaticResource MediumGridRowHeight}"
                         SelectionMode="Single"

@@ -132,11 +132,18 @@ public sealed partial class TradeSettingsDialog:DialogG, INotifyPropertyChanged 
 		var _requestedResources = new Resources(
 			woodRequest.IntValue(),stoneRequest.IntValue(),ironRequest.IntValue(),foodRequest.IntValue()
 			);
-		var reqHash1 = HashCode.Combine(_requestedResources,_requestedResourceMaxTravel,_resourcePaymentRate);
-		if(reqHash0 != reqHash1) {
-			new CnVEventCityTradeRequest(city.c,_requestedResources,_resourcePaymentRate,_requestedResourceMaxTravel).EnqueueAsap();
+		var goldCost = CnVEventCityTradeRequest.GoldRequiredForRequest(city,_requestedResources,_resourcePaymentRate);
+		if(goldCost >= Player.active.gold) {
+			AppS.MessageBox($"Not enough gold for request, need {goldCost - Player.active.gold} more gold");
+		}
+		else {
+
+			var reqHash1 = HashCode.Combine(_requestedResources,_requestedResourceMaxTravel,_resourcePaymentRate);
+			if(reqHash0 != reqHash1) {
+				new CnVEventCityTradeRequest(city.c,_requestedResources,_resourcePaymentRate,_requestedResourceMaxTravel).EnqueueAsap();
+			}
+			Done();
 		}
 
-		Done();
 	}
 }

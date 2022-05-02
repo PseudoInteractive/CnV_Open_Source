@@ -323,9 +323,9 @@ namespace CnV
 			}
 			Assert(xQ.Count == rtQ.Count);
 			Assert(xQ.Count == lg);
-			for(int i = 0;i<lg;++i) {
-				Assert(equals(rtQ[i],xQ[i]));
-			}
+			//for(int i = 0;i<lg;++i) {
+			//	Assert(equals(rtQ[i],xQ[i]));
+			//}
 			return anyRemoved;
 		}
 
