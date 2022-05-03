@@ -117,7 +117,7 @@ namespace CnV
 			Assert(isInUpdateI == 0);
 			Interlocked.Increment(ref isInUpdateI);
 			try {
-				Note.Show($"UpdateI start {visibleT0}..{visibleT1}");
+//				Note.Show($"UpdateI start {visibleT0}..{visibleT1}");
 
 				var t0 = visibleT0;
 				var t1 = visibleT1;
@@ -197,7 +197,7 @@ namespace CnV
 
 				if(appointments.Count == 0) {
 
-					Note.Show("no Appointments!");
+//					Note.Show("no Appointments!");
 					GetDummyAppointments(appointments,t0-TimeSpanS.FromDays(1),t1+TimeSpanS.FromDays(1));
 					players.Add(Player.active);
 				}
@@ -209,7 +209,7 @@ namespace CnV
 
 					//players.Add(Player.active);
 				}
-				Note.Show($"Appointments: {appointments.Count()} Players: {players.Count()}");
+	//			Note.Show($"Appointments: {appointments.Count()} Players: {players.Count()}");
 				schedule.ItemsSource = appointments;
 
 
@@ -241,7 +241,7 @@ namespace CnV
 			if(hasLoaded)
 				return;
 			hasLoaded=true;
-			Note.Show("loaded timeline");
+			//Note.Show("loaded timeline");
 			//this.schedule.TimelineViewSettings.TimeInterval = new System.TimeSpan(0, 60, 0); // hourly ticks
 
 			try {
@@ -310,7 +310,7 @@ namespace CnV
 
 		private void QueryAppointments(object sender,QueryAppointmentsEventArgs e) {
 			//		schedule.ShowBusyIndicator=true;
-			Note.Show("Query Appointements");
+		//	Note.Show("Query Appointements");
 			visibleT0= e.VisibleDateRange.StartDate;
 			visibleT1 = e.VisibleDateRange.EndDate+TimeSpanS.FromDays(1);
 			if(isInUpdateI==0) {
@@ -318,7 +318,7 @@ namespace CnV
 				UpdateDataI();
 			}
 			else {
-				Note.Show("Skipped Query Appointements");
+			//	Note.Show("Skipped Query Appointements");
 
 			}
 		}

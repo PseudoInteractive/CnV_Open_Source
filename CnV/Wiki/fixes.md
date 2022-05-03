@@ -34,3 +34,5 @@
 	 - Trade overflow sends
 	 - Trade requests
 	 - Auto enlistment
+## New Timeline Tab
+	- A calender and timeline showing recent events
