@@ -63,12 +63,7 @@ ItemsSource="{x:Bind attackerSource,Mode=OneWay}"
                                             DisplayNumberFormat="N0"
                                              />
                 
-                <sf:GridNumericColumn MappingName="tsHome"
-                                            HeaderText="Def"
-                                            
-                                            TextAlignment="Right"
-                                            DisplayNumberFormat="N0"
-                                             />
+
                 <sf:GridTextColumn MappingName="playerName" HeaderText="Player"
                                        TextAlignment="Left"
                                        
@@ -91,11 +86,7 @@ ItemsSource="{x:Bind attackerSource,Mode=OneWay}"
                                             TextAlignment="Center"
                                             
                                              />
-                <sf:GridTextColumn MappingName="classificationString"
-                                       HeaderText="intel"
-                                       TextAlignment="Left"
-                                       
-                                        />
+
             </sf:SfDataGrid.Columns>
         </sf:SfDataGrid>
         <sf:SfDataGrid x:Name="armyGrid"

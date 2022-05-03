@@ -119,7 +119,7 @@ namespace CnV.Views
 			var sel = instance.attackerGrid.SelectedItem as Spot;
 			if (sel != null)
 			{
-				instance.armyGrid.ItemsSource = sel.incoming;
+				instance.armyGrid.ItemsSource = sel.incoming.Where( a => a.shareInfo );
 				if (Settings.fetchFullHistory)
 				{
 					var tab = HitHistoryTab.instance;
