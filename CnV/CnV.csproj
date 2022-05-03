@@ -731,9 +731,6 @@
     <Resource Include="Wiki\wiki.md" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="JSON\ofdf.cs" />
-  </ItemGroup>
-  <ItemGroup>
 	<Compile Include="App.xaml.cs">
 	  <DependentUpon>App.xaml</DependentUpon>
 	</Compile>

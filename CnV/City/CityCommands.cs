@@ -71,7 +71,7 @@ public partial class City
 		get {
 			var city = this;
 			if(isShrine)
-				return "Shrine\n(To be named)";
+				return Shrine.FromCid(cid).toolTip;
 			else if(isPortal)
 				return "Moongate";
 			else if(isDungeonOrBoss)
