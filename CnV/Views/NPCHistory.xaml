@@ -57,7 +57,7 @@ Loaded="DataGridLoaded"
                                             TextAlignment="Center"
 					Width="40"
                                              />
-				<sf:GridTextColumn MappingName="Player"  />
+				<sf:GridTextColumn MappingName="player"  />
 				<sf:GridTextColumn MappingName="bossC"  />
 				<sf:GridTextColumn Width="200" MappingName="city"  />
 				<sf:GridTextColumn Width="200" MappingName="Troops"         />

@@ -121,7 +121,7 @@
                                        IsHidden="True" />
 				<sf:GridNumericColumn MappingName="cont"
                                             TextAlignment="Center" />
-				<sf:GridNumericColumn MappingName="scoutRange"
+				<sf:GridNumericColumn MappingName="scoutRangeHrs"
                                             TextAlignment="Right"
                                              IsHidden="True" />
 				<sf:GridNumericColumn MappingName="tsOffMax"
@@ -176,12 +176,12 @@
 				<sf:GridTextColumn MappingName="typeS"
 
                                                       TextAlignment="Center" />
-				<sf:GridTextColumn MappingName="troopsS"
-
+				<sf:GridTextColumn MappingName="troopS"
+												HeaderText="Troops"
                                                    ColumnWidthMode="Auto" 
                                                    TextAlignment="Left" />
 				<sf:GridTextColumn MappingName="defenseAtArrivalS"
-
+													HeaderText="defense on arrival"
                                                    ColumnWidthMode="Auto" 
                                                    TextAlignment="Left" />
 				<sf:GridNumericColumn MappingName="dist"

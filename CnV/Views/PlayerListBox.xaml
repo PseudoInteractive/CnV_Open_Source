@@ -1,0 +1,32 @@
+﻿<sfe:SfComboBox
+    x:Class="CnV.PlayerListBox"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cnv="using:CnV"
+	xmlns:sfe="using:Syncfusion.UI.Xaml.Editors"
+	
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+			HorizontalAlignment="Stretch"
+            x:Name="TokenBox"
+            ItemsSource="{x:Bind cnv:Player.allSorted}"
+			SelectionMode="Multiple"
+			IsMultiSelectCheckBoxEnabled="True"
+			DelimiterText=","
+	
+			IsFilteringEnabled="True"
+			IsTextSearchEnabled="True"
+			MultiSelectionDisplayMode="Token"
+			 IsEditable="true"
+            PlaceholderText="Select Players"
+            TextMemberPath="name"
+		    DisplayMemberPath="name"
+			SelectionChanged="_SelectionChanged"
+			TokenItemTemplate="{StaticResource playerComboTemplate}"
+			>
+	
+	
+
+
+</sfe:SfComboBox>

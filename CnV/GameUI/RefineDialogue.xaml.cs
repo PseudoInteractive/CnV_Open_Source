@@ -34,7 +34,7 @@ namespace CnV
 		
 		
 
-		private void ResetItems() => items = new RefineItem[] { new(City.GetBuild(),0),new(City.GetBuild(),1),new(City.GetBuild(),2),new(City.GetBuild(),3) };
+		private void ResetItems() => items = new RefineItem[] { new(0),new(1),new(2),new(3) };
 		public static void ShowInstance()
 		{
 			if(City.GetBuild().GetHightestLevelBuilding(Building.bidSorcererTower) < 10)
@@ -53,7 +53,13 @@ namespace CnV
 		{
 			var res = new Resources();
 			var city = City.GetBuild();
+			if(!items[id].count.IsInRange(1,1_000_000)) {
+				
+				AppS.MessageBox("Value range is [1 .. 1m]");
+				return;
+			}
 			res[id] = items[id].count;
+			Assert(res.allPositive);
 			var cost = res * -1000;
 			if(!(city.SampleResources() + cost).allPositive)
 			{
@@ -91,13 +97,12 @@ private void FoodClick(object sender,RoutedEventArgs e) => DoRefine(3);
 	}
 	public sealed class RefineItem
 	{
-		public RefineItem(City _city,int id)
+		public RefineItem(int id)
 		{
-			city=_city;
 			this.id = id;
 			this.count = res/1000;
 		}
-		City city;
+		City city => City.GetBuild();
 		public int id { get; set; }
 		public int res => city.SampleResources()[id];
 		public string resS => res.Format();

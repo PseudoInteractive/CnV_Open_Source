@@ -2,13 +2,37 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converter="using:CnV.Converters"
+	xmlns:cnv="using:CnV"
     xmlns:converterTK="using:CommunityToolkit.WinUI.UI.Converters"
     xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
 	xmlns:tkui="using:CommunityToolkit.WinUI.UI"
     xmlns:sf="using:Syncfusion.UI.Xaml.DataGrid"
 	
  >
+	<DataTemplate x:Key="playerComboTemplate">
+		<Grid HorizontalAlignment="Center"
+                                      VerticalAlignment="Center">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="auto"/>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+			<Image      
+                                        Grid.Column="0"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Stretch" 
+                                        Source="{Binding avatarImageSmall}" 
+                                       
+                                        Stretch="Uniform"/>
 
+			<TextBlock 
+                                        Margin="8,0,0,0"
+                                        Grid.Column="1" 
+                                        TextAlignment="Center"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center" 
+                                        Text="{Binding shortName}"/>
+		</Grid>
+	</DataTemplate>
 	<converterTK:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
 	
 	<!--"Expander"-->
@@ -37,6 +61,7 @@
         <Setter Property="Background" Value="{x:Null}"/>
 		<Setter Property="Margin" Value="0" />
 		<Setter Property="BorderThickness" Value="0" />
+		<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
 		<Setter Property="Padding" Value="0" />
 		<Setter Property="IsTabStop" Value="True" />
 		<Setter Property="TabFocusNavigation" Value="Cycle" />
@@ -45,6 +70,7 @@
 		<Setter Property="IsDefaultShadowEnabled" Value="True" />
 		<Setter Property="MaxWidth" Value="800" />
 		<Setter Property="MaxHeight" Value="740" />
+		<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
 		<Setter Property="IsTabStop" Value="True" />
 		<Setter Property="TabFocusNavigation" Value="Cycle" />
 	</Style>
@@ -137,8 +163,25 @@
 			<Style BasedOn="{StaticResource ToggleButton}" TargetType="ToggleButton">
 			</Style>
 
+	<Style x:Key="sfRowStyle" TargetType="sf:DataGridRowControl">
+		<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
+		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+		<Setter Property="FontStretch" Value="Condensed" />
+		<Setter Property="FontWeight" Value="Normal" />
+	</Style>
+	<Style x:Key="sfHeaderStyle" TargetType="sf:GridHeaderCellControl">
+		<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
+		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+		<Setter Property="FontStretch" Value="Condensed" />
+		<Setter Property="FontWeight" Value="Normal" />
+	</Style>
 
-			<!--Toggle Button-->
+
+	<Style TargetType="sf:GridHeaderCellControl" BasedOn="{StaticResource sfHeaderStyle}" />
+
+	<Style BasedOn="{StaticResource sfRowStyle}" TargetType="sf:DataGridRowControl" />
+
+	<!--Toggle Button-->
 
 			<!--Syncfusion text-->
 
@@ -150,9 +193,16 @@
 				<Setter Property="FontWeight" Value="Normal" />
 
 			</Style>
-			<Style  TargetType="sf:GridCell" BasedOn="{StaticResource SfTextCell}"/>
+	<Style  TargetType="sf:GridCell" BasedOn="{StaticResource SfTextCell}">
+		<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
+		<Setter Property="FontStretch" Value="Condensed"/>
+		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+		<Setter Property="FontWeight" Value="Normal" />
+		<Setter Property="Margin" Value="1" />
+	</Style>
 	<Style  TargetType="sf:GridTextColumn" BasedOn="{StaticResource SfTextCell}">
 		<Setter Property="ShowHeaderToolTip" Value="True"/>
+
 	
 	</Style>
 
@@ -170,9 +220,12 @@
 			</Style>
 			<Style  TargetType="sf:GridTemplateColumn" BasedOn="{StaticResource SfGridColumnBase}">
 				<Setter Property="AllowSorting" Value="False"/>
+				
 				<Setter Property="AllowFiltering" Value="False"/>
 			</Style>
 			<Style  TargetType="sf:GridNumericColumn" BasedOn="{StaticResource SfGridColumnBase}">
+				
+				
         <Setter Property="ShowHeaderToolTip" Value="True"/>
     </Style>
 	<Style  TargetType="sf:GridCheckBoxColumn" BasedOn="{StaticResource SfGridColumnBase}">
@@ -248,14 +301,16 @@
 
 			<Style TargetType="Border" x:Key="BorderReveal"  >
 				<Setter Property="BorderThickness" Value="1" />
-				<Setter Property="Margin" Value="2"/>
-				<Setter Property="Padding" Value="4"/>
-				<Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundAccentRevealBorderBrush}"/>
+				<Setter Property="Margin" Value="1"/>
+				<Setter Property="Padding" Value="1"/>
+		<Setter Property="CornerRadius" Value="4" />
+		<Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"/>
 			</Style>
+	<Style TargetType="Border" BasedOn="{StaticResource BorderReveal}" >
+		
+	</Style>
 
-
-
-			<converter:SmallTimeConverter x:Key="SmallTimeConverter" />
+	<converter:SmallTimeConverter x:Key="SmallTimeConverter" />
 			<converter:DateTimeConverter x:Key="DateTimeConverter" />
 			<converter:IntConverter x:Key="IntConverter" />
 			<converter:TimeConverter x:Key="TimeConverter" />

@@ -20,7 +20,7 @@
 	<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
 	<AppxBundle>Always</AppxBundle>
 	<TieredCompilation>True</TieredCompilation>
-    <AppxBundlePlatforms>x64|arm64</AppxBundlePlatforms>
+    <AppxBundlePlatforms>x64</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
 	  
@@ -71,7 +71,8 @@
     </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.5.0" />
     <PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.5.0" />
-    <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0-preview.3.22175.4" />
+    <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="7.0.0-preview.3.22178.4" />
     <PackageReference Include="Microsoft.Extensions.Primitives" Version="7.0.0-preview.3.22175.4" />
     <PackageReference Include="Microsoft.Identity.Client" Version="4.43.1">
       <TreatAsUsed>true</TreatAsUsed>
@@ -80,7 +81,7 @@
     <PackageReference Include="Microsoft.Toolkit" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
 	<PackageReference Include="Azure.Data.Tables" Version="12.5.0" />
-    <PackageReference Include="Azure.Storage.Blobs" Version="12.12.0-beta.1" />
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.12.0" />
     <PackageReference Include="CommunityToolkit.WinUI.Notifications" Version="7.1.2" />
     <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
     <PackageReference Include="Enums.NET" Version="4.0.0" />
@@ -89,11 +90,11 @@
     <PackageReference Include="Humanizer.Core" Version="2.14.1" />
     <PackageReference Include="MessagePack" Version="2.4.14-alpha" />
     <PackageReference Include="MagicOnion.Client" Version="4.4.1" />
-    <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.4" />
     <PackageReference Include="Microsoft.Toolkit" Version="7.1.2">
       <TreatAsUsed>true</TreatAsUsed>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
+    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="1.6.3" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.197" />	  
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.3" />
 	<PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
@@ -114,13 +115,14 @@
     </PackageReference>
     <PackageReference Include="SharpDX.MediaFoundation" Version="4.2.0" />
     <PackageReference Include="SharpGen.Runtime.COM" Version="2.0.0-beta.10" />
+    <PackageReference Include="Syncfusion.Scheduler.WinUI" Version="20.1.0.51" />
     <PackageReference Include="System.Collections.Immutable" Version="7.0.0-preview.3.22175.4">
       <TreatAsUsed>true</TreatAsUsed>
     </PackageReference>
+    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="7.0.0-preview.3.22175.4" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="7.0.0-preview.2.22152.2">
       <TreatAsUsed>true</TreatAsUsed>
     </PackageReference>
-    <PackageReference Include="System.Runtime.Experimental" Version="6.0.2" />
     <PackageReference Include="System.Text.Json" Version="7.0.0-preview.3.22175.4" />
 	<PackageReference Include="ZString" Version="2.4.4" />
   </ItemGroup>
@@ -155,6 +157,7 @@
     <Compile Include="GameUI\ResearchPurchase.xaml.cs" />
     <Compile Include="GameUI\SendResDialogue.xaml.cs" />
     <Compile Include="GameUI\SendTroops.xaml.cs" />
+    <Compile Include="GameUI\TimelineView.xaml.cs" />
     <Compile Include="GameUI\ToolTipWindow.xaml.cs" />
     <Compile Include="GameUI\TradeSettingsDialog.xaml.cs" />
     <Compile Include="Program.cs" />
@@ -166,6 +169,7 @@
     <Compile Include="Views\CityStats.xaml.cs" />
     <Compile Include="Views\CnVSwapChainPanel.cs" />
     <Compile Include="Views\NPCHistory.xaml.cs" />
+    <Compile Include="Views\PlayerListBox.xaml.cs" />
     <Compile Include="Views\PlayerStats.xaml.cs" />
     <Compile Include="Views\PlayerTab.xaml.cs" />
     <Compile Include="Xaml\IconText.cs" />
@@ -452,6 +456,9 @@
     <Page Include="GameUI\SendTroops.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="GameUI\TimelineView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="GameUI\ToolTipWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -537,6 +544,9 @@
     </Page>
     <Page Include="Views\PlayerChangeTab.xaml">
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PlayerListBox.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\PlayerStats.xaml">
@@ -673,6 +683,7 @@
 	<None Remove="GameUI\ResearchPurchase.xaml" />
 	<None Remove="GameUI\SendResDialogue.xaml" />
 	<None Remove="GameUI\SendTroops.xaml" />
+	<None Remove="GameUI\TimelineView.xaml" />
 	<None Remove="GameUI\ToolTipWindow.xaml" />
 	<None Remove="GameUI\TradeSettingsDialog.xaml" />
     <None Remove="Resources\CnVFont-VF.ttf" />
@@ -693,6 +704,7 @@
     <None Remove="Views\DefenderPage.xaml" />
     <None Remove="Views\DefendTab.xaml" />
     <None Remove="Views\NPCHistory.xaml" />
+    <None Remove="Views\PlayerListBox.xaml" />
     <None Remove="Views\PlayerStats.xaml" />
     <None Remove="Views\PlayerTab.xaml" />
     <None Remove="Views\ReinforcementsTab.xaml" />
@@ -737,7 +749,7 @@
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
     <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
     <EnableNETAnalyzers>True</EnableNETAnalyzers>
-    <AnalysisLevel>preview</AnalysisLevel>
+    <AnalysisLevel>preview-all</AnalysisLevel>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <ImplicitUsings>True</ImplicitUsings>
     <Nullable>annotations</Nullable>
@@ -751,6 +763,7 @@
     <AppxPackageDir>S:\Source\cnv\appx\</AppxPackageDir>
     <ApplicationInsightsResourceId>/subscriptions/2a698fb0-55b8-4561-b722-2015b2c78d9c/resourceGroups/appcenter-export-Alliances/providers/microsoft.insights/components/AppCenterExport-Alliances</ApplicationInsightsResourceId>
     <UserSecretsId>390b80fc-ab7a-4c55-9a54-5947221eec7e</UserSecretsId>
+    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Optimize>False</Optimize>
@@ -808,12 +821,21 @@
 	 <Reference Include="Cyotek.Drawing.BitmapFont">
       <HintPath>..\ext\Cyotek.Drawing.BitmapFont.dll</HintPath>
     </Reference>
-    <Reference Include="MonoGame.Framework">
-      <HintPath>..\ext\net6.0-windows10.0.22000.0\MonoGame.Framework.dll</HintPath>
-    </Reference>
-    <ProjectCapability Include="Msix" />
+
   </ItemGroup>
-  <ItemGroup>
+	<ItemGroup Condition="'$(Platform)'=='ARM64'">
+		
+		<Reference Include="MonoGame.Framework">
+			<HintPath>..\ext\arm64\MonoGame.Framework.dll</HintPath>
+		</Reference>
+	</ItemGroup>
+	<ItemGroup Condition="'$(Platform)'=='x64'">
+
+		<Reference Include="MonoGame.Framework">
+			<HintPath>..\ext\x64\MonoGame.Framework.dll</HintPath>
+		</Reference>
+	</ItemGroup>
+	<ItemGroup>
     <Content Update="Assets\cnvIcon.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

@@ -106,7 +106,7 @@
 					<AppBarElementContainer VerticalAlignment="Center" >
 						<TextBox  x:Name="coords" Margin="4,0,4,0" Width="100" TextAlignment="Center"  Text="000:000" HorizontalAlignment="Center"  x:FieldModifier="public" KeyDown="coords_KeyDown"/>
 					</AppBarElementContainer>
-					<AppBarElementContainer VerticalAlignment="Center">
+					<AppBarElementContainer VerticalAlignment="Center" AllowFocusOnInteraction="True" IsTabStop="True">
 				<ComboBox x:Name="windowLayout" SelectedIndex="{x:Bind layout, Mode=TwoWay}"  VerticalAlignment="Center" Margin="4,0,4,0"
 						          ToolTipService.ToolTip="Select a view layout"  ItemsSource="{x:Bind layoutOptions}"  />
 					</AppBarElementContainer>
@@ -450,7 +450,7 @@
 					</tk:WrapPanel>
                     <NumberBox x:Name="gotoTimeOffset" Value ="24" Description="Step time change"  SmallChange="1"
                                ToolTipService.ToolTip="Hour change when forward or back is pressed"
-                               ValueChanged="{x:Bind cnv:App.FilterNans}" />
+                               ValueChanged="{x:Bind cnv:App.FilterPositive}" />
 				</StackPanel>
 			</Expander>
 

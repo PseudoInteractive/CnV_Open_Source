@@ -1,0 +1,120 @@
+﻿<view:UserTab
+    x:Class="CnV.TimelineView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cnv="using:CnV"
+    xmlns:cnvchart="using:CnV.Chart"
+	xmlns:view="using:CnV.Views"
+	xmlns:sfc="using:Syncfusion.UI.Xaml.Charts"
+    xmlns:sfs="using:Syncfusion.UI.Xaml.Scheduler"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	Loaded="OnLoaded"
+	Tag="Timeline"
+    mc:Ignorable="d">
+	<UserControl.Resources>
+		<DataTemplate x:Key="agendaTemplate" x:DataType="sfs:ScheduleAppointment"   >
+			<Border BorderThickness="0" Background = "{x:Bind cnv:TimelineView.GetColor(Id,AppointmentBackground) }"
+								 VerticalAlignment="Stretch"
+								 HorizontalAlignment="Stretch" 
+									ToolTipService.ToolTip="{x:Bind cnv:TimelineView.GetNotes(Id,Notes)}" >
+				<TextBlock
+									Text = "{x:Bind Subject}"
+									Foreground="{x:Bind Foreground}"
+									VerticalAlignment="Center"
+									TextTrimming="CharacterEllipsis"
+									TextWrapping="Wrap"
+									Style="{StaticResource TextBlockSmall}"
+									TextAlignment="Left"/>
+			</Border>
+		</DataTemplate>
+	</UserControl.Resources>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="auto" />
+			<RowDefinition Height="*" />
+		</Grid.RowDefinitions>
+		
+		<StackPanel Orientation="Horizontal" >
+			<!--<ComboBox ItemsSource="{x:Bind resourceGroupTypes}" SelectedItem="{x:Bind ResourceGrouping,Mode=TwoWay}" Header="Grouping" Width="200" />-->
+			<cnv:PlayerListBox x:Name="PlayerFilter" Width="300" Header="Filter" Changed="PlayerFilterChanged" />
+			<CheckBox Content="Artifacts" IsChecked="{x:Bind ShowArtifacts,Mode=TwoWay}" />
+			<CheckBox Content="Quests" IsChecked="{x:Bind ShowQuests,Mode=TwoWay}" />
+			<CheckBox Content="Agenda" x:Name="showAgenda" />
+		</StackPanel>
+
+		<sfs:SfScheduler x:Name="schedule" Grid.Row="1" 
+						 AllowedViewTypes="TimelineDay,TimelineWeek,Day,Month,Week"
+						AllowViewNavigation="true"
+						 
+						ShowDatePickerButton="False"
+						 FontFamily="{StaticResource CnvIcons}"
+						 FontStretch="Condensed"
+						 ViewType="Month"
+						 
+						 ResourceGroupType="None"
+						DisplayDate="{x:Bind initialDisplayDate,Mode=OneTime}"
+					
+						 QueryAppointments="QueryAppointments"
+						 AppointmentTapped="ItemTapped"
+						AppointmentEditFlag="None"
+						 EnableReminder="False"
+						 
+						ContextFlyoutOpening="ContextOpening"
+						>
+			<sfs:SfScheduler.DragDropSettings>
+				<sfs:DragDropSettings TimeIndicatorFormat = "HH:mm:ss" />
+			</sfs:SfScheduler.DragDropSettings>
+			<sfs:SfScheduler.TimelineViewSettings>
+				<sfs:TimelineViewSettings TimeRulerFormat="HH:mm" RowMinHeight="64"  AppointmentTemplate="{StaticResource agendaTemplate}" />
+			</sfs:SfScheduler.TimelineViewSettings>
+			<sfs:SfScheduler.DaysViewSettings>
+				<sfs:DaysViewSettings TimeRulerFormat="HH:mm"  AppointmentTemplate="{StaticResource agendaTemplate}"  />
+			</sfs:SfScheduler.DaysViewSettings>
+			<sfs:SfScheduler.MonthViewSettings>
+				<sfs:MonthViewSettings  AppointmentDisplayMode="Appointment" ViewHeaderHeight="32"  AppointmentDisplayCount="4" 
+										ShowAgendaView="{x:Bind showAgenda.IsChecked.GetValueOrDefault(),Mode=OneWay}" AppointmentTemplate="{StaticResource agendaTemplate}"  >
+					
+				</sfs:MonthViewSettings>
+			</sfs:SfScheduler.MonthViewSettings>
+			<sfs:SfScheduler.AppointmentContextFlyout>
+				<MenuFlyout>
+					<MenuFlyoutItem Text="Visit in Historic..."  Click="HistoricClick" >
+					
+					</MenuFlyoutItem>
+					
+				</MenuFlyout>
+			</sfs:SfScheduler.AppointmentContextFlyout>
+			<sfs:SfScheduler.CellContextFlyout>
+				<MenuFlyout>
+					<MenuFlyoutItem Text="Visit in Historic..."  Click="HistoricClick" >
+
+					</MenuFlyoutItem>
+
+				</MenuFlyout>
+			</sfs:SfScheduler.CellContextFlyout>
+			<sfs:SfScheduler.ResourceHeaderTemplate>
+				<DataTemplate x:DataType="sfs:SchedulerResource" >
+
+					<Grid  BorderBrush="{x:Bind Background }" BorderThickness="0,2,0,0" >
+						<Grid.RowDefinitions>
+							<RowDefinition Height="*" />
+							<RowDefinition Height="auto" />
+						</Grid.RowDefinitions>
+						<Image HorizontalAlignment="Left" VerticalAlignment="Stretch"
+                                                         
+							   Stretch="Uniform"
+							   Margin="0"
+							   
+                                                           Source="{x:Bind cnv:TimelineView.PlayerImage(Id) }" />
+							<TextBlock Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" 
+                                                       Text="{x:Bind Name}" Style="{StaticResource TextBlockSmall}" />
+						</Grid>
+				
+				</DataTemplate>
+			</sfs:SfScheduler.ResourceHeaderTemplate>
+
+
+		</sfs:SfScheduler>
+	</Grid>
+</view:UserTab>

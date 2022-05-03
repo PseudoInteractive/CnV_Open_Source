@@ -18,7 +18,8 @@ namespace CnV
 	public class DialogG :Microsoft.UI.Xaml.Controls.Expander
 	{
 		protected virtual string title => "Title";
-
+		internal virtual bool closeOnCitySwitch => true;
+		
 		protected TextBlock titleText;
 		protected Button closeButton;
 		public UIElementCollection TitleGrid
@@ -63,7 +64,7 @@ namespace CnV
 			grid.ColumnDefinitions.Add(new() { Width=GridLength.Auto});
 			titleText = new TextBlock()
 			{
-				Text=title,
+				
 				Style = App.instance.Resources["TextBlockMedium"]  as Style,
 				VerticalAlignment=VerticalAlignment.Center,
 				Padding = new(),
@@ -113,7 +114,11 @@ namespace CnV
 		{
 			App.FilterNans(sender,args);
 		}
-		
+		protected void FilterPositive(NumberBox sender,NumberBoxValueChangedEventArgs args)
+		{
+			App.FilterPositive(sender,args);
+			
+		}
 		private void Grid_Tapped(object sender,TappedRoutedEventArgs e)
 		{
 			Note.Show("Tapped");
@@ -131,6 +136,19 @@ namespace CnV
 		}
 		
 		TaskCompletionSource<bool> showTask;
+
+		static internal void CitySwitched() {
+			AppS.QueueOnUIThread(() => {
+				lock(all) {
+					foreach(var d in all) {
+						if(d.closeOnCitySwitch)
+							d.Hide(false);
+
+					}
+
+				}
+			});
+		}
 
 		public Task<bool> Show(bool toggle)
 		{

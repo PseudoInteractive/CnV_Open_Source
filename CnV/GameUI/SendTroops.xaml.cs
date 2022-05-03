@@ -1,19 +1,7 @@
 ﻿using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -21,153 +9,194 @@ using Windows.Foundation.Collections;
 namespace CnV
 {
 	using static Troops;
-	public sealed partial class SendTroops:DialogG,INotifyPropertyChanged
+	public sealed partial class SendTroops:DialogG, INotifyPropertyChanged
 	{
 		internal bool viaWater;
 		internal bool isSettle;
-		protected override string title => $"{(isSettle? "Setting" : Army.typeStrings[(int)type] )} => {target}"; 
+		internal Army prior;
+		protected override string title => $"{(isSettle ? "Settle" : target.isBoss ? "NPC Hit" : Army.typeStrings[(int)type])} => {target}";
 		internal static SendTroops? instance;
 		internal City city;
 		internal City target;
 		internal ArmyType type;
-	//	internal ServerTime arrival;
-	
-		
+		//	internal ServerTime arrival;
+
+
 		//internal ServerTime departure;
 		internal int armyType { get => (int)type; set => type=(ArmyType)(value); }
-		
+
 		internal readonly int[] splitsItems = Enumerable.Range(1,16).ToArray();
 
 		internal ArmyTransport transport => isSettle ? (viaWater ? ArmyTransport.ports : ArmyTransport.carts) : (viaWater ? ArmyTransport.water : ArmyTransport.land);
-		public SendTroops()
-		{
+		public SendTroops() {
 			this.InitializeComponent();
 			instance = this;
-			
+			PropertyChanged += SendTroops_PropertyChanged;
+			arrival.PropertyChanged += SendTroops_PropertyChanged;
+
 		}
 
-		private void UpdateTroopItems()
-		{
-			troopItems = new SendTroopItem[Troops.ttCount];
+		private void SendTroops_PropertyChanged(object? sender,PropertyChangedEventArgs e) {
+
+			var arrival = this.arrival.dateTime;
+			var tt = travelTime;
+			if(arrival == default) {
+				travelInfo.Text= $"Travel time: {tt.Format()}\nArrival: {(Sim.simTime+tt)}";
+			}
+			else {
+				var depart = (arrival-tt);
+				var rv = $"Travel time: {tt.Format()}\nDepart: {depart}";
+				if(depart <= Sim.simTime) {
+					rv += "(in the past)";
+				}
+				travelInfo.Text= rv;
+			}
 
 
-			for(int i = 0;i<Troops.ttCount;++i)
-				troopItems[i] = new(target:target, city:city,type:(byte)i,wantMax:false) ;
-
-			OnPropertyChanged();
 		}
 
-		bool isRaid => type==ArmyType.raid; 
-		bool isCavernRaid => type==ArmyType.raid && target.isDungeon; 
+		private void UpdateTroopItems(TroopTypeCounts?troops) {
+			var troopItems = new List<SendTroopItem>();
+			if(troops is not null) {
+				foreach(var t in troops.Value) {
+					var rv = new SendTroopItem(target: target,city: city,type: t.t,count: (int)t.c);
+					troopItems.Add(rv);
+					rv.PropertyChanged += SendTroops_PropertyChanged;
+				}
+			}
+			else {
+				var ttHome = city.troopsOwnedPlusRecruiting;
+				for(var i = (TType)0;i<Troops.ttCount;++i) {
+					if(ttHome.GetCount(i) > 0) {
+						var rv = new SendTroopItem(target: target,city: city,type: i);
+						troopItems.Add(rv);
+						rv.PropertyChanged += SendTroops_PropertyChanged;
+					}
+				}
+			}
+			this.troopItems = troopItems.ToArray();
+		}
+
+		bool isRaid => type==ArmyType.raid;
+		bool isCavernRaid => type==ArmyType.raid && target.isDungeon;
 		bool isDefense => type==ArmyType.defense && !isSettle;
 		int splits => isDefense || isCavernRaid ? splitsCombo.SelectedIndex+1 : 1;
 
-		public static void ShowInstance(City city,City target,bool isSettle,bool viaWater=false, ArmyType type = ArmyType.defense)
-		{
-			if(city == target)
-			{
+		public static Task<bool> ShowInstance(City city = null,City target = null,bool isSettle = false,bool viaWater = false,ArmyType type = ArmyType.nop,Army? prior = null,TroopTypeCounts?troops=null,ServerTime?arrival=null,ServerTime? depart=null) {
+			if(city == target && prior is null) {
 				AppS.MessageBox("Cannot send to self");
-				return;
+				return Task.FromResult(false);
 			}
 			var rv = instance ?? new SendTroops();
-			rv.city = city;
-			rv.target = target;
-			rv.isSettle = isSettle;
-			rv.viaWater = viaWater;
-			rv.type = type;
-			rv.UpdateTroopItems();
-			if(isSettle)
-				rv.troopItems[Troops.ttMagistra].count = 1;
+			rv.prior = prior;
+			if(prior is not null) {
+				rv.city =prior.sourceCity;
+				rv.target = prior.targetCity;
+				rv.isSettle = prior.isSettle;
+				rv.viaWater = prior.isViaWater;
+				rv.type = prior.type;
+				rv.UpdateTroopItems(prior.troops);
+				rv.arrival.SetDateTime(prior.arrival);
+				rv.buttoGo.Content = "Return";
+				rv.buttoGo.IsEnabled = prior.sourceCity.outgoing.Contains(prior);
+			}
+			else
+			{
+				
 
+				rv.city =city;
+				rv.target = target;
+				rv.isSettle = isSettle;
+				rv.viaWater = viaWater;
+				rv.type = type;
+				rv.UpdateTroopItems(troops);
+				if(arrival is not null)
+					rv.arrival.SetDateTime(arrival.Value);
+				else if(depart is not null)
+					rv.arrival.SetDateTime(depart.Value + rv.travelTime);
+			
+				rv.buttoGo.Content = "Send";
+				rv.buttoGo.IsEnabled=true;
+
+			}
+
+			if(isSettle) {
+				foreach(var i in rv.troopItems) {
+					if(i.type ==ttMagistra )
+						i.count = 1;
+				}
+			}
 			rv.raidPanel.Visibility = rv.isCavernRaid ? Visibility.Visible : Visibility.Collapsed;
 			rv.OnPropertyChanged();
-			rv.Show(false);
-			
+			return rv.Show(false);
+
 		}
 
-		internal bool IsValid(TroopTypeCounts troops,bool verbose)
-		{
-			if(city.underSiege)
-			{
+		internal bool IsValid(TroopTypeCounts troops,bool verbose) {
+			if(city.underSiege) {
 				if(verbose)
 					AppS.MessageBox($"City is under siege");
 				return false;
 			}
-			if(isSettle)
-			{
-				if(!troopItems.Any(a => a.type == Troops.ttSenator && a.count > 0))
-				{
+			if(isSettle) {
+				if(!troopItems.Any(a => a.type == Troops.ttSenator && a.count > 0)) {
 					if(verbose)
 						AppS.MessageBox($"Need a Magistra to settle");
 					return false;
 				}
 
-				if(!Army.CheckSettleResources(city))
-				{
+				if(!Army.CheckSettleResources(city)) {
 					return false;
 				}
 			}
-			if(transport == ArmyTransport.carts && city.cartsHome < 250)
-			{
+			if(transport == ArmyTransport.carts && city.cartsHome < 250) {
 				if(verbose) AppS.MessageBox($"Need 250 carts.  Have {city.cartsHome} home of {city.carts} ");
 				return false;
 			}
-			if(transport == ArmyTransport.ports && city.shipsHome < 25)
-			{
+			if(transport == ArmyTransport.ports && city.shipsHome < 25) {
 				if(verbose) AppS.MessageBox($"Need 25 trading ships.  Have {city.shipsHome} home of {city.ships} ");
 				return false;
 			}
-			if( type is ( >= Army.attackFirst and <= Army.attackLast))
-			{
-				if( !city.isCastle )
-				{ 
+			if(type is (>= Army.attackFirst and <= Army.attackLast)) {
+				if(!city.isCastle) {
 					if(verbose) AppS.MessageBox($"Only castles can attack like that");
-						return false;
+					return false;
 				}
-				if(troops.TS() < city.minTS)
-				{
+				if(troops.TS() < city.minTS) {
 					if(verbose) AppS.MessageBox($"Cannot send {troops.TS()}, min TS is {city.minTS}");
-						return false;
+					return false;
 
 				}
 			}
-			if( (type is (  ArmyType.siege or ArmyType.assault)) &&(!target.isCastle) )
-			{
+			if((type is (ArmyType.siege or ArmyType.assault)) &&(!target.isCastle)) {
 				if(verbose) AppS.MessageBox($"Target must be castle");
 				return false;
 			}
 			// check for water
-			if(transport is ( ArmyTransport.land or ArmyTransport.carts) )
-			{
-				if(troopItems.Any(a => a.count>0 && IsTTNaval(a.type)))
-				{
+			if(transport is (ArmyTransport.land or ArmyTransport.carts)) {
+				if(troopItems.Any(a => a.count>0 && IsTTNaval(a.type))) {
 					if(verbose) AppS.MessageBox($"Boats must go by water");
 					return false;
 				}
-				if(city.cont != target.cont)
-				{ 
+				if(city.cont != target.cont) {
 					if(verbose) AppS.MessageBox($"Land travel only to same continent");
 					return false;
 				}
 			}
-			else
-			{
+			else {
 				// by water
 				// check galley space todo
-				if(!city.isOnWater || !target.isOnWater)
-				{
+				if(!city.isOnWater || !target.isOnWater) {
 					if(verbose) AppS.MessageBox($"Source and target must be on water");
 					return false;
 				}
 
 			}
-			if(!troopItems.Any(a => a.count > 0))
-			{
+			if(!troopItems.Any(a => a.count > 0)) {
 				if(verbose) AppS.MessageBox($"Please send something");
 				return false;
 			}
-			if(city.freeCommandSlots < splits)
-			{
+			if(city.freeCommandSlots < splits) {
 				if(verbose) AppS.MessageBox($"Out of command slots");
 				return false;
 			}
@@ -178,69 +207,86 @@ namespace CnV
 		//private bool isSettle => (transport == ArmyTransport.carts || transport==ArmyTransport.ports);
 
 
-		internal SendTroopItem [] troopItems;
-		private void ClearClick(object sender,RoutedEventArgs e)
-		{
-			for(int i = 0;i<Troops.ttCount;++i)
-				troopItems[i].count = 0;
+		internal SendTroopItem[] troopItems;
+		private void ClearClick(object sender,RoutedEventArgs e) {
+			foreach(var ti in troopItems)
+				ti.count = 0;
 			Changed();
 		}
-		private void MaxClick(object sender,RoutedEventArgs e)
-		{
+		private void MaxClick(object sender,RoutedEventArgs e) {
 			var t = city.troopsOwned;
-			for(var i = Troops.ttZero;i<Troops.ttCount;++i)
-				troopItems[i].count = t.GetCount(i);
-			foreach(var i in CityStats.instance.recruitQueue)
-			{
-				troopItems[i.op.t].count += i.op.count; 
-			}	
+
+			foreach(var i in troopItems)
+				i.count = (int)t.GetCount(i.type);
+
 			Changed();
 		}
-		private void HomeClick(object sender,RoutedEventArgs e)
-		{
+		private void HomeClick(object sender,RoutedEventArgs e) {
 			var t = city.troopsHome;
-			for(var i = Troops.ttZero;i<Troops.ttCount;++i)
-				troopItems[i].count = t.GetCount(i);
+			foreach(var i in troopItems)
+				i.count = (int)t.GetCount(i.type);
+
 			Changed();
 		}
 
-		private  void SendTroopsClick(object sender,RoutedEventArgs e)
-		{
-			var ts = new TroopTypeCounts();
-			foreach(var i in troopItems)
-			{
-				if(i.count > 0)
+		internal TimeSpanS travelTime => Army.JourneyTime(city,target.cid,transport,troops,isRaid);
+
+
+		private async void SendTroopsClick(object sender,RoutedEventArgs e) {
+			if( prior is not null ) {
+				if(prior.sourceCity.outgoing.Contains(prior))
 				{
-					ts += i.tt;
-					
+					new CnVEventReturnTroops(prior).EnqueueAsap();
 				}
+				else {
+					AppS.MessageBox("Cannot be returned this way.");
+				}
+				Done();
+				return;
 			}
+			TroopTypeCounts ts = troops;
 
 			if(!IsValid(ts,true))
 				return;
-			
-			
-			
-			if(ts.Any())
-			{
+
+
+
+			if(ts.Any()) {
 				var splits = this.splits;
 
 				var flags = (byte)(isCavernRaid ? ((repeatCheckBox.IsChecked.Value ? Army.flagRepeating : Army.flagNone)
 									)
 									| Army.FlagSplits(splits) : Army.flagNone);
-				var arrival = this.arrival.dateTime; 
+				var arrival = this.arrival.dateTime;
 
 				bool okay;
-				if(arrival != default )
-					okay = Army.Send(ts,flags,city,target.cid,type,transport,arrival);
+				if(arrival != default) {
+					okay = await Army.Send(ts,flags,city,target.cid,type,transport,arrival);
+					if(!okay) {
+
+					}
+				}
 				else
 					okay = Army.Send(ts,flags,city,target.cid,type,transport);
 				if(okay)
 					Done();
 			}
-			else
-			{
+			else {
 				AppS.MessageBox("Please select troops to send");
+			}
+		}
+
+		internal TroopTypeCounts troops {
+			get {
+				var ts = new TroopTypeCounts();
+				foreach(var i in troopItems) {
+					if(i.count > 0) {
+						ts += i.tt;
+
+					}
+				}
+
+				return ts;
 			}
 		}
 
@@ -258,18 +304,15 @@ namespace CnV
 		//		//new CnVEventRecruit(city.c,tt).Execute();
 		//	}
 		//}
-		
+
 
 		public event PropertyChangedEventHandler? PropertyChanged;
-		public void OnPropertyChanged(string? member = null)
-		{
-			if (this.PropertyChanged is not null) 
+		public void OnPropertyChanged(string? member = null) {
+			if(this.PropertyChanged is not null)
 				AppS.QueueOnUIThread(() => PropertyChanged?.Invoke(this,new(member)));
 		}
-		public static void Changed(string? member = null)
-		{
-			if(instance is not null)
-			{
+		public static void Changed(string? member = null) {
+			if(instance is not null) {
 				instance.OnPropertyChanged(member);
 				foreach(var i in instance.troopItems)
 					i.OnPropertyChanged(member);
@@ -279,37 +322,43 @@ namespace CnV
 	}
 
 
-	internal class SendTroopItem: INotifyPropertyChanged
+	internal class SendTroopItem:INotifyPropertyChanged
 	{
-		
+
 		internal City city; // convienience
-				internal City target;
+		internal City target;
 
 		internal TType type;
-		internal uint count;
+		internal int _count;
+		internal int count {
+			get => _count;
+			set {
+				if(_count != value && value >=0) {
+					_count = value;
+					OnPropertyChanged(nameof(count));
+				}
+			}
+		}
 
-		public SendTroopItem(City city,City target,byte type, bool wantMax)
-		{
+		public SendTroopItem(City city,City target,byte type,bool wantMax = false,int? count = null) {
 			this.city=city;
 			this.target=target;
 			this.type=type;
-			this.count =wantMax ?city.troopsHome.GetCount(type) : 0;
+			this._count = count ??(wantMax ? (int)city.troopsHome.GetCount(type) : 0);
 		}
 
-		internal TroopTypeCount tt => new(type,count);
+		internal TroopTypeCount tt => new(type,(uint)_count.Max(0));
 		internal ImageSource image => Troops.Image(type);
 		internal TroopInfo info => TroopInfo.all[type];
-		internal void MaxClick(object sender,RoutedEventArgs e)
-		{
-			count = city.troopsHome.GetCount(type);
-			OnPropertyChanged(nameof(count));
+		internal void MaxClick(object sender,RoutedEventArgs e) {
+			count = (int)city.troopsHome.GetCount(type);
+
 		}
 		public string troopsHome => $"{city.troopsHome.GetCount(type).Format()}/{city.troopsOwned.GetCount(type).Format()}";
 
 		public event PropertyChangedEventHandler? PropertyChanged;
-		public void OnPropertyChanged(string? member = null)
-		{
-			if (this.PropertyChanged is not null) 
+		public void OnPropertyChanged(string? member = null) {
+			if(this.PropertyChanged is not null)
 				AppS.QueueOnUIThread(() => PropertyChanged?.Invoke(this,new(member)));
 		}
 

@@ -54,7 +54,7 @@ namespace CnV
 			{
 				foreach(var tt in city.MO.troopTargets)
 				{
-					troopItems[tt.t].count = tt.count;
+					troopItems[tt.t].count = (int)tt.count;
 				}
 			}
 			OnPropertyChanged();
@@ -87,7 +87,7 @@ namespace CnV
 			var ttc = new TroopTypeCounts();
 			for(int i = 0;i<ttCount;++i)
 			{
-				var c = troopItems[i].count.Min(TroopTypeCount.countMax);
+				var c = troopItems[i].count.Clamp(0,(int)TroopTypeCount.countMax);
 				ttc += new TroopTypeCount( (TType)i,(uint)c );
 			}
 			new CnVEventCityTroopTargets(city.c,ttc).EnqueueAsap();

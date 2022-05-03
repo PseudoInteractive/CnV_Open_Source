@@ -77,7 +77,6 @@ namespace CnV
 		{
 			get { return _activationService.Value; }
 		}
-
 		internal static void FilterNans(NumberBox sender,NumberBoxValueChangedEventArgs args)
 		{
 			if(Double.IsNaN(sender.Value) || Double.IsNaN(args.NewValue))
@@ -86,29 +85,52 @@ namespace CnV
 
 				sender.Value =0;
 			}
+			
 		}
+		internal static void FilterPositive(NumberBox sender,NumberBoxValueChangedEventArgs args)
+		{
+			if(Double.IsNaN(sender.Value) || Double.IsNaN(args.NewValue))
+			{
+				Log($"{args.NewValue} <= {args.OldValue} v: {sender.Value}");
+
+				sender.Value =0;
+			}
+			else if(sender.Value < 0) {
+				Note.Show($"{sender.Header} Cannot be negative");
+				sender.Value = 0;
+			}
+		}
+
+
 		public static App instance;
 		public static string appLink = "cnv";
 
-		public static void InitAppCenter()
+		public static void InitAppCenter(string appArgs)
 		{
 #if APPCENTER
 			if(AAnalytics.initialized)
 				return;
-			if(AppCenter.Configured)
-			{
-				return;
-			}
+			//if(AppCenter.Configured)
+			//{
+			//	return;
+			//}
 			//AppCenter.SetMaxStorageSizeAsync(16 * 1024 * 1024).ContinueWith((storageTask) => {
 			//	// The storageTask.Result is false when the size cannot be honored.
 			//});
-
-			AppCenter.Start("0b4c4039-3680-41bf-b7d7-685eb68e21d2",typeof(Analytics)
+#if DEBUG
+			AppCenter.LogLevel = LogLevel.Verbose;
+#endif
+			AppCenter.Configure("windowsdesktop=0b4c4039-3680-41bf-b7d7-685eb68e21d2");
+			AppCenter.Start(typeof(Analytics)
 					   ,typeof(Crashes));
 			//	AppCenter.LogLevel = System.Diagnostics.Debugger.IsAttached ? Microsoft.AppCenter.LogLevel.Warn : Microsoft.AppCenter.LogLevel.None;
 		
 		
 			AAnalytics.initialized = true;
+			var args = AppInstance.GetCurrent().GetActivatedEventArgs();
+			AAnalytics.Track("Activate",new Dictionary<string,string> { { "kind",args.Kind.ToString() },
+				
+				{"args" ,appArgs } });
 			//await Task.WhenAll(
 //			Analytics.SetEnabledAsync(true);
 	//		Crashes.SetEnabledAsync(true);
@@ -153,7 +175,7 @@ namespace CnV
 			//			services = ConfigureServices();
 			RequestedTheme = ApplicationTheme.Dark;
 			InitializeComponent();
-			UnhandledException += App_UnhandledException;
+	//		UnhandledException += App_UnhandledException;
 
 
 
@@ -197,13 +219,13 @@ namespace CnV
 		//         return services.BuildServiceProvider();
 		//     }
 
-		private void App_UnhandledException(object sender,Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
-		{
-			e.Handled = true;
-			System.Diagnostics.Debug.WriteLine($"Unhandled Exception: " + e.Message);
-			System.Diagnostics.Debug.WriteLine(e.Exception.StackTrace);
+		//private void App_UnhandledException(object sender,Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
+		//{
+		//	e.Handled = true;
+		//	System.Diagnostics.Debug.WriteLine($"Unhandled Exception: " + e.Message);
+		//	System.Diagnostics.Debug.WriteLine(e.Exception.StackTrace);
 
-		}
+		//}
 
 		private void TaskScheduler_UnobservedTaskException(object sender,UnobservedTaskExceptionEventArgs e)
 		{
@@ -356,8 +378,8 @@ namespace CnV
 				if(AppS.RegisterException(e.Message))
 				{
 #if APPCENTER
-
-					Crashes.TrackError(e.Exception);
+					if(AAnalytics.initialized)
+						Crashes.TrackError(e.Exception);
 #endif
 					AAnalytics.Track("UnhandledException",
 									new Dictionary<string,string> { { "message",e.Message.Truncate(64) } });
@@ -464,6 +486,8 @@ namespace CnV
 						WindowId myWndId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
 						AppS.appWindow= AppWindow.GetFromWindowId(myWndId);
 					}
+					InitAppCenter(args.Arguments);
+
 					AppS.appWindow.Title = "Conquest and Virtue Alpha sign in to Discord";
 					AppS.appWindow.SetIcon("assets\\cnvIcon.ico");
 					//				
@@ -486,6 +510,7 @@ namespace CnV
 					// if (!args.PrelaunchActivated)
 
 					await OnLaunchedOrActivated(args);
+				//	InitAppCenter();
 //					var w2 = new Window();
 //w2.Content = new TextBlock() { Text = "Hello" };
 //w2.Activate();
@@ -638,14 +663,11 @@ namespace CnV
 
 				if(!wasRunning)
 				{
-					InitAppCenter();
+					
 					await Sim.LoadJsons();
 				}
 				const bool isInteractive = true;
 
-				AAnalytics.Track("Activate",new Dictionary<string,string> { { "kind",AppInstance.GetCurrent().GetActivatedEventArgs().ToString() },
-				
-				{"args" , args.Arguments } });
 				//if(IsInteractive(activationArgs))
 				{
 					// Initialize services that you need before app activation
@@ -668,6 +690,7 @@ namespace CnV
 
 					}
 				}
+			
 
 				// Depending on activationArgs one of ActivationHandlers or DefaultActivationHandler
 				// will navigate to the first page
@@ -694,6 +717,7 @@ namespace CnV
 					//await Task.Delay(500);
 					Log("Activate!");
 					AppS.appWindow.Show(true);
+						
 					AppS.presenter.Maximize();
 					//await Task.Delay(500);
 					Log("Max");

@@ -110,7 +110,7 @@ namespace CnV
 		internal int towerSlots;
 		internal Visibility towerVis = Visibility.Collapsed;
 
-		internal TroopTypeCount tt => new(type,count);
+		internal TroopTypeCount tt => new(type,count.Max(0));
 		internal ImageSource image => Troops.Image(type);
 		internal TroopInfo info => TroopInfo.all[type];
 		internal string survivingS => $"=> {surviving.Format()}";

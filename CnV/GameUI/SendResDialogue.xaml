@@ -30,7 +30,7 @@
 				<cnv:WoodText Text="{x:Bind FreeRes(0), Mode=OneWay}" HorizontalAlignment="Right" Width="220" />
 				<NumberBox Grid.Row="1" HorizontalAlignment="Right" 
 						   Value="{x:Bind res.wood,Mode=TwoWay}" 
-						   ValueChanged="FilterNans" Width="150" SmallChange="10000" LargeChange="100000"/>
+						   ValueChanged="FilterPositive" Width="150" SmallChange="10000" LargeChange="100000"/>
 				<Button Grid.Row="1" HorizontalAlignment="Left" Content="Max" Click="SetMax0" />
 			</Grid>
 			<Grid Grid.Column="1">
@@ -40,7 +40,7 @@
 				</Grid.RowDefinitions>
 				<cnv:StoneText Text="{x:Bind FreeRes(1), Mode=OneWay}"  HorizontalAlignment="Right" Width="220" />
 				<NumberBox Grid.Row="1" HorizontalAlignment="Right" Value="{x:Bind res.stone,Mode=TwoWay}" 
-						   ValueChanged="FilterNans"  Width="150"  SmallChange="10000" LargeChange="100000" />
+						   ValueChanged="FilterPositive"  Width="150"  SmallChange="10000" LargeChange="100000" />
 				<Button Grid.Row="1" HorizontalAlignment="Left" Content="Max" Click="SetMax1" />
 			</Grid>
 			<Grid Grid.Row="1" Grid.Column="0">
@@ -49,7 +49,7 @@
 					<RowDefinition/>
 				</Grid.RowDefinitions>
 				<cnv:IronText Text="{x:Bind FreeRes(2), Mode=OneWay}" HorizontalAlignment="Right" Width="220"  />
-				<NumberBox Grid.Row="1" HorizontalAlignment="Right" Value="{x:Bind res.iron,Mode=TwoWay}" ValueChanged="FilterNans"  
+				<NumberBox Grid.Row="1" HorizontalAlignment="Right" Value="{x:Bind res.iron,Mode=TwoWay}" ValueChanged="FilterPositive"  
 						   Width="150"  SmallChange="10000" LargeChange="100000"  />
 				<Button Grid.Row="1" HorizontalAlignment="Left" Content="Max" Click="SetMax2" />
 			</Grid>
@@ -60,7 +60,7 @@
 				</Grid.RowDefinitions>
 				<cnv:FoodText Text="{x:Bind FreeRes(3), Mode=OneWay}" HorizontalAlignment="Right" Width="220" />
 				<NumberBox Grid.Row="1" HorizontalAlignment="Right" Value="{x:Bind res.food,Mode=TwoWay}" Width="150" 
-						   ValueChanged="FilterNans" 
+						   ValueChanged="FilterPositive" 
 						   SmallChange="10000" LargeChange="100000"  />
 				<Button Grid.Row="1" HorizontalAlignment="Left" Content="Max" Click="SetMax3" />
 			</Grid>

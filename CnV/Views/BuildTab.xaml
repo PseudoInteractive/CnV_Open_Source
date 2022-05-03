@@ -24,7 +24,7 @@
 							x:FieldModifier="public"
 							AllowFiltering="True"
 							Grid.Row="3"
-							FrozenColumnCount="2"
+							
 							ItemsSource="{x:Bind game:City.gridCitySource, Mode=OneWay}"
 							AutoGenerateColumns="False"
 							SelectionMode="Extended"
@@ -70,7 +70,7 @@
 				<sf:GridTextColumn MappingName="nameAndRemarks"
 										   HeaderText="Name"
 										   TextAlignment="Left"
-										   Width="200"
+										 
 										    />
 				<sf:GridHyperlinkColumn MappingName="bStage"
 									HeaderText="stage"	 

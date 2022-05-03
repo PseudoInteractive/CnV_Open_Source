@@ -494,7 +494,8 @@ namespace CnV.Views
 #if APPCENTER
 
 					{
-						AppCenter.SetUserId(CnVSignin.name);
+						if(AAnalytics.initialized)
+							AppCenter.SetUserId(CnVSignin.name);
 						//AppCenter.Analytics.Properties.put("UserId", "your user Id");
 						//	CustomProperties properties = new CustomProperties();
 						//	properties.Set("alliance",Alliance.myId).Set("allianceName",Alliance.my.name).Set("world",CnVServer.world).Set("sub",CnVServer.isSub).Set("playerId",Player.myId).Set("UserId",Player.myName);

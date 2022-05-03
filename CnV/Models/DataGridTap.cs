@@ -70,8 +70,8 @@ namespace CnV;
 								Spot.ProcessCoordClick(br.cityC, false, AppS.keyModifiers, false);
 								break;
 
-							case nameof(BossReport.Player):
-								br.Player.Click();
+							case nameof(BossReport.player):
+								br.player.Click();
 								break;
 							case nameof(BossReport.icon):
 								BossReportDialog.ShowInstance(br);
@@ -197,29 +197,29 @@ namespace CnV;
 
 						break;
 					}
-					case BlessedCity blessedCity:
+					case DonationOrder blessedCity:
 					{
-						blessedCity.ProcessTap(e.Column.HeaderText);
+						blessedCity.ProcessTap(e.Column.MappingName);
 						break;
 					}
 					case Supporter supporter:
 					{
-						supporter.ProcessedTapped(e.Column.HeaderText);
+						supporter.ProcessedTapped(e.Column.MappingName);
 						break;
 
 					}
-					case Boss boss:
-					{
-						switch(e.Column.HeaderText)
-						{
+					//case Boss boss:
+					//{
+					//	switch(e.Column.HeaderText)
+					//	{
 
-							case nameof(boss.xy):
-								Spot.ProcessCoordClick(boss.cid, false, AppS.keyModifiers);
-								break;
-						}
+					//		case nameof(boss.xy):
+					//			Spot.ProcessCoordClick(boss.cid, false, AppS.keyModifiers);
+					//			break;
+					//	}
 
-						break;
-					}
+					//	break;
+					//}
 
 				}
 			}

@@ -60,6 +60,8 @@ namespace CnV
 		}
 
 		bool hasEnough { get {
+				if(r.IsFree(player))
+					return true;
 				for(int r=0;r<5;++r)
 				{
 					if(player.RefinesOrGold(r) < this.r.R(r) )

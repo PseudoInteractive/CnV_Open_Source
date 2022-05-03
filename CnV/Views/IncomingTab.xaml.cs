@@ -234,7 +234,8 @@ namespace CnV.Views
 				lastSelected = sel;
 				if(sel != null)
 				{
-					armyGrid.ItemsSource = sel.incoming.OrderBy(a=>a.arrival);
+					var visibilityTime = Sim.simTime + sel.scoutRange;
+					armyGrid.ItemsSource = sel.incoming.Where(a => a.arrival <= visibilityTime).OrderBy(a=>a.arrival).ToArray();
 
 					if(updatehistoryTab)
 					{

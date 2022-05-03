@@ -77,7 +77,7 @@ namespace CnV
 
 		private void CountChanged(NumberBox sender,NumberBoxValueChangedEventArgs args)
 		{
-			base.FilterNans(sender,args);
+			base.FilterPositive(sender,args);
 			OnPropertyChanged();
 		}
 		public event PropertyChangedEventHandler? PropertyChanged;

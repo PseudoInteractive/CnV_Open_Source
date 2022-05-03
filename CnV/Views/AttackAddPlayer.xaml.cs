@@ -85,8 +85,8 @@ namespace CnV.Views
 					{
 						if (toAdd.Count >= wantCount)
 							break;
-						var wi = World.GetInfoFromCid(cid);
-						if (!wi.isCastle)
+						var isCastle = World.GetTile(cid.CidToWorldC()).isCastle;
+						if (!isCastle)
 							continue;
 						if (cid.CidToContinentDigits() != wantContinent)
 							continue;

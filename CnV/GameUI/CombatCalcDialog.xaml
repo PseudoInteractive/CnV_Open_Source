@@ -25,12 +25,12 @@
 					<Image Grid.Column="0" Source="{x:Bind image}" Stretch="Uniform" VerticalAlignment="Center" Margin="1"  />
 
 					<NumberBox  Grid.Column="1"  Style="{StaticResource NumberBoxMedium}" 
-                                         ValueChanged="FilterNans" 
+                                         ValueChanged="FilterPositive" 
                                         Value="{x:Bind towerSlots,Mode=TwoWay}"   Margin="4,0,2,0" VerticalAlignment="Center" 
                                          SmallChange="1000" Visibility="{x:Bind towerVis}" />
 					
 					<NumberBox  Grid.Column="2"   Style="{StaticResource NumberBoxMedium}" 
-                                         ValueChanged="FilterNans" Width="110"
+                                         ValueChanged="FilterPositive" Width="110"
                                         Value="{x:Bind count,Mode=TwoWay}"  Margin="4,0,4,0" VerticalAlignment="Center" 
                                         SmallChange="1000" LargeChange="10000" />
 
@@ -63,7 +63,7 @@
 		<ComboBox Grid.Row="1" SelectedIndex="{x:Bind attackType,Mode=TwoWay}" ItemsSource="{x:Bind cnv:Army.typeStrings}" />
 			<ComboBox Grid.Row="1" Description="Wall" SelectedIndex="{x:Bind wallLevel,Mode=TwoWay}" ItemsSource="{x:Bind cnv:XamlHelper.strings_0_10}" />
 			<NumberBox    Style="{StaticResource NumberBoxSmall}" 
-                                         ValueChanged="FilterNans" Width="110"
+                                         ValueChanged="FilterPositive" Width="110"
                                         Value="{x:Bind nightProtection,Mode=TwoWay}"  Margin="4,0,4,0" VerticalAlignment="Center" 
                                         SmallChange="1" LargeChange="10000" Description="Night Protection" />
 		</StackPanel>

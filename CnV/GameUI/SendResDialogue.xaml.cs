@@ -29,12 +29,20 @@ namespace CnV
 		internal City source;
 		internal City destination;
 
-		public static void ShowInstance(City city,City target)
+		public static void ShowInstance(City city,City target, Resources? _res, bool? _viaWater)
 		{
 			var rv = instance ?? new SendResDialogue();
 			rv.source = city;
 			rv.destination = target;
-			rv.SetDefault();
+			if(_viaWater.HasValue)
+				rv.transport.SelectedIndex = _viaWater.Value.Switch(0,1);
+			if(_res is not null) {
+				rv.res = _res.Value;
+				rv.OnPropertyChanged();
+			}
+			else
+				rv.SetDefault();
+			
 			rv.Show(false);
 
 		}
@@ -109,8 +117,8 @@ namespace CnV
 
 		private void transport_SelectionChange(object sender,SelectionChangedEventArgs e)
 		{
-			if(source is not null)
-				SetDefault();
+		//	if(source is not null)
+		//		SetDefault();
 		}
 
 		private void ClearClick(object sender,RoutedEventArgs e)

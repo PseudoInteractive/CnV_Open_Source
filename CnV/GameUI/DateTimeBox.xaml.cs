@@ -41,13 +41,13 @@ namespace CnV
 		internal string labelTime => $"{Label} time";
 		internal string labelDate => $"{Label} date";
 
-		internal static DateTimeOffset TranslateTime(ServerTime t) => new DateTime(t.dateTime.Ticks,DateTimeKind.Local);
+		internal static DateTime? TranslateTime(ServerTime t) => t.isZero ? null :  t.dateTimeDT;
 		internal void SetDateTime(ServerTime t)
 		{
 			var tDefault = TranslateTime(t);
 			if(date.SelectedDate != tDefault || time.SelectedTime != tDefault)
 			{
-				date.SelectedDate = tDefault;
+				date.SelectedDate =   tDefault;
 
 				time.SelectedTime = tDefault;
 
@@ -58,11 +58,22 @@ namespace CnV
 		{
 			// We pretend that this is local
 			// 
-			var tDefault = TranslateTime(Sim.simTime);
-			if(date.SelectedDate is null)
+			var tDefault = Sim.simTime.dateTimeDT;
+
+			if(time.SelectedTime is null) {
 				date.SelectedDate = tDefault;
-			if(time.SelectedTime is null)
 				time.SelectedTime = tDefault;
+			}
+		}
+		private void date_DropDownOpened(object sender,EventArgs e)
+		{
+			// We pretend that this is local
+			// 
+			var tDefault = Sim.simTime.dateTimeDT;
+			if(date.SelectedDate is null) {
+				date.SelectedDate = tDefault;
+				time.SelectedTime = tDefault;
+			}
 		}
 
 		internal static ObservableCollection<ServerTime> recent = new( new[] { ServerTime.zero } );
@@ -87,9 +98,11 @@ namespace CnV
 
 		}
 
-		private void NowClick(object sender,RoutedEventArgs e)
+		private void ClearClick(object sender,RoutedEventArgs e)
 		{
-			SetDateTime(Sim.simTime);
+			date.SelectedDate=null;
+			time.SelectedTime = null;
+			OnPropertyChanged();
 		}
 		public event PropertyChangedEventHandler? PropertyChanged;
 		public void OnPropertyChanged(string? member = null)
@@ -97,5 +110,19 @@ namespace CnV
 			if (this.PropertyChanged is not null) 
 				AppS.DispatchOnUIThread(() => PropertyChanged?.Invoke(this,new(member)));
 		}
+		bool isLoaded;
+		private void Loaded(object sender,RoutedEventArgs e) {
+			if(isLoaded)
+				return;
+			isLoaded = true;
+			date.SelectedDateChanged+=DateTime_SelectedTimeChanged;
+			time.SelectedTimeChanged+=DateTime_SelectedTimeChanged;
+		}
+
+		private void DateTime_SelectedTimeChanged(object? sender,Syncfusion.UI.Xaml.Editors.SelectedDateTimeChangedEventArgs e) {
+			OnPropertyChanged();
+		}
+
+		
 	}
 }

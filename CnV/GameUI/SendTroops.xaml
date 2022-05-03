@@ -13,8 +13,12 @@
 		<Grid.RowDefinitions>
 			<RowDefinition  />
 			<RowDefinition Height="auto" />
+			<RowDefinition Height="auto" />
 		</Grid.RowDefinitions>
-		<Button Grid.Row="1" Style="{StaticResource ButtonMedium}" Content="Send" Click="SendTroopsClick" HorizontalAlignment="Right" Margin="8,2"/>
+		
+		<Button x:Name="buttoGo"  Grid.Row="2" Style="{StaticResource ButtonMedium}" Content="Send" Click="SendTroopsClick" HorizontalAlignment="Right" Margin="8,2,4,2"/>
+		<TextBlock Grid.Row="2" x:Name="travelInfo"  Margin="4,2,70,2" TextWrapping="Wrap"  />
+		
 		<tk:WrapPanel Grid.Row="1" Orientation="Horizontal" Padding="4">
 			<Button Style="{StaticResource ButtonMedium}" Content="Total" Click="MaxClick" Margin="0,2,8,2" />
 			<Button Style="{StaticResource ButtonMedium}" Content="Home" Click="HomeClick" Margin="8,2" />
@@ -32,6 +36,7 @@
 				<CheckBox x:Name="repeatCheckBox" Content="Repeat" IsChecked="True" Margin="8,2" />
 			</StackPanel>
 			<cnv:DateTimeBox Label="arrival" x:Name="arrival" ToolTipService.ToolTip="Clear both boxes to send immediately" />
+			
 			<NumberBox Description="Min TS" Value="{x:Bind city.minTS,Mode=OneWay}" IsEnabled="false" />
 		</tk:WrapPanel>
 
@@ -64,7 +69,7 @@
 										HorizontalTextAlignment="Right"
 										Text="{x:Bind troopsHome,Mode=OneWay}" Style="{StaticResource TextBlockMedium}" VerticalAlignment="Center"  Margin="8,0,8,0"/>
 							<NumberBox  Grid.Column="1"  Grid.Row="1" Style="{StaticResource NumberBoxMedium}" 
-                                         ValueChanged="FilterNans"
+                                         ValueChanged="FilterPositive"
                                         Value="{x:Bind count,Mode=TwoWay}" Width="120"   Margin="8,0,8,0" VerticalAlignment="Center" SmallChange="1000"
                                         HorizontalAlignment="Right" />
 								

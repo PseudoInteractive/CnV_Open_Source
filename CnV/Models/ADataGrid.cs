@@ -11,6 +11,9 @@ using Game;
 using Syncfusion.UI.Xaml.Grids;
 using Syncfusion.UI.Xaml.Grids.ScrollAxis;
 using Views;
+using Microsoft.UI.Xaml;
+using Windows.UI.Text;
+
 /// <summary>
 /// Tag is used to save/load the dataGrid
 /// </summary>
@@ -97,7 +100,7 @@ public static partial class ADataGrid
 			{
 				HeaderText = headerText,
 				IsReadOnly = true,
-				ColumnWidthMode=ColumnWidthMode.Auto,
+				ColumnWidthMode=ColumnWidthMode.SizeToCells,
 				MappingName = nameof(City.cityName)
 			});
 			if(wantRemarks)
@@ -253,48 +256,67 @@ public static partial class ADataGrid
 		if (Register(tab, grid))
 		{
 			var _lock0 = new ADataGrid.ChangeContextDisposable(wantChangeContext ? grid : null);
-		//	grid.FontFamily = App.CnVFont;
+			//	grid.FontFamily = App.CnVFont;
+			//	grid.ColumnSizer.FontStretch = Windows.UI.Text.FontStretch.Condensed;
+				grid.ColumnSizer.FontFamily = XamlHelper.cnvFont;
+			//	grid.ColumnSizer.FontWeight = Microsoft.UI.Text.FontWeights.Normal;
+			grid.ColumnSizer.Margin = new(4);// = Settings.mediumFontSize;
+		//	grid.FontSize = Settings.smallFontSize;
 			grid.AlternationCount = 2;
-
-			grid.RowHeight = Settings.mediumGridRowHeight;
+		//	grid.AllowRowHoverHighlighting = true;
+			grid.RowHeight = Settings.shortGridRowHeight;
 		//	grid.FontSize = Settings.smallFontSize;
 			
 			grid.FontWeight=Microsoft.UI.Text.FontWeights.Normal;
+				grid.FontSize = Settings.smallFontSize;
+			grid.FontStretch = Windows.UI.Text.FontStretch.Condensed;
+			grid.FontFamily=XamlHelper.cnvFont;
 			grid.SelectionMode = GridSelectionMode.Extended;
-			grid.GridLinesVisibility = GridLinesVisibility.Both;
+		//	grid.GridLinesVisibility = GridLinesVisibility.Both;
 		
-			grid.ShowGroupDropArea=true;
+			grid.ShowGroupDropArea=false;
 			grid.AllowResizingHiddenColumns = true;
 			grid.AllowResizingColumns = true;
-			grid.CanMaintainScrollPosition=true;
-			grid.ShowToolTip=true;
-			
+		//	grid.CanMaintainScrollPosition=true;
+			//grid.ShowToolTip=true;
+			grid.CellStyle = App.instance.Resources["SfTextCell"] as Style;
+			grid.RowStyle = App.instance.Resources["sfRowStyle"] as Style;
+			grid.HeaderStyle=App.instance.Resources["sfHeaderStyle"] as Style;
 			grid.AllowEditing=false;
 			grid.AllowDraggingColumns=true;
 			grid.AllowSorting=true;
+			grid.ColumnSizer.AutoFitMode = AutoFitMode.SmartFit;
+
 			grid.AllowTriStateSorting=true;
 //			grid.FontStretch = Windows.UI.Text.FontStretch.Condensed;
-			grid.ExpanderColumnWidth = 32;
+			//grid.ExpanderColumnWidth = 16;
 			if (tab is not null && grid.IsCityGrid())
 				grid.SelectionChanged += tab.SpotSelectionChanged;
-			grid.FontSize = Settings.smallFontSize;
-			grid.FontStretch = Windows.UI.Text.FontStretch.Condensed;
+		
 			grid.GridContextFlyoutOpening += UserTab.ContextFlyoutOpening;
 			grid.RecordContextFlyout = new();
 			grid.RecordContextFlyout.SetXamlRoot(grid);
 			grid.CurrentCellRequestNavigate += UserTab.CelNavigate;
 			grid.CellTapped += ADataGrid.SfCellTapped;
-			grid.AllowGrouping = true;
-			grid.AllowFiltering = true;
+			grid.AllowGrouping = false;
+			grid.ShowToolTip=true;
+			grid.AllowFiltering = false;
+
 			//				grid.AllowFrozenGroupHeaders = false;
-//			grid.ColumnWidthMode = Syncfusion.UI.Xaml.Grids.ColumnWidthMode.AutoLastColumnFill;
-			grid.ColumnWidthMode = Syncfusion.UI.Xaml.Grids.ColumnWidthMode.SizeToCells;
+			grid.ColumnWidthMode = Syncfusion.UI.Xaml.Grids.ColumnWidthMode.Auto;
+//			grid.ColumnWidthMode = Syncfusion.UI.Xaml.Grids.ColumnWidthMode.SizeToCells;
 			grid.CellToolTipOpening += UserTab.CellToolTipOpening;
 			//if(sourceType is not null) //  || grid.ItemsSource is not null)
 		//		grid.SourceType = sourceType;// ?? UserTab.GetContainerType(grid.ItemsSource);
 			//grid.UseSystemFocusVisuals = true;
 			grid.ShowSortNumbers = true;
-			
+			foreach(var c in 			grid.Columns ) {
+				c.ShowHeaderToolTip=true;
+				c.ShowToolTip=true;
+				c.CellStyle = App.instance.Resources["SfTextCell"] as Style;
+			}
+					grid.ColumnSizer.ResetAutoCalculationforAllColumns();
+	
 			return _lock0;
 
 		}
