@@ -141,8 +141,8 @@ IsTabStop="True"
                                                    
                                                    TextAlignment="Left" />
            
-                <sf:GridTextColumn MappingName="troopInfo"
-                                                 HeaderText="Attack"  
+                <sf:GridTextColumn MappingName="troopS"
+                                                 HeaderText="Troops"  
                                                    
                                                    TextAlignment="Left" />
             </sf:SfDataGrid.Columns>

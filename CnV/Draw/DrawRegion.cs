@@ -853,119 +853,9 @@ internal partial class GameClient
 				if(!focusOnCity)
 				{
 					var incomingVisible = IncomingTab.IsVisible() || ReinforcementsTab.IsVisible() || NearDefenseTab.IsVisible() || Settings.incomingAlwaysVisible;
-					var outgoingVisible = OutgoingTab.IsVisible() || Settings.attacksAlwaysVisible;
+					var outgoingVisible = AttackTab.IsVisible() || OutgoingTab.IsVisible() || Settings.attacksAlwaysVisible;
 					{
-						//if (DefenseHistoryTab.IsVisible() || HitTab.IsVisible())
-						//{
-						//	for (var dfof = 0; dfof < 2; ++dfof)
-						//	{
-						//		if (dfof == 0)
-						//		{
-						//			if (!DefenseHistoryTab.IsVisible())
-						//				continue;
-						//		}
-						//		else
-						//		{
-						//			if (!HitTab.IsVisible())
-						//				continue;
-
-						//		}
-						//		var reports = dfof == 0 ? DefenseHistoryTab.instance.history : HitTab.instance.history;
-
-						//		if (reports.Length > 0)
-						//		{
-						//			var autoShow = reports.Length <= Settings.showAttacksLimit;
-
-						//			var counts = new Dictionary<int, IncomingCounts>();
-
-						//			foreach (var attack in reports)
-						//			{
-						//				if (attack.type == COTG.Game.Enum.reportPending)
-						//				{
-						//					if (dfof == 0)
-						//					{
-						//						// this will be drawn later, don't repeat
-						//						if (defenderVisible)
-						//							continue;
-
-						//					}
-						//					else
-						//					{
-						//						// this will be drawn later, don't repeat
-						//						if (outgoingVisible)
-						//							continue;
-						//					}
-
-						//				}
-						//				var targetCid = attack.targetCid;
-						//				var sourceCid = attack.sourceCid;
-						//				if (!(targetCid.TestContinentFilter() | sourceCid.TestContinentFilter()))
-						//					continue;
-
-						//				var c1 = targetCid.CidToCamera();
-						//				var c0 = sourceCid.CidToCamera();
-						//				// cull (should do this pre-transform as that would be more efficient
-						//				if (IsCulled(c0, c1))
-						//					continue;
-
-						//				var dt1 = attack.TimeToArrival(serverNow);
-
-						//				// before attack
-						//				var journeyTime = attack.journeyTime;
-						//				{
-						//					// register attack
-						//					if (!counts.TryGetValue(targetCid, out var count))
-						//					{
-						//						count = new IncomingCounts();
-						//						counts.Add(targetCid, count);
-						//					}
-						//					if (dt1 > 0)
-						//						++count.incoming;
-						//					else
-						//						++count.prior;
-						//				}
-
-						//				if (dt1 >= journeyTime || dt1 < -postAttackDisplayTime)
-						//					continue;
-						//				if (!Spot.IsSelectedOrHovered(targetCid, sourceCid, autoShow))
-						//				{
-						//					continue;
-						//				}
-						//				Color c = GetAttackColor(attack);
-
-						//				{
-						//					var t = (tick * sourceCid.CidToRandom().Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
-						//					var r = t.Ramp();
-						//					var nSprite = attack.troops.count;
-						//					if (nSprite > 0)
-						//					{
-						//						(int iType, float alpha) = GetTroopBlend(t, nSprite);
-						//						DrawAction(dt1, journeyTime, r, c0, c1, c, troopImages[attack.troops.GetIndexType(iType)], true, attack, alpha: alpha, 
-						//							lineThickness:lineThickness,highlight:Spot.IsSelectedOrHovered(a)(attack.sourceCid,attack.targetCid)) );
-						//					}
-						//				}
-						//				//var progress = (dt0 / (dt0 + dt1).Max(1)).Saturate(); // we don't know the duration so we approximate with 2 hours
-						//				//var mid = progress.Lerp(c0, c1);
-						//				//ds.DrawLine(c0, c1, shadowBrush, lineThickness, defaultStrokeStyle);
-						//				//ds.FillCircle(mid, span, shadowBrush);
-						//				//var midS = mid - shadowOffset;
-						//				//ds.DrawLine(c0 - shadowOffset, midS, raidBrush, lineThickness, defaultStrokeStyle);
-						//				//ds.FillCircle(midS, span, raidBrush);
-						//			}
-						//			foreach (var i in counts)
-						//			{
-						//				var cid = i.Key;
-						//				var count = i.Value;
-						//				var wc = cid.CidToWorld();
-						//				if (!IsCulledWC(wc))
-						//					DrawTextBox($"{count.prior}`{count.incoming}", wc.WToCamera(), textformatLabel, Color.DarkOrange, textBackgroundOpacity, Layer.tileText);
-
-
-						//			}
-						//		}
-						//	}
-						//}
-
+					
 						if(AttackTab.IsVisible())
 						{
 							List<AttackTab.AttackCluster> hovered = new();
@@ -1105,15 +995,19 @@ internal partial class GameClient
 										var incAttacks = 0;
 										var incDef = 0;
 		//								var incTs = 0u;
-										var hasSettle = false;
+									//	var hasSettle = false;
 										var sieged = false;
 										var hasSen = false;
+										var visibilityTime = isIncoming ? Sim.simTime + city.scoutRange : ServerTime.infinity;
 									//	var hasArt = false;
 										//	var hasAssault = false;
 										foreach(var i in isIncoming ? city.incoming : city.outgoing)
 										{
 											var c0 = isIncoming ? i.sourceCid.CidToWorld() : i.targetCid.CidToWorld();
 											if(IsSegmentCulledWC(c0,c1))
+												continue;
+											// not visible yet
+											if(i.arrival > visibilityTime)
 												continue;
 
 											if(!isIncoming && (i.isAttack || i.isDefense) && !i.isReturn && !IsCulledWC(c0))
@@ -1135,7 +1029,7 @@ internal partial class GameClient
 															c = returnColor;  // returning carts
 														else
 															c = Color.White;
-														hasSettle=true;
+													//	hasSettle=true;
 														// outgoing
 														// if(hasSettle)
 														if(!isIncoming)
@@ -1210,10 +1104,21 @@ internal partial class GameClient
 												var t = (tick  * ((hash&0xffff)/65536f).Lerp(0.375f,0.5f)  );
 											//	var t = (tick +i.sourceCid.CidToRandom()).Wave(1.5f / 512.0f+0.25f,2.0f / 512f+ 0.25f) ;
 												var r = t.Ramp();
-												var nSprite = i.troops.Count;
+												var alpha = 1.0f;
+												TType ttype;
+												if(i.shareInfo && i.troops.Length > 0) {
+													var nSprite = i.troops.Count;
 
-												(int iType, float alpha) = GetTroopBlend((float)t,nSprite);
+													(int iType, alpha) = GetTroopBlend((float)t,nSprite);
+													ttype = i.troops.GetIndexType(iType);
+												}
+												else {
+													// TODO base it on travel time
+													ttype = i.travelType.TTypeGuess();
+												}
+
 												(int x, int y) _c0, _c1;
+												
 												if(isIncoming ^ i.isReturn)
 												{
 													_c0 = c0; _c1 = c1;
@@ -1222,9 +1127,11 @@ internal partial class GameClient
 												{
 													_c0 = c1; _c1 = c0;
 												}
+
+
 												DrawAction(i.TimeToArrival(serverNow),i.journeyTime,r,
 													_c0.ToVector(),
-												_c1.ToVector(),c,i.troops.Any() ? troopImages[i.troops.GetIndexType(iType)] : null,
+												_c1.ToVector(),c,i.troops.Any() ? troopImages[ttype] : null,
 												true,i,alpha: alpha,lineThickness: lineThickness,highlight: sel);
 											}
 										}
