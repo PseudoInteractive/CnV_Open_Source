@@ -136,11 +136,12 @@ using Game;
 										break;
 									}
 								case World.TileType.typeShrine:
-									if(WorldViewSettings.shrines.isOn)
-										toolTip = $"Shrine\n(To be named)";
+								//	if(WorldViewSettings.shrines.isOn)
+										toolTip = Shrine.FromCid(cid).toolTip;
+								
 									break;
 								case World.TileType.typeMoongate:
-									toolTip = $"Moon Gate";
+									toolTip = $"Moongate";
 									break;
 							default:
 								if(data.isDungeonOrBoss)
