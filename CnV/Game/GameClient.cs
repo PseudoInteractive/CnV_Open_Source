@@ -85,6 +85,7 @@ namespace CnV
 //		public static      EffectParameter pixelScaleParameter;
 		public static      Material        lineDraw;
 		public static      Material        quadTexture;
+		public static      Material        blessedMaterial;
 		public static      Material        whiteMaterial;
 		public static      Material        shadowMaterial; // no texture
 //		public static      Material        sky;

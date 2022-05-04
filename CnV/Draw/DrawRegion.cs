@@ -852,6 +852,29 @@ internal partial class GameClient
 
 				if(!focusOnCity)
 				{
+					//
+					// Draw blessed indicators
+					// Note:  These could be baked into the big mesh, except that we need another layer
+					//
+					foreach(var shrine in Shrine.all)
+					{
+						foreach(var l in shrine.lit) {
+							var c = l;
+							if(IsCulledWC(c))
+								continue;
+							// Todo: Color by faith
+							Material sprite = blessedMaterial;
+							float sizeGain = 0.5f;
+							var dimX = sizeGain * (168.0f/100.0f);
+							var dimY = sizeGain;
+							var y = c.y+0.2f;
+							var _c0 = new Vector2(c.x - dimX,y - dimY);
+							var _c1 = new Vector2(c.x + dimX,y + dimY);
+							draw.AddQuad(Layer.action + 4,sprite,_c0,_c1,Color.White,zCities);
+
+						}
+					}
+
 					var incomingVisible = IncomingTab.IsVisible() || ReinforcementsTab.IsVisible() || NearDefenseTab.IsVisible() || Settings.incomingAlwaysVisible;
 					var outgoingVisible = AttackTab.IsVisible() || OutgoingTab.IsVisible() || Settings.attacksAlwaysVisible;
 					{

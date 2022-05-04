@@ -91,7 +91,7 @@ public static partial class ADataGrid
 					Width = dim,
 
 					IsReadOnly = true,
-					MappingName = nameof(City.iconUri)
+					MappingName = nameof(City.icon)
 				});
 			}
 

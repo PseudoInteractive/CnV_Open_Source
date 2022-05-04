@@ -88,6 +88,12 @@ public partial class City
 					sb.AppendLinePre(Alliance.IdToName(player.allianceId));
 				var share = sharesInfo;
 
+				if(isTemple)
+					sb.AppendLinePre($"L{blessData.level} palace of\n{blessData.virtue.EnumName()}");
+				if(isBlessed)
+					sb.AppendLinePre($"Blessed{(isTemple ? "" : "with "+blessData.virtue.EnumName())}\nuntil {blessData.blessedUntil}");
+
+
 				if(share & !city.notes.IsNullOrEmpty())
 					sb.AppendLinePre(city.notes.AsSpan().Wrap(20));
 

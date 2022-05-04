@@ -576,7 +576,7 @@ namespace CnV.Views
 																	AppS.appWindow.SetPresenter(Settings.fullScreen.GetValueOrDefault() ? Microsoft.UI.Windowing.AppWindowPresenterKind.FullScreen : Microsoft.UI.Windowing.AppWindowPresenterKind.Overlapped);
 																}));
 				KeyboardAccelerators.Add(BuildKeyboardAccelerator(key: VirtualKey.F12,modifiers:
-																VirtualKeyModifiers.Control,OnKeyboardAcceleratorInvoked: (_,a) => {
+																VirtualKeyModifiers.Control|VirtualKeyModifiers.Menu|VirtualKeyModifiers.Shift,OnKeyboardAcceleratorInvoked: (_,a) => {
 																	a.Handled=true;
 																	AppS.isTest ^= true;
 																	Trace(AppS.isTest.ToString());
@@ -584,9 +584,21 @@ namespace CnV.Views
 				KeyboardAccelerators.Add(BuildKeyboardAccelerator(key: VirtualKey.F12,modifiers:
 																VirtualKeyModifiers.Control|VirtualKeyModifiers.Shift,OnKeyboardAcceleratorInvoked: (_,a) => {
 																	a.Handled=true;
-																	Sim.AddSubs();
+																	if(AppS.isTest)
+																		Sim.AddSubs();
 																}));
-
+				KeyboardAccelerators.Add(BuildKeyboardAccelerator(key: VirtualKey.F12,modifiers:
+																VirtualKeyModifiers.Control|VirtualKeyModifiers.Menu,OnKeyboardAcceleratorInvoked: (_,a) => {
+																	a.Handled=true;
+																	if(AppS.isTest)
+																		ArtifactDialogue.ShowInstance(Artifact.GetForPlayerRank(Artifact.ArtifactType.karma) );
+																}));
+				KeyboardAccelerators.Add(BuildKeyboardAccelerator(key: VirtualKey.F12,modifiers:
+																VirtualKeyModifiers.Shift|VirtualKeyModifiers.Menu,OnKeyboardAcceleratorInvoked: (_,a) => {
+																	a.Handled=true;
+																	if(AppS.isTest)
+																		ArtifactDialogue.ShowInstance(Artifact.GetForPlayerRank(Artifact.ArtifactType.zirconia) );
+																}));
 
 				//AppS.SetState(AppS.State.active);
 

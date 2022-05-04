@@ -9,12 +9,12 @@ namespace CnV;
 using Game;
 using Microsoft.UI.Xaml.Data;
 
-	public class CityIconConverter : IValueConverter	
-	{
-		public object Convert(object value, Type targetType, object parameter, string language) => (value as Spot)?.iconUri;
+	//public class CityIconConverter : IValueConverter	
+	//{
+	//	public object Convert(object value, Type targetType, object parameter, string language) => (value as Spot)?.iconUri;
 
-		public object ConvertBack(object value, Type targetType, object parameter, string language) { LogEx(new NotImplementedException("Convert")); return null; }
-	}
+	//	public object ConvertBack(object value, Type targetType, object parameter, string language) { LogEx(new NotImplementedException("Convert")); return null; }
+	//}
 public class CityNameConverter:IValueConverter
 {
 	public object Convert(object value,Type targetType,object parameter,string language) => (value as Spot)?.cityName;

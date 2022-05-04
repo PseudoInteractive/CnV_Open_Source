@@ -710,7 +710,7 @@ public partial class City
 		{
 
 			case nameof(cityName):
-			case nameof(iconUri):
+			case nameof(icon):
 			case nameof(remarks):
 				wantSelect = false;
 				DoClick();
@@ -764,10 +764,7 @@ public partial class City
 				ProcessCoordClick(cid, false, modifiers, false);
 				wantSelect = false;
 				break;
-			case nameof(icon):
-				DoClick();
-				wantSelect = false;
-				break;
+			
 			case nameof(City.dungeonsToggle):
 			{
 				ShowDungeons();
