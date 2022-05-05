@@ -591,13 +591,13 @@ namespace CnV.Views
 																VirtualKeyModifiers.Control|VirtualKeyModifiers.Menu,OnKeyboardAcceleratorInvoked: (_,a) => {
 																	a.Handled=true;
 																	if(AppS.isTest)
-																		ArtifactDialogue.ShowInstance(Artifact.GetForPlayerRank(Artifact.ArtifactType.karma) );
+																		ArtifactDialogue.ShowInstance(Artifact.GetForPlayerRank(Artifact.ArtifactType.karma),free:true );
 																}));
 				KeyboardAccelerators.Add(BuildKeyboardAccelerator(key: VirtualKey.F12,modifiers:
 																VirtualKeyModifiers.Shift|VirtualKeyModifiers.Menu,OnKeyboardAcceleratorInvoked: (_,a) => {
 																	a.Handled=true;
 																	if(AppS.isTest)
-																		ArtifactDialogue.ShowInstance(Artifact.GetForPlayerRank(Artifact.ArtifactType.zirconia) );
+																		ArtifactDialogue.ShowInstance(Artifact.GetForPlayerRank(Artifact.ArtifactType.zirconia),free:true );
 																}));
 
 				//AppS.SetState(AppS.State.active);

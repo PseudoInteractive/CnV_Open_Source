@@ -55,14 +55,14 @@ namespace CnV
 		public int iron => resoucesToSend.iron;
 
 		public int food => resoucesToSend.food;
-		public int pri => target.blessData.priority;
-		public string Pri => DonationTab.instance.priorityNames[pri];
-
+		public PalacePriority pri => target.blessData.priority;
+		public string Pri => pri.EnumTitle();
+		
 		public int level => target.templeLevel;
 		public string notes => target.blessData.notes;
 		public DateTimeOffset travelT => (ServerTime.epoch + travelTime); // year and day are off format for UI
 
-		public int priToScore => pri;
+		public int priToScore => (int)pri;
 
 		public float sortScore => wantTempleDonations ? 
 			(float) -(priToScore * 1e20f - (Sim.simTime - blessedUntil).TotalHours
@@ -151,21 +151,15 @@ namespace CnV
 		//	return rv;
 		//}
 
-		public void Send()
+		public async void Send()
 		{
 			// Sender City might be null here
 			try
 			{
 				var source = senderCity;
 
-				if(source.underSiege)
-					{
-						Note.Show($"Under Siege");
-
-					}
-					else
-					{
-						SendResDialogue.ShowInstance(source,target,resoucesToSend,DonationTab.viaWater);
+				
+					await	SendResDialogue.ShowInstance(source,target,resoucesToSend,DonationTab.viaWater,palaceDonation:wantTempleDonations);
 						// Todo: apply limit to resources again in case of pause before sending
 						//var trade = new TradeOrder(source: source.c,target: target.c,departure: Sim.simTime,viaWater: DonationTab.viaWater,isTempleTrade: wantTempleDonations,
 						//	resources: resoucesToSend.Min(source.sampleResources).LimitToTranspost(tradeTransport) );
@@ -176,7 +170,7 @@ namespace CnV
 						//{
 						//	Note.Show($"Sent {trade.resources.Format()} from {source} to {target}");
 						//}
-					}
+				//	}
 
 
 			//	source.OnPropertyChanged();

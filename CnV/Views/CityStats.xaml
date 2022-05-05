@@ -61,6 +61,8 @@
 				</ComboBox.ItemTemplate>
 			</ComboBox>
 
+			<!--Incoming-->
+			
 			<Expander IsExpanded="True" Expanding="Expander_Expanding" Visibility="{x:Bind incomingVisible,Mode=OneWay}"  x:Name="expIncoming" HorizontalAlignment="Stretch" Background="{StaticResource ExpanderBrushContent}"   >
 				<Expander.Header   >
 					<Border Background="Maroon" BorderThickness="0" Padding="3" CornerRadius="{StaticResource baseCR}" >
@@ -85,7 +87,25 @@
 				</ListView>
 
 			</Expander>
-			<Expander Background="{StaticResource ExpanderBrushContent}" Expanding="Expander_Expanding" IsExpanded="True"   x:Name="expResource" HorizontalAlignment="Stretch"  >
+
+			<!-- Palace -->
+
+			<Expander IsExpanded="True" Background="{StaticResource ExpanderBrushContent}" Expanding="Expander_Expanding" Visibility="{x:Bind palaceVisible,Mode=OneWay}"  x:Name="expPalace"   >
+				<Expander.Header   >
+					<Border  Padding="3" CornerRadius="{StaticResource baseCR}" >
+						<TextBlock Text ="{x:Bind palaceVirtue, Mode=OneWay}" Margin="0"   Style="{StaticResource TextBlockMedium}"  HorizontalAlignment="Right"  />
+					</Border>
+				</Expander.Header>
+				<StackPanel>
+					<TextBlock Text="{x:Bind palaceInfo, Mode=OneWay}" TextWrapping="Wrap" />
+					
+				</StackPanel>
+
+			</Expander>
+
+			<!--Resources-->
+			
+			<Expander Background="{StaticResource ExpanderBrushContent}" Expanding="Expander_Expanding" IsExpanded="True"   x:Name="expResource"   >
 				<ToolTipService.ToolTip >
 					<ToolTip  Content="{x:Bind ResToolTip, Mode=OneWay}" />
 				</ToolTipService.ToolTip>

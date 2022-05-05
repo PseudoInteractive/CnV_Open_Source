@@ -9,7 +9,7 @@
 	  xmlns:sf="using:Syncfusion.UI.Xaml.DataGrid"
       xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
       xmlns:local="using:CnV.Views"
-        Tag="Donation"
+        Tag="Market"
 		Loaded="OnLoaded"
 			  IsTabStop="True"
     mc:Ignorable="d">

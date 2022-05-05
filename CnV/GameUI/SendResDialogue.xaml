@@ -7,13 +7,15 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Width="480" Padding="16">
+    <Grid  Padding="8" HorizontalAlignment="Stretch"  >
 		<Grid.RowDefinitions>
-			<RowDefinition   />
+			<RowDefinition    />
+			<RowDefinition/>
 			<RowDefinition/>
 		</Grid.RowDefinitions>
+		
 
-		<Grid Padding="8" ColumnSpacing="16" RowSpacing="16">
+		<Grid Padding="8" ColumnSpacing="16" RowSpacing="8" HorizontalAlignment="Stretch" Width="460" >
 			<Grid.RowDefinitions>
 				<RowDefinition  />
 				<RowDefinition/>
@@ -65,13 +67,18 @@
 				<Button Grid.Row="1" HorizontalAlignment="Left" Content="Max" Click="SetMax3" />
 			</Grid>
 		</Grid>
-		<RadioButtons Grid.Row="1" x:Name="transport" SelectedIndex="0" SelectionChanged="transport_SelectionChange" HorizontalAlignment="Center" MaxColumns="2" Margin="16"  >
+		<StackPanel Grid.Row="2" Orientation="Horizontal">
+		<Button  Content="Clear" Click="ClearClick"  Style="{StaticResource ButtonMedium}" />
+		<Button  Content="Max" Click="SetMax"  Style="{StaticResource ButtonMedium}"/>
+
+		
+		<CheckBox Content="Palace Donation" x:Name="palaceDonation" Margin="8,0" IsChecked="false" />
+		</StackPanel>
+		<RadioButtons Grid.Row="1" x:Name="transport" SelectedIndex="0" SelectionChanged="transport_SelectionChange" HorizontalAlignment="Left" MaxColumns="1" Margin="16"  >
 			<RadioButton Content="{x:Bind cartsStr, Mode=OneWay}" />
 			<RadioButton Content="{x:Bind shipsStr, Mode=OneWay}" />
-
 		</RadioButtons>
-		<Button Grid.Row="1" HorizontalAlignment="Left" Content="Clear" Click="ClearClick"  Style="{StaticResource ButtonMedium}"/>
-		<Button Grid.Row="1" HorizontalAlignment="Right" Content="Send" Click="SendClick"  Style="{StaticResource ButtonMedium}"/>
+		<Button Grid.Row="2" HorizontalAlignment="Right" Content="Send" Click="SendClick"  Style="{StaticResource ButtonMedium}"/>
 		
 	</Grid>
 </cnv:DialogG>

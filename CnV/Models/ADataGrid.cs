@@ -257,7 +257,7 @@ public static partial class ADataGrid
 		{
 			var _lock0 = new ADataGrid.ChangeContextDisposable(wantChangeContext ? grid : null);
 			//	grid.FontFamily = App.CnVFont;
-			//	grid.ColumnSizer.FontStretch = Windows.UI.Text.FontStretch.Condensed;
+				grid.ColumnSizer.FontStretch = Windows.UI.Text.FontStretch.Condensed;
 				grid.ColumnSizer.FontFamily = XamlHelper.cnvFont;
 			//	grid.ColumnSizer.FontWeight = Microsoft.UI.Text.FontWeights.Normal;
 			grid.ColumnSizer.Margin = new(4);// = Settings.mediumFontSize;
@@ -279,9 +279,9 @@ public static partial class ADataGrid
 			grid.AllowResizingColumns = true;
 		//	grid.CanMaintainScrollPosition=true;
 			//grid.ShowToolTip=true;
-			grid.CellStyle = App.instance.Resources["SfTextCell"] as Style;
-			grid.RowStyle = App.instance.Resources["sfRowStyle"] as Style;
-			grid.HeaderStyle=App.instance.Resources["sfHeaderStyle"] as Style;
+		//	grid.CellStyle = App.instance.Resources["SfTextCell"] as Style;
+	//		grid.RowStyle = App.instance.Resources["sfRowStyle"] as Style;
+	//		grid.HeaderStyle=App.instance.Resources["sfHeaderStyle"] as Style;
 			grid.AllowEditing=false;
 			grid.AllowDraggingColumns=true;
 			grid.AllowSorting=true;
@@ -303,7 +303,7 @@ public static partial class ADataGrid
 			grid.AllowFiltering = false;
 
 			//				grid.AllowFrozenGroupHeaders = false;
-			grid.ColumnWidthMode = Syncfusion.UI.Xaml.Grids.ColumnWidthMode.Auto;
+			grid.ColumnWidthMode = Syncfusion.UI.Xaml.Grids.ColumnWidthMode.SizeToCells;
 //			grid.ColumnWidthMode = Syncfusion.UI.Xaml.Grids.ColumnWidthMode.SizeToCells;
 			grid.CellToolTipOpening += UserTab.CellToolTipOpening;
 			//if(sourceType is not null) //  || grid.ItemsSource is not null)
@@ -313,6 +313,7 @@ public static partial class ADataGrid
 			foreach(var c in 			grid.Columns ) {
 				c.ShowHeaderToolTip=true;
 				c.ShowToolTip=true;
+				
 				c.CellStyle = App.instance.Resources["SfTextCell"] as Style;
 			}
 					grid.ColumnSizer.ResetAutoCalculationforAllColumns();

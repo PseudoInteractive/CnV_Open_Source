@@ -24,7 +24,9 @@
 							x:FieldModifier="public"
 							AllowFiltering="True"
 							Grid.Row="3"
-							
+							CellStyle="{StaticResource SfTextCell}"
+					   FontFamily="{StaticResource CnvIcons}"
+					   
 							ItemsSource="{x:Bind game:City.gridCitySource, Mode=OneWay}"
 							AutoGenerateColumns="False"
 							SelectionMode="Extended"

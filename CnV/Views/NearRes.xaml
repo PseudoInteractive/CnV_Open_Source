@@ -24,7 +24,7 @@
 
 					<Image Source="{x:Bind targetIcon, Mode=OneWay}"  Width="32" Tapped="TargetTapped" />
 					<TextBlock Text="{x:Bind targetName, Mode=OneWay}" VerticalAlignment ="Center" />
-					<ToggleSwitch x:Name="SendAsDontation"  Header="Send as.." OnContent="Temple Donation" OffContent="Normal Trade" IsOn="False"
+					<ToggleSwitch x:Name="SendAsDontation"  Header="Send as.." OnContent="Temple Donation" OffContent="Normal Trade" IsOn="{x:Bind TempleDonation,Mode=TwoWay}"
 					                />
 				</tk:WrapPanel>
 			</Border>

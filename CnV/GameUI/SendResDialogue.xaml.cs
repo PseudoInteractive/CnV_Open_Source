@@ -25,15 +25,22 @@ namespace CnV
 		internal static SendResDialogue? instance;
 		protected override string title => $"Send from {source} to {destination}"; 
 		internal Resources res;
-		
+
 		internal City source;
 		internal City destination;
 
-		public static void ShowInstance(City city,City target, Resources? _res, bool? _viaWater)
+		public static Task<bool> ShowInstance(City city,City target, Resources? _res, bool? _viaWater, bool? palaceDonation)
 		{
+			if(city == target) {
+				Note.Show("Cannot send to self");
+				return Task.FromResult(false);
+			}
 			var rv = instance ?? new SendResDialogue();
 			rv.source = city;
 			rv.destination = target;
+			if(palaceDonation.HasValue) {
+				rv.palaceDonation.IsChecked = palaceDonation.Value;
+			}
 			if(_viaWater.HasValue)
 				rv.transport.SelectedIndex = _viaWater.Value.Switch(0,1);
 			if(_res is not null) {
@@ -43,14 +50,18 @@ namespace CnV
 			else
 				rv.SetDefault();
 			
-			rv.Show(false);
+			return rv.Show(false);
 
 		}
+		internal bool isPalaceDonation => palaceDonation.IsChecked.GetValueOrDefault();
 
 		private void SetDefault()
 		{
-			res = source.SampleResources().LimitToTranspost(bandWidth);
-
+			res = source.SampleResources();
+			if(isPalaceDonation) {
+				res.iron=res.food=0;
+			}
+			res.LimitToTranspostInPlace(bandWidth);
 			OnPropertyChanged();
 		}
 
@@ -72,7 +83,7 @@ namespace CnV
 
 		bool viaWater => transport.SelectedIndex == 1;
 		bool viaLand => transport.SelectedIndex == 0;
-		internal int bandWidth =>  viaLand ? (int)source.cartsHome*1000 : (int)source.shipsHome*10000;
+		internal int bandWidth =>  viaLand ? (int)source.cartsHome*1000 : (int)source.shipsHome*10_000;
 		internal RoutedEventHandler SetMaxDel(int id) => (_,_) => SetMax(id);
 
 
@@ -88,29 +99,64 @@ namespace CnV
 				instance.OnPropertyChanged(member);
 		}
 
-		internal string shipsStr => $"Ships {source.shipsHome}/{source.ships}";
-		internal string cartsStr => $"Carts {source.cartsHome}/{source.carts}";
+		internal string shipsStr => $"Ships {source.shipsHome}/{source.ships}, travel time: {source.player.TravelTime(source.c.DistanceToD(destination.cid),true).Format()}";
+		internal string cartsStr => $"Carts {source.cartsHome}/{source.carts}, travel time: {source.player.TravelTime(source.c.DistanceToD(destination.cid),false).Format()}";
+	
 		private void SetMax0(object sender,RoutedEventArgs e) => SetMax(0);
 		private void SetMax1(object sender,RoutedEventArgs e) => SetMax(1);
 		private void SetMax2(object sender,RoutedEventArgs e) => SetMax(2);
 		private void SetMax3(object sender,RoutedEventArgs e) => SetMax(3);
 
-		private void SendClick(object sender,RoutedEventArgs e)
-		{
-			if(source.underSiege)
-			{
+		private void SendClick(object sender,RoutedEventArgs e) {
+			if(source.underSiege) {
 				AppS.MessageBox("City is under siege");
 				return;
 			}
-			Done();
+			if(source == destination) {
+				AppS.MessageBox("Cannot send to self");
+				return;
+		
+			}
+			if(isPalaceDonation&& (res.iron + res.food) > 0) {
+				AppS.MessageBox("Food and iron cannot be sent as a palace donation");
+				return;
+			}
+			if(res.sum == 0) {
+				AppS.MessageBox("That was easy.");
+				return;
+
+			}
 			var viaWater = this.viaWater; // fetch before lock
+
+			if(viaWater && !destination.isOnWater) {
+				AppS.MessageBox("Destination must be on water to send via ships.");
+				return;
+			}
+			if(!viaWater && (destination.c.continentId != source.c.continentId)  ) {
+				AppS.MessageBox("Carts cannot travel cross continent.");
+				return;
+			}
+			if( (destination.c.continentId != source.c.continentId)  ) {
+				AppS.MessageBox("Carts cannot travel cross continent.");
+				return;
+			}
+			if( bandWidth < res.sum) {
+				AppS.MessageBox("Not enough ships or carts to send this much");
+				return;
+			}
+
+
+			Done();
+			
 //			using(var locker = Sim.eventQLock.Enter)
 			{
-				var trade = new TradeOrder(source: source.c,target: destination.c,departure: Sim.simTime,viaWater: viaWater,isTempleTrade: false,resources: res);
+				
+				var trade = new TradeOrder(source: source.c,target: destination.c,departure: Sim.simTime,viaWater: viaWater,isTempleTrade: isPalaceDonation,resources: res);
 
 				new CnVEventTrade(source.c,trade: trade).EnqueueAsap();
 			}
 
+			Note.Show($"Sent {(isPalaceDonation? "palace donaton " : "")} {res.Format()} from {source} to {destination}");
 			
 			
 		}
@@ -124,6 +170,11 @@ namespace CnV
 		private void ClearClick(object sender,RoutedEventArgs e)
 		{
 			res = default;
+			Changed();
+		}
+
+		private void SetMax(object sender,RoutedEventArgs e) {
+			SetDefault();
 			Changed();
 		}
 	}

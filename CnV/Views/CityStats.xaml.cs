@@ -172,7 +172,7 @@ namespace CnV
 			ClearLastDisplayed();
 			Changed();
 			// Close misc dialogs
-		
+
 
 
 
@@ -400,6 +400,42 @@ namespace CnV
 
 		}
 		//internal DebounceA buildCityChangeDebounce = new(BuildCityChanged) { runOnUiThread=true,debounceDelay=100 };
+		internal Visibility palaceVisible => city.blessData.isValid.Switch(Visibility.Collapsed,Visibility.Visible);
+		internal string palaceVirtue => city.blessData.virtue.EnumName();
+		internal string palaceInfo { get{
+				using var sb = new PooledStringBuilder();
+				var city = this.city;
+				var bd = city.blessData;
+				if(city.isBlessed) {
+					sb.s.Append("Blessed until ").Append(bd.blessedUntil.Format());
+				}
+				if(bd.level > 0) {
+					sb.s.Append("\nPalace level ").Append(bd.level);
+				}
+				sb.s.Append("\nStored:\n").Append(bd.stored.Format(" "));
+				if(city.incomingDonations.isNonZero) {
+					sb.s.Append("\nIncoming:\n").Append(city.incomingDonations.Format(" "))
+						.Append("\nWill have:\n").Append( (bd.stored+city.incomingDonations).Format(" ") );
+				
+				}
+				if(bd.level < 10) {
+
+					var bc = BuildingDef.FromId(Building.bidTemple).bc[bd.level+1];
+
+					sb.s.Append("\nNeed:\n").Append( new Resources(bc.w,bc.s,0,0).Format(" "));
+				}
+
+				if(!bd.notes.IsNullOrEmpty())
+					sb.s.AppendLinePre(bd.notes);
+				if(bd.priority != PalacePriority.NA )
+					sb.s.Append("\nPriority: ").Append(bd.priority.EnumTitle());
+				if(bd.damage > 0)
+					sb.s.Append("\nDamage: ").Append(bd.damage.Format());
+				
+
+
+				return sb.s.ToString();
+			} }
 
 		internal string TroopsHomeS => city?.troopsHere.Format(separator: ',');
 		internal string TroopsOwnedS => city?.troopsOwned.Format(separator: ',');
@@ -783,6 +819,8 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 
 		
 
+		internal static bool hasTempleQueued =>	 instance.buildQueue.Any(a => a.op.bidIfNotMove == Building.bidTemple);
+
 		
 
 		private async void buildQueueListView_DragItemsCompleted(ListViewBase sender,DragItemsCompletedEventArgs args)
@@ -790,7 +828,10 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 			try
 			{
 				Log(args.DropResult);
-				
+				if(hasTempleQueued) {
+					AppS.MessageBox("Cannot drag when temples are queued");
+					return;
+				}
 				if(args.DropResult ==DataPackageOperation.Move)
 				{
 					var item = args.Items.FirstOrDefault() as BuildItem;
@@ -1036,6 +1077,7 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 			}
 
 		}
+
 		public void ContextRequested(UIElement sender,ContextRequestedEventArgs args)
 		{
 			args.Handled    = true;
@@ -1052,50 +1094,45 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 				CityUI.Show( Artifact.ArtifactType.black_powder, sender);
 			});
 			}
-			flyout.AddItem("Remove..",Symbol.Remove, () =>
-			{
-				var index = instance.buildQueue.IndexOf(this);
-				if(index != -1)
-					city.RemoveWithDependencies(new(new[] { index }),lastSynchronizedQueue);
-				else
-				{
-					Note.Show("Something changed");
-					Invalidate();
-				}
-			});
-			flyout.AddItem("Cancel Selected",Symbol.Cancel,() =>
-			{
-				var sel = instance.buildQueueListView.SelectedItems;
+			if(!hasTempleQueued) {
 
-				city.RemoveWithDependencies(new( (sel.Any() ?  sel.Select( x=> instance.buildQueue.IndexOf(x as BuildItem )) : (new[] { instance.buildQueue.IndexOf(this) })).Where(i=>i!=-1) ) ,lastSynchronizedQueue);
-			});
-			flyout.AddItem("Cancel all",Symbol.Cut,() =>
-			{
-				var sel = instance.buildQueueListView.SelectedItems;
-				new CnVEventCancelBuildQueue(city.worldC).EnqueueAsap();
-			});
-			flyout.AddItem("Sort",Symbol.Sort,() =>
-			{
-				var sel = instance.buildQueueListView.SelectedItems;
-				new CnVEventSortBuildQueue(city.worldC).EnqueueAsap();
-			});
-			flyout.AddItem("Move To Front",Symbol.Up,() =>
-			{
-				var index = instance.buildQueue.IndexOf(this);
-				if(index != -1)
-					city.AttemptMove(index,0,lastSynchronizedQueue);
-				else
-					Invalidate();
-			}); 
-			flyout.AddItem("Move To End",Symbol.Back,() =>
-			{
-				var index = instance.buildQueue.IndexOf(this);
-				if(index != -1)
-					city.AttemptMove(index,city.buildQueue.Length-1,lastSynchronizedQueue);
-				else
-					Invalidate();
-			});
-			
+				flyout.AddItem("Remove..",Symbol.Remove,() => {
+					var index = instance.buildQueue.IndexOf(this);
+					if(index != -1)
+						city.RemoveWithDependencies(new(new[] { index }),lastSynchronizedQueue);
+					else {
+						Note.Show("Something changed");
+						Invalidate();
+					}
+				});
+				flyout.AddItem("Cancel Selected",Symbol.Cancel,() => {
+					var sel = instance.buildQueueListView.SelectedItems;
+
+					city.RemoveWithDependencies(new((sel.Any() ? sel.Select(x => instance.buildQueue.IndexOf(x as BuildItem)) : (new[] { instance.buildQueue.IndexOf(this) })).Where(i => i!=-1)),lastSynchronizedQueue);
+				});
+				flyout.AddItem("Cancel all",Symbol.Cut,() => {
+					var sel = instance.buildQueueListView.SelectedItems;
+					new CnVEventCancelBuildQueue(city.worldC).EnqueueAsap();
+				});
+				flyout.AddItem("Sort",Symbol.Sort,() => {
+					var sel = instance.buildQueueListView.SelectedItems;
+					new CnVEventSortBuildQueue(city.worldC).EnqueueAsap();
+				});
+				flyout.AddItem("Move To Front",Symbol.Up,() => {
+					var index = instance.buildQueue.IndexOf(this);
+					if(index != -1)
+						city.AttemptMove(index,0,lastSynchronizedQueue);
+					else
+						Invalidate();
+				});
+				flyout.AddItem("Move To End",Symbol.Back,() => {
+					var index = instance.buildQueue.IndexOf(this);
+					if(index != -1)
+						city.AttemptMove(index,city.buildQueue.Length-1,lastSynchronizedQueue);
+					else
+						Invalidate();
+				});
+			}
 			flyout.ShowContext(sender,args);
 
 		}

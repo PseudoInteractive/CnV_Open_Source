@@ -198,7 +198,7 @@
 		<Setter Property="FontStretch" Value="Condensed"/>
 		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 		<Setter Property="FontWeight" Value="Normal" />
-		<Setter Property="Margin" Value="1" />
+
 	</Style>
 	<Style  TargetType="sf:GridTextColumn" BasedOn="{StaticResource SfTextCell}">
 		<Setter Property="ShowHeaderToolTip" Value="True"/>

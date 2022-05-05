@@ -46,7 +46,7 @@ public sealed partial class TradeSettingsDialog:DialogG, INotifyPropertyChanged 
 	{
 
 		var city = this.city;
-		var mo = city.GetMOForWrite();
+		var mo = city.GetMOForRead();
 		woodSource.city =mo.requestCities[0].AsCity();
 		stoneSource.city =mo.requestCities[1].AsCity();
 		ironSource.city =mo.requestCities[2].AsCity();
@@ -104,8 +104,9 @@ public sealed partial class TradeSettingsDialog:DialogG, INotifyPropertyChanged 
 	private void DoneClick(object sender,Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
 		var city = this.city;
-		var priorHash = city.GetMOForRead().tradeHashCode;
-		var mo = new CityMO();
+		
+		var mo = city.cloneMO; ;
+		var priorHash = mo.tradeHashCode;
 		mo.protectResources = protectResources.IsChecked.GetValueOrDefault();
 		mo.sendCities=new(woodDest.cid,stoneDest.cid,ironDest.cid,foodDest.cid);
 		mo.requestCities=new(woodSource.cid,stoneSource.cid,ironSource.cid,foodSource.cid);

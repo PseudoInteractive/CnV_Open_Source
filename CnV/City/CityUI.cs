@@ -61,7 +61,7 @@ public static partial class CityUI
 			//var level = Player.me.title.rank;
 			var art = Artifact.GetForPlayerRank(type);
 			if(art is not null)
-				ArtifactDialogue.ShowInstance(art,sender as FrameworkElement);
+				ArtifactDialogue.ShowInstance(art);
 			else
 				AppS.MessageBox("No artifact type for your rank");
 		}
@@ -228,7 +228,7 @@ public static partial class CityUI
 			aWar.AddItem("Show Reinforcements",     (_, _) => ReinforcementsTab.ShowReinforcements(cid, null));
 			aWar.AddItem("Show All Reinforcements", (_, _) => ReinforcementsTab.ShowReinforcements(0,   null));
 			aExport.AddItem("Defense Sheet", me.ExportToDefenseSheet);
-			AApp.AddItem(flyout, "Send Res", (_, _) => SendResDialogue.ShowInstance(City.GetBuild(),me,null,null));
+			AApp.AddItem(flyout, "Send Res", (_, _) => SendResDialogue.ShowInstance(City.GetBuild(),me,null,null,palaceDonation:null));
 			AApp.AddItem(flyout, "Near Res", me.ShowNearRes);
 			if (me.canVisit)
 			{

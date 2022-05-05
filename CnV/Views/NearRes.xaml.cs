@@ -24,6 +24,17 @@ namespace CnV.Views
 				DoRefresh(true);
 			} }
 		public bool templeDonation;
+		public bool TempleDonation {
+			get => templeDonation;
+			set {
+				if(value != templeDonation) {
+					templeDonation = value;
+					if(templeDonation)
+						DoRefresh(true);
+
+				}
+			}
+		}
 		public City target = City.invalid;
 		public float filterTime = 6;
 		public float _filterTime { get => filterTime; set { filterTime = value; DoRefresh(); } }  // defenders outside of this window are not included
@@ -109,11 +120,12 @@ namespace CnV.Views
 
 
 					var r  = Settings.nearResSend= Settings.nearResSend.ClampToPositive();// des.Sub(target.res.Add(target.tradeInfo.inc));
-					
+					if(templeDonation)
+						r.iron=r.food=0;
 					var reserve = Settings.nearResReserve;
 					//views: Settings.nearResSend = r;
 					if(useRatio)
-						r = r*((1<<30)/r.sum.Max(1));
+						r = r*((1<<29)/r.sum.Max(1));
 
 					List<ResSource> s = new List<ResSource>();
 					//                supportGrid.ItemsSource = null;
@@ -287,6 +299,8 @@ namespace CnV.Views
 			//var info = supporter.info;
 			var city = supporter.city;
 			var res = supporter.city.sampleResources.Sub(reserve).Max(0);
+			if(templeDonation)
+				res.iron=res.food=0;
 		//	var viaWater = NearRes.instance.viaWater;
 			var shipping = GetTransport(city);//viaWater ? (city.shipsHome - Settings.nearResShipReserve).Max0() * 10000 : (city.cartsHome - Settings.nearResCartReserve).Max0() * 1000;
 			supporter.res = res.LimitToTranspost(shipping);
@@ -305,39 +319,39 @@ namespace CnV.Views
 				var text = sender as FrameworkElement;
 				var s = text.DataContext as ResSource;
 				var source = s.city;
-			//	var pid = city.pid;
-			//	var cid = city.cid;
-
-				string res = string.Empty;
-				var asDonation = this.SendAsDontation.IsOn;
-				if(asDonation) {
-					s.res.iron =s.res.food = 0;
-				}
-				//if(asDonation && false)
-				//{
-				////	await BlessedCity.SendDonation(s.city.cid,target.cid,s.res.wood,s.res.stone,viaWater);
+				//	var pid = city.pid;
+				//	var cid = city.cid;
+				await SendResDialogue.ShowInstance(source,target,s.res,viaWater,SendAsDontation.IsOn);
+				////string res = string.Empty;
+				//var asDonation = this.SendAsDontation.IsOn;
+				//if(asDonation) {
+				//	s.res.iron =s.res.food = 0;
 				//}
-				//else
-				{
-					if(source.underSiege)
-					{
-						Note.Show($"Under Siege");
+				////if(asDonation && false)
+				////{
+				//////	await BlessedCity.SendDonation(s.city.cid,target.cid,s.res.wood,s.res.stone,viaWater);
+				////}
+				////else
+				//{
+				//	if(source.underSiege)
+				//	{
+				//		Note.Show($"Under Siege");
 
-					}
-					else
-					{
+				//	}
+				//	else
+				//	{
 
-						var trade = new TradeOrder(source: source.c,target: target.c,departure: Sim.simTime,viaWater: viaWater,isTempleTrade: asDonation,resources: s.res);
+				//		var trade = new TradeOrder(source: source.c,target: target.c,departure: Sim.simTime,viaWater: viaWater,isTempleTrade: asDonation,resources: s.res);
 
-						new CnVEventTrade(source.c,trade: trade).EnqueueAsap();
+				//		new CnVEventTrade(source.c,trade: trade).EnqueueAsap();
 
 
-						{
-							Note.Show($"Sent {s.res.Format()}");
-						}
-					}
+				//		{
+				//			Note.Show($"Sent {s.res.Format()}");
+				//		}
+				//	}
 					
-				}
+				//}
 
 				s.res = default;
 				s.OnPropertyChanged();

@@ -20,7 +20,7 @@ public sealed partial class DonationTab : UserTab
 
 	public static float woodStoneRatio = -1;
 	public static bool viaWater;
-	public string[] priorityNames = { "Do Not Send","NA", "Low", "Medium", "High"  };
+	//public string[] priorityNames = { "Do Not Send","NA", "Low", "Medium", "High"  };
 	NotifyCollection<City> donationGridSource = new();
 
 	public DonationTab()

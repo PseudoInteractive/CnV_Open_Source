@@ -23,7 +23,7 @@ public sealed partial class AutobuildDialog:DialogG,INotifyPropertyChanged
 	public void UpdateItems()
 	{
 		var city = this.city ;
-		var mo =  city.GetMOForWrite();
+		var mo =  city.GetMOForRead();
 		autobuildOn.IsChecked = mo.autobuildOn;
 		items.Clear();
 		for(var bid = bidAutobuildStart;bid<=bidAutobuildLast;++bid)
@@ -69,7 +69,7 @@ public sealed partial class AutobuildDialog:DialogG,INotifyPropertyChanged
 	private void DoneClick(object sender,Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
 		var city = this.city ;
-		var mo =  city.GetMOForWrite();
+		var mo =  city.cloneMO;
 		var priorHash = mo.autobuildHashCode;
 		
 		mo.autobuildOn = autobuildOn.IsChecked.GetValueOrDefault();

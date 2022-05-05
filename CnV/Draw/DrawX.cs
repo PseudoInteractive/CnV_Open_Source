@@ -86,8 +86,10 @@ static partial class View
 			//pixelScaleParameter = avaEffect.Parameters["pixelScale"];
 
 				fontTexture = CreateFromDDS(AppS.AppFileName("runtime/font.dds"),false);
-
-				blessedMaterial = new Material(CreateFromDDS(AppS.AppFileName("runtime/region/shrine_marker.dds"),true),defaultEffect);
+			blessedMaterials = new Material[VirtueHelper.count];
+			for(int i = 0;i<blessedMaterials.Length;i++) {
+				blessedMaterials[i] = new Material(CreateFromDDS(AppS.AppFileName($"runtime/region/shrinemarker{i}.dds"),true),defaultEffect);
+			}
 				fontMaterial = new Material(fontTexture,fontEffect);
 			//	darkFontMaterial = new Material(fontTexture, darkFontEffect);
 

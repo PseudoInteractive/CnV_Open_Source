@@ -260,7 +260,7 @@ namespace CnV.Views
 
 		static Dictionary<string,Symbol> tabSymbolIcons = new Dictionary<string,Symbol> {
 			{ "Raid", Symbol.ReShare },
-			{ "Donation", Symbol.Share },
+			{ "Market", Symbol.Share },
 			{ "Boss", Symbol.View },
 			{ "AttackPlanner", Symbol.Audio },
 			{ "world", Symbol.Microphone },

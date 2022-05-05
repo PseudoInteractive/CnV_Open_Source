@@ -863,14 +863,14 @@ internal partial class GameClient
 							if(IsCulledWC(c))
 								continue;
 							// Todo: Color by faith
-							Material sprite = blessedMaterial;
+							Material sprite = blessedMaterials[(int)shrine.virtue];
 							float sizeGain = 0.5f;
 							var dimX = sizeGain * (168.0f/100.0f);
 							var dimY = sizeGain;
-							var y = c.y+0.2f;
+							var y = c.y+0.125f;
 							var _c0 = new Vector2(c.x - dimX,y - dimY);
 							var _c1 = new Vector2(c.x + dimX,y + dimY);
-							draw.AddQuad(Layer.action + 4,sprite,_c0,_c1,Color.White,zCities);
+							draw.AddQuad(Layer.action + 4,sprite,_c0,_c1,new Color(255,255,255,192),zCities);
 
 						}
 					}
