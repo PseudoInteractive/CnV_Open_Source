@@ -13,11 +13,10 @@
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <EnableDefaultPageItems>false</EnableDefaultPageItems>
     <LangVersion>preview</LangVersion>
-    <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
-    <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+    <AppxPackageSigningEnabled>False</AppxPackageSigningEnabled>
 	<TieredCompilation>True</TieredCompilation>
 	<AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
-	<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
+	<!--<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>-->
 	<AppxBundle>Always</AppxBundle>
 	<TieredCompilation>True</TieredCompilation>
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
@@ -714,11 +713,6 @@
     <None Remove="Wiki\fixes.md" />
     <None Remove="Win32Native.txt" />
     <None Remove="Xaml\TTipX.xaml" />
-  </ItemGroup>
-  <ItemGroup>
-    <AppxManifest Include="Package.appxmanifest">
-      <SubType>Designer</SubType>
-    </AppxManifest>
   </ItemGroup>
   <ItemGroup>
  

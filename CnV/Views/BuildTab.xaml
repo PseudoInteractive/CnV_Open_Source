@@ -26,7 +26,7 @@
 							Grid.Row="3"
 							CellStyle="{StaticResource SfTextCell}"
 					   FontFamily="{StaticResource CnvIcons}"
-					   
+					   RowStyle="{StaticResource sfRowStyle}"
 							ItemsSource="{x:Bind game:City.gridCitySource, Mode=OneWay}"
 							AutoGenerateColumns="False"
 							SelectionMode="Extended"

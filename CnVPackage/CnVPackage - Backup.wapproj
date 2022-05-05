@@ -5,7 +5,11 @@
       <Configuration>Debug</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|x64">
+	 <ProjectConfiguration Include="SinglePlayer|x64">
+		  <Configuration>Debug</Configuration>
+		  <Platform>x64</Platform>
+	 </ProjectConfiguration>
+	 <ProjectConfiguration Include="Release|x64">
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
@@ -22,37 +26,26 @@
     <TargetPlatformVersion>10.0.22000.0</TargetPlatformVersion>
     <MonoGamePlatform>WindowsStoreApp</MonoGamePlatform>
     <TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
-    <SelfContained>true</SelfContained>
     <AssetTargetFallback>net6.0-windows$(TargetPlatformVersion);$(AssetTargetFallback)</AssetTargetFallback>
+    <SelfContained>true</SelfContained>
     <DefaultLanguage>en-US</DefaultLanguage>
-    <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
-    <EntryPointProjectUniqueName>..\CnV\CnV.csproj</EntryPointProjectUniqueName>
+    <AppxPackageSigningEnabled>false</AppxPackageSigningEnabled>
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
-    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
-    <AppxBundlePlatforms>x64</AppxBundlePlatforms>
+    <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
-    <PackageCertificateKeyFile>CnV_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
-    <GenerateTestArtifacts>True</GenerateTestArtifacts>
-    <AppxBundlePlatforms>x64</AppxBundlePlatforms>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <AppxBundle>Always</AppxBundle>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <AppxBundle>Always</AppxBundle>
+    <PackageCertificateKeyFile>CnVPackage_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>202952D71706C061FDF84832AA8ED0677E99CB8D</PackageCertificateThumbprint>
   </PropertyGroup>
   <ItemGroup>
-    <AppxManifest Include="Package.appxmanifest">
+    <AppxManifest Include="..\CnV\Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="cnvCoverSquare.png" />
     <None Include="CnVPackage_TemporaryKey.pfx" />
-    <None Include="CnV_TemporaryKey.pfx" />
-    <Content Include="Package.StoreAssociation.xml" />
+    <Content Include="cnvCoverSquare.png" />
+    <Content Include="..\CnV\Package.StoreAssociation.xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CnV\CnV.csproj">
@@ -61,10 +54,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="[10.0.22000.197]" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="[1.0.3]">
-      <IncludeAssets>build</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="[10.0.22000.197]">
       <IncludeAssets>build</IncludeAssets>
     </PackageReference>
   </ItemGroup>

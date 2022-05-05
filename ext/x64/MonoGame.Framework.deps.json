@@ -8,7 +8,7 @@
     ".NETCoreApp,Version=v6.0": {
       "MonoGame.Framework/1.0.0": {
         "dependencies": {
-          "Microsoft.Windows.CsWinRT": "1.6.1",
+          "Microsoft.Windows.CsWinRT": "1.6.3",
           "Microsoft.WindowsAppSDK": "1.0.3",
           "SharpDX": "4.2.0",
           "SharpDX.DXGI": "4.2.0",
@@ -46,11 +46,11 @@
           "System.Runtime": "4.3.0"
         }
       },
-      "Microsoft.Windows.CsWinRT/1.6.1": {
+      "Microsoft.Windows.CsWinRT/1.6.3": {
         "runtime": {
           "lib/net5.0/WinRT.Runtime.dll": {
             "assemblyVersion": "1.6.0.0",
-            "fileVersion": "1.6.1.38391"
+            "fileVersion": "1.6.3.38841"
           }
         }
       },
@@ -910,12 +910,12 @@
       "path": "microsoft.win32.primitives/4.3.0",
       "hashPath": "microsoft.win32.primitives.4.3.0.nupkg.sha512"
     },
-    "Microsoft.Windows.CsWinRT/1.6.1": {
+    "Microsoft.Windows.CsWinRT/1.6.3": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-asdly89JVfPh365eBVwTHwxILu2QItEfkbbmd+LdIrQU7SDFd6lpsRzmWeax+LhAwvdzDxTmbUsQepcXTdVnCQ==",
-      "path": "microsoft.windows.cswinrt/1.6.1",
-      "hashPath": "microsoft.windows.cswinrt.1.6.1.nupkg.sha512"
+      "sha512": "sha512-DT0DwYBdJU5KxSB+RUx9eCLGsN61ylUnNJs51ySiOXlpDv2Rzttos6R2GfeOQYj23pHcJ3vZfePvM5a5HX/dlQ==",
+      "path": "microsoft.windows.cswinrt/1.6.3",
+      "hashPath": "microsoft.windows.cswinrt.1.6.3.nupkg.sha512"
     },
     "Microsoft.Windows.SDK.BuildTools/10.0.22000.194": {
       "type": "package",

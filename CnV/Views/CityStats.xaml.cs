@@ -819,7 +819,7 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 
 		
 
-		internal static bool hasTempleQueued =>	 instance.buildQueue.Any(a => a.op.bidIfNotMove == Building.bidTemple);
+//		internal static bool hasTempleQueued =>	 instance.buildQueue.Any(a => a.op.bidIfNotMove == Building.bidTemple);
 
 		
 
@@ -828,10 +828,10 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 			try
 			{
 				Log(args.DropResult);
-				if(hasTempleQueued) {
-					AppS.MessageBox("Cannot drag when temples are queued");
-					return;
-				}
+				//if(hasTempleQueued) {
+				//	AppS.MessageBox("Cannot drag when temples are queued");
+				//	return;
+				//}
 				if(args.DropResult ==DataPackageOperation.Move)
 				{
 					var item = args.Items.FirstOrDefault() as BuildItem;
@@ -1094,7 +1094,8 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 				CityUI.Show( Artifact.ArtifactType.black_powder, sender);
 			});
 			}
-			if(!hasTempleQueued) {
+//			if(!hasTempleQueued) 
+				{
 
 				flyout.AddItem("Remove..",Symbol.Remove,() => {
 					var index = instance.buildQueue.IndexOf(this);
