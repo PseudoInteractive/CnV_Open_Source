@@ -253,7 +253,7 @@ namespace CnVDiscord
 		{
 			try
 			{
-				var tab = ChatTab.FindDiscordChatTab(message.ChannelId);
+				var tab = ChatTab.FindDiscordChatTab(message.Channel);
 				if(tab is not null) {
 
 
@@ -298,6 +298,9 @@ namespace CnVDiscord
 					//Note.Show(chat.ToString());
 					//				AppS.DispatchOnUIThread(() => ChatTab.Post(message.ChannelId,chat,isNew,notify));
 					tab.Post(chat,isNew,deferNotify);
+				}
+				else {
+					Assert(false);
 				}
 			}
 			catch(Exception ex)

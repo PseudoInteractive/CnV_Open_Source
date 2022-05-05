@@ -10,6 +10,7 @@ using Microsoft.UI;
 using System.Text;
 using CommunityToolkit.WinUI.UI.Controls;
 
+using CnVChat;
 
 namespace CnV.Views
 {
@@ -538,9 +539,9 @@ namespace CnV.Views
 				t.Post(chat,isNew,deferNotify);
 
 		}
-		internal static ChatTab FindDiscordChatTab(DiscordId channelId)
+		internal static ChatTab FindDiscordChatTab(DiscordChannel channel)
 		{
-		
+			if(channel.IsWorld())
 			foreach(var tab in all)
 			{
 				if(tab.discordChannel?.Id == channelId)
@@ -551,6 +552,12 @@ namespace CnV.Views
 			return null;
 
 		}
+		internal static ChatTab FindWorldChatTab()
+		{
+			Assert(all.Count(a => a.defaultPostType == ChatEntry.typeWorld) <= 1);
+			return all.FirstOrDefault(a => a.defaultPostType == ChatEntry.typeWorld);
+		}
+
 		internal static DebounceA PostsCompleteNotify = new( () =>
 		{
 			ChatTab t = null;
