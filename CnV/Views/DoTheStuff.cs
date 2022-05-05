@@ -250,7 +250,7 @@ public static class DoTheStuff
 											cabinsInLayout.RemoveAt(0);
 										}
 
-										if(!city.IsBuildingSpot(c))
+										if(!city.IsBuildingSpotExcludingShore(c))
 										{
 											continue;
 										}

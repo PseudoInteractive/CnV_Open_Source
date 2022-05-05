@@ -470,7 +470,7 @@ namespace CnV.Views
 										var id1 = XYToId((x0, y0));
 										if (city.GetLayoutBuilding(id1).isBuilding)
 											continue;
-										if (!city.IsBuildingSpot(id1))
+										if (!city.IsBuildingSpotExcludingShore(id1))
 										{
 											continue;
 										}
