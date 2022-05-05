@@ -10,17 +10,7 @@ using static CnV.Troops;
 
 namespace CnV
 {
-	[Flags]
-		public enum TravelType : byte {
-			unknown ,
-			scout,
-			cav,
-			inf,
-			art,
-			sen,
-			navy,
-		
-			};
+	
 	//public struct TravelEstimate
 	//{
 	//	unsafe fixed float gain[(int)TravelType.count];
