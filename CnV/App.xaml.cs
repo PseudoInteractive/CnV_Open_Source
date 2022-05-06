@@ -270,10 +270,13 @@ namespace CnV
 						activeStart = t;
 						//	Trace("Finished!1");
 
-						AAnalytics.Track("Background",
-										new Dictionary<string,string>
-												{ { "time", dt.TotalSeconds.RoundToInt().ToString() } });
-						SystemInformation.Instance.AddToAppUptime(dt);
+						try {
+							AAnalytics.Track("Background",
+											new Dictionary<string,string>
+													{ { "time", dt.TotalSeconds.RoundToInt().ToString() } });
+							SystemInformation.Instance.AddToAppUptime(dt);
+						}
+						catch(Exception ex) { }
 						await t0;
 						AppS.windowState = AppS.WindowState.background;
 						Log("Finished!");
