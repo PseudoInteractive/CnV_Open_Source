@@ -473,7 +473,7 @@ namespace CnV.Views
 
 				// Links will not work until after the game is set up
 				try {
-					if(SystemInformation.Instance.IsAppUpdated && !Sim.isSub) {
+					if(SystemInformation.Instance==null || SystemInformation.Instance.IsAppUpdated ) {
 						AppS.DispatchOnUIThread(Settings.ShowWhatsNew);
 					}
 

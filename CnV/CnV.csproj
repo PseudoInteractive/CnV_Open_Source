@@ -68,9 +68,8 @@
 		</PackageReference>
 		<PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.5.0" />
 		<PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.5.0" />
-		<PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="7.0.0-preview.3.22175.4" />
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0-preview.3.22175.4" />
-		<PackageReference Include="Microsoft.Extensions.ObjectPool" Version="7.0.0-preview.3.22178.4" />
+		<PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.4" />
 		<PackageReference Include="Microsoft.Extensions.Primitives" Version="7.0.0-preview.3.22175.4" />
 		<PackageReference Include="Microsoft.Identity.Client" Version="4.43.2">
 			<TreatAsUsed>true</TreatAsUsed>
@@ -116,8 +115,6 @@
 		<PackageReference Include="System.Collections.Immutable" Version="7.0.0-preview.3.22175.4">
 			<TreatAsUsed>true</TreatAsUsed>
 		</PackageReference>
-		<PackageReference Include="System.Diagnostics.DiagnosticSource" Version="7.0.0-preview.3.22175.4" />
-		<PackageReference Include="System.IO.Pipelines" Version="7.0.0-preview.3.22175.4" />
 		<PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="7.0.0-preview.2.22152.2">
 			<TreatAsUsed>true</TreatAsUsed>
 		</PackageReference>
@@ -684,6 +681,7 @@
 		<None Remove="GameUI\TimelineView.xaml" />
 		<None Remove="GameUI\ToolTipWindow.xaml" />
 		<None Remove="GameUI\TradeSettingsDialog.xaml" />
+		<None Remove="Package.StoreAssociation.xml" />
 		<None Remove="Resources\CnVFont-VF.ttf" />
 		<None Remove="Resources\Icon1.ico" />
 		<None Remove="Strings\en-us\Resources.resw" />
@@ -712,11 +710,6 @@
 		<None Remove="Wiki\fixes.md" />
 		<None Remove="Win32Native.txt" />
 		<None Remove="Xaml\TTipX.xaml" />
-	</ItemGroup>
-	<ItemGroup>
-		<AppxManifest Include="Package.appxmanifest">
-			<SubType>Designer</SubType>
-		</AppxManifest>
 	</ItemGroup>
 	<ItemGroup>
 
