@@ -98,7 +98,7 @@ static partial class View
 
 				bfont = new BitmapFont.BitmapFont();
 
-				var a = new System.IO.StreamReader((typeof(AGame).Assembly).GetManifestResourceStream("CnV.Content.Fonts.tra.fnt")).ReadToEnd();
+				var a = AppS.GetAppString("Content/Fonts/tra.fnt");
 				//	using (System.IO.TextReader stream = new System.IO.StreamReader(a))
 				{
 

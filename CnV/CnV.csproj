@@ -1,30 +1,31 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
-    <EnablePreviewFeatures>True</EnablePreviewFeatures>
-    <TargetPlatformVersion>10.0.22000.0</TargetPlatformVersion>
-	<TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
-    <RootNamespace>CnV</RootNamespace>
-    <Platforms>x64;ARM64</Platforms>
-    <MonoGamePlatform>WindowsStoreApp</MonoGamePlatform>
-    <RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
-    <UseWinUI>True</UseWinUI>
-    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
-    <EnableDefaultPageItems>false</EnableDefaultPageItems>
-    <LangVersion>preview</LangVersion>
-    <AppxPackageSigningEnabled>False</AppxPackageSigningEnabled>
-	<TieredCompilation>True</TieredCompilation>
-	<AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
-	<!--<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>-->
-	<AppxBundle>Always</AppxBundle>
-	<TieredCompilation>True</TieredCompilation>
-    <AppxBundlePlatforms>x64</AppxBundlePlatforms>
-    <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
-    <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
-	  
-    <Configurations>Debug;Release;SinglePlayer</Configurations>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
+		<EnablePreviewFeatures>True</EnablePreviewFeatures>
+		<TargetPlatformVersion>10.0.22000.0</TargetPlatformVersion>
+		<TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
+		<RootNamespace>CnV</RootNamespace>
+		<Platforms>x64</Platforms>
+		<MonoGamePlatform>WindowsStoreApp</MonoGamePlatform>
+		<RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
+		<UseWinUI>True</UseWinUI>
+		<EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+		<EnableDefaultPageItems>false</EnableDefaultPageItems>
+		<LangVersion>preview</LangVersion>
+		<AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
+		<GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+		<TieredCompilation>True</TieredCompilation>
+		<AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
+		<!--<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>-->
+		<AppxBundle>Always</AppxBundle>
+		<TieredCompilation>True</TieredCompilation>
+		<AppxBundlePlatforms>x64</AppxBundlePlatforms>
+		<HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+		<AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
+
+		<Configurations>Debug;Release;SinglePlayer</Configurations>
+	</PropertyGroup>
   <ItemGroup>
     <Content Remove="Content\**" />
     <Content Remove="gamebin\**" />
@@ -52,773 +53,775 @@
     <PRIResource Remove="JS\**" />
   </ItemGroup>
 
-  <ItemGroup>
-	<PackageReference Include="Azure.Data.Tables" Version="12.3.0" />
-    <PackageReference Include="Azure.Storage.Blobs" Version="12.11.0-beta.2" />
-    <PackageReference Include="CommunityToolkit.WinUI.Notifications" Version="7.1.2" />
-    <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
-    <PackageReference Include="DirectXTexNet" Version="1.0.3" />
-    <PackageReference Include="DSharpPlus" Version="4.2.0" />
-    <PackageReference Include="Enums.NET" Version="4.0.0" />
-    <PackageReference Include="Grpc.Net.Client" Version="2.41.0-pre1" />
-    <PackageReference Include="Grpc.Net.Client" Version="2.42.0-pre1" />
-    <PackageReference Include="Humanizer.Core" Version="2.13.14" />
-    <PackageReference Include="MessagePack" Version="2.3.85" />
-    <PackageReference Include="MessagePackAnalyzer" Version="2.4.14-alpha">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.5.0" />
-    <PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.5.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0-preview.3.22175.4" />
-    <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="7.0.0-preview.3.22178.4" />
-    <PackageReference Include="Microsoft.Extensions.Primitives" Version="7.0.0-preview.3.22175.4" />
-    <PackageReference Include="Microsoft.Identity.Client" Version="4.43.2">
-      <TreatAsUsed>true</TreatAsUsed>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="2.20.1" />
-    <PackageReference Include="Microsoft.Toolkit" Version="7.1.2" />
-    <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
-	<PackageReference Include="Azure.Data.Tables" Version="12.5.0" />
-    <PackageReference Include="Azure.Storage.Blobs" Version="12.12.0" />
-    <PackageReference Include="CommunityToolkit.WinUI.Notifications" Version="7.1.2" />
-    <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
-    <PackageReference Include="Enums.NET" Version="4.0.0" />
-    <PackageReference Include="Grpc.Net.Client" Version="2.41.0-pre1" />
-    <PackageReference Include="Grpc.Net.Client" Version="2.45.0" />
-    <PackageReference Include="Humanizer.Core" Version="2.14.1" />
-    <PackageReference Include="MessagePack" Version="2.4.14-alpha" />
-    <PackageReference Include="MagicOnion.Client" Version="4.4.1" />
-    <PackageReference Include="Microsoft.Toolkit" Version="7.1.2">
-      <TreatAsUsed>true</TreatAsUsed>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
-    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="1.6.3" />
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.197" />	  
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.3" />
-	<PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
-    <PackageReference Include="PlayFabAllSDK" Version="1.108.220118" />
-    <PackageReference Include="Syncfusion.Chart.WinUI" Version="20.1.0.52" />
-    <PackageReference Include="Syncfusion.Editors.WinUI" Version="20.1.0.52" />
-    <PackageReference Include="Syncfusion.Grid.WinUI" Version="20.1.0.52" />
-    <PackageReference Include="Syncfusion.Licensing" Version="20.1.0.52" />
-	<PackageReference Include="SharpDX" Version="4.2.0">
-	  <TreatAsUsed>true</TreatAsUsed>
-	</PackageReference>
-    <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0">
-      <TreatAsUsed>true</TreatAsUsed>
-    </PackageReference>
-    <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
-    <PackageReference Include="SharpDX.DXGI" Version="4.2.0">
-      <TreatAsUsed>true</TreatAsUsed>
-    </PackageReference>
-    <PackageReference Include="SharpDX.MediaFoundation" Version="4.2.0" />
-    <PackageReference Include="SharpGen.Runtime.COM" Version="2.0.0-beta.10" />
-    <PackageReference Include="Syncfusion.Scheduler.WinUI" Version="20.1.0.52" />
-    <PackageReference Include="System.Collections.Immutable" Version="7.0.0-preview.3.22175.4">
-      <TreatAsUsed>true</TreatAsUsed>
-    </PackageReference>
-    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="7.0.0-preview.3.22175.4" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="7.0.0-preview.2.22152.2">
-      <TreatAsUsed>true</TreatAsUsed>
-    </PackageReference>
-    <PackageReference Include="System.Text.Json" Version="7.0.0-preview.3.22175.4" />
-	<PackageReference Include="ZString" Version="2.4.4" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Activation\ProtocolActivation.cs" />
-    <Compile Include="Activation\ActivationHandler.cs" />
-    <Compile Include="Draw\CameraView.cs" />
-    <Compile Include="Draw\DrawX.cs" />
-    <Compile Include="Draw\StatsView.cs" />
-    <Compile Include="Draw\ViewStep.cs" />
-    <Compile Include="FormatParameterObject.cs" />
-    <Compile Include="GameUI\AllianceDialog.xaml.cs" />
-    <Compile Include="GameUI\ArtifactDialogue.xaml.cs" />
-    <Compile Include="GameUI\Artifacts.xaml.cs" />
-    <Compile Include="GameUI\AutobuildDialog.xaml.cs" />
-    <Compile Include="GameUI\BattleReportDialog.xaml.cs" />
-    <Compile Include="GameUI\BossReportDialog.xaml.cs" />
-    <Compile Include="GameUI\ChartDialog.xaml.cs" />
-    <Compile Include="GameUI\CombatCalcDialog.xaml.cs" />
-    <Compile Include="GameUI\CreateAlliance.xaml.cs" />
-    <Compile Include="GameUI\DailyDialog.xaml.cs" />
-    <Compile Include="GameUI\DateTimeBox.xaml.cs" />
-    <Compile Include="GameUI\DialogG.cs" />
-    <Compile Include="GameUI\ErrorReport.xaml.cs" />
-    <Compile Include="GameUI\JoinAlliance.xaml.cs" />
-    <Compile Include="GameUI\MessageBox.xaml.cs" />
-    <Compile Include="GameUI\QuestList.xaml.cs" />
-    <Compile Include="GameUI\RecruitDialog.xaml.cs" />
-    <Compile Include="GameUI\RecruitTargetDialog.xaml.cs" />
-    <Compile Include="GameUI\RefineDialogue.xaml.cs" />
-    <Compile Include="GameUI\ResearchList.xaml.cs" />
-    <Compile Include="GameUI\ResearchPurchase.xaml.cs" />
-    <Compile Include="GameUI\SendResDialogue.xaml.cs" />
-    <Compile Include="GameUI\SendTroops.xaml.cs" />
-    <Compile Include="GameUI\TimelineView.xaml.cs" />
-    <Compile Include="GameUI\ToolTipWindow.xaml.cs" />
-    <Compile Include="GameUI\TradeSettingsDialog.xaml.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Services\CnVSignin.cs" />
-    <Compile Include="Services\HostBuilder.cs" />
-    <Compile Include="Views\AllianceTab.xaml.cs" />
-    <Compile Include="Views\CanvasMouse.cs" />
-    <Compile Include="Views\CanvasUI.cs" />
-    <Compile Include="Views\CityStats.xaml.cs" />
-    <Compile Include="Views\CnVSwapChainPanel.cs" />
-    <Compile Include="Views\NPCHistory.xaml.cs" />
-    <Compile Include="Views\PlayerListBox.xaml.cs" />
-    <Compile Include="Views\PlayerStats.xaml.cs" />
-    <Compile Include="Views\PlayerTab.xaml.cs" />
-    <Compile Include="Xaml\IconText.cs" />
-    <Compile Include="Xaml\TTip.cs" />
-    <Compile Include="Xaml\TTipX.xaml.cs" />
-    <Manifest Include="$(ApplicationManifest)" />
-    <Compile Include="Activation\CommandLineActivationHandler.cs" />
-    <Compile Include="Activation\SchemeActivationConfig.cs" />
-    <Compile Include="Activation\SchemeActivationData.cs" />
-    <Compile Include="Activation\SchemeActivationHandler.cs" />
-    <Compile Include="Activation\ShareTargetActivationHandler.cs" />
-    <Compile Include="Activation\WebToAppLinkActivationHandler.cs" />
-    <Compile Include="Audio\Audio.cs" />
-    <Compile Include="Bookmarks.cs" />
-    <Compile Include="City\CityBuildClient.cs" />
-    <Compile Include="City\CityCommands.cs" />
-    <Compile Include="City\CityFocus.cs" />
-    <Compile Include="City\CitySelection.cs" />
-    <Compile Include="City\ResourceSource.cs" />
-    <Compile Include="ClientUIHelpers\KeyboardFocus.cs" />
-    <Compile Include="ClientUIHelpers\NavStack.cs" />
-    <Compile Include="ClientOS\SettingsStorageExtensions.cs" />
-    <Compile Include="ClientOS\WindowHelper.cs" />
-    <Compile Include="ClientUI\CitySettingsUI.cs" />
-    <Compile Include="ClientUI\OnTap.cs" />
-    <Compile Include="ClientUI\TradeSettingsUI.cs" />
-    <Compile Include="CnVChatClient\CnVChatClient.cs" />
-    <Compile Include="Converters\CityConverters.cs" />
-    <Compile Include="Converters\DateTimeFormatConverter.cs" />
-    <Compile Include="Converters\IntConverter.cs" />
-    <Compile Include="Converters\StringConverter.cs" />
-    <Compile Include="Draw\CanvasHelpers.cs" />
-    <Compile Include="Draw\CityView.cs" />
-    <Compile Include="Draw\ClientView.cs" />
-    <Compile Include="Draw\DrawRegion.cs" />
-    <Compile Include="Draw\SpriteAnim.cs" />
-    <Compile Include="Draw\SpriteBatch.cs" />
-    <Compile Include="Draw\SpriteBatcher.cs" />
-    <Compile Include="Draw\SpriteBatchItem.cs" />
-    <Compile Include="Draw\TextFormat.cs" />
-    <Compile Include="Draw\TextLayout.cs" />
-    <Compile Include="Game\BlessedCity.cs" />
-    <Compile Include="Game\CityClient.cs" />
-    <Compile Include="Game\CnVClient.cs" />
-    <Compile Include="Game\GameClient.cs" />
-    <Compile Include="Game\GameSetup.cs" />
-    <Compile Include="Game\PlayerPresence.cs" />
-    <Compile Include="Game\Supporter.cs" />
-    <Compile Include="Game\WorldUI.cs" />
-    <Compile Include="GlobalSuppressions2.cs" />
-    <Compile Include="JSON\Errors.cs" />
-    <Compile Include="JSON\GetIO.cs" />
-    <Compile Include="JSON\gFRep2.cs" />
-    <Compile Include="JSON\IncomingEstimate.cs" />
-    <Compile Include="JSON\incover.cs" />
-    <Compile Include="JSON\Json.cs" />
-    <Compile Include="JSON\OutOver.cs" />
-    <Compile Include="JSON\poll2.cs" />
-    <Compile Include="JSON\ppdt.cs" />
-    <Compile Include="JSON\Report.cs" />
-    <Compile Include="JSON\SpotJson.cs" />
-    <Compile Include="Models\ADataGrid.cs" />
-    <Compile Include="Models\DataGridTap.cs" />
-    <Compile Include="Models\GoogleSheets.cs" />
-    <Compile Include="Models\JsNative.cs" />
-    <Compile Include="Models\JSPopup.cs" />
-    <Compile Include="NoteClient.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Services\Avatarslate.cs" />
-    <Compile Include="Services\Cosmos.cs" />
-    <Compile Include="Models\DragDropCompletedData.cs" />
-    <Compile Include="Models\DragDropData.cs" />
-    <Compile Include="Models\DragDropStartingData.cs" />
-    <Compile Include="Models\JSClient.cs" />
-    <Compile Include="Services\ActivationService.cs" />
-    <Compile Include="Activation\DefaultActivationHandler.cs" />
-    <Compile Include="Services\Discord.cs" />
-    <Compile Include="Services\DragAndDrop\DragDropService.cs" />
-    <Compile Include="Services\DragAndDrop\DropConfiguration.cs" />
-    <Compile Include="Services\DragAndDrop\ListViewDropConfiguration.cs" />
-    <Compile Include="Services\DragAndDrop\VisualDropConfiguration.cs" />
-    <Compile Include="Services\FirstRunDisplayService.cs" />
-    <Compile Include="Services\HubNotificationsService.cs" />
-    <Compile Include="Services\LiveTileService.cs" />
-    <Compile Include="Services\LiveTileService.Samples.cs" />
-    <Compile Include="Services\NavigationService.cs" />
-    <Compile Include="Services\StoreHelper.cs" />
-    <Compile Include="Services\SuspendAndResumeArgs.cs" />
-    <Compile Include="Services\SuspendAndResumeService.cs" />
-    <Compile Include="Services\SuspensionState.cs" />
-    <Compile Include="Services\Tables.cs" />
-    <Compile Include="Services\ThemeSelectorService.cs" />
-    <Compile Include="Services\ToastNotificationsService.cs" />
-    <Compile Include="Services\ToastNotificationsService.Samples.cs" />
-    <Compile Include="Services\UserActivityData.cs" />
-    <Compile Include="Services\UserActivityService.cs" />
-    <Compile Include="Services\UserActivityService.Sample.cs" />
-    <Compile Include="Services\UserDataService.cs" />
-    <Compile Include="Services\WhatsNewDisplayService.cs" />
-    <Compile Include="Services\WindowManagerService.cs" />
-    <Compile Include="StateTriggers\ControlSizeTrigger.cs" />
-    <Compile Include="Styles\BattleReportTemplateSelector.cs" />
-    <Compile Include="Views\AttackAddPlayer.xaml.cs">
-      <DependentUpon>AttackAddPlayer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\AttackTab.xaml.cs">
-      <DependentUpon>AttackTab.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\BossTab.xaml.cs">
-      <DependentUpon>BossTab.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\BuildMenu.cs" />
-    <Compile Include="Views\BuildTab.xaml.cs">
-      <DependentUpon>BuildTab.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ChatTab.xaml.cs">
-      <DependentUpon>ChatTab.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\CityBox.xaml.cs" />
-    <Compile Include="Views\CityBuild.xaml.cs">
-      <DependentUpon>CityBuild.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\CityControl.xaml.cs">
-      <DependentUpon>CityControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="City\CityUI.cs" />
-    <Compile Include="Views\ContinentTagFilter.xaml.cs">
-      <DependentUpon>ContinentTagFilter.xaml</DependentUpon>
-    </Compile>
-	<Compile Include="Views\DoTheStuff.cs" />
-    <Compile Include="Views\DungeonView.xaml.cs">
-      <DependentUpon>DungeonView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ExportCastles.xaml.cs">
-      <DependentUpon>ExportCastles.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\PlayerChangeTab.xaml.cs">
-      <DependentUpon>PlayerChangeTab.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\QueueTab.xaml.cs">
-      <DependentUpon>QueueTab.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\DonationTab.xaml.cs">
-      <DependentUpon>DonationTab.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\CmdLineActivationSamplePage.xaml.cs">
-      <DependentUpon>CmdLineActivationSamplePage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\DateTimePicker.xaml.cs">
-      <DependentUpon>DateTimePicker.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\HitHistory.xaml.cs">
-      <DependentUpon>HitHistory.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Fixes.xaml.cs">
-      <DependentUpon>Fixes.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\HeatTab.xaml.cs">
-      <DependentUpon>HeatTab.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\IncomingTab.xaml.cs">
-      <DependentUpon>IncomingTab.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\MainPage.xaml.cs">
-      <DependentUpon>MainPage.xaml</DependentUpon>
-    </Compile>
-	  <Compile Include="Views\NearDefenseTab.xaml.cs">
-		  <DependentUpon>NearDefenseTab.xaml</DependentUpon>
-	  </Compile>
-    <Compile Include="Views\NearRes.xaml.cs">
-      <DependentUpon>NearRes.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\OutgoingTab.xaml.cs">
-      <DependentUpon>OutgoingTab.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\PlannerTab.xaml.cs">
-      <DependentUpon>PlannerTab.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\PlayerGroup.xaml.cs">
-      <DependentUpon>PlayerGroup.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\QuickBuild.xaml.cs">
-      <DependentUpon>QuickBuild.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ReinforcementsTab.xaml.cs" />
-    <Compile Include="Views\ResSettings.xaml.cs">
-      <DependentUpon>ResSettings.xaml</DependentUpon>
-    </Compile>
-	  <Compile Include="Views\SettingsPage.xaml.cs">
-		  <DependentUpon>SettingsPage.xaml</DependentUpon>
-	  </Compile>
-	  <Compile Include="Views\ShareString.xaml.cs">
-      <DependentUpon>ShareString.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ShareStringData.cs" />
-    <Compile Include="Views\Shell2d.cs" />
-    <Compile Include="Views\ShellPage.xaml.cs">
-      <DependentUpon>ShellPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ShellWorld.cs" />
-    <Compile Include="Views\SpotTab.xaml.cs">
-      <DependentUpon>SpotTab.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\TabPage.xaml.cs">
-      <DependentUpon>TabPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\TroopBox.xaml.cs">
-      <DependentUpon>TroopBox.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\UpdateHtmlOffsets.cs" />
-    <Compile Include="Views\UserTab.cs" />
-    <Compile Include="Views\WhatsNewDialog.xaml.cs">
-      <DependentUpon>WhatsNewDialog.xaml</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="GameUI\AllianceDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GameUI\ArtifactDialogue.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GameUI\Artifacts.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GameUI\AutobuildDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GameUI\BattleReportDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GameUI\BossReportDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GameUI\ChartDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GameUI\CombatCalcDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GameUI\CreateAlliance.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GameUI\DailyDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GameUI\DateTimeBox.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GameUI\ErrorReport.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GameUI\JoinAlliance.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GameUI\MessageBox.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GameUI\QuestList.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GameUI\RecruitDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GameUI\RecruitTargetDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GameUI\RefineDialogue.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GameUI\ResearchList.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GameUI\ResearchPurchase.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GameUI\SendResDialogue.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GameUI\SendTroops.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GameUI\TimelineView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GameUI\ToolTipWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GameUI\TradeSettingsDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Styles\BattleReport.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Styles\Page.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Styles\ScrollBarHack.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Styles\FontSizes.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Styles\TextBlock.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Styles\Theme.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Themes\Generic.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\AllianceTab.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\AttackAddPlayer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\AttackTab.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\BossTab.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\BuildTab.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\ChatTab.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\CityBox.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\CityBuild.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\CityControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\CityStats.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\ContinentTagFilter.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\DungeonView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\ExportCastles.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\NPCHistory.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\PlayerChangeTab.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\PlayerListBox.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\PlayerStats.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\PlayerTab.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-	  <Page Include="Views\QueueTab.xaml">
-		  <SubType>Designer</SubType>
-		  <Generator>MSBuild:Compile</Generator>
-	  </Page>
-    <Page Include="Views\DonationTab.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\CmdLineActivationSamplePage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\DateTimePicker.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\HitHistory.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\FirstRunDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\Fixes.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\HeatTab.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\IncomingTab.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\MainPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-	  <Page Include="Views\NearDefenseTab.xaml">
-		  <Generator>MSBuild:Compile</Generator>
-		  <SubType>Designer</SubType>
-	  </Page>
-    <Page Include="Views\NearRes.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\OutgoingTab.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\PlannerTab.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\PlayerGroup.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\QuickBuild.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\ReinforcementsTab.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\ResSettings.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-	  <Page Include="Views\SettingsPage.xaml">
-		  <Generator>MSBuild:Compile</Generator>
-		  <SubType>Designer</SubType>
-	  </Page>
-	  <Page Include="Views\ShareString.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\ShellPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\SpotTab.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\TabPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\TroopBox.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\WhatsNewDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Xaml\TTipX.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-	<None Remove="Assets\cnvIcon.ico" />
-	<None Remove="cnvCover.png" />
-	<None Remove="GameUI\AllianceDialog.xaml" />
-	<None Remove="GameUI\ArtifactDialogue.xaml" />
-	<None Remove="GameUI\Artifacts.xaml" />
-	<None Remove="GameUI\AutobuildDialog.xaml" />
-	<None Remove="GameUI\BattleReportDialog.xaml" />
-	<None Remove="GameUI\BossReportDialog.xaml" />
-	<None Remove="GameUI\ChartDialog.xaml" />
-	<None Remove="GameUI\CombatCalcDialog.xaml" />
-	<None Remove="GameUI\CreateAlliance.xaml" />
-	<None Remove="GameUI\DailyDialog.xaml" />
-	<None Remove="GameUI\DateTimeBox.xaml" />
-	<None Remove="GameUI\ErrorReport.xaml" />
-	<None Remove="GameUI\JoinAlliance.xaml" />
-	<None Remove="GameUI\MessageBox.xaml" />
-	<None Remove="GameUI\QuestList.xaml" />
-	<None Remove="GameUI\RecruitDialog.xaml" />
-	<None Remove="GameUI\RecruitTargetDialog.xaml" />
-	<None Remove="GameUI\RefineDialogue.xaml" />
-	<None Remove="GameUI\ResearchList.xaml" />
-	<None Remove="GameUI\ResearchPurchase.xaml" />
-	<None Remove="GameUI\SendResDialogue.xaml" />
-	<None Remove="GameUI\SendTroops.xaml" />
-	<None Remove="GameUI\TimelineView.xaml" />
-	<None Remove="GameUI\ToolTipWindow.xaml" />
-	<None Remove="GameUI\TradeSettingsDialog.xaml" />
-    <None Remove="Resources\CnVFont-VF.ttf" />
-    <None Remove="Resources\Icon1.ico" />
-    <None Remove="Strings\en-us\Resources.resw" />
-    <None Remove="Package.appxmanifest" />
-    <None Remove="Styles\CommandBar.xaml" />
-    <None Remove="Styles\ScrollBarHack.xaml" />
-    <None Remove="Styles\SharedResources.xaml" />
-    <None Remove="Styles\Theme.xaml" />
-    <None Remove="Styles\_Colors.xaml" />
-    <None Remove="Styles\_Thickness.xaml" />
-    <None Remove="Themes\Generic.xaml" />
-    <None Remove="Views\AllianceTab.xaml" />
-    <None Remove="Views\CityBox.xaml" />
-    <None Remove="Views\CityRename.xaml" />
-    <None Remove="Views\CityStats.xaml" />
-    <None Remove="Views\DefenderPage.xaml" />
-    <None Remove="Views\DefendTab.xaml" />
-    <None Remove="Views\NPCHistory.xaml" />
-    <None Remove="Views\PlayerListBox.xaml" />
-    <None Remove="Views\PlayerStats.xaml" />
-    <None Remove="Views\PlayerTab.xaml" />
-    <None Remove="Views\ReinforcementsTab.xaml" />
-    <None Remove="Views\Signin.xaml" />
-    <None Remove="Views\SigninPage.xaml" />
-    <None Remove="Views\WebViewPage.xaml" />
-    <None Remove="Wiki\fixes.md" />
-    <None Remove="Win32Native.txt" />
-    <None Remove="Xaml\TTipX.xaml" />
-  </ItemGroup>
-  <ItemGroup>
- 
-    <None Include="..\CnVPackage\Assets\Square44x44Logo.targetsize-256.png">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-    <None Include="SignatureKey.snk" />
-    <None Include="SignaturePubKey.snk" />
-    <Resource Include="Wiki\wiki.md" />
-  </ItemGroup>
-  <ItemGroup>
-	<Compile Include="App.xaml.cs">
-	  <DependentUpon>App.xaml</DependentUpon>
-	</Compile>
-  </ItemGroup>
-  <PropertyGroup>
-    <SignAssembly>False</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
- <AssemblyOriginatorKeyFile>SignatureKey.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
-  <PropertyGroup>
-    <PreBuildEvent />
-  </PropertyGroup>
-  <PropertyGroup>
-    <DebugType>portable</DebugType>
-    <GenerateDocumentationFile>False</GenerateDocumentationFile>
-    <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
-    <EnableNETAnalyzers>True</EnableNETAnalyzers>
-    <AnalysisLevel>preview-all</AnalysisLevel>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <ImplicitUsings>True</ImplicitUsings>
-    <Nullable>annotations</Nullable>
-    <SupportedOSPlatformVersion>10.0.18362.0</SupportedOSPlatformVersion>
-    <ApplicationIcon>Assets\cnvIcon.ico</ApplicationIcon>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
-    <PackageIcon>Square44x44Logo.targetsize-256.png</PackageIcon>
-    <PackageCertificateKeyFile>CnV_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
-    <GenerateTestArtifacts>True</GenerateTestArtifacts>
-    <AppxPackageDir>S:\Source\cnv\appx\</AppxPackageDir>
-    <ApplicationInsightsResourceId>/subscriptions/2a698fb0-55b8-4561-b722-2015b2c78d9c/resourceGroups/appcenter-export-Alliances/providers/microsoft.insights/components/AppCenterExport-Alliances</ApplicationInsightsResourceId>
-    <UserSecretsId>390b80fc-ab7a-4c55-9a54-5947221eec7e</UserSecretsId>
-    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <Optimize>False</Optimize>
-    <WarningLevel>4</WarningLevel>
-    <DefineConstants>$(DefineConstants);CNV;CNVCLIENT;APPCENTER;DISABLE_XAML_GENERATED_MAIN</DefineConstants>
-    <Deterministic>True</Deterministic>
-    <FileAlignment>4096</FileAlignment>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
-    <Optimize>False</Optimize>
-    <WarningLevel>4</WarningLevel>
-    <DefineConstants>$(DefineConstants);CNV;CNVCLIENT;APPCENTER;DISABLE_XAML_GENERATED_MAIN</DefineConstants>
-    <Deterministic>True</Deterministic>
-    <FileAlignment>4096</FileAlignment>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='SinglePlayer|x64'">
-    <Optimize>False</Optimize>
-    <WarningLevel>4</WarningLevel>
-    <DefineConstants>$(DefineConstants);CNV;CNVCLIENT;APPCENTER;DISABLE_XAML_GENERATED_MAIN;DEBUG</DefineConstants>
-    <Deterministic>True</Deterministic>
-    <FileAlignment>4096</FileAlignment>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='SinglePlayer|ARM64'">
-    <Optimize>False</Optimize>
-    <WarningLevel>4</WarningLevel>
-    <DefineConstants>$(DefineConstants);CNV;CNVCLIENT;APPCENTER;DISABLE_XAML_GENERATED_MAIN;DEBUG</DefineConstants>
-    <Deterministic>True</Deterministic>
-    <FileAlignment>4096</FileAlignment>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <Optimize>True</Optimize>
-    <WarningLevel>4</WarningLevel>
-    <DefineConstants>$(DefineConstants);CNV;CNVCLIENT;APPCENTER;DISABLE_XAML_GENERATED_MAIN</DefineConstants>
-    <Deterministic>True</Deterministic>
-    <FileAlignment>4096</FileAlignment>
-    <LayoutDir />
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
-    <Optimize>True</Optimize>
-    <WarningLevel>4</WarningLevel>
-    <DefineConstants>$(DefineConstants);CNV;CNVCLIENT;APPCENTER;DISABLE_XAML_GENERATED_MAIN</DefineConstants>
-    <Deterministic>True</Deterministic>
-    <FileAlignment>4096</FileAlignment>
-    <LayoutDir />
-  </PropertyGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Wiki\fixes.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Base\" />
-    <Folder Include="Properties\ServiceDependencies\local\" />
-    <Folder Include="Resources\" />
-  </ItemGroup>
-  <ItemGroup>
-	 <Reference Include="Cyotek.Drawing.BitmapFont">
-      <HintPath>..\ext\Cyotek.Drawing.BitmapFont.dll</HintPath>
-    </Reference>
+	<ItemGroup>
+		<PackageReference Include="Azure.Data.Tables" Version="12.3.0" />
+		<PackageReference Include="CommunityToolkit.WinUI.Notifications" Version="7.1.2" />
+		<PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
+		<PackageReference Include="DirectXTexNet" Version="1.0.3" />
+		<PackageReference Include="DSharpPlus" Version="4.2.0" />
+		<PackageReference Include="Enums.NET" Version="4.0.0" />
+		<PackageReference Include="Humanizer.Core" Version="2.13.14" />
+		<PackageReference Include="MessagePack" Version="2.3.85" />
+		<PackageReference Include="MessagePackAnalyzer" Version="2.4.14-alpha">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.5.0" />
+		<PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.5.0" />
+		<PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="7.0.0-preview.3.22175.4" />
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0-preview.3.22175.4" />
+		<PackageReference Include="Microsoft.Extensions.ObjectPool" Version="7.0.0-preview.3.22178.4" />
+		<PackageReference Include="Microsoft.Extensions.Primitives" Version="7.0.0-preview.3.22175.4" />
+		<PackageReference Include="Microsoft.Identity.Client" Version="4.43.2">
+			<TreatAsUsed>true</TreatAsUsed>
+		</PackageReference>
+		<PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="2.20.1" />
+		<PackageReference Include="Microsoft.Toolkit" Version="7.1.2" />
+		<PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
+		<PackageReference Include="Azure.Data.Tables" Version="12.5.0" />
+		<PackageReference Include="Azure.Storage.Blobs" Version="12.12.0" />
+		<PackageReference Include="CommunityToolkit.WinUI.Notifications" Version="7.1.2" />
+		<PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
+		<PackageReference Include="Enums.NET" Version="4.0.0" />
+		<PackageReference Include="Grpc.Net.Client" Version="2.45.0" />
+		<PackageReference Include="Humanizer.Core" Version="2.14.1" />
+		<PackageReference Include="MessagePack" Version="2.4.14-alpha" />
+		<PackageReference Include="MagicOnion.Client" Version="4.4.1" />
+		<PackageReference Include="Microsoft.Toolkit" Version="7.1.2">
+			<TreatAsUsed>true</TreatAsUsed>
+		</PackageReference>
+		<PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
+		<PackageReference Include="Microsoft.Windows.CsWinRT" Version="1.6.3" />
+		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.197" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.3" />
+		<PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
+		<PackageReference Include="PlayFabAllSDK" Version="1.108.220118" />
+		<PackageReference Include="Syncfusion.Chart.WinUI" Version="20.1.0.52" />
+		<PackageReference Include="Syncfusion.Editors.WinUI" Version="20.1.0.52" />
+		<PackageReference Include="Syncfusion.Grid.WinUI" Version="20.1.0.52" />
+		<PackageReference Include="Syncfusion.Licensing" Version="20.1.0.52" />
+		<PackageReference Include="SharpDX" Version="4.2.0">
+			<TreatAsUsed>true</TreatAsUsed>
+		</PackageReference>
+		<PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0">
+			<TreatAsUsed>true</TreatAsUsed>
+		</PackageReference>
+		<PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
+		<PackageReference Include="SharpDX.DXGI" Version="4.2.0">
+			<TreatAsUsed>true</TreatAsUsed>
+		</PackageReference>
+		<PackageReference Include="SharpDX.MediaFoundation" Version="4.2.0" />
+		<PackageReference Include="SharpGen.Runtime.COM" Version="2.0.0-beta.10" />
+		<PackageReference Include="Syncfusion.Scheduler.WinUI" Version="20.1.0.52" />
+		<PackageReference Include="System.Collections.Immutable" Version="7.0.0-preview.3.22175.4">
+			<TreatAsUsed>true</TreatAsUsed>
+		</PackageReference>
+		<PackageReference Include="System.Diagnostics.DiagnosticSource" Version="7.0.0-preview.3.22175.4" />
+		<PackageReference Include="System.IO.Pipelines" Version="7.0.0-preview.3.22175.4" />
+		<PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="7.0.0-preview.2.22152.2">
+			<TreatAsUsed>true</TreatAsUsed>
+		</PackageReference>
+		<PackageReference Include="System.Text.Json" Version="7.0.0-preview.3.22175.4" />
+		<PackageReference Include="ZString" Version="2.4.4" />
+	</ItemGroup>
+	<ItemGroup>
+		<Compile Include="Activation\ProtocolActivation.cs" />
+		<Compile Include="Activation\ActivationHandler.cs" />
+		<Compile Include="Draw\CameraView.cs" />
+		<Compile Include="Draw\DrawX.cs" />
+		<Compile Include="Draw\StatsView.cs" />
+		<Compile Include="Draw\ViewStep.cs" />
+		<Compile Include="FormatParameterObject.cs" />
+		<Compile Include="GameUI\AllianceDialog.xaml.cs" />
+		<Compile Include="GameUI\ArtifactDialogue.xaml.cs" />
+		<Compile Include="GameUI\Artifacts.xaml.cs" />
+		<Compile Include="GameUI\AutobuildDialog.xaml.cs" />
+		<Compile Include="GameUI\BattleReportDialog.xaml.cs" />
+		<Compile Include="GameUI\BossReportDialog.xaml.cs" />
+		<Compile Include="GameUI\ChartDialog.xaml.cs" />
+		<Compile Include="GameUI\CombatCalcDialog.xaml.cs" />
+		<Compile Include="GameUI\CreateAlliance.xaml.cs" />
+		<Compile Include="GameUI\DailyDialog.xaml.cs" />
+		<Compile Include="GameUI\DateTimeBox.xaml.cs" />
+		<Compile Include="GameUI\DialogG.cs" />
+		<Compile Include="GameUI\ErrorReport.xaml.cs" />
+		<Compile Include="GameUI\JoinAlliance.xaml.cs" />
+		<Compile Include="GameUI\MessageBox.xaml.cs" />
+		<Compile Include="GameUI\QuestList.xaml.cs" />
+		<Compile Include="GameUI\RecruitDialog.xaml.cs" />
+		<Compile Include="GameUI\RecruitTargetDialog.xaml.cs" />
+		<Compile Include="GameUI\RefineDialogue.xaml.cs" />
+		<Compile Include="GameUI\ResearchList.xaml.cs" />
+		<Compile Include="GameUI\ResearchPurchase.xaml.cs" />
+		<Compile Include="GameUI\SendResDialogue.xaml.cs" />
+		<Compile Include="GameUI\SendTroops.xaml.cs" />
+		<Compile Include="GameUI\TimelineView.xaml.cs" />
+		<Compile Include="GameUI\ToolTipWindow.xaml.cs" />
+		<Compile Include="GameUI\TradeSettingsDialog.xaml.cs" />
+		<Compile Include="Program.cs" />
+		<Compile Include="Services\CnVSignin.cs" />
+		<Compile Include="Services\HostBuilder.cs" />
+		<Compile Include="Views\AllianceTab.xaml.cs" />
+		<Compile Include="Views\CanvasMouse.cs" />
+		<Compile Include="Views\CanvasUI.cs" />
+		<Compile Include="Views\CityStats.xaml.cs" />
+		<Compile Include="Views\CnVSwapChainPanel.cs" />
+		<Compile Include="Views\NPCHistory.xaml.cs" />
+		<Compile Include="Views\PlayerListBox.xaml.cs" />
+		<Compile Include="Views\PlayerStats.xaml.cs" />
+		<Compile Include="Views\PlayerTab.xaml.cs" />
+		<Compile Include="Xaml\IconText.cs" />
+		<Compile Include="Xaml\TTip.cs" />
+		<Compile Include="Xaml\TTipX.xaml.cs" />
+		<Manifest Include="$(ApplicationManifest)" />
+		<Compile Include="Activation\CommandLineActivationHandler.cs" />
+		<Compile Include="Activation\SchemeActivationConfig.cs" />
+		<Compile Include="Activation\SchemeActivationData.cs" />
+		<Compile Include="Activation\SchemeActivationHandler.cs" />
+		<Compile Include="Activation\ShareTargetActivationHandler.cs" />
+		<Compile Include="Activation\WebToAppLinkActivationHandler.cs" />
+		<Compile Include="Audio\Audio.cs" />
+		<Compile Include="Bookmarks.cs" />
+		<Compile Include="City\CityBuildClient.cs" />
+		<Compile Include="City\CityCommands.cs" />
+		<Compile Include="City\CityFocus.cs" />
+		<Compile Include="City\CitySelection.cs" />
+		<Compile Include="City\ResourceSource.cs" />
+		<Compile Include="ClientUIHelpers\KeyboardFocus.cs" />
+		<Compile Include="ClientUIHelpers\NavStack.cs" />
+		<Compile Include="ClientOS\SettingsStorageExtensions.cs" />
+		<Compile Include="ClientOS\WindowHelper.cs" />
+		<Compile Include="ClientUI\CitySettingsUI.cs" />
+		<Compile Include="ClientUI\OnTap.cs" />
+		<Compile Include="ClientUI\TradeSettingsUI.cs" />
+		<Compile Include="CnVChatClient\CnVChatClient.cs" />
+		<Compile Include="Converters\CityConverters.cs" />
+		<Compile Include="Converters\DateTimeFormatConverter.cs" />
+		<Compile Include="Converters\IntConverter.cs" />
+		<Compile Include="Converters\StringConverter.cs" />
+		<Compile Include="Draw\CanvasHelpers.cs" />
+		<Compile Include="Draw\CityView.cs" />
+		<Compile Include="Draw\ClientView.cs" />
+		<Compile Include="Draw\DrawRegion.cs" />
+		<Compile Include="Draw\SpriteAnim.cs" />
+		<Compile Include="Draw\SpriteBatch.cs" />
+		<Compile Include="Draw\SpriteBatcher.cs" />
+		<Compile Include="Draw\SpriteBatchItem.cs" />
+		<Compile Include="Draw\TextFormat.cs" />
+		<Compile Include="Draw\TextLayout.cs" />
+		<Compile Include="Game\BlessedCity.cs" />
+		<Compile Include="Game\CityClient.cs" />
+		<Compile Include="Game\CnVClient.cs" />
+		<Compile Include="Game\GameClient.cs" />
+		<Compile Include="Game\GameSetup.cs" />
+		<Compile Include="Game\PlayerPresence.cs" />
+		<Compile Include="Game\Supporter.cs" />
+		<Compile Include="Game\WorldUI.cs" />
+		<Compile Include="GlobalSuppressions2.cs" />
+		<Compile Include="JSON\Errors.cs" />
+		<Compile Include="JSON\GetIO.cs" />
+		<Compile Include="JSON\gFRep2.cs" />
+		<Compile Include="JSON\IncomingEstimate.cs" />
+		<Compile Include="JSON\incover.cs" />
+		<Compile Include="JSON\Json.cs" />
+		<Compile Include="JSON\OutOver.cs" />
+		<Compile Include="JSON\poll2.cs" />
+		<Compile Include="JSON\ppdt.cs" />
+		<Compile Include="JSON\Report.cs" />
+		<Compile Include="JSON\SpotJson.cs" />
+		<Compile Include="Models\ADataGrid.cs" />
+		<Compile Include="Models\DataGridTap.cs" />
+		<Compile Include="Models\GoogleSheets.cs" />
+		<Compile Include="Models\JsNative.cs" />
+		<Compile Include="Models\JSPopup.cs" />
+		<Compile Include="NoteClient.cs" />
+		<Compile Include="Properties\Resources.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Resources.resx</DependentUpon>
+		</Compile>
+		<Compile Include="Services\Avatarslate.cs" />
+		<Compile Include="Services\Cosmos.cs" />
+		<Compile Include="Models\DragDropCompletedData.cs" />
+		<Compile Include="Models\DragDropData.cs" />
+		<Compile Include="Models\DragDropStartingData.cs" />
+		<Compile Include="Models\JSClient.cs" />
+		<Compile Include="Services\ActivationService.cs" />
+		<Compile Include="Activation\DefaultActivationHandler.cs" />
+		<Compile Include="Services\Discord.cs" />
+		<Compile Include="Services\DragAndDrop\DragDropService.cs" />
+		<Compile Include="Services\DragAndDrop\DropConfiguration.cs" />
+		<Compile Include="Services\DragAndDrop\ListViewDropConfiguration.cs" />
+		<Compile Include="Services\DragAndDrop\VisualDropConfiguration.cs" />
+		<Compile Include="Services\FirstRunDisplayService.cs" />
+		<Compile Include="Services\HubNotificationsService.cs" />
+		<Compile Include="Services\LiveTileService.cs" />
+		<Compile Include="Services\LiveTileService.Samples.cs" />
+		<Compile Include="Services\NavigationService.cs" />
+		<Compile Include="Services\StoreHelper.cs" />
+		<Compile Include="Services\SuspendAndResumeArgs.cs" />
+		<Compile Include="Services\SuspendAndResumeService.cs" />
+		<Compile Include="Services\SuspensionState.cs" />
+		<Compile Include="Services\Tables.cs" />
+		<Compile Include="Services\ThemeSelectorService.cs" />
+		<Compile Include="Services\ToastNotificationsService.cs" />
+		<Compile Include="Services\ToastNotificationsService.Samples.cs" />
+		<Compile Include="Services\UserActivityData.cs" />
+		<Compile Include="Services\UserActivityService.cs" />
+		<Compile Include="Services\UserActivityService.Sample.cs" />
+		<Compile Include="Services\UserDataService.cs" />
+		<Compile Include="Services\WhatsNewDisplayService.cs" />
+		<Compile Include="Services\WindowManagerService.cs" />
+		<Compile Include="StateTriggers\ControlSizeTrigger.cs" />
+		<Compile Include="Styles\BattleReportTemplateSelector.cs" />
+		<Compile Include="Views\AttackAddPlayer.xaml.cs">
+			<DependentUpon>AttackAddPlayer.xaml</DependentUpon>
+		</Compile>
+		<Compile Include="Views\AttackTab.xaml.cs">
+			<DependentUpon>AttackTab.xaml</DependentUpon>
+		</Compile>
+		<Compile Include="Views\BossTab.xaml.cs">
+			<DependentUpon>BossTab.xaml</DependentUpon>
+		</Compile>
+		<Compile Include="Views\BuildMenu.cs" />
+		<Compile Include="Views\BuildTab.xaml.cs">
+			<DependentUpon>BuildTab.xaml</DependentUpon>
+		</Compile>
+		<Compile Include="Views\ChatTab.xaml.cs">
+			<DependentUpon>ChatTab.xaml</DependentUpon>
+		</Compile>
+		<Compile Include="Views\CityBox.xaml.cs" />
+		<Compile Include="Views\CityBuild.xaml.cs">
+			<DependentUpon>CityBuild.xaml</DependentUpon>
+		</Compile>
+		<Compile Include="Views\CityControl.xaml.cs">
+			<DependentUpon>CityControl.xaml</DependentUpon>
+		</Compile>
+		<Compile Include="City\CityUI.cs" />
+		<Compile Include="Views\ContinentTagFilter.xaml.cs">
+			<DependentUpon>ContinentTagFilter.xaml</DependentUpon>
+		</Compile>
+		<Compile Include="Views\DoTheStuff.cs" />
+		<Compile Include="Views\DungeonView.xaml.cs">
+			<DependentUpon>DungeonView.xaml</DependentUpon>
+		</Compile>
+		<Compile Include="Views\ExportCastles.xaml.cs">
+			<DependentUpon>ExportCastles.xaml</DependentUpon>
+		</Compile>
+		<Compile Include="Views\PlayerChangeTab.xaml.cs">
+			<DependentUpon>PlayerChangeTab.xaml</DependentUpon>
+		</Compile>
+		<Compile Include="Views\QueueTab.xaml.cs">
+			<DependentUpon>QueueTab.xaml</DependentUpon>
+		</Compile>
+		<Compile Include="Views\DonationTab.xaml.cs">
+			<DependentUpon>DonationTab.xaml</DependentUpon>
+		</Compile>
+		<Compile Include="Views\CmdLineActivationSamplePage.xaml.cs">
+			<DependentUpon>CmdLineActivationSamplePage.xaml</DependentUpon>
+		</Compile>
+		<Compile Include="Views\DateTimePicker.xaml.cs">
+			<DependentUpon>DateTimePicker.xaml</DependentUpon>
+		</Compile>
+		<Compile Include="Views\HitHistory.xaml.cs">
+			<DependentUpon>HitHistory.xaml</DependentUpon>
+		</Compile>
+		<Compile Include="Views\Fixes.xaml.cs">
+			<DependentUpon>Fixes.xaml</DependentUpon>
+		</Compile>
+		<Compile Include="Views\HeatTab.xaml.cs">
+			<DependentUpon>HeatTab.xaml</DependentUpon>
+		</Compile>
+		<Compile Include="Views\IncomingTab.xaml.cs">
+			<DependentUpon>IncomingTab.xaml</DependentUpon>
+		</Compile>
+		<Compile Include="Views\MainPage.xaml.cs">
+			<DependentUpon>MainPage.xaml</DependentUpon>
+		</Compile>
+		<Compile Include="Views\NearDefenseTab.xaml.cs">
+			<DependentUpon>NearDefenseTab.xaml</DependentUpon>
+		</Compile>
+		<Compile Include="Views\NearRes.xaml.cs">
+			<DependentUpon>NearRes.xaml</DependentUpon>
+		</Compile>
+		<Compile Include="Views\OutgoingTab.xaml.cs">
+			<DependentUpon>OutgoingTab.xaml</DependentUpon>
+		</Compile>
+		<Compile Include="Views\PlannerTab.xaml.cs">
+			<DependentUpon>PlannerTab.xaml</DependentUpon>
+		</Compile>
+		<Compile Include="Views\PlayerGroup.xaml.cs">
+			<DependentUpon>PlayerGroup.xaml</DependentUpon>
+		</Compile>
+		<Compile Include="Views\QuickBuild.xaml.cs">
+			<DependentUpon>QuickBuild.xaml</DependentUpon>
+		</Compile>
+		<Compile Include="Views\ReinforcementsTab.xaml.cs" />
+		<Compile Include="Views\ResSettings.xaml.cs">
+			<DependentUpon>ResSettings.xaml</DependentUpon>
+		</Compile>
+		<Compile Include="Views\SettingsPage.xaml.cs">
+			<DependentUpon>SettingsPage.xaml</DependentUpon>
+		</Compile>
+		<Compile Include="Views\ShareString.xaml.cs">
+			<DependentUpon>ShareString.xaml</DependentUpon>
+		</Compile>
+		<Compile Include="Views\ShareStringData.cs" />
+		<Compile Include="Views\Shell2d.cs" />
+		<Compile Include="Views\ShellPage.xaml.cs">
+			<DependentUpon>ShellPage.xaml</DependentUpon>
+		</Compile>
+		<Compile Include="Views\ShellWorld.cs" />
+		<Compile Include="Views\SpotTab.xaml.cs">
+			<DependentUpon>SpotTab.xaml</DependentUpon>
+		</Compile>
+		<Compile Include="Views\TabPage.xaml.cs">
+			<DependentUpon>TabPage.xaml</DependentUpon>
+		</Compile>
+		<Compile Include="Views\TroopBox.xaml.cs">
+			<DependentUpon>TroopBox.xaml</DependentUpon>
+		</Compile>
+		<Compile Include="Views\UpdateHtmlOffsets.cs" />
+		<Compile Include="Views\UserTab.cs" />
+		<Compile Include="Views\WhatsNewDialog.xaml.cs">
+			<DependentUpon>WhatsNewDialog.xaml</DependentUpon>
+		</Compile>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Include="GameUI\AllianceDialog.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="GameUI\ArtifactDialogue.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="GameUI\Artifacts.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="GameUI\AutobuildDialog.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="GameUI\BattleReportDialog.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="GameUI\BossReportDialog.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="GameUI\ChartDialog.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="GameUI\CombatCalcDialog.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="GameUI\CreateAlliance.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="GameUI\DailyDialog.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="GameUI\DateTimeBox.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="GameUI\ErrorReport.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="GameUI\JoinAlliance.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="GameUI\MessageBox.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="GameUI\QuestList.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="GameUI\RecruitDialog.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="GameUI\RecruitTargetDialog.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="GameUI\RefineDialogue.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="GameUI\ResearchList.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="GameUI\ResearchPurchase.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="GameUI\SendResDialogue.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="GameUI\SendTroops.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="GameUI\TimelineView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="GameUI\ToolTipWindow.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="GameUI\TradeSettingsDialog.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\BattleReport.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Page.xaml">
+			<Generator>MSBuild:Compile</Generator>
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Include="Styles\ScrollBarHack.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\FontSizes.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\TextBlock.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Styles\Theme.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Themes\Generic.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\AllianceTab.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\AttackAddPlayer.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\AttackTab.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\BossTab.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\BuildTab.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\ChatTab.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\CityBox.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\CityBuild.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\CityControl.xaml">
+			<Generator>MSBuild:Compile</Generator>
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Include="Views\CityStats.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\ContinentTagFilter.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\DungeonView.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\ExportCastles.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\NPCHistory.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\PlayerChangeTab.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\PlayerListBox.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\PlayerStats.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\PlayerTab.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\QueueTab.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\DonationTab.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\CmdLineActivationSamplePage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Include="Views\DateTimePicker.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\HitHistory.xaml">
+			<Generator>MSBuild:Compile</Generator>
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Include="Views\FirstRunDialog.xaml">
+			<Generator>MSBuild:Compile</Generator>
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Include="Views\Fixes.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\HeatTab.xaml">
+			<Generator>MSBuild:Compile</Generator>
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Include="Views\IncomingTab.xaml">
+			<Generator>MSBuild:Compile</Generator>
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Include="Views\MainPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Include="Views\NearDefenseTab.xaml">
+			<Generator>MSBuild:Compile</Generator>
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Include="Views\NearRes.xaml">
+			<Generator>MSBuild:Compile</Generator>
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Include="Views\OutgoingTab.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\PlannerTab.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\PlayerGroup.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\QuickBuild.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\ReinforcementsTab.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\ResSettings.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\SettingsPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Include="Views\ShareString.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\ShellPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Include="Views\SpotTab.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\TabPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Include="Views\TroopBox.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\WhatsNewDialog.xaml">
+			<Generator>MSBuild:Compile</Generator>
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Include="Xaml\TTipX.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<None Remove="Assets\cnvIcon.ico" />
+		<None Remove="cnvCover.png" />
+		<None Remove="GameUI\AllianceDialog.xaml" />
+		<None Remove="GameUI\ArtifactDialogue.xaml" />
+		<None Remove="GameUI\Artifacts.xaml" />
+		<None Remove="GameUI\AutobuildDialog.xaml" />
+		<None Remove="GameUI\BattleReportDialog.xaml" />
+		<None Remove="GameUI\BossReportDialog.xaml" />
+		<None Remove="GameUI\ChartDialog.xaml" />
+		<None Remove="GameUI\CombatCalcDialog.xaml" />
+		<None Remove="GameUI\CreateAlliance.xaml" />
+		<None Remove="GameUI\DailyDialog.xaml" />
+		<None Remove="GameUI\DateTimeBox.xaml" />
+		<None Remove="GameUI\ErrorReport.xaml" />
+		<None Remove="GameUI\JoinAlliance.xaml" />
+		<None Remove="GameUI\MessageBox.xaml" />
+		<None Remove="GameUI\QuestList.xaml" />
+		<None Remove="GameUI\RecruitDialog.xaml" />
+		<None Remove="GameUI\RecruitTargetDialog.xaml" />
+		<None Remove="GameUI\RefineDialogue.xaml" />
+		<None Remove="GameUI\ResearchList.xaml" />
+		<None Remove="GameUI\ResearchPurchase.xaml" />
+		<None Remove="GameUI\SendResDialogue.xaml" />
+		<None Remove="GameUI\SendTroops.xaml" />
+		<None Remove="GameUI\TimelineView.xaml" />
+		<None Remove="GameUI\ToolTipWindow.xaml" />
+		<None Remove="GameUI\TradeSettingsDialog.xaml" />
+		<None Remove="Resources\CnVFont-VF.ttf" />
+		<None Remove="Resources\Icon1.ico" />
+		<None Remove="Strings\en-us\Resources.resw" />
+		<None Remove="Package.appxmanifest" />
+		<None Remove="Styles\CommandBar.xaml" />
+		<None Remove="Styles\ScrollBarHack.xaml" />
+		<None Remove="Styles\SharedResources.xaml" />
+		<None Remove="Styles\Theme.xaml" />
+		<None Remove="Styles\_Colors.xaml" />
+		<None Remove="Styles\_Thickness.xaml" />
+		<None Remove="Themes\Generic.xaml" />
+		<None Remove="Views\AllianceTab.xaml" />
+		<None Remove="Views\CityBox.xaml" />
+		<None Remove="Views\CityRename.xaml" />
+		<None Remove="Views\CityStats.xaml" />
+		<None Remove="Views\DefenderPage.xaml" />
+		<None Remove="Views\DefendTab.xaml" />
+		<None Remove="Views\NPCHistory.xaml" />
+		<None Remove="Views\PlayerListBox.xaml" />
+		<None Remove="Views\PlayerStats.xaml" />
+		<None Remove="Views\PlayerTab.xaml" />
+		<None Remove="Views\ReinforcementsTab.xaml" />
+		<None Remove="Views\Signin.xaml" />
+		<None Remove="Views\SigninPage.xaml" />
+		<None Remove="Views\WebViewPage.xaml" />
+		<None Remove="Wiki\fixes.md" />
+		<None Remove="Win32Native.txt" />
+		<None Remove="Xaml\TTipX.xaml" />
+	</ItemGroup>
+	<ItemGroup>
+		<AppxManifest Include="Package.appxmanifest">
+			<SubType>Designer</SubType>
+		</AppxManifest>
+	</ItemGroup>
+	<ItemGroup>
 
-  </ItemGroup>
+		<None Include="..\CnVPackage\Assets\Square44x44Logo.targetsize-256.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="SignatureKey.snk" />
+		<None Include="SignaturePubKey.snk" />
+		<Resource Include="Wiki\wiki.md" />
+	</ItemGroup>
+	<ItemGroup>
+		<Compile Include="App.xaml.cs">
+			<DependentUpon>App.xaml</DependentUpon>
+		</Compile>
+	</ItemGroup>
+	<PropertyGroup>
+		<SignAssembly>False</SignAssembly>
+	</PropertyGroup>
+	<PropertyGroup>
+		<AssemblyOriginatorKeyFile>SignatureKey.snk</AssemblyOriginatorKeyFile>
+	</PropertyGroup>
+	<PropertyGroup>
+		<PreBuildEvent />
+	</PropertyGroup>
+	<PropertyGroup>
+		<DebugType>portable</DebugType>
+		<GenerateDocumentationFile>False</GenerateDocumentationFile>
+		<RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
+		<EnableNETAnalyzers>True</EnableNETAnalyzers>
+		<AnalysisLevel>preview-all</AnalysisLevel>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+		<ImplicitUsings>True</ImplicitUsings>
+		<Nullable>annotations</Nullable>
+		<SupportedOSPlatformVersion>10.0.18362.0</SupportedOSPlatformVersion>
+		<ApplicationIcon>Assets\cnvIcon.ico</ApplicationIcon>
+		<ApplicationManifest>app.manifest</ApplicationManifest>
+		<PackageIcon>Square44x44Logo.targetsize-256.png</PackageIcon>
+		<PackageCertificateKeyFile>CnV_TemporaryKey.pfx</PackageCertificateKeyFile>
+		<AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+		<GenerateTestArtifacts>True</GenerateTestArtifacts>
+		<ApplicationInsightsResourceId>/subscriptions/2a698fb0-55b8-4561-b722-2015b2c78d9c/resourceGroups/appcenter-export-Alliances/providers/microsoft.insights/components/AppCenterExport-Alliances</ApplicationInsightsResourceId>
+		<UserSecretsId>390b80fc-ab7a-4c55-9a54-5947221eec7e</UserSecretsId>
+		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+		<Optimize>False</Optimize>
+		<WarningLevel>4</WarningLevel>
+		<DefineConstants>$(DefineConstants);CNV;CNVCLIENT;APPCENTER;DISABLE_XAML_GENERATED_MAIN</DefineConstants>
+		<Deterministic>True</Deterministic>
+		<FileAlignment>4096</FileAlignment>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
+		<Optimize>False</Optimize>
+		<WarningLevel>4</WarningLevel>
+		<DefineConstants>$(DefineConstants);CNV;CNVCLIENT;APPCENTER;DISABLE_XAML_GENERATED_MAIN</DefineConstants>
+		<Deterministic>True</Deterministic>
+		<FileAlignment>4096</FileAlignment>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='SinglePlayer|x64'">
+		<Optimize>False</Optimize>
+		<WarningLevel>4</WarningLevel>
+    <DefineConstants>$(DefineConstants);CNV;CNVCLIENT;APPCENTER;DISABLE_XAML_GENERATED_MAIN;DEBUG</DefineConstants>
+		<Deterministic>True</Deterministic>
+		<FileAlignment>4096</FileAlignment>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='SinglePlayer|ARM64'">
+		<Optimize>False</Optimize>
+		<WarningLevel>4</WarningLevel>
+		<DefineConstants>$(DefineConstants);CNV;CNVCLIENT;APPCENTER;DISABLE_XAML_GENERATED_MAIN;DEBUG</DefineConstants>
+		<Deterministic>True</Deterministic>
+		<FileAlignment>4096</FileAlignment>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+		<Optimize>True</Optimize>
+		<WarningLevel>4</WarningLevel>
+		<DefineConstants>$(DefineConstants);CNV;CNVCLIENT;APPCENTER;DISABLE_XAML_GENERATED_MAIN</DefineConstants>
+		<Deterministic>True</Deterministic>
+		<FileAlignment>4096</FileAlignment>
+		<LayoutDir />
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
+		<Optimize>True</Optimize>
+		<WarningLevel>4</WarningLevel>
+		<DefineConstants>$(DefineConstants);CNV;CNVCLIENT;APPCENTER;DISABLE_XAML_GENERATED_MAIN</DefineConstants>
+		<Deterministic>True</Deterministic>
+		<FileAlignment>4096</FileAlignment>
+		<LayoutDir />
+	</PropertyGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="Wiki\fixes.md" />
+	</ItemGroup>
+	<ItemGroup>
+		<Folder Include="Base\" />
+		<Folder Include="Properties\ServiceDependencies\local\" />
+		<Folder Include="Resources\" />
+	</ItemGroup>
+	<ItemGroup>
+		<Reference Include="Cyotek.Drawing.BitmapFont">
+			<HintPath>..\ext\Cyotek.Drawing.BitmapFont.dll</HintPath>
+		</Reference>
+
+	</ItemGroup>
 	<ItemGroup Condition="'$(Platform)'=='ARM64'">
-		
+
 		<Reference Include="MonoGame.Framework">
 			<HintPath>..\ext\arm64\MonoGame.Framework.dll</HintPath>
 		</Reference>
@@ -830,20 +833,25 @@
 		</Reference>
 	</ItemGroup>
 	<ItemGroup>
-    <Content Update="Assets\cnvIcon.ico">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-  <Import Project="..\..\CnVShared\CnVShared.projitems" Label="Shared" />
-  <Import Project="..\..\cnvResource\CnVResource.projitems" Label="Shared" />
-  <ItemGroup>
-    <PRIResource Remove="Helpers\**" />
-  </ItemGroup>
+		<Content Update="Assets\cnvIcon.ico">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Update="Properties\Resources.resx">
+			<Generator>PublicResXFileCodeGenerator</Generator>
+			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+	</ItemGroup>
+	<Import Project="..\..\CnVShared\CnVShared.projitems" Label="Shared" />
+	<ItemGroup>
+		<PRIResource Remove="Helpers\**" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\..\cnvResource\CnVResource.csproj">
+	    <Private></Private>
+	    <CopyLocalSatelliteAssemblies></CopyLocalSatelliteAssemblies>
+	  </ProjectReference>
+	</ItemGroup>
 
- </Project>
+</Project>

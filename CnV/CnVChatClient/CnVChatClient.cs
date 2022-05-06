@@ -253,7 +253,7 @@ namespace CnVDiscord
 		{
 			try
 			{
-				var tab = ChatTab.FindDiscordChatTab(message.Channel);
+				var tab = ChatTab.FindDiscordChatTab(message.ChannelId);
 				if(tab is not null) {
 
 

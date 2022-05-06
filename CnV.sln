@@ -13,9 +13,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "CnVShared", "..\CnVShared\CnVShared.shproj", "{06711006-5A6C-41FF-AA66-A08C8624F98B}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "CnVResource", "..\cnvResource\CnVResource.shproj", "{DFB81CA7-2237-4E6E-8E73-742A39A18451}"
-EndProject
 Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "CnVPackage", "CnVPackage\CnVPackage.wapproj", "{E468CD1E-2B87-4604-9D22-291015B36C9F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5453771C-78A7-4D71-8739-74C4D2BFDDFF} = {5453771C-78A7-4D71-8739-74C4D2BFDDFF}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CnVResource", "..\cnvResource\CnVResource.csproj", "{5453771C-78A7-4D71-8739-74C4D2BFDDFF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,6 +43,12 @@ Global
 		{E468CD1E-2B87-4604-9D22-291015B36C9F}.SinglePlayer|x64.ActiveCfg = Debug|x64
 		{E468CD1E-2B87-4604-9D22-291015B36C9F}.SinglePlayer|x64.Build.0 = Debug|x64
 		{E468CD1E-2B87-4604-9D22-291015B36C9F}.SinglePlayer|x64.Deploy.0 = Debug|x64
+		{5453771C-78A7-4D71-8739-74C4D2BFDDFF}.Debug|x64.ActiveCfg = Debug|x64
+		{5453771C-78A7-4D71-8739-74C4D2BFDDFF}.Debug|x64.Build.0 = Debug|x64
+		{5453771C-78A7-4D71-8739-74C4D2BFDDFF}.Release|x64.ActiveCfg = Release|Any CPU
+		{5453771C-78A7-4D71-8739-74C4D2BFDDFF}.Release|x64.Build.0 = Release|Any CPU
+		{5453771C-78A7-4D71-8739-74C4D2BFDDFF}.SinglePlayer|x64.ActiveCfg = Debug|x64
+		{5453771C-78A7-4D71-8739-74C4D2BFDDFF}.SinglePlayer|x64.Build.0 = Debug|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -49,8 +58,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		..\CnVShared\CnVShared.projitems*{06711006-5a6c-41ff-aa66-a08c8624f98b}*SharedItemsImports = 13
-		..\cnvResource\CnVResource.projitems*{d3c61ee9-9fad-45bd-acce-f4e95ae32807}*SharedItemsImports = 5
 		..\CnVShared\CnVShared.projitems*{d3c61ee9-9fad-45bd-acce-f4e95ae32807}*SharedItemsImports = 5
-		..\cnvResource\CnVResource.projitems*{dfb81ca7-2237-4e6e-8e73-742a39a18451}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal

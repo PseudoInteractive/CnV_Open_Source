@@ -9,6 +9,10 @@
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+	  <ProjectConfiguration Include="SinglePlayer|x64">
+		  <Configuration>Release</Configuration>
+		  <Platform>x64</Platform>
+	  </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup>
     <WapProjPath Condition="'$(WapProjPath)'==''">$(MSBuildExtensionsPath)\Microsoft\DesktopBridge\</WapProjPath>
@@ -22,7 +26,6 @@
     <TargetPlatformVersion>10.0.22000.0</TargetPlatformVersion>
     <MonoGamePlatform>WindowsStoreApp</MonoGamePlatform>
     <TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
-    <SelfContained>true</SelfContained>
     <AssetTargetFallback>net6.0-windows$(TargetPlatformVersion);$(AssetTargetFallback)</AssetTargetFallback>
     <DefaultLanguage>en-US</DefaultLanguage>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>

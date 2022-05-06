@@ -539,9 +539,10 @@ namespace CnV.Views
 				t.Post(chat,isNew,deferNotify);
 
 		}
-		internal static ChatTab FindDiscordChatTab(DiscordChannel channel)
+		internal static ChatTab FindDiscordChatTab(DiscordId channelId)
 		{
-			if(channel.IsWorld())
+			
+			Assert(all.Count(a => a.defaultPostType == ChatEntry.typeWorld) <= 1);
 			foreach(var tab in all)
 			{
 				if(tab.discordChannel?.Id == channelId)
@@ -549,12 +550,15 @@ namespace CnV.Views
 					return tab;
 				}
 			}
-			return null;
+			// Try world (hack)
+
+			Log("channel not found, assuming world");
+			return all.FirstOrDefault(a => a.defaultPostType == ChatEntry.typeWorld);
 
 		}
 		internal static ChatTab FindWorldChatTab()
 		{
-			Assert(all.Count(a => a.defaultPostType == ChatEntry.typeWorld) <= 1);
+		
 			return all.FirstOrDefault(a => a.defaultPostType == ChatEntry.typeWorld);
 		}
 

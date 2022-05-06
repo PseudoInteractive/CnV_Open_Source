@@ -516,7 +516,7 @@ namespace CnV
 //w2.Activate();
 
 					//if(uwpArgs.Kind == Windows.ApplicationModel.Activation.ActivationKind.Launch)
-					AppS.QueueOnUIThread(Services.StoreHelper.instance.DownloadAndInstallAllUpdatesAsync);
+				//	AppS.QueueOnUIThread(Services.StoreHelper.instance.DownloadAndInstallAllUpdatesAsync);
 				}
 				//);
 
