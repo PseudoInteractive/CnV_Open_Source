@@ -1135,10 +1135,11 @@ internal partial class GameClient
 													(int iType, alpha) = GetTroopBlend((float)t,nSprite);
 													ttype = i.troops.GetIndexType(iType);
 												}
-												else {
+												else if(i.troops.Any()){
 													// TODO base it on travel time
 													ttype = i.travelType.TTypeGuess();
 												}
+												else { ttype = Troops.ttZero; }
 
 												(int x, int y) _c0, _c1;
 												

@@ -1617,7 +1617,7 @@ namespace CnV.Views
 				Note.Show("No need to leave, you are already in the present.");
 				return;
 			}
-			Sim.HistoricEnd();
+			Sim.HistoricEndRequest();
 		}
 
 

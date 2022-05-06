@@ -131,12 +131,17 @@ namespace CnV
 
 				List<ScheduleAppointment> appointments = new();
 				var players = new HashSet<Player>();
+				var alliance = Alliance.MyId; // only have visibility of alliance members
 
 				foreach(var e in Sim.GetAllEvents()) {
 
 
 
-					if(!(e.tlInclude && e.TlTimeRange().Overlaps(_timeRange) && (playerFilter.ContainsAny(e.TlReferences()))))
+					if(!(e.tlInclude && e.TlTimeRange().Overlaps(_timeRange)))
+						continue;
+					
+				
+					if(!IsRelevant(e.TlReferences()))
 						continue;
 
 					if(e is CnVEventReturnTroops rt) {
@@ -171,7 +176,9 @@ namespace CnV
 
 				}
 				foreach(var b in BattleReport.all) {
-					if(!(_timeRange.Overlaps(b.arrival) && (b.ReferencesPlayers(playerFilter))))
+					if(!(_timeRange.Overlaps(b.arrival) ))
+						continue;
+					if(!IsRelevant((b.attackerPid, b.defenderPid)))
 						continue;
 
 					var a = b.attackArmy;
@@ -193,6 +200,15 @@ namespace CnV
 
 					appointments.Add(rv);
 				}
+				foreach(var b in TimelineNews.all) {
+					if(!(_timeRange.Overlaps(b.t) ))
+						continue;
+					var rv = CreateAppointment(b);
+
+
+					appointments.Add(rv);
+				}
+
 
 
 				if(appointments.Count == 0) {
@@ -215,6 +231,12 @@ namespace CnV
 
 				//	schedule.ResourceCollection = resources;
 				// players.SyncList(resources,(a,b) => a == b.Id,PlayerToResource);
+				// Must be part of player list we are filtering for
+			// And must have intel on at least one participant
+			bool IsRelevant( (ushort p0, ushort p1) ps) {
+				return (playerFilter.ContainsAny(ps) && (Player.Get(ps.p0).allianceId==alliance |
+																				Player.Get(ps.p1).allianceId==alliance));
+			}
 
 			}
 			catch(Exception ex) {
@@ -223,6 +245,8 @@ namespace CnV
 			finally {
 				Interlocked.Decrement(ref isInUpdateI);
 			}
+
+			
 
 			//			schedule.ShowBusyIndicator=false;
 		}

@@ -255,9 +255,9 @@ namespace CnV.Views
 			var bc = city.layout.ToArray();
 			
 			Assert(CityBuild.isPlanner);
-			for (int y = span0; y <= span1; ++y)
+			for (var y = span0; y <= span1; ++y)
 			{
-				for (int x = span0; x <= span1; ++x)
+				for (var x = span0; x <= span1; ++x)
 				{
 					var c = new BuildC(x, y);
 					if (c.isInCenter ? center : outer)
