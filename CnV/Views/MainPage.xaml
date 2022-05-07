@@ -62,7 +62,7 @@
 										    />
 					<sf:GridHyperlinkColumn MappingName="xy"
 										   winui:ToolTipService.ToolTip="Click to view this city"
-										  Width="48"
+										 
 										    />
 					<sf:GridNumericColumn MappingName="cont"
 												TextAlignment="Center"

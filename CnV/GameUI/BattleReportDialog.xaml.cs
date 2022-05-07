@@ -29,9 +29,9 @@ namespace CnV
 		{
 			get {
 				if(b.attackArmy.type is (ArmyType.siege))
-					return $"{ttGlyphSiege} Siege claim {b.claim}% ({(b.claim - b.attackArmy.claim).FormatWithSign()})\nattack ratio: {b.attackRatio:P}";
+					return $"{ttGlyphSiege} Siege claim {b.claim}% ({(b.claim - b.attackArmy.claim).FormatWithSign()})\nattack ratio: {b.attackRatio:N2}x";
 				else
-					return 	$"{ttGlyphSword} {b.attackArmy.typeS}, ratio: {b.attackRatio:P}";
+					return 	$"{ttGlyphSword} {b.attackArmy.typeS}, ratio: {b.attackRatio:N2}x";
 			}
 		}
 		internal string wallInfo => $"{ttGlyphWall} {b.wallLevel}";

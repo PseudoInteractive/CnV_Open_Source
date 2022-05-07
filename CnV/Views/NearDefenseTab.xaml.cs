@@ -122,7 +122,7 @@ namespace CnV.Views
 									else {
 										sendGain = galleys * 500.0 / landTroops;
 									}
-									supporter.tSend |= new TroopTypeCount(ttGalley,galleys);
+									supporter.tSend.SetInPlace( new (ttGalley,galleys));
 									foreach(var tt in troops) {
 										if(tt.type == ttStinger) {
 											supporter.tSend += tt;
@@ -234,17 +234,17 @@ namespace CnV.Views
 			flyout.SetXamlRoot(text);
 			AApp.AddItem(flyout,"Troops Home",(_,_) => {
 				var supporter = stt.supporter;
-				supporter.tSend |= new TroopTypeCount(stt.type,stt.supporter.city.troopsHome.GetCount(stt.type));
+				supporter.tSend.SetInPlace( new(stt.type,stt.supporter.city.troopsHome.GetCount(stt.type)));
 				supporter.NotifyChange();
 			});
 			AApp.AddItem(flyout,"Total Troops",(_,_) => {
 				var supporter = stt.supporter;
-				supporter.tSend |= new TroopTypeCount(stt.type,stt.supporter.city.troopsOwned.GetCount(stt.type));
+				supporter.tSend.SetInPlace( new TroopTypeCount(stt.type,stt.supporter.city.troopsOwned.GetCount(stt.type)));
 				supporter.NotifyChange();
 			});
 			AApp.AddItem(flyout,"None",(_,_) => {
 				var supporter = stt.supporter;
-				supporter.tSend |= new TroopTypeCount(stt.type,0);
+				supporter.tSend.SetInPlace( new TroopTypeCount(stt.type,0) );
 				supporter.NotifyChange();
 			});
 

@@ -255,12 +255,14 @@ public static partial class ADataGrid
 
 		if (Register(tab, grid))
 		{
-			var _lock0 = new ADataGrid.ChangeContextDisposable(wantChangeContext ? grid : null);
+			
+			 var _lock0 = new ADataGrid.ChangeContextDisposable(wantChangeContext ? grid : null);
 			//	grid.FontFamily = App.CnVFont;
+			grid.FilterRowPosition=FilterRowPosition.FixedTop;
 				grid.ColumnSizer.FontStretch = Windows.UI.Text.FontStretch.Condensed;
 				grid.ColumnSizer.FontFamily = XamlHelper.cnvFont;
 			//	grid.ColumnSizer.FontWeight = Microsoft.UI.Text.FontWeights.Normal;
-			grid.ColumnSizer.Margin = new(4);// = Settings.mediumFontSize;
+			grid.ColumnSizer.FontSize = Settings.mediumFontSize;
 		//	grid.FontSize = Settings.smallFontSize;
 			grid.AlternationCount = 2;
 		//	grid.AllowRowHoverHighlighting = true;
@@ -268,7 +270,7 @@ public static partial class ADataGrid
 		//	grid.FontSize = Settings.smallFontSize;
 			
 			grid.FontWeight=Microsoft.UI.Text.FontWeights.Normal;
-				grid.FontSize = Settings.smallFontSize;
+			grid.FontSize = Settings.smallFontSize;
 			grid.FontStretch = Windows.UI.Text.FontStretch.Condensed;
 			grid.FontFamily=XamlHelper.cnvFont;
 			grid.SelectionMode = GridSelectionMode.Extended;

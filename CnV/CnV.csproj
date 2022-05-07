@@ -232,11 +232,6 @@
 		<Compile Include="Models\JsNative.cs" />
 		<Compile Include="Models\JSPopup.cs" />
 		<Compile Include="NoteClient.cs" />
-		<Compile Include="Properties\Resources.Designer.cs">
-			<DesignTime>True</DesignTime>
-			<AutoGen>True</AutoGen>
-			<DependentUpon>Resources.resx</DependentUpon>
-		</Compile>
 		<Compile Include="Services\Avatarslate.cs" />
 		<Compile Include="Services\Cosmos.cs" />
 		<Compile Include="Models\DragDropCompletedData.cs" />
@@ -746,7 +741,6 @@
 		<Nullable>annotations</Nullable>
 		<SupportedOSPlatformVersion>10.0.18362.0</SupportedOSPlatformVersion>
 		<ApplicationIcon>Assets\cnvIcon.ico</ApplicationIcon>
-		<ApplicationManifest>app.manifest</ApplicationManifest>
 		<PackageIcon>Square44x44Logo.targetsize-256.png</PackageIcon>
 		<PackageCertificateKeyFile>CnV_TemporaryKey.pfx</PackageCertificateKeyFile>
 		<AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
@@ -830,15 +824,12 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
-	<ItemGroup>
-		<EmbeddedResource Update="Properties\Resources.resx">
-			<Generator>PublicResXFileCodeGenerator</Generator>
-			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
-		</EmbeddedResource>
-	</ItemGroup>
 	<Import Project="..\..\CnVShared\CnVShared.projitems" Label="Shared" />
 	<ItemGroup>
 		<PRIResource Remove="Helpers\**" />
+	</ItemGroup>
+	<ItemGroup>
+	  <EmbeddedResource Remove="Properties\Resources.resx" />
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\..\cnvResource\CnVResource.csproj">

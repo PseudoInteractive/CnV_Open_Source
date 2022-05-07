@@ -165,13 +165,13 @@
 
 	<Style x:Key="sfRowStyle" TargetType="sf:DataGridRowControl">
 		<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
-		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+		<Setter Property="FontSize" Value="{StaticResource TinyFontSize}" />
 		<Setter Property="FontStretch" Value="Condensed" />
 		<Setter Property="FontWeight" Value="Normal" />
 	</Style>
 	<Style x:Key="sfHeaderStyle" TargetType="sf:GridHeaderCellControl">
 		<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
-		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+		<Setter Property="FontSize" Value="{StaticResource TinyFontSize}" />
 		<Setter Property="FontStretch" Value="Condensed" />
 		<Setter Property="FontWeight" Value="Normal" />
 	</Style>
@@ -187,7 +187,7 @@
 
 			<Style x:Key="SfTextCell" TargetType="sf:GridCell">
 				<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
-				<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+				<Setter Property="FontSize" Value="{StaticResource TinyFontSize}" />
 				<Setter Property="FontStretch" Value="Condensed" />
 				
 				<Setter Property="FontWeight" Value="Normal" />
@@ -196,7 +196,7 @@
 	<Style  TargetType="sf:GridCell" BasedOn="{StaticResource SfTextCell}">
 		<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
 		<Setter Property="FontStretch" Value="Condensed"/>
-		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+		<Setter Property="FontSize" Value="{StaticResource TinyFontSize}" />
 		<Setter Property="FontWeight" Value="Normal" />
 
 	</Style>
