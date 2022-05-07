@@ -124,11 +124,11 @@ public sealed partial class DonationTab : UserTab
 		}
 	}
 
-	private void donationGrid_DetailsViewExpanding(object sender,GridDetailsViewExpandingEventArgs e) {
-		    e.DetailsViewItemsSource.Clear();
-		var c = e.Record as City;
-		e.DetailsViewItemsSource.Add("Targets", c.donationTargets);
-	}
+	//private void donationGrid_DetailsViewExpanding(object sender,GridDetailsViewExpandingEventArgs e) {
+	//	    e.DetailsViewItemsSource.Clear();
+	//	var c = e.Record as City;
+	//	e.DetailsViewItemsSource.Add("Targets", c.donationTargets);
+	//}
 private void OnLoaded(object sender,RoutedEventArgs e)
 {
 	base.SetupDataGrid(donationGrid);
