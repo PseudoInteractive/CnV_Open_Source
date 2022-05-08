@@ -16,7 +16,7 @@ public sealed partial class DonationTab : UserTab
 	public static DonationTab instance;
 
 	//public ObservableCollection<DonationOrder> donationOrders = new();
-	public static bool wantTempleDonations;
+	//public static bool wantTempleDonations;
 
 	public static float woodStoneRatio = -1;
 	public static bool viaWater;
@@ -41,7 +41,7 @@ public sealed partial class DonationTab : UserTab
 			
 				instance.donationGridSource.Set(l.Where((city) => (viaWater?city.shipsHome > Settings.tradeSendReserveShips:
 				city.cartsHome > Settings.tradeSendReserveCarts) )
-					.OrderBy(a => a.cont).ThenByDescending(a => (viaWater ? a.cartsHome * 1000 : a.shipsHome*10_000).Min(a.sampleResources.sum)));
+					.OrderBy(a => a.cont).ThenByDescending(a => (!viaWater ? a.cartsHome * 1000 : a.shipsHome*10_000).Min(a.sampleResources.sum)));
 
 			
 		}
@@ -80,14 +80,14 @@ public sealed partial class DonationTab : UserTab
 			CityListChanged(City.gridCitySource);
 
 
-			CityList.NotifyChange(true);
-			AppS.QueueOnUIThread(() =>
-				{
-				//	blessedGrid.ItemsSource = DonationOrder.GetForCity(null);
+			//CityList.NotifyChange(true);
+			//AppS.QueueOnUIThread(() =>
+			//	{
+			//	//	blessedGrid.ItemsSource = DonationOrder.GetForCity(null);
 
-					///	donationGrid.ItemsSource = City.gridCitySource;
-				}
-			); // many items changed
+			//		///	donationGrid.ItemsSource = City.gridCitySource;
+			//	}
+			//); // many items changed
 		}
 		else
 		{
@@ -133,6 +133,7 @@ private void OnLoaded(object sender,RoutedEventArgs e)
 {
 	base.SetupDataGrid(donationGrid);
 	base.SetupDataGrid(donationTargetsGrid);
+	base.SetupDataGrid(marketTargetsGrid);
 }
 }
 

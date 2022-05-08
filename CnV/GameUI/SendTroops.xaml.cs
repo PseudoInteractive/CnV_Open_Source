@@ -132,7 +132,7 @@ namespace CnV
 
 		}
 
-		internal bool IsValid(TroopTypeCounts troops,bool verbose) {
+		internal async Task<bool> IsValid(TroopTypeCounts troops,bool verbose) {
 			if(city.underSiege) {
 				if(verbose)
 					AppS.MessageBox($"City is under siege");
@@ -200,6 +200,22 @@ namespace CnV
 				if(verbose) AppS.MessageBox($"Out of command slots");
 				return false;
 			}
+			var arrivalTime = arrival.dateTime;
+			if(arrivalTime != default) {
+				if(Sim.simTime + travelTime > arrivalTime) {
+					if(await AppS.DoYesNoBox("Arrival too soon",$"The earliest time that we can make is {Sim.simTime + travelTime}, send now?",no: string.Empty) != 1)
+						return false;
+					arrival.Clear(); ;
+					arrivalTime = arrival.dateTime;
+				}
+			}
+			if(arrivalTime == default) {
+				// check for enough troops
+				if(!city.troopsHome.IsSuperSetOf(troops) ) {
+					AppS.MessageBox($"Not enough troops. Here:\n{city.troopsHome.Format()}" );
+					return false;
+				}
+			}
 
 			return true;
 		}
@@ -246,7 +262,7 @@ namespace CnV
 			}
 			TroopTypeCounts ts = troops;
 
-			if(!IsValid(ts,true))
+			if(! await IsValid(ts,true))
 				return;
 
 
@@ -261,7 +277,7 @@ namespace CnV
 
 				bool okay;
 				if(arrival != default) {
-					okay = await Army.Send(ts,flags,city,target.cid,type,transport,arrival);
+					okay =  Army.Send(ts,flags,city,target.cid,type,transport,arrival);
 					if(!okay) {
 
 					}

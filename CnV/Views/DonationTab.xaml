@@ -24,8 +24,9 @@
 
 			<!--<ToggleSwitch Header="Wood vs Stone" IsOn="{x:Bind cnv:Settings.donationsProportionateToWhatsNeeded, Mode=TwoWay}" OnContent="Needed" OffContent="Have"
 						  ToolTipService.ToolTip="Ratio of wood vs stone to send.  On: Whats needed, Off: What's in storage" />-->
-			<ToggleSwitch Header="Land or Water" IsOn="{x:Bind local:DonationTab.viaWater, Mode=TwoWay}" OnContent="Water" OffContent="Land"
+			<ToggleSwitch Header="Transport" IsOn="{x:Bind local:DonationTab.viaWater, Mode=TwoWay}" OnContent="Water" OffContent="Land"
 			               />
+			
 			<!--<NumberBox Header="Fixed Wood vs Stone?" Value="{x:Bind local:DonationTab.woodStoneRatio,Mode=TwoWay}"
 			              Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="If this is not -1, resources will be sent in a fixed ratio of wood vs stone, i.e. 0.5 means half of each, 0 means all stone, 1 means all wood" 
 			              NumberFormatter="{x:Bind cnv:App.formatter2Digit}" />-->
@@ -43,6 +44,8 @@
 						   Style="{StaticResource NumberBoxPercent}" Width="120"
 						  NumberFormatter="{x:Bind cnv:App.percentFormatter}"
 						  />
+		</tk:WrapPanel>
+		<tk:WrapPanel Orientation="Horizontal" Grid.Row="1" >
 
 			<NumberBox  Header="&#xA040; Reserve" Value="{x:Bind cnv:Settings.tradeSendReserve.wood,Mode=TwoWay}"
                     Style="{StaticResource NumberBoxRes}" 
@@ -120,11 +123,12 @@
 			</sf:SfDataGrid.Columns>
 			<sf:SfDataGrid.DetailsViewDefinition>
 				<!--  FirstLevelNestedGrid1 is created here  -->
-				<sf:GridViewDefinition RelationalColumn="donationTargets">
+				<sf:GridViewDefinition RelationalColumn="donationTargets" >
 					<sf:GridViewDefinition.DataGrid>
 						<sf:SfDataGrid x:Name="donationTargetsGrid" 
 									   AutoGenerateColumns="False"
-							SelectionMode="Extended"
+							SelectionMode="Single"
+									   
 									   FontFamily="{StaticResource CnvIcons}"
 							SelectionUnit="Row"
 							AutoGenerateRelations="False"
@@ -141,14 +145,17 @@
 											Width="32"
 											
 											 />
-								<sf:GridHyperlinkColumn MappingName="goldReward" HeaderText="&#xA044;"
-				                          
-                                                     TextAlignment="Right"
-                                              />
+								<sf:GridHyperlinkColumn MappingName="Pri"
+									
+									
+										 
+										    />
+								<sf:GridTextColumn MappingName="virtue"/>
+
 
 								<sf:GridTimeColumn  MappingName="travelT"
                                                       HeaderText="Travel"
-									DisplayTimeFormat="HH:mm:ss"
+									DisplayTimeFormat="HH:mm"
                                              />
 								<sf:GridNumericColumn MappingName="wood" HeaderText="&#xA040;"
 				                            DisplayNumberFormat="N0"
@@ -158,24 +165,18 @@
 				                            DisplayNumberFormat="N0"
                                                      TextAlignment="Right"
                                               />
-								<sf:GridNumericColumn MappingName="iron" HeaderText="&#xA042;"
-				                            DisplayNumberFormat="N0"
-                                                     TextAlignment="Right"
-                                              />
-								<sf:GridNumericColumn MappingName="food" HeaderText="&#xA043;"
-				                            DisplayNumberFormat="N0"
-                                                     TextAlignment="Right"
-                                              />
+								<sf:GridNumericColumn MappingName="level" />
+								<sf:GridTextColumn MappingName="notes"/>
+
+
 								<sf:GridTextColumn MappingName="target.player"
 										   HeaderText="player"
 										   TextAlignment="Left"
 										 
 										    />
-								<sf:GridTextColumn MappingName="nameAndRemarks"
-										   HeaderText="Name"
-										   TextAlignment="Left"
-										 
-										    />
+								<sf:GridDateColumn  MappingName="BlessedUntil"
+                               DisplayDateFormat="MM/dd HH:mm"
+                                             />
 
 								<sf:GridHyperlinkColumn MappingName="xy"
 				                        TextAlignment="Center"
@@ -187,16 +188,85 @@
 										
 												 />
 
-								<sf:GridCheckBoxColumn MappingName="isOnWater"
-											  IsHidden="True"
-											   />
+							
 
 							</sf:SfDataGrid.Columns>
 						</sf:SfDataGrid>
 					</sf:GridViewDefinition.DataGrid>
 				</sf:GridViewDefinition>
 				<!--  FirstLevelNestedGrid2 is created here  -->
+				<sf:GridViewDefinition RelationalColumn="marketTargets">
+				<sf:GridViewDefinition.DataGrid>
+					<sf:SfDataGrid x:Name="marketTargetsGrid" 
+									   AutoGenerateColumns="False"
+							SelectionMode="Single"
+									   FontFamily="{StaticResource CnvIcons}"
+							SelectionUnit="Row"
+							AutoGenerateRelations="False"
+							ShowToolTip="True"
+							
+									   >
+						<sf:SfDataGrid.Columns >
 
+
+							<sf:GridImageColumn MappingName="icon"
+				                    AllowFiltering="False"
+									AllowSorting="False"
+											HeaderText="I"
+											Width="32"
+											
+											 />
+							<sf:GridHyperlinkColumn MappingName="goldReward" HeaderText="&#xA044;"
+				                          
+                                                     TextAlignment="Right"
+                                              />
+
+							<sf:GridTimeColumn  MappingName="travelT"
+                                                      HeaderText="Travel"
+									DisplayTimeFormat="HH:mm:ss"
+                                             />
+							<sf:GridNumericColumn MappingName="wood" HeaderText="&#xA040;"
+				                            DisplayNumberFormat="N0"
+                                                     TextAlignment="Right"
+                                              />
+							<sf:GridNumericColumn MappingName="stone" HeaderText="&#xA041;"
+				                            DisplayNumberFormat="N0"
+                                                     TextAlignment="Right"
+                                              />
+							<sf:GridNumericColumn MappingName="iron" HeaderText="&#xA042;"
+				                            DisplayNumberFormat="N0"
+                                                     TextAlignment="Right"
+                                              />
+							<sf:GridNumericColumn MappingName="food" HeaderText="&#xA043;"
+				                            DisplayNumberFormat="N0"
+                                                     TextAlignment="Right"
+                                              />
+							<sf:GridTextColumn MappingName="target.player"
+										   HeaderText="player"
+										   TextAlignment="Left"
+										 
+										    />
+							<sf:GridTextColumn MappingName="nameAndRemarks"
+										   HeaderText="Name"
+										   TextAlignment="Left"
+										 
+										    />
+
+							<sf:GridHyperlinkColumn MappingName="xy"
+				                        TextAlignment="Center"
+				                     
+
+				/>
+							<sf:GridNumericColumn MappingName="cont"
+				                      TextAlignment="Center"
+										
+												 />
+
+
+						</sf:SfDataGrid.Columns>
+					</sf:SfDataGrid>
+				</sf:GridViewDefinition.DataGrid>
+				</sf:GridViewDefinition>
 			</sf:SfDataGrid.DetailsViewDefinition>
 
 

@@ -18,12 +18,12 @@ namespace CnV
 	using Views;
 
 	// these are transient, not cached, owned by their grid.
-	public class DonationOrder
+	public class DonationOrder : CNotifyPropertyChanged
 	{
 	//	public static List<DonationOrder> all = new List<DonationOrder>();
 		public City senderCity;
-		public static bool wantTempleDonations => DonationTab.wantTempleDonations;
-
+		public bool isTempleDonation;
+	
 		public City target { get; set; }
 
 		public TimeSpanS travelTime; // distance to sending city
@@ -38,15 +38,30 @@ namespace CnV
 		public string player => target.playerName;
 		public string virtue => target.blessData.virtue.EnumName(); // only for temple
 		public ServerTime blessedUntil => target.blessData.blessedUntil; // only for temple
+		public DateTime BlessedUntil => blessedUntil; // only for temple
 		public Resources resoucesToSend;
 
-		public DonationOrder(City target,TimeSpanS travelTime,City senderCity,Resources resoucesToSend) {
+
+		void UpdateResourcesToSend() {
+			var res = senderCity.sampleResources.SubSat(Settings.tradeSendReserve);
+			var desired = isTempleDonation ? target.templeMissing : target.requestedResources;
+			res = res.Min(desired);
+			res = res.LimitToTransport(tradeTransport);
+			resoucesToSend = res;
+			
+		}
+		public DonationOrder(City target,TimeSpanS travelTime,City senderCity,bool isTempleDonation) {
 			this.senderCity=senderCity;
 			this.target=target;
-			this.resoucesToSend = resoucesToSend;
+			this.isTempleDonation = isTempleDonation;
 			this.travelTime = travelTime;
+			this.UpdateResourcesToSend();
+			if(isTempleDonation) {
+				Assert(resoucesToSend.iron==0);
+				Assert(resoucesToSend.food==0);
+			}
 		}
-		public int tradeTransport => DonationTab.viaWater ? senderCity.shipsHome * 10_000 : senderCity.cartsHome*1_000;
+		public int tradeTransport => DonationTab.viaWater ? (senderCity.shipsHome - Settings.tradeSendReserveShips).Max(0)*10_000 : (senderCity.cartsHome - Settings.tradeSendReserveCarts).Max(0)*1000;
 		public int wood => resoucesToSend.wood;
 		public int stone => resoucesToSend.stone;
 
@@ -64,9 +79,10 @@ namespace CnV
 
 		public int priToScore => (int)pri;
 
-		public float sortScore => wantTempleDonations ? 
-			(float) -(priToScore * 1e20f - (Sim.simTime - blessedUntil).TotalHours
-			                             - travelTime ) : -travelTime.TotalSeconds; // todo: refine this, also take into acccount resources needed
+		public float templeSortScore => (float)-(priToScore * (1024) - (blessedUntil-Sim.simTime).TotalHours
+										 - travelTime.TotalMinutes*0.5f);
+		
+		public float marketSortScre => travelTime.TotalSeconds; // least to greatest todo: also take into acccount resources needed
 
 		//public static async void Refresh()
 		//{
@@ -159,7 +175,10 @@ namespace CnV
 				var source = senderCity;
 
 				
-					await	SendResDialogue.ShowInstance(source,target,resoucesToSend,DonationTab.viaWater,palaceDonation:wantTempleDonations);
+					await	SendResDialogue.ShowInstance(source,target,resoucesToSend,DonationTab.viaWater,palaceDonation:isTempleDonation);
+					await Task.Delay(500);
+					UpdateResourcesToSend();
+					OnPropertyChanged();
 						// Todo: apply limit to resources again in case of pause before sending
 						//var trade = new TradeOrder(source: source.c,target: target.c,departure: Sim.simTime,viaWater: DonationTab.viaWater,isTempleTrade: wantTempleDonations,
 						//	resources: resoucesToSend.Min(source.sampleResources).LimitToTranspost(tradeTransport) );
@@ -212,6 +231,8 @@ namespace CnV
 			var i = this;
 			switch (mappingName)
 			{
+				case nameof(i.virtue):
+				case nameof(i.Pri):
 				case nameof(i.travelT):
 				case nameof(i.wood):
 				case nameof(i.stone):

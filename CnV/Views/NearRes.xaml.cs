@@ -172,7 +172,7 @@ namespace CnV.Views
 							//var info = sup.info;
 							var city = sup.city;
 							var shipping = GetTransport( city);//, viaWater ? (city.shipsHome - shipReserve).Max0() * 10000 : (city.cartsHome - cartReserve).Max0() * 1000;
-							var send = r.LimitToTranspost(shipping);
+							var send = r.LimitToTransport(shipping);
 							send = send.Min(sup.city.sampleResources.SubSat(Settings.nearResReserve));
 							Assert( send.sum <= shipping);
 	
@@ -303,7 +303,7 @@ namespace CnV.Views
 				res.iron=res.food=0;
 		//	var viaWater = NearRes.instance.viaWater;
 			var shipping = GetTransport(city);//viaWater ? (city.shipsHome - Settings.nearResShipReserve).Max0() * 10000 : (city.cartsHome - Settings.nearResCartReserve).Max0() * 1000;
-			supporter.res = res.LimitToTranspost(shipping);
+			supporter.res = res.LimitToTransport(shipping);
 
 
 			DoRefresh();

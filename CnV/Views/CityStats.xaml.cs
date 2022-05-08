@@ -413,16 +413,15 @@ namespace CnV
 					sb.s.Append("\nPalace level ").Append(bd.level);
 				}
 				sb.s.Append("\nStored:\n").Append(bd.stored.Format(" "));
-				if(city.incomingDonations.isNonZero) {
-					sb.s.Append("\nIncoming:\n").Append(city.incomingDonations.Format(" "))
-						.Append("\nWill have:\n").Append( (bd.stored+city.incomingDonations).Format(" ") );
+				var incoming = city.incomingDonations;
+				if(incoming.isNonZero) {
+					sb.s.Append("\nIncoming:\n").Append(incoming.Format(" "))
+						.Append("\nWill have:\n").Append( (bd.stored+incoming).Format(" ") );
 				
 				}
 				if(bd.level < 10) {
 
-					var bc = BuildingDef.FromId(Building.bidTemple).bc[bd.level+1];
-
-					sb.s.Append("\nNeed:\n").Append( new Resources(bc.w,bc.s,0,0).Format(" "));
+					sb.s.Append("\nNeed:\n").Append(bd.needed.Format(" "));
 				}
 
 				if(!bd.notes.IsNullOrEmpty())
@@ -1342,7 +1341,7 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 		public event PropertyChangedEventHandler? PropertyChanged;
 	}
 
-	public class ResourceItem:COnPropertyChanged
+	public class ResourceItem:CNotifyPropertyChanged
 	{
 		internal int r;
 		internal void Tapped(object sender,TappedRoutedEventArgs e) => CityUI.Show(
@@ -1367,7 +1366,7 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 			},height
 		 );
 	}
-	public class TradeItem:COnPropertyChanged
+	public class TradeItem:CNotifyPropertyChanged
 	{
 		internal TradeOrder trade;
 		

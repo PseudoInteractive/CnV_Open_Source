@@ -1358,7 +1358,7 @@ internal partial class GameClient
 							drawTradesHash.Clear();
 						}
 
-						if(NearRes.IsVisible())
+						if(NearRes.IsVisible()||DonationTab.IsVisible())
 						{
 							var sendOffset = new Vector2(0.125f);//  new System.Numerics.Vector2(0.125f *pixelScale,0.125f *pixelScale);
 							var viewHover = Spot.viewHover;

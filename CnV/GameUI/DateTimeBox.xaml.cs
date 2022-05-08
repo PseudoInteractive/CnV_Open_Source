@@ -98,12 +98,16 @@ namespace CnV
 
 		}
 
-		private void ClearClick(object sender,RoutedEventArgs e)
-		{
+		private void ClearClick(object sender,RoutedEventArgs e) {
+			Clear();
+		}
+
+		internal void Clear() {
 			date.SelectedDate=null;
 			time.SelectedTime = null;
 			OnPropertyChanged();
 		}
+
 		public event PropertyChangedEventHandler? PropertyChanged;
 		public void OnPropertyChanged(string? member = null)
 		{

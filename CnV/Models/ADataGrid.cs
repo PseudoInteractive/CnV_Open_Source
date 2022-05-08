@@ -258,7 +258,7 @@ public static partial class ADataGrid
 			
 			 var _lock0 = new ADataGrid.ChangeContextDisposable(wantChangeContext ? grid : null);
 			//	grid.FontFamily = App.CnVFont;
-			grid.FilterRowPosition=FilterRowPosition.FixedTop;
+			//grid.FilterRowPosition=FilterRowPosition.FixedTop;
 				grid.ColumnSizer.FontStretch = Windows.UI.Text.FontStretch.Condensed;
 				grid.ColumnSizer.FontFamily = XamlHelper.cnvFont;
 			//	grid.ColumnSizer.FontWeight = Microsoft.UI.Text.FontWeights.Normal;
