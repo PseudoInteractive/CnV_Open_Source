@@ -77,7 +77,7 @@ namespace CnV
 
 					}
 				}
-//				await Sim.StartSim();
+				//				await Sim.StartSim();
 
 				//	var str = timeOffsetSecondsRounded >= 0 ? " +" : " ";
 				//	str += $"{gameTOffset.Hours:D2}:{gameTOffset.Minutes:D2}";
@@ -109,14 +109,17 @@ namespace CnV
 
 				// todo: utf
 				//		AddPlayer(true, true, Player.myId, Player.myName, token, raidSecret, cookies);//, s, ppdt.ToString());
-				ShellPage.WorkEnd();
 
 
-				while(!City.myCities.Any())
-				{
-					await Task.Delay(500).ConfigureAwait(false);
-					ShellPage.RefreshX();
+
+				
+				while(!Sim.isPastWarmup) {
+					await Task.Delay(250).ConfigureAwait(false);
 				}
+				//while(!City.myCities.Any()) {
+				//	await Task.Delay(500).ConfigureAwait(false);
+				//}
+				ShellPage.WorkEnd();
 				//UpdatePPDT();
 				var cid = City.myCities.First().cid;
 
@@ -179,10 +182,7 @@ namespace CnV
 			//	reinforcementsTask = new(interval:64.0f,()=> ReinforcementsOverview.instance.Post(),initialDelay:4.0f );
 			//	senInfoTask        = new( interval: 68f, City.UpdateSenatorInfo, 3.0f);
 				Sim.isInitialized      = true;
-				while(!Sim.isPastWarmup)
-				{
-					await Task.Delay(250).ConfigureAwait(false);
-				}
+				
 				
 			}
 		catch(Exception ex)
