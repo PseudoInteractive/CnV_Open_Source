@@ -177,9 +177,6 @@
 	</Style>
 
 
-	<Style TargetType="sf:GridHeaderCellControl" BasedOn="{StaticResource sfHeaderStyle}" />
-
-	<Style BasedOn="{StaticResource sfRowStyle}" TargetType="sf:DataGridRowControl" />
 
 	<!--Toggle Button-->
 
@@ -200,11 +197,7 @@
 		<Setter Property="FontWeight" Value="Normal" />
 
 	</Style>
-	<Style  TargetType="sf:GridTextColumn" BasedOn="{StaticResource SfTextCell}">
-		<Setter Property="ShowHeaderToolTip" Value="True"/>
-
 	
-	</Style>
 
 	<Style x:Key="SfGridColumnBase" TargetType="sf:GridColumn">
 				<Setter Property="ShowHeaderToolTip" Value="True"/>

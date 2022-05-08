@@ -24,7 +24,7 @@
 
 			<!--<ToggleSwitch Header="Wood vs Stone" IsOn="{x:Bind cnv:Settings.donationsProportionateToWhatsNeeded, Mode=TwoWay}" OnContent="Needed" OffContent="Have"
 						  ToolTipService.ToolTip="Ratio of wood vs stone to send.  On: Whats needed, Off: What's in storage" />-->
-			<ToggleSwitch Header="Transport" IsOn="{x:Bind local:DonationTab.viaWater, Mode=TwoWay}" OnContent="Water" OffContent="Land"
+			<ToggleSwitch Header="Transport" IsOn="{x:Bind local:DonationTab.ViaWater, Mode=TwoWay}" OnContent="Water" OffContent="Land"
 			               />
 			
 			<!--<NumberBox Header="Fixed Wood vs Stone?" Value="{x:Bind local:DonationTab.woodStoneRatio,Mode=TwoWay}"
@@ -66,8 +66,9 @@
 		                Grid.Row="2" 
 								 							
 		                AutoGenerateColumns="False"
-		               
-		                ItemsSource="{x:Bind donationGridSource}"
+		               CellStyle="{StaticResource SfTextCell}"
+					   FontStretch="Condensed"
+					    ItemsSource="{x:Bind donationGridSource}"
 		                RowHeight="{StaticResource MediumGridRowHeight}"
 		                AlternationCount="2"
 						AllowTriStateSorting="True"

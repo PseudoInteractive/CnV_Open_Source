@@ -15,10 +15,13 @@ namespace CnV
 	using Microsoft.UI.Xaml.Media;
 
 	using Services;
+
+	using System.Collections.Concurrent;
+
 	using Views;
 
 	// these are transient, not cached, owned by their grid.
-	public class DonationOrder : CNotifyPropertyChanged
+	public class DonationOrder : CNotifyPropertyChanged, IEquatable<DonationOrder?>
 	{
 	//	public static List<DonationOrder> all = new List<DonationOrder>();
 		public City senderCity;
@@ -39,29 +42,59 @@ namespace CnV
 		public string virtue => target.blessData.virtue.EnumName(); // only for temple
 		public ServerTime blessedUntil => target.blessData.blessedUntil; // only for temple
 		public DateTime BlessedUntil => blessedUntil; // only for temple
-		public Resources resoucesToSend;
+													  //public Resources resoucesToSend;
 
+		internal static ConcurrentHashSet<WeakReference<DonationOrder>> all = new();
 
-		void UpdateResourcesToSend() {
-			var res = senderCity.sampleResources.SubSat(Settings.tradeSendReserve);
-			var desired = isTempleDonation ? target.templeMissing : target.requestedResources;
-			res = res.Min(desired);
-			res = res.LimitToTransport(tradeTransport);
-			resoucesToSend = res;
-			
+		public Resources resoucesToSend {
+			get {
+				var res = senderCity.sampleResources.SubSat(Settings.tradeSendReserve);
+				var desired = isTempleDonation ? target.templeMissing : target.requestedResources;
+				res = res.Min(desired);
+				return res.LimitToTransport(tradeTransport);
+			}
 		}
 		public DonationOrder(City target,TimeSpanS travelTime,City senderCity,bool isTempleDonation) {
 			this.senderCity=senderCity;
 			this.target=target;
 			this.isTempleDonation = isTempleDonation;
 			this.travelTime = travelTime;
-			this.UpdateResourcesToSend();
 			if(isTempleDonation) {
 				Assert(resoucesToSend.iron==0);
 				Assert(resoucesToSend.food==0);
 			}
+			all.Add(new(this,false));
+			Note.Show($"Orders: {all.Count}");
+			
 		}
-		public int tradeTransport => DonationTab.viaWater ? (senderCity.shipsHome - Settings.tradeSendReserveShips).Max(0)*10_000 : (senderCity.cartsHome - Settings.tradeSendReserveCarts).Max(0)*1000;
+		public static DonationOrder GetOrAdd(City target,TimeSpanS travelTime,City senderCity,bool isTempleDonation) {
+			foreach(var i in all.ToArray()) {
+				if( i.TryGetTarget(out var t)) {
+
+					if(t.senderCity == senderCity&&t.target==target && t.isTempleDonation==isTempleDonation)
+						return t;
+				}
+				else {
+					all.Remove(i);
+				}
+			}
+			return new(target,travelTime,senderCity,isTempleDonation);
+		}
+		internal static void RefreshAll() {
+			
+			var initial = all.Count;
+			foreach(var i in all.ToArray()) {
+				if( i.TryGetTarget(out var t)) {
+				
+					t.OnPropertyChangedImmediate();
+				}
+				else {
+					all.Remove(i);
+				}
+			}
+			Note.Show($"Orders: {initial}=>{all.Count}");
+		}
+		public int tradeTransport => DonationTab.ViaWater ? (senderCity.shipsHome - Settings.tradeSendReserveShips).Max(0)*10_000 : (senderCity.cartsHome - Settings.tradeSendReserveCarts).Max(0)*1000;
 		public int wood => resoucesToSend.wood;
 		public int stone => resoucesToSend.stone;
 
@@ -175,10 +208,12 @@ namespace CnV
 				var source = senderCity;
 
 				
-					await	SendResDialogue.ShowInstance(source,target,resoucesToSend,DonationTab.viaWater,palaceDonation:isTempleDonation);
+					await	SendResDialogue.ShowInstance(source,target,resoucesToSend,DonationTab.ViaWater,palaceDonation:isTempleDonation);
 					await Task.Delay(500);
-					UpdateResourcesToSend();
-					OnPropertyChanged();
+				// Need to update all of them
+//					UpdateResourcesToSend();
+					RefreshAll();	
+				//OnPropertyChanged();
 						// Todo: apply limit to resources again in case of pause before sending
 						//var trade = new TradeOrder(source: source.c,target: target.c,departure: Sim.simTime,viaWater: DonationTab.viaWater,isTempleTrade: wantTempleDonations,
 						//	resources: resoucesToSend.Min(source.sampleResources).LimitToTranspost(tradeTransport) );
@@ -355,8 +390,28 @@ namespace CnV
 			}
 		}
 
+		public override bool Equals(object? obj) {
+			return Equals(obj as DonationOrder);
+		}
 
+		public bool Equals(DonationOrder? other) {
+			return other is not null&&
+				   EqualityComparer<City>.Default.Equals(senderCity,other.senderCity)&&
+				   isTempleDonation==other.isTempleDonation&&
+				   EqualityComparer<City>.Default.Equals(target,other.target);
+		}
 
+		public override int GetHashCode() {
+			return HashCode.Combine(senderCity,isTempleDonation,target);
+		}
+
+		public static bool operator ==(DonationOrder? left,DonationOrder? right) {
+			return EqualityComparer<DonationOrder>.Default.Equals(left,right);
+		}
+
+		public static bool operator !=(DonationOrder? left,DonationOrder? right) {
+			return !(left==right);
+		}
 	}
 
 }

@@ -456,7 +456,7 @@ namespace CnV.Views
 				Assert(transport >= 0);
 				var resOther = selected.res;
 				resOther[id] = 0;
-				resOther.LimitToTranspostInPlace(transport); 
+				resOther.LimitToTransportInPlace(transport); 
 				for(int i = 0;i < 4;++i)
 				{
 					if(i == id)

@@ -259,7 +259,7 @@ public static partial class ADataGrid
 			 var _lock0 = new ADataGrid.ChangeContextDisposable(wantChangeContext ? grid : null);
 			//	grid.FontFamily = App.CnVFont;
 			//grid.FilterRowPosition=FilterRowPosition.FixedTop;
-				grid.ColumnSizer.FontStretch = Windows.UI.Text.FontStretch.Condensed;
+			//	grid.ColumnSizer.FontStretch = Windows.UI.Text.FontStretch.Condensed;
 				grid.ColumnSizer.FontFamily = XamlHelper.cnvFont;
 			//	grid.ColumnSizer.FontWeight = Microsoft.UI.Text.FontWeights.Normal;
 			grid.ColumnSizer.FontSize = Settings.mediumFontSize;
@@ -316,9 +316,9 @@ public static partial class ADataGrid
 				c.ShowHeaderToolTip=true;
 				c.ShowToolTip=true;
 				
-				c.CellStyle = App.instance.Resources["SfTextCell"] as Style;
+				//c.CellStyle = App.instance.Resources["SfTextCell"] as Style;
 			}
-					grid.ColumnSizer.ResetAutoCalculationforAllColumns();
+			//		grid.ColumnSizer.ResetAutoCalculationforAllColumns();
 	
 			return _lock0;
 

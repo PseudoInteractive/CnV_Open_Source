@@ -19,9 +19,15 @@ public sealed partial class DonationTab : UserTab
 	//public static bool wantTempleDonations;
 
 	public static float woodStoneRatio = -1;
-	public static bool viaWater;
+	private static bool viaWater;
 	//public string[] priorityNames = { "Do Not Send","NA", "Low", "Medium", "High"  };
 	NotifyCollection<City> donationGridSource = new();
+
+	public static bool ViaWater { get => viaWater; set {
+		if(viaWater == value) return;
+			viaWater=value;
+			DonationTab.instance.refresh.Go();
+		} }
 
 	public DonationTab()
 	{
@@ -39,9 +45,9 @@ public sealed partial class DonationTab : UserTab
 		if (DonationTab.IsVisible())
 		{
 			
-				instance.donationGridSource.Set(l.Where((city) => (viaWater?city.shipsHome > Settings.tradeSendReserveShips:
+				instance.donationGridSource.Set(l.Where((city) => (ViaWater?city.shipsHome > Settings.tradeSendReserveShips:
 				city.cartsHome > Settings.tradeSendReserveCarts) )
-					.OrderBy(a => a.cont).ThenByDescending(a => (!viaWater ? a.cartsHome * 1000 : a.shipsHome*10_000).Min(a.sampleResources.sum)));
+					.OrderBy(a => a.cont).ThenByDescending(a => (!ViaWater ? a.cartsHome * 1000 : a.shipsHome*10_000).Min(a.sampleResources.sum)));
 
 			
 		}

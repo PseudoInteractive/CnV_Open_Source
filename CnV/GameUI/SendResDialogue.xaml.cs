@@ -61,7 +61,7 @@ namespace CnV
 			if(isPalaceDonation) {
 				res.iron=res.food=0;
 			}
-			res.LimitToTranspostInPlace(bandWidth);
+			res.LimitToTransportInPlace(bandWidth);
 			OnPropertyChanged();
 		}
 
