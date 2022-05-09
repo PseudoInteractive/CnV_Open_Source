@@ -1115,8 +1115,13 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 					new CnVEventCancelBuildQueue(city.worldC).EnqueueAsap();
 				});
 				flyout.AddItem("Sort",Symbol.Sort,() => {
-					var sel = instance.buildQueueListView.SelectedItems;
-					new CnVEventSortBuildQueue(city.worldC).EnqueueAsap();
+					if(BuildQueue.HasBuildOpsInFlight(city)) {
+						Note.Show("Please try again in a minute");
+					}
+					else {
+						var sel = instance.buildQueueListView.SelectedItems;
+						new CnVEventSortBuildQueue(city.worldC).EnqueueAsap();
+					}
 				});
 				flyout.AddItem("Move To Front",Symbol.Up,() => {
 					var index = instance.buildQueue.IndexOf(this);

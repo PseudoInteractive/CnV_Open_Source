@@ -87,11 +87,18 @@ namespace CnV
 			var freeSpace = city.availableTsSpace;
 			if(freeSpace < tt.ts)
 			{
-				AppS.MessageBox("Not enough troop space");
+				AppS.MessageBox("Not enough troop space",hero: AppS.heroMissingFunds);
 				return;
 			}
 			var rr = tt.resResquired;
 			var p = city.player;
+			if(type==Troops.ttMagistra) {
+				if( (int)p.freeSenatorCount <= count) {
+					AppS.MessageBox(title:$"Can recruit at most {p.freeSenatorCount} Magistra",hero: AppS.heroMissingFunds);
+					return;
+				}
+
+			}
 			if((city.SampleResources() - rr.r).allPositive && p.gold >= rr.gold)
 			{
 				Note.Show("Recruit");
@@ -121,10 +128,11 @@ namespace CnV
 					m = m.Min(res[i] / req.r[i]);
 			}
 			if(req.gold > 0)
-				m = m.Min(city.player.gold / req.gold);
+				m = m.Min( (city.player.gold / req.gold).ClampToInt() );
 
 			var freeSpace = city.availableTsSpace;
 			m = m.Min(freeSpace / Troops.ttTs[type]);
+			
 			count = m;
 			OnPropertyChanged();
 		}
