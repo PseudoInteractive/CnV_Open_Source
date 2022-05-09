@@ -73,9 +73,8 @@ ItemsSource="{x:Bind attackerSource,Mode=OneWay}"
                                        
                                        TextAlignment="Left"
                                         IsHidden="True" />
-                <sf:GridTextColumn HeaderText="Alliance"
-                                       MappingName="alliance"
-                                       TextAlignment="Left"
+				<sf:GridTextColumn     MappingName="allianceName"
+									   HeaderText="Alliance"
                                        
                                        />
                 <sf:GridTextColumn MappingName="attackers"

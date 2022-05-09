@@ -117,10 +117,15 @@ namespace CnV
 				return;
 		
 			}
+			if(isPalaceDonation&& (!destination.isBlessed)) {
+				AppS.MessageBox("Palace donations can only be sent to blessed cities");
+				return;
+			}
 			if(isPalaceDonation&& (res.iron + res.food) > 0) {
 				AppS.MessageBox("Food and iron cannot be sent as a palace donation");
 				return;
 			}
+
 			if(res.sum == 0) {
 				AppS.MessageBox("That was easy.");
 				return;

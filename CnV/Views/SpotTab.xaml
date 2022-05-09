@@ -63,7 +63,8 @@
                                        Width="34" />
                 <sf:GridTextColumn MappingName="playerName" HeaderText="Player"
                                      />
-                <sf:GridTextColumn MappingName="alliance"
+				<sf:GridTextColumn MappingName="allianceName"
+								   HeaderText="Alliance"
                                       />
                 <sf:GridNumericColumn MappingName="points"
                                      

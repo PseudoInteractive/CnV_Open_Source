@@ -115,8 +115,9 @@
                                       
                                        TextAlignment="Left"
                                          IsHidden="True" />
-				<sf:GridTextColumn MappingName="alliance"
-                                       TextAlignment="Left"
+				<sf:GridTextColumn MappingName="allianceName"
+								   HeaderText="Alliance"
+                                      
                                        
                                        IsHidden="True" />
 				<sf:GridNumericColumn MappingName="cont"

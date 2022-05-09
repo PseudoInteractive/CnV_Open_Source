@@ -57,6 +57,8 @@ namespace CnV
 
 		internal static readonly string[] metrics = {
 			nameof(DataPoint.points),
+			nameof(DataPoint.donations),
+			nameof(DataPoint.faith),
 			nameof(DataPoint.raiding),
 			nameof(DataPoint.cities),
 			nameof(DataPoint.ts),

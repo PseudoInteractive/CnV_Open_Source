@@ -385,7 +385,7 @@
                                        FontSize="{StaticResource SmallFontSize}"
 		   							   FontFamily="{StaticResource CnvIcons}"
 
-									   Binding="{Binding alliance, Mode=OneTime}" />
+									   Binding="{Binding allianceName, Mode=OneTime}" />
 				<tk:DataGridTextColumn Header="Points"
 									   FontSize="{StaticResource SmallFontSize}"
 		   							   FontFamily="{StaticResource CnvIcons}"
@@ -575,7 +575,7 @@
 					<tk:DataGridTextColumn Header="Water"
                                        Binding="{Binding isOnWater, Mode=OneTime}" IsReadOnly="True" />
 					<tk:DataGridTextColumn Header="Alliance"
-                                       Binding="{Binding alliance, Mode=OneTime}" IsReadOnly="True" />
+                                       Binding="{Binding allianceName, Mode=OneTime}" IsReadOnly="True" />
 				</tk:DataGrid.Columns>
 			</tk:DataGrid>
 		</Grid>

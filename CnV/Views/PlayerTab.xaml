@@ -60,8 +60,6 @@
 				<sf:GridTextColumn MappingName="allianceName"
 								  
 										 
-										   TextAlignment="Left"
-								   Width="200"
 										HeaderText="Alliance"
 										    />
 				<sf:GridTextColumn MappingName="allianceTitleS"
@@ -84,6 +82,9 @@
 										   ShowHeaderToolTip="True"
 										   TextAlignment="Center"
 										    />
+				
+				<sf:GridNumericColumn MappingName="palaceDonations"/>
+
 				<sf:GridNumericColumn MappingName="ts"/>
 				<sf:GridNumericColumn MappingName="tsOffense"/>
 				<sf:GridNumericColumn MappingName="tsDefense"/>
@@ -130,6 +131,7 @@
 				                      TextAlignment="Center"
 									  DisplayNumberFormat="N0"
 											 />
+				<sf:GridNumericColumn MappingName="cityFaith"/>
 			</sf:SfDataGrid.Columns>
 			<sf:SfDataGrid.DetailsViewDefinition>
 				<!--  FirstLevelNestedGrid1 is created here  -->
