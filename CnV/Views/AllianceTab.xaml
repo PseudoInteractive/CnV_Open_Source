@@ -45,7 +45,7 @@
 				<sf:GridTextColumn MappingName="abbreviation"/>
 				<sf:GridTextColumn MappingName="invite"/>
 				<sf:GridNumericColumn MappingName="playerCount"/>
-				<sf:GridNumericColumn MappingName="totalFaith"/>
+				<sf:GridNumericColumn MappingName="cityFaith"/>
 				<sf:GridNumericColumn MappingName="cityCount"/>
 				<sf:GridNumericColumn MappingName="ts"/>
 				<sf:GridNumericColumn MappingName="tsOffense"/>

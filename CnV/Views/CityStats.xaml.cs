@@ -849,7 +849,7 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 				else
 				{
 					
-					var items = args.Items.Select( (a) =>  buildQueue.IndexOf( a as BuildItem)).Where(x=>x!=-1);
+					var items = args.Items.Select( (a) =>  buildQueue.IndexOf( a as BuildItem)).Where(x=>x!=-1).Select(a=>(byte)a);
 					
 					city.RemoveWithDependencies(new(items),bqAtDragStart);
 
@@ -902,8 +902,20 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 
 		}
 
-		private void buildQueueListView_ItemClick(object sender,ItemClickEventArgs e)
+		private async void buildQueueListView_ItemClick(object sender,ItemClickEventArgs e)
 		{
+			try {
+				var i = e.ClickedItem as BuildItem;
+				if(i.status == Status.invalid) {
+					if(await AppS.DoYesNoBox("Clean","Remove invalid items?") == 1) {
+						RemoveInvalidBuildQueueItems();
+					}
+				}
+			}
+			catch(Exception _ex) {
+				LogEx(_ex);
+
+			}
 
 		}
 
@@ -1007,6 +1019,26 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 		{
 			CombatCalcDialog.ShowInstance();
 		}
+
+		public void RemoveInvalidBuildQueueItems() {
+			try {
+					var bq = city.buildQueue;
+					var status = city.GetBuildQueueStatuses();
+					var remove = new List<byte>();
+				if(status.Length < 255) {
+					for(int i = 0;i<status.Length;++i) {
+						if(status[i] == Status.invalid) {
+							remove.Add((byte)i);
+						}
+					}
+					city.RemoveWithDependencies(remove,bq);
+				}
+				}
+				catch(Exception _ex) {
+					LogEx(_ex);
+
+				}
+		}
 	}
 	public class BuildingCountAndBrush:INotifyPropertyChanged
 	{
@@ -1077,11 +1109,17 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 
 		}
 
+		
 		public void ContextRequested(UIElement sender,ContextRequestedEventArgs args)
 		{
 			args.Handled    = true;
 			var flyout = new MenuFlyout();
 
+			if(instance.buildQueue.Any(a=>a.status == Status.invalid))
+				{
+			flyout.AddItem("Remove Invalid..",Symbol.Bullets,instance.RemoveInvalidBuildQueueItems);
+
+			}
 			flyout.AddItem("Medallion..",Symbol.OutlineStar,() =>
 			{
 				CityUI.Show( Artifact.ArtifactType.medallion, sender);
@@ -1099,17 +1137,19 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 				flyout.AddItem("Remove..",Symbol.Remove,() => {
 					var index = instance.buildQueue.IndexOf(this);
 					if(index != -1)
-						city.RemoveWithDependencies(new(new[] { index }),lastSynchronizedQueue);
+						city.RemoveWithDependencies(new(new[] { (byte)index }),lastSynchronizedQueue);
 					else {
 						Note.Show("Something changed");
 						Invalidate();
 					}
 				});
-				flyout.AddItem("Cancel Selected",Symbol.Cancel,() => {
-					var sel = instance.buildQueueListView.SelectedItems;
+				if(instance.buildQueueListView.SelectedItems.Any()) {
+					flyout.AddItem("Cancel Selected",Symbol.Cancel,() => {
+						var sel = instance.buildQueueListView.SelectedItems;
 
-					city.RemoveWithDependencies(new((sel.Any() ? sel.Select(x => instance.buildQueue.IndexOf(x as BuildItem)) : (new[] { instance.buildQueue.IndexOf(this) })).Where(i => i!=-1)),lastSynchronizedQueue);
-				});
+						city.RemoveWithDependencies(new( sel.Select(x => (byte)instance.buildQueue.IndexOf(x as BuildItem))),lastSynchronizedQueue);
+					});
+				}
 				flyout.AddItem("Cancel all",Symbol.Cut,() => {
 					var sel = instance.buildQueueListView.SelectedItems;
 					new CnVEventCancelBuildQueue(city.worldC).EnqueueAsap();

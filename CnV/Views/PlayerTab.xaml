@@ -83,7 +83,7 @@
 										   TextAlignment="Center"
 										    />
 				
-				<sf:GridNumericColumn MappingName="palaceDonations"/>
+				<sf:GridNumericColumn MappingName="donations"/>
 
 				<sf:GridNumericColumn MappingName="ts"/>
 				<sf:GridNumericColumn MappingName="tsOffense"/>
