@@ -31,6 +31,7 @@
     <Content Remove="gamebin\**" />
     <Content Remove="gameobj\**" />
     <Content Remove="JS\**" />
+    <Content Remove="Properties\ServiceDependencies\**" />
     <EmbeddedResource Remove="AppPackages\**" />
     <EmbeddedResource Remove="BundleArtifacts\**" />
     <EmbeddedResource Remove="CnVDiscord\**" />
@@ -39,6 +40,7 @@
     <EmbeddedResource Remove="gameobj\**" />
     <EmbeddedResource Remove="Helpers\**" />
     <EmbeddedResource Remove="JS\**" />
+    <EmbeddedResource Remove="Properties\ServiceDependencies\**" />
     <None Remove="AppPackages\**" />
     <None Remove="BundleArtifacts\**" />
     <None Remove="CnVDiscord\**" />
@@ -47,10 +49,12 @@
     <None Remove="gameobj\**" />
     <None Remove="Helpers\**" />
     <None Remove="JS\**" />
+    <None Remove="Properties\ServiceDependencies\**" />
     <PRIResource Remove="Content\**" />
     <PRIResource Remove="gamebin\**" />
     <PRIResource Remove="gameobj\**" />
     <PRIResource Remove="JS\**" />
+    <PRIResource Remove="Properties\ServiceDependencies\**" />
   </ItemGroup>
 
 	<ItemGroup>
@@ -144,6 +148,7 @@
 		<Compile Include="GameUI\ErrorReport.xaml.cs" />
 		<Compile Include="GameUI\JoinAlliance.xaml.cs" />
 		<Compile Include="GameUI\MessageBox.xaml.cs" />
+		<Compile Include="GameUI\PalaceTab.xaml.cs" />
 		<Compile Include="GameUI\QuestList.xaml.cs" />
 		<Compile Include="GameUI\RecruitDialog.xaml.cs" />
 		<Compile Include="GameUI\RecruitTargetDialog.xaml.cs" />
@@ -422,6 +427,9 @@
 		<Page Include="GameUI\MessageBox.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
+		<Page Include="GameUI\PalaceTab.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
 		<Page Include="GameUI\QuestList.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
@@ -665,6 +673,7 @@
 		<None Remove="GameUI\ErrorReport.xaml" />
 		<None Remove="GameUI\JoinAlliance.xaml" />
 		<None Remove="GameUI\MessageBox.xaml" />
+		<None Remove="GameUI\PalaceTab.xaml" />
 		<None Remove="GameUI\QuestList.xaml" />
 		<None Remove="GameUI\RecruitDialog.xaml" />
 		<None Remove="GameUI\RecruitTargetDialog.xaml" />
@@ -798,7 +807,6 @@
 	</ItemGroup>
 	<ItemGroup>
 		<Folder Include="Base\" />
-		<Folder Include="Properties\ServiceDependencies\local\" />
 		<Folder Include="Resources\" />
 	</ItemGroup>
 	<ItemGroup>

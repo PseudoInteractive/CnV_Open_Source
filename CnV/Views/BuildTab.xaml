@@ -23,6 +23,7 @@
 		<sf:SfDataGrid x:Name="cityGrid"
 							x:FieldModifier="public"
 							AllowFiltering="True"
+					   ShowGroupDropArea="True"
 							Grid.Row="3"
 							CellStyle="{StaticResource SfTextCell}"
 					   FontFamily="{StaticResource CnvIcons}"

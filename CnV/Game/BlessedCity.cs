@@ -106,7 +106,7 @@ namespace CnV
 		public PalacePriority pri => target.blessData.priority;
 		public string Pri => pri.EnumTitle();
 		
-		public int level => target.templeLevel;
+		public int level => target.palaceLevel;
 		public string notes => target.blessData.notes;
 		public DateTimeOffset travelT => (ServerTime.epoch + travelTime); // year and day are off format for UI
 

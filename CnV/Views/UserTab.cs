@@ -58,6 +58,7 @@ public partial class UserTab:UserControl, IANotifyPropertyChanged
 				new BuildTab(),
 				new MainPage(),
 				new PlayerTab(),
+				new PalaceTab(),
 				new DonationTab(),
 				new IncomingTab(),
 				new HitHistoryTab(),

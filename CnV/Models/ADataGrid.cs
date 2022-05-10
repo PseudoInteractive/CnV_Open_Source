@@ -263,6 +263,7 @@ public static partial class ADataGrid
 				grid.ColumnSizer.FontFamily = XamlHelper.cnvFont;
 			//	grid.ColumnSizer.FontWeight = Microsoft.UI.Text.FontWeights.Normal;
 			grid.ColumnSizer.FontSize = Settings.mediumFontSize;
+			grid.ColumnSizer.Margin = new(16);
 		//	grid.FontSize = Settings.smallFontSize;
 			grid.AlternationCount = 2;
 		//	grid.AllowRowHoverHighlighting = true;
@@ -276,7 +277,7 @@ public static partial class ADataGrid
 			grid.SelectionMode = GridSelectionMode.Extended;
 		//	grid.GridLinesVisibility = GridLinesVisibility.Both;
 		
-			grid.ShowGroupDropArea=false;
+		//	grid.ShowGroupDropArea=false;
 			grid.AllowResizingHiddenColumns = true;
 			grid.AllowResizingColumns = true;
 		//	grid.CanMaintainScrollPosition=true;
@@ -300,8 +301,9 @@ public static partial class ADataGrid
 			grid.RecordContextFlyout.SetXamlRoot(grid);
 			grid.CurrentCellRequestNavigate += UserTab.CelNavigate;
 			grid.CellTapped += ADataGrid.SfCellTapped;
-			grid.AllowGrouping = false;
+		//	grid.AllowGrouping = false;
 			grid.ShowToolTip=true;
+			grid.IsRightTapEnabled=true;
 			grid.AllowFiltering = false;
 
 			//				grid.AllowFrozenGroupHeaders = false;
@@ -318,7 +320,7 @@ public static partial class ADataGrid
 				
 				//c.CellStyle = App.instance.Resources["SfTextCell"] as Style;
 			}
-			//		grid.ColumnSizer.ResetAutoCalculationforAllColumns();
+					grid.ColumnSizer.ResetAutoCalculationforAllColumns();
 	
 			return _lock0;
 
