@@ -83,7 +83,7 @@ namespace CnV
 		private void CalcClick(object sender,RoutedEventArgs e)
 		{
 			var b = new BattleReport();
-			b.attacker = new ArmyResult(new Army(default,default,default,default,default,(ArmyType)attackType,new(attackers.Where(i => i.count > 0).Select(i => new TroopTypeCount(i.type,i.count))),
+			b.attacker = new ArmyResult(new Army(null,default,default,default,default,default,(ArmyType)attackType,new(attackers.Where(i => i.count > 0).Select(i => new TroopTypeCount(i.type,i.count))),
 				false));
 			b.defenders = new[] { new ArmyResult(new TroopTypeCounts(defenders.Where(i => i.count > 0).Select(i => new TroopTypeCount(i.type,i.count)))) };
 

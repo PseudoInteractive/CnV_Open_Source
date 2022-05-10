@@ -17,6 +17,7 @@
 			<RowDefinition Height="auto"/>
 			<RowDefinition Height="auto"/>
 			<RowDefinition Height="auto"/>
+			<RowDefinition Height="auto"/>
 		</Grid.RowDefinitions>
 		<StackPanel BorderThickness="1" Margin="0,4" BorderBrush="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}" ToolTipService.ToolTip="Resources that this city requests from its hub" >
 			<TextBlock Style="{StaticResource TextBlockLarge}" Margin="4" Text="Wanted Resources and Source Hub" />
@@ -57,7 +58,7 @@
 		<StackPanel Grid.Row="1" BorderThickness="1" Margin="0,4" BorderBrush="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}" ToolTipService.ToolTip="When resources go above limit, excess is sent to the destination hub" >
 			<TextBlock Style="{StaticResource TextBlockLarge}" Text="Limit Resources and Destination" Margin="4" />
 
-			<Grid  >
+			<Grid ToolTipService.ToolTip="If resources go above these amounts, they will be shiped out. These values are usually close to the storage capactiy of the city" >
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="*" />
 					<ColumnDefinition Width="*" />
@@ -72,9 +73,10 @@
 				<NumberBox Grid.Column="2"  x:Name="ironSend" Margin="8,2" Description="&#xA042; Limit"
 					   SmallChange="10000" />
 				<NumberBox Grid.Column="3"  x:Name="foodSend" Margin="8,2" Description="&#xA043; Limit"
+						   
 					   SmallChange="10000" />
 			</Grid >
-			<Grid  >
+			<Grid ToolTipService.ToolTip="Resources will be sent to these cities on overflow.  These are usually hubs or storage cities" >
 				<Grid.RowDefinitions>
 					<RowDefinition Height="auto" />
 					<RowDefinition Height="auto"/>
@@ -88,7 +90,20 @@
 				<view:CityControl Label="Iron Dest" Grid.Column="0" Grid.Row="1"  x:Name="ironDest" LabelWidth="110" Margin="8,2"/>
 				<view:CityControl Label="Food Dest" Grid.Column="1" Grid.Row="1" x:Name="foodDest" LabelWidth="110" Margin="8,2"/>
 			</Grid >
+			<Grid  >
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
 
+				<NumberBox Grid.Column="0"  x:Name="cartReserve" Margin="8,2"  Description="&#xA04D; % Reserved"
+						   ToolTipService.ToolTip="This % carts will not be used to transport overflow to the destination city.  They will be reserved for trade requests from other cities" 
+					   SmallChange="5" />
+				<NumberBox Grid.Column="1"  x:Name="shipReserve" Margin="8,2" Description="&#xA04E; % Reserved"
+						   ToolTipService.ToolTip="This % ships will not be used to transport overflow to the destination city.  They will be reserved for trade requests from other cities" 
+					   SmallChange="5"/>
+				
+			</Grid >
 		</StackPanel>
 
 		<Grid HorizontalAlignment="Stretch" Grid.Row="2" BorderThickness="1" Margin="0,4"

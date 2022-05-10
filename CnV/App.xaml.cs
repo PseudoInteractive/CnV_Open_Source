@@ -484,11 +484,11 @@ namespace CnV
 					//var scale = view.ResolutionScale == ResolutionScale.Invalid ? 1 : view.RawPixelsPerViewPixel;
 					//var bounds = new Size(resolution.Width / scale, resolution.Height / scale);
 
-					{
-						IntPtr hWnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
-						WindowId myWndId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
-						AppS.appWindow= AppWindow.GetFromWindowId(myWndId);
-					}
+					
+					IntPtr hWnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
+					WindowId myWndId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
+					AppS.appWindow= AppWindow.GetFromWindowId(myWndId);
+					
 					InitAppCenter(args.Arguments);
 
 					AppS.appWindow.Title = "Conquest and Virtue Alpha sign in to Discord";
@@ -519,7 +519,7 @@ namespace CnV
 //w2.Activate();
 
 					//if(uwpArgs.Kind == Windows.ApplicationModel.Activation.ActivationKind.Launch)
-					AppS.QueueOnUIThread(Services.StoreHelper.instance.DownloadAndInstallAllUpdatesAsync);
+					Services.StoreHelper.instance.DownloadAndInstallAllUpdatesAsync(hWnd);
 				}
 				//);
 

@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 using Windows.Foundation;
 using Windows.Services.Store;
+
+using static CnV.WindowHelper;
 //using Windows.UI.Popups;
 
 namespace CnV.Services
@@ -16,15 +18,18 @@ namespace CnV.Services
 		private StoreContext context = null;
 
 		// Downloads and installs package updates in separate steps.
-		public async void DownloadAndInstallAllUpdatesAsync()
+		public async void DownloadAndInstallAllUpdatesAsync(IntPtr hwnd)
 		{
-		//	if (System.Diagnostics.Debugger.IsAttached)
-		//		return;
+			if (System.Diagnostics.Debugger.IsAttached)
+				return;
 			try
 			{
 				if (context == null)
 				{
+					
 					context = StoreContext.GetDefault();
+					WinRT.Interop.InitializeWithWindow.Initialize(context, hwnd);
+					
 				}
 
 				//Debug.Assert(App.IsOnUIThread());
@@ -96,30 +101,37 @@ namespace CnV.Services
 		// Helper method for installing package updates.
 		private async Task InstallPackageUpdatesAsync(IEnumerable<StorePackageUpdate> updates)
 		{
-			IAsyncOperationWithProgress<StorePackageUpdateResult, StorePackageUpdateStatus> installOperation =
-				this.context.RequestDownloadAndInstallStorePackageUpdatesAsync(updates);
+		
+				try {
 
-			// The package updates were already downloaded separately, so this method skips the download
-			// operatation and only installs the updates; no download progress notifications are provided.
-			StorePackageUpdateResult result = await installOperation.AsTask().ConfigureAwait(true);
+					IAsyncOperationWithProgress<StorePackageUpdateResult,StorePackageUpdateStatus> installOperation =
+						this.context.RequestDownloadAndInstallStorePackageUpdatesAsync(updates);
 
-			switch (result.OverallState)
-			{
-				case StorePackageUpdateState.Completed:
-					break;
-				default:
-					// Get the failed updates.
-					var failedUpdates = result.StorePackageUpdateStatuses.Where(
-						status => status.PackageUpdateState != StorePackageUpdateState.Completed);
+					// The package updates were already downloaded separately, so this method skips the download
+					// operatation and only installs the updates; no download progress notifications are provided.
+					StorePackageUpdateResult result = await installOperation.AsTask().ConfigureAwait(true);
 
-					// See if any failed updates were mandatory
-					if (updates.Any(u => u.Mandatory && failedUpdates.Any(failed => failed.PackageFamilyName == u.Package.Id.FamilyName)))
-					{
-						// At least one of the updates is mandatory, so tell the user.
-						HandleMandatoryPackageError();
+					switch(result.OverallState) {
+						case StorePackageUpdateState.Completed:
+							break;
+						default:
+							// Get the failed updates.
+							var failedUpdates = result.StorePackageUpdateStatuses.Where(
+								status => status.PackageUpdateState != StorePackageUpdateState.Completed);
+
+							// See if any failed updates were mandatory
+							if(updates.Any(u => u.Mandatory && failedUpdates.Any(failed => failed.PackageFamilyName == u.Package.Id.FamilyName))) {
+								// At least one of the updates is mandatory, so tell the user.
+								HandleMandatoryPackageError();
+							}
+							break;
 					}
-					break;
-			}
+				}
+				catch(Exception _ex) {
+					LogEx(_ex);
+
+				}
+			
 		}
 
 		// Helper method for handling the scenario where a mandatory package update fails to

@@ -67,12 +67,13 @@ public sealed partial class TradeSettingsDialog:DialogG, INotifyPropertyChanged 
 		ironSend.Value = ToNumberBoxValue(mo.resSend[2]);
 		foodSend.Value =ToNumberBoxValue( mo.resSend[3]);
 		protectResources.IsChecked = mo.protectResources;
+		cartReserve.Value = mo.cartReserve;
+		shipReserve.Value = mo.shipReserve;
 
 		woodRequest.Value = ToNumberBoxValue(city.requestedResources.wood);
 		stoneRequest.Value = ToNumberBoxValue(city.requestedResources.stone);
 		ironRequest.Value = ToNumberBoxValue(city.requestedResources.iron);
 		foodRequest.Value = ToNumberBoxValue(city.requestedResources.food);
-
 		maxTravel.Value = city.requestedResourceMaxTravel.TotalHours;
 		payRate.Value = city.resourcePaymentRate;
 
@@ -108,6 +109,8 @@ public sealed partial class TradeSettingsDialog:DialogG, INotifyPropertyChanged 
 		var mo = city.cloneMO; ;
 		var priorHash = mo.tradeHashCode;
 		mo.protectResources = protectResources.IsChecked.GetValueOrDefault();
+		mo.cartReserve = cartReserve.Value.RoundToInt().Clamp(0,100).AsByte();
+		mo.shipReserve = shipReserve.Value.RoundToInt().Clamp(0,100).AsByte();
 		mo.sendCities=new(woodDest.cid,stoneDest.cid,ironDest.cid,foodDest.cid);
 		mo.requestCities=new(woodSource.cid,stoneSource.cid,ironSource.cid,foodSource.cid);
 		mo.resSend = new(
@@ -134,7 +137,7 @@ public sealed partial class TradeSettingsDialog:DialogG, INotifyPropertyChanged 
 			woodRequest.IntValue(),stoneRequest.IntValue(),ironRequest.IntValue(),foodRequest.IntValue()
 			);
 		var goldCost = CnVEventCityTradeRequest.GoldRequiredForRequest(city,_requestedResources,_resourcePaymentRate);
-		if(goldCost >= Player.active.gold) {
+		if(goldCost > 0 && goldCost >= Player.active.gold) {
 			AppS.MessageBox($"Not enough gold for request, need {goldCost - Player.active.gold} more gold");
 		}
 		else {
