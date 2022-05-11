@@ -182,10 +182,10 @@
 						Click="RaidSettings"
 						Style="{StaticResource ButtonSmall}"
 						ToolTipService.ToolTip="Shows settings page for raids"  />
-				<Button Content="Return For Outgoing"
+				<!--<Button Content="Return For Outgoing"
 						Click="ReturnRaidsForOutgoing"
 						Style="{StaticResource ButtonSmall}"
-						ToolTipService.ToolTip="Schedules all troops with outgoing attacks to return in time for attacks.  Uses ReturnRaidsOffset in settings  Warning 0: this takes time, please do not interrupt it.   Warning 1: Not well tested, please double check the results"  />
+						ToolTipService.ToolTip="Schedules all troops with outgoing attacks to return in time for attacks.  Uses ReturnRaidsOffset in settings  Warning 0: this takes time, please do not interrupt it.   Warning 1: Not well tested, please double check the results"  />-->
 			</tk:WrapPanel>
 			<tk:WrapPanel>				
 			<Border Style="{StaticResource BorderReveal}">

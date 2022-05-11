@@ -11,10 +11,20 @@ namespace CnV
 	using static Troops;
 	public sealed partial class SendTroops:DialogG, INotifyPropertyChanged
 	{
+		internal bool ViaWater {
+			get => viaWater;
+			set {
+				if(viaWater != value) {
+					viaWater = value;
+					UpdateTravelTime();
+				}
+			}
+		}
 		internal bool viaWater;
 		internal bool isSettle;
+		internal bool isReturn => prior != null;
 		internal Army prior;
-		protected override string title => $"{(isSettle ? "Settle" : target.isBoss ? "NPC Hit" : Army.typeStrings[(int)type])} => {target}";
+		protected override string title => $"{(isReturn?"Return ": String.Empty)}{(isSettle ? "Settle" : target.isBoss ? "NPC Hit" : Army.typeStrings[(int)type])} => {target}";
 		internal static SendTroops? instance;
 		internal City city;
 		internal City target;
@@ -37,7 +47,11 @@ namespace CnV
 		}
 
 		private void SendTroops_PropertyChanged(object? sender,PropertyChangedEventArgs e) {
+			UpdateTravelTime();
 
+		}
+
+		private void UpdateTravelTime() {
 			var arrival = this.arrival.dateTime;
 			var tt = travelTime;
 			if(arrival == default) {
@@ -51,24 +65,22 @@ namespace CnV
 				}
 				travelInfo.Text= rv;
 			}
-
-
 		}
 
 		private void UpdateTroopItems(TroopTypeCounts?troops) {
 			var troopItems = new List<SendTroopItem>();
 			if(troops is not null) {
 				foreach(var t in troops.Value) {
-					var rv = new SendTroopItem(target: target,city: city,type: t.t,count: (int)t.c);
+					var rv = new SendTroopItem(target: target,city: city,type: t.t,count: (int)t.c, prior:prior);
 					troopItems.Add(rv);
-					rv.PropertyChanged += SendTroops_PropertyChanged;
+					rv.PropertyChanged += SendTroops_PropertyChanged; // memory leak
 				}
 			}
 			else {
 				var ttHome = city.troopsOwnedPlusRecruiting;
 				for(var i = (TType)0;i<Troops.ttCount;++i) {
 					if(ttHome.GetCount(i) > 0) {
-						var rv = new SendTroopItem(target: target,city: city,type: i);
+						var rv = new SendTroopItem(target: target,city: city,type: i, prior:prior);
 						troopItems.Add(rv);
 						rv.PropertyChanged += SendTroops_PropertyChanged;
 					}
@@ -80,64 +92,84 @@ namespace CnV
 		bool isRaid => type==ArmyType.raid;
 		bool isCavernRaid => type==ArmyType.raid && target.isDungeon;
 		bool isDefense => type==ArmyType.defense && !isSettle;
-		int splits => isDefense || isCavernRaid ? splitsCombo.SelectedIndex+1 : 1;
+		int splits => isCavernRaid ? splitsCombo.SelectedIndex+1 : 1;
 
 		public static Task<bool> ShowInstance(City city = null,City target = null,bool isSettle = false,bool viaWater = false,ArmyType type = ArmyType.nop,Army? prior = null,TroopTypeCounts?troops=null,ServerTime?arrival=null,ServerTime? depart=null) {
-			if(city == target && prior is null) {
-				AppS.MessageBox("Cannot send to self");
+			try {
+				if(city == target && prior is null) {
+					AppS.MessageBox("Cannot send to self");
+					return Task.FromResult(false);
+				}
+				var rv = instance ?? new SendTroops();
+				rv.prior = prior;
+				if(prior is not null) {
+					rv.arrival.Visibility = Visibility.Visible; // reset
+					rv.city =prior.sourceCity;
+				
+					rv.target = prior.targetCity;
+					rv.isSettle = prior.isSettle;
+					rv.viaWater = prior.isViaWater;
+					rv.type = prior.type;
+					rv.UpdateTroopItems(prior.troops);
+					rv.arrival.SetDateTime(prior.arrival);
+					//rv.arrival.Visibility = !wantReturn ? Visibility.Visible : Visibility.Collapsed;
+					rv.buttoGo.Content = "Return";
+					rv.buttoGo.IsEnabled = prior.sourceCity.outgoing.Contains(prior);
+					//	rv.isReturn = wantReturn;
+					rv.armyTypeCombo.Visibility = Visibility.Collapsed;
+				}
+				else {
+					//	Assert(wantReturn == false);
+
+					var isRaid = type == ArmyType.raid;
+					rv.arrival.Visibility = isRaid||isSettle ? Visibility.Collapsed : Visibility.Visible;
+					rv.city =city;
+					rv.target = target;
+					rv.isSettle = isSettle;
+					rv.viaWater = viaWater;
+					rv.UpdateTroopItems(troops);
+					if(isRaid||isSettle)
+						rv.arrival.Clear();
+					else if(arrival is not null)
+						rv.arrival.SetDateTime(arrival.Value);
+					else if(depart is not null)
+						rv.arrival.SetDateTime(depart.Value + rv.travelTime);
+
+					var isAttack = type is (>=Army.attackFirst and <= Army.attackLast);
+					if(isAttack && rv.type is (>=Army.attackFirst and <= Army.attackLast)) {
+						// leave it
+					}
+					else {
+						rv.type = type;
+					}
+					rv.armyTypeCombo.Visibility = isAttack ? Visibility.Visible : Visibility.Collapsed;
+
+
+					rv.buttoGo.Content = "Send";
+					rv.buttoGo.IsEnabled=true;
+					
+					
+				}
+
+
+				if(isSettle) {
+					foreach(var i in rv.troopItems) {
+						if(i.type ==ttMagistra)
+							i.count = 1;
+					}
+				}
+				rv.raidPanel.Visibility = rv.isCavernRaid ? Visibility.Visible : Visibility.Collapsed;
+				rv.OnPropertyChanged();
+				return rv.Show(false);
+			}
+			catch(Exception _ex) {
+				LogEx(_ex);
 				return Task.FromResult(false);
 			}
-			var rv = instance ?? new SendTroops();
-			rv.prior = prior;
-			if(prior is not null) {
-				rv.city =prior.sourceCity;
-				rv.target = prior.targetCity;
-				rv.isSettle = prior.isSettle;
-				rv.viaWater = prior.isViaWater;
-				rv.type = prior.type;
-				rv.UpdateTroopItems(prior.troops);
-				rv.arrival.SetDateTime(prior.arrival);
-				rv.buttoGo.Content = "Return";
-				rv.buttoGo.IsEnabled = prior.sourceCity.outgoing.Contains(prior);
-			}
-			else
-			{
-				
-
-				rv.city =city;
-				rv.target = target;
-				rv.isSettle = isSettle;
-				rv.viaWater = viaWater;
-				rv.type = type;
-				rv.UpdateTroopItems(troops);
-				if(arrival is not null)
-					rv.arrival.SetDateTime(arrival.Value);
-				else if(depart is not null)
-					rv.arrival.SetDateTime(depart.Value + rv.travelTime);
-			
-				rv.buttoGo.Content = "Send";
-				rv.buttoGo.IsEnabled=true;
-
-			}
-
-			if(isSettle) {
-				foreach(var i in rv.troopItems) {
-					if(i.type ==ttMagistra )
-						i.count = 1;
-				}
-			}
-			rv.raidPanel.Visibility = rv.isCavernRaid ? Visibility.Visible : Visibility.Collapsed;
-			rv.OnPropertyChanged();
-			return rv.Show(false);
 
 		}
 
 		internal async Task<bool> IsValid(TroopTypeCounts troops,bool verbose) {
-			if(city.underSiege) {
-				if(verbose)
-					AppS.MessageBox($"City is under siege");
-				return false;
-			}
 			if(isSettle) {
 				if(!troopItems.Any(a => a.type == Troops.ttSenator && a.count > 0)) {
 					if(verbose)
@@ -149,58 +181,57 @@ namespace CnV
 					return false;
 				}
 			}
-			if(transport == ArmyTransport.carts && city.cartsHome < 250) {
-				if(verbose) AppS.MessageBox($"Need 250 carts.  Have {city.cartsHome} home of {city.carts} ");
-				return false;
-			}
-			if(transport == ArmyTransport.ports && city.shipsHome < 25) {
-				if(verbose) AppS.MessageBox($"Need 25 trading ships.  Have {city.shipsHome} home of {city.ships} ");
-				return false;
-			}
-			if(type is (>= Army.attackFirst and <= Army.attackLast)) {
-				if(!city.isCastle) {
-					if(verbose) AppS.MessageBox($"Only castles can attack like that");
-					return false;
-				}
-				if(troops.TS() < city.minTS) {
-					if(verbose) AppS.MessageBox($"Cannot send {troops.TS()}, min TS is {city.minTS}");
-					return false;
-
-				}
-			}
-			if((type is (ArmyType.siege or ArmyType.assault)) &&(!target.isCastle)) {
-				if(verbose) AppS.MessageBox($"Target must be castle");
-				return false;
-			}
-			// check for water
-			if(transport is (ArmyTransport.land or ArmyTransport.carts)) {
-				if(troopItems.Any(a => a.count>0 && IsTTNaval(a.type))) {
-					if(verbose) AppS.MessageBox($"Boats must go by water");
-					return false;
-				}
-				if(city.cont != target.cont) {
-					if(verbose) AppS.MessageBox($"Land travel only to same continent");
-					return false;
-				}
-			}
-			else {
-				// by water
-				// check galley space todo
-				if(!city.isOnWater || !target.isOnWater) {
-					if(verbose) AppS.MessageBox($"Source and target must be on water");
+			if(!isReturn) {
+				if(city.underSiege) {
+					if(verbose)
+						AppS.MessageBox($"City is under siege");
 					return false;
 				}
 
-			}
-			if(!troopItems.Any(a => a.count > 0)) {
-				if(verbose) AppS.MessageBox($"Please send something");
-				return false;
-			}
-			if(city.freeCommandSlots < splits) {
-				if(verbose) AppS.MessageBox($"Out of command slots");
-				return false;
-			}
-			var arrivalTime = arrival.dateTime;
+				if(transport == ArmyTransport.carts && city.cartsHome < 250) {
+					if(verbose) AppS.MessageBox($"Need 250 carts.  Have {city.cartsHome} home of {city.carts} ");
+					return false;
+				}
+				if(transport == ArmyTransport.ports && city.shipsHome < 25) {
+					if(verbose) AppS.MessageBox($"Need 25 trading ships.  Have {city.shipsHome} home of {city.ships} ");
+					return false;
+				}
+				if(type is (>= Army.attackFirst and <= Army.attackLast)) {
+					if(!city.isCastle) {
+						if(verbose) AppS.MessageBox($"Only castles can attack like that");
+						return false;
+					}
+					if(troops.TS() < city.minTS) {
+						if(verbose) AppS.MessageBox($"Cannot send {troops.TS()}, min TS is {city.minTS}");
+						return false;
+
+					}
+				}
+				if((type is (ArmyType.siege or ArmyType.assault)) &&(!target.isCastle)) {
+					if(verbose) AppS.MessageBox($"Target must be castle");
+					return false;
+				}
+				// check for water
+				if(transport is (ArmyTransport.land or ArmyTransport.carts)) {
+					if(troopItems.Any(a => a.count>0 && IsTTNaval(a.type))) {
+						if(verbose) AppS.MessageBox($"Boats must go by water");
+						return false;
+					}
+					if(city.cont != target.cont) {
+						if(verbose) AppS.MessageBox($"Land travel only to same continent");
+						return false;
+					}
+				}
+				else {
+					// by water
+					// check galley space todo
+					if(!city.isOnWater || !target.isOnWater) {
+						if(verbose) AppS.MessageBox($"Source and target must be on water");
+						return false;
+					}
+
+				}
+				var arrivalTime = arrival.dateTime;
 			if(arrivalTime != default) {
 				if(Sim.simTime + travelTime > arrivalTime) {
 					if(await AppS.DoYesNoBox("Arrival too soon",$"The earliest time that we can make is {Sim.simTime + travelTime}, send now?",no: string.Empty) != 1)
@@ -216,6 +247,17 @@ namespace CnV
 					return false;
 				}
 			}
+			if(!troopItems.Any(a => a.count > 0)) {
+				if(verbose) AppS.MessageBox($"Please send something");
+				return false;
+			}
+			}
+			
+			if(city.freeCommandSlots < splits) {
+				if(verbose) AppS.MessageBox($"Out of command slots");
+				return false;
+			}
+			
 
 			return true;
 		}
@@ -230,7 +272,7 @@ namespace CnV
 			Changed();
 		}
 		private void MaxClick(object sender,RoutedEventArgs e) {
-			var t = city.troopsOwned;
+			var t = prior?.troops?? city.troopsOwned;
 
 			foreach(var i in troopItems)
 				i.count = (int)t.GetCount(i.type);
@@ -238,28 +280,28 @@ namespace CnV
 			Changed();
 		}
 		private void HomeClick(object sender,RoutedEventArgs e) {
-			var t = city.troopsHome;
+			var t = prior?.troops?? city.troopsHome;
 			foreach(var i in troopItems)
 				i.count = (int)t.GetCount(i.type);
 
 			Changed();
 		}
 
-		internal TimeSpanS travelTime => Army.JourneyTime(city,target.cid,transport,troops,isRaid);
+		internal TimeSpanS travelTime => Army.JourneyTime(city,target.cid,transport,troops,isCavernRaid);
 
 
 		private async void SendTroopsClick(object sender,RoutedEventArgs e) {
-			if( prior is not null ) {
-				if(prior.sourceCity.outgoing.Contains(prior))
-				{
-					new CnVEventReturnTroops(prior).EnqueueAsap();
-				}
-				else {
-					AppS.MessageBox("Cannot be returned this way.");
-				}
-				Done();
-				return;
-			}
+			//if( prior is not null ) {
+			//	if(prior.sourceCity.outgoing.Contains(prior))
+			//	{
+			//		CnVEventReturnTroops.TryReturn(prior);
+			//	}
+			//	else {
+			//		AppS.MessageBox("Cannot be returned this way.");
+			//	}
+			//	Done();
+			//	return;
+			//}
 			TroopTypeCounts ts = troops;
 
 			if(! await IsValid(ts,true))
@@ -267,29 +309,35 @@ namespace CnV
 
 
 
-			if(ts.Any()) {
-				var splits = this.splits;
-
-				var flags = (byte)(isCavernRaid ? ((repeatCheckBox.IsChecked.Value ? Army.flagRepeating : Army.flagNone)
-									)
-									| Army.FlagSplits(splits) : Army.flagNone);
-				var arrival = this.arrival.dateTime;
+			Assert(ts.Any());
+				
 
 				bool okay;
-				if(arrival != default) {
-					okay =  Army.Send(ts,flags,city,target.cid,type,transport,arrival);
-					if(!okay) {
-
-					}
+				if(isReturn) {
+					CnVEventReturnTroops.TryReturn(prior, ts.isEmpty || ts.IsSuperSetOf(prior.troops) ? default : ts);
+					okay = true;
 				}
-				else
-					okay = Army.Send(ts,flags,city,target.cid,type,transport);
+				else {
+					var splits = this.splits;
+
+					var flags = (byte)(isCavernRaid ? ((repeatCheckBox.IsChecked.Value ? Army.flagRepeating : Army.flagNone)
+										)
+										| Army.FlagSplits(splits) : Army.flagNone);
+					var arrival = this.arrival.dateTime;
+
+					if(arrival != default) {
+						okay =  Army.Send(ts,flags,city,target.cid,type,transport,arrival);
+						if(!okay) {
+
+						}
+					}
+					else
+						okay = Army.Send(ts,flags,city,target.cid,type,transport);
+
+					
+				}
 				if(okay)
 					Done();
-			}
-			else {
-				AppS.MessageBox("Please select troops to send");
-			}
 		}
 
 		internal TroopTypeCounts troops {
@@ -343,7 +391,7 @@ namespace CnV
 
 		internal City city; // convienience
 		internal City target;
-
+		internal Army prior;
 		internal TType type;
 		internal int _count;
 		internal int count {
@@ -356,7 +404,7 @@ namespace CnV
 			}
 		}
 
-		public SendTroopItem(City city,City target,byte type,bool wantMax = false,int? count = null) {
+		public SendTroopItem(City city,City target,byte type,bool wantMax = false,int? count = null, Army? prior=null) {
 			this.city=city;
 			this.target=target;
 			this.type=type;
@@ -367,7 +415,7 @@ namespace CnV
 		internal ImageSource image => Troops.Image(type);
 		internal TroopInfo info => TroopInfo.all[type];
 		internal void MaxClick(object sender,RoutedEventArgs e) {
-			count = (int)city.troopsHome.GetCount(type);
+			count = (int)(prior?.troops ?? city.troopsHome).GetCount(type);
 
 		}
 		public string troopsHome => $"{city.troopsHome.GetCount(type).Format()}/{city.troopsOwned.GetCount(type).Format()}";

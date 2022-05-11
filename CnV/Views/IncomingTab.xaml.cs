@@ -1,17 +1,11 @@
 ﻿using System.Runtime.CompilerServices;
 
 using Microsoft.UI.Xaml.Controls;
-using System.Collections.Generic;
 //using Windows.UI.Core;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Input;
-using static CnV.Troops;
-using System.Threading.Tasks;
 
 namespace CnV.Views
 {
-	using Game;
-	using Syncfusion.UI.Xaml.DataGrid;
 	using Syncfusion.UI.Xaml.Grids;
 
 	public sealed partial class IncomingTab:UserTab
@@ -19,7 +13,11 @@ namespace CnV.Views
 		public int typeFilter { get; set; }
 		public static Spot lastSelected;
 		public static IncomingTab instance;
-		public bool includeInternal { get; set; }
+
+		internal ObservableCollection<City> citiesWithIncoming = new();
+		internal ObservableCollection<Army> armiesIncoming = new();
+
+		public bool includeInternal { get; set; } = true;
 		//        public static Report showingRowDetails;
 
 		//public DataTemplate GetTsInfoDataTemplate()
@@ -28,8 +26,7 @@ namespace CnV.Views
 		//    Assert(rv != null);
 		//    return rv;
 		//}
-		public IncomingTab()
-		{
+		public IncomingTab() {
 			Assert(instance == null);
 			instance = this;
 
@@ -56,26 +53,22 @@ namespace CnV.Views
 			public Style? plunderStyle { get; set; }
 
 
-			protected override Style? SelectStyleCore(object item,DependencyObject container)
-			{
-				try
-				{
+			protected override Style? SelectStyleCore(object item,DependencyObject container) {
+				try {
 					var report = (item as BattleReport);
 					if(report is null)
 						return null;
-					return report.type switch
-					{
+					return report.type switch {
 
 						ArmyType.assault => assaultStyle,
 						ArmyType.siege when report.attackArmy.isSieging => siegingStyle,
 						ArmyType.siege => siegeStyle,
 						ArmyType.plunder => plunderStyle,
 						ArmyType.scout => scoutStyle,
-						_=>pendingStyle
+						_ => pendingStyle
 					};
 				}
-				catch(Exception _ex)
-				{
+				catch(Exception _ex) {
 					LogEx(_ex);
 					return scoutStyle;
 				}
@@ -111,10 +104,8 @@ namespace CnV.Views
 
 
 
-		private void Set<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
-		{
-			if(Equals(storage, value))
-			{
+		private void Set<T>(ref T storage,T value,[CallerMemberName] string propertyName = null) {
+			if(Equals(storage,value)) {
 				return;
 			}
 			storage = value;
@@ -123,77 +114,78 @@ namespace CnV.Views
 
 
 		// we want current not selected
-		public static Spot selected
-		{
-			get {
-				if(!instance.isFocused)
-					return null;
-				return instance.defenderGrid.CurrentItem as Spot;
+		
+
+		public static (int forAlliance, int forMe, ServerTime nextArrival) GetIncomingCounts() {
+			int forAlliance = 0;
+			int forMe = 0;
+
+			ServerTime nextArrival = ServerTime.infinity;
+			foreach(var c in City.allianceCities) {
+				foreach(var i in c.incoming) {
+					if(!i.isAttack)
+						continue;
+					if(i.arrival > Sim.simTime + c.scoutRange || !i.departed)
+						continue;
+
+					forAlliance++;
+					if(c.isMine)
+						++forMe;
+					nextArrival = nextArrival.Min(i.arrival);
+				}
 			}
+
+			return (forAlliance, forMe, nextArrival);
 		}
-		public void NotifyIncomingUpdated()
-		{
-			if(IncomingTab.IsVisible())
-			{
-
-				//					lastSelected = sel;
 
 
+		public static void NotifyIncomingUpdated() {
 
-				AppS.QueueOnUIThreadIdle(() =>
-				{
-					try
-					{
 
-						var newItems = City.allianceCities.Where(w => w.testContinentFilter
-														&& w.HasIncomingAttacks(includeInternal)
-														&&(typeFilter == 2 ? w.pid == Player.myId
-														: typeFilter == 1 ? Settings.incomingWatch.Contains(w.playerName)|| w.pid == Player.myId
-														: true)).OrderBy(w => w.firstIncoming).ToArray();
-						var sel = defenderGrid.SelectedItems.ToArray();
-						++SpotTab.silenceSelectionChanges;
-							
-					    // remove selections that are gone
-						foreach(var i in sel)
-						{
-							var c = i as City;
-							if(!newItems.Contains(c)  )
-							{
-								defenderGrid.SelectedItems.Remove(i);
+			//					lastSelected = sel;
+
+			if(!Sim.isPastWarmup)
+				return;
+
+				AppS.QueueOnUIThreadIdle(() => {
+					
+					PlayerStats.instance.UpdateOutgoingText();
+					if(IncomingTab.IsVisible()) {
+						try {
+							var typeFilter = instance.typeFilter;
+							var includeInternal = instance.includeInternal;
+
+							var newItems = City.allianceCities.Where(w => w.testContinentFilter
+															&& w.HasIncomingAttacks(includeInternal)
+															&&(typeFilter == 2 ? w.pid == Player.myId
+															: typeFilter == 1 ? Settings.incomingWatch.Contains(w.playerName)|| w.pid == Player.myId
+															: true)).OrderBy(w => w.firstIncoming).ToArray();
+							//var sel = defenderGrid.SelectedItems.ToArray();
+							//++SpotTab.silenceSelectionChanges;
+
+							newItems.SyncList(instance.citiesWithIncoming);
+
+							var sel = instance.defenderGrid.SelectedItem;
+							if(sel is not null && newItems.Contains(sel)) {
+
+								instance.defenderGrid.ScrollItemIntoView(sel);
+
 							}
+							instance.UpdateArmyGrid(true,true);
 						}
-
-						defenderGrid.ItemsSource = newItems;
-						if(defenderGrid.SelectedItems.Count > 0)
-						{
-
-
-							defenderGrid.ScrollItemIntoView(defenderGrid.SelectedItems[0]);
-							
-						};
+						catch(Exception ex) { LogEx(ex); }
 
 					}
-
+					
+				});
 			
-				catch(Exception e)
-				{
-					LogEx(e);
-				} 
-				finally
-					{
-						--SpotTab.silenceSelectionChanges; 
-
-					}
-			});
-			}
 		}
 
 
 
 
 
-		public override Task VisibilityChanged(bool visible, bool longTerm)
-		{
+		public override Task VisibilityChanged(bool visible,bool longTerm) {
 			//  Log("Vis change" + visible);
 			//AppS.DispatchOnUIThreadLow(() =>
 			//{
@@ -201,77 +193,65 @@ namespace CnV.Views
 			//    armyGrid.ItemsSource = Army.empty;
 			//});
 
-			if(visible)
-			{
-			//	lastSelected = null;
+			if(visible) {
+				//	lastSelected = null;
 				NotifyIncomingUpdated();
-				AppS.QueueOnUIThreadIdle(() =>UpdateArmyGrid(true,false) );
+				//AppS.QueueOnUIThreadIdle(() => UpdateArmyGrid(true,false));
 			}
-			return base.VisibilityChanged(visible, longTerm: longTerm);
+			return base.VisibilityChanged(visible,longTerm: longTerm);
 
 		}
 		public static bool IsVisible() => instance.isFocused;
 
 
 
-		private void defenderGrid_SelectionChanged(object sender, GridSelectionChangedEventArgs e)
-		{
+		private void defenderGrid_SelectionChanged(object sender,GridSelectionChangedEventArgs e) {
 			if(!isFocused)
 				return;
-			if(SpotTab.silenceSelectionChanges == 0)
-			{
+			if(SpotTab.silenceSelectionChanges == 0) {
 				UpdateArmyGrid(false,true);
 				//	SpotSelectionChanged(sender, e);
 			}
 		}
 
-		internal void UpdateArmyGrid(bool force, bool updatehistoryTab)
-		{
-			var sel = selected;
-			var changed = sel != null && sel != lastSelected;
-			if(changed || force)
-			{
+		internal void UpdateArmyGrid(bool force,bool updatehistoryTab) {
+			var sel = defenderGrid.SelectedItem as Spot;;
+			var changed = sel != lastSelected;
+			if(changed || force) {
 				lastSelected = sel;
-				if(sel != null)
-				{
+				if(sel != null) {
 					var visibilityTime = Sim.simTime + sel.scoutRange;
-					armyGrid.ItemsSource = sel.incoming.Where(a => a.arrival <= visibilityTime).OrderBy(a=>a.arrival).ToArray();
+					var items=  sel.incoming.Where(a => a.isDefense || (a.arrival <= visibilityTime && a.departed) ).OrderBy(a => a.arrival).ToArray();
+					items.SyncList(armiesIncoming);
 
-					if(updatehistoryTab)
-					{
+					if(updatehistoryTab) {
 						var tab = HitHistoryTab.instance;
 						tab.SetFilter(sel);
 
-						if(!tab.isFocused)
-						{
+						if(!tab.isFocused) {
 							tab.ShowOrAdd(true,onlyIfClosed: true);
 
 						}
-						else
-						{
+						else {
 							tab.refresh.Go();
 						}
 					}
 				}
-				else
-				{
-					armyGrid.ItemsSource = Army.EmptyArray;
+				else {
+					armiesIncoming.Clear();
 				}
 			}
 		}
 
-		private void filterChanged(object sender, RoutedEventArgs e)
-		{
+		private void filterChanged(object sender,RoutedEventArgs e) {
 			instance.refresh.Go();
 		}
 
-		private void ExportSheetsClick(object sender, RoutedEventArgs e)
-		{
+		private void ExportSheetsClick(object sender,RoutedEventArgs e) {
 			defenderGrid.SelectAll();
 			var sel = defenderGrid.SelectedItems;
 			List<int> cids = new();
-			foreach(var c in sel)
-			{
+			foreach(var c in sel) {
 				cids.Add((c as City).cid);
 			}
 			Spot.ExportToDefenseSheet(cids);

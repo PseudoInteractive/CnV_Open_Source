@@ -23,8 +23,8 @@
 			<Button Style="{StaticResource ButtonMedium}" Content="Total" Click="MaxClick" Margin="0,2,8,2" />
 			<Button Style="{StaticResource ButtonMedium}" Content="Home" Click="HomeClick" Margin="8,2" />
 			<Button Style="{StaticResource ButtonMedium}" Content="Zero" Click="ClearClick" Margin="8,2"  />
-			<ComboBox SelectedIndex="{x:Bind armyType, Mode=TwoWay}" ItemsSource="{x:Bind cnv:Army.typeStrings}" />
-			<ToggleSwitch IsOn="{x:Bind viaWater, Mode=TwoWay}" OnContent="Water" OffContent="Land" />
+			<ComboBox SelectedIndex="{x:Bind armyType, Mode=TwoWay}" ItemsSource="{x:Bind cnv:Army.typeStrings}" x:Name="armyTypeCombo" />
+			<ToggleSwitch IsOn="{x:Bind ViaWater, Mode=TwoWay}" OnContent="Water" OffContent="Land" />
 			
 			<!--<TextBox   VerticalAlignment="Center" Text="{x:Bind arrival,Mode=TwoWay,Converter={StaticResource SmallTimeConverter}}"
                Description="arrival" PlaceholderText="ASAP"    ToolTipService.ToolTip="Time of arrival, leave blank to send as soon as possible" />-->

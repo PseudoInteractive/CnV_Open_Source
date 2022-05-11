@@ -432,6 +432,35 @@ public partial class UserTab:UserControl, IANotifyPropertyChanged
 					}
 					break;
 				}
+			case ContextFlyoutType.Header: {
+					var info = e.ContextFlyoutInfo as GridContextFlyoutInfo;
+					var dg = info.DataGrid;
+					Assert(info is not null);
+					if(info is not null) {
+						flyout.AddItem("Reset columns",() => {
+							var sizer = dg.ColumnSizer;
+							sizer.ResetAutoCalculationforAllColumns();
+							sizer.Refresh();
+						}
+						);
+						flyout.AddItem("Toggle Filter",() => {
+							if(dg.FilterRowPosition == FilterRowPosition.Top) {
+								dg.FilterRowPosition = FilterRowPosition.None;
+								dg.AllowFiltering = true;
+							}
+							else if(dg.AllowFiltering) {
+								dg.AllowFiltering = false;
+
+							}
+							else {
+								dg.FilterRowPosition = FilterRowPosition.Top;
+
+							}
+						});
+
+					}
+					break;
+			}
 		}
 	}
 

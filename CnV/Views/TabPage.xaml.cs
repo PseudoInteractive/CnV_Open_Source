@@ -260,18 +260,18 @@ namespace CnV.Views
 
 		static Dictionary<string,Symbol> tabSymbolIcons = new Dictionary<string,Symbol> {
 			{ "Raid", Symbol.ReShare },
-			{ "Market", Symbol.Share },
+			{ "RssSender", Symbol.Share },
 			{ "Boss", Symbol.View },
 			{ "AttackPlanner", Symbol.Audio },
 			{ "world", Symbol.Microphone },
 			{ "Build", Symbol.Repair },
 			{ "Reinforcements", Symbol.AddFriend },
 			{ "Planner", Symbol.Map },
-			{ "NearRes", Symbol.Favorite },
+			{ "NearRes", Symbol.Download },
 			{ "officer" ,Symbol.Admin },
-			{ "WebView", Symbol.World },
 			{ "BossHits", Symbol.Play },
-			{ "Timeline", Symbol.Calendar }
+			{ "Timeline", Symbol.Calendar },
+			{ "Palace", Symbol.LikeDislike }
 		};
 
 		static Dictionary<string,string> tabFontIcons = new Dictionary<string,string> {

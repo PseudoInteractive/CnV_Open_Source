@@ -287,18 +287,18 @@ namespace CnV
 			var anyRemoved = false;
 
 			// first remove
-			{
-			__restartRemove:
-				int i = 0;
-				foreach(var x in xQ) {
-					if(!rtQ.Any(a => equals(a,x))) {
-						xQ.RemoveAt(i);
-						anyRemoved=true;
-						goto __restartRemove;
-					}
-					++i;
-				}
-			}
+			//{
+			//__restartRemove:
+			//	int i = 0;
+			//	foreach(var x in xQ) {
+			//		if(!rtQ.Any(a => equals(a,x))) {
+			//			xQ.RemoveAt(i);
+			//			anyRemoved=true;
+			//			goto __restartRemove;
+			//		}
+			//		++i;
+			//	}
+			//}
 
 			for(int i = 0;i<lg;++i) {
 				var op = rtQ[i];
@@ -321,6 +321,14 @@ namespace CnV
 
 				}
 			}
+
+			// removed unused, these are all at the end now
+			for(int r = xQ.Count;--r >= lg;)
+			{
+				xQ.RemoveAt(r);
+				anyRemoved=true;
+			}
+			
 			Assert(xQ.Count == rtQ.Count);
 			Assert(xQ.Count == lg);
 			//for(int i = 0;i<lg;++i) {
@@ -1286,7 +1294,12 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 			{
 				flyout.AddItem("Return",Symbol.Undo,() =>
 				{
-					new CnVEventReturnTroops(army).EnqueueAsap();
+					if(army.isDefense || army.isSieging) {
+						SendTroops.ShowInstance(prior: army);
+					}
+					else {
+						CnVEventReturnTroops.TryReturn(army);
+					}
 				});
 			}
 			if( army.canUseWings)
@@ -1333,7 +1346,7 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 					// return troops first
 					if( army.arrived)
 					{
-						new CnVEventReturnTroops(army).EnqueueAsap(); 
+						CnVEventReturnTroops.TryReturn(army); 
 					}
 
 					try
@@ -1372,7 +1385,7 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 
 			flyout.AddItem("Return",Symbol.Undo,() =>
 			{
-				new CnVEventReturnTroops(army).EnqueueAsap();
+				CnVEventReturnTroops.TryReturn(army);
 			});
 			if( army.canUseWings)
 				flyout.AddItem("Speedup",Symbol.Forward,SpeedupDefense);

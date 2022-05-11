@@ -1008,7 +1008,7 @@ internal partial class GameClient
 									if(!city.testContinentFilter)
 										continue;
 
-									if((isIncoming&&city.incoming.Any())||(!isIncoming&&city.outgoing.Any()))
+									if(isIncoming ? city.incoming.Any() :city.outgoing.Any() )
 									{
 
 										var cityCid = city.cid;

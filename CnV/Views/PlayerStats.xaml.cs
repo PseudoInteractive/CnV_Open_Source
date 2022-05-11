@@ -134,5 +134,63 @@ namespace CnV
 		{
 			Artifacts.ShowInstance();
 		}
+
+		private void OutgoingTapped(object sender,RoutedEventArgs e) {
+			OutgoingTab.instance.Show();
+		}
+		internal void UpdateOutgoingText() {
+			var c = OutgoingTab.GetOutgoingCounts();
+			if( c.forAlliance==0) {
+				outgoing.Visibility = Visibility.Collapsed;
+			}
+			else {
+				outgoing.Text = $"{c.forAlliance}({c.forMe})";
+				outgoing.Visibility = Visibility.Visible;
+			}
+		}
+		internal string outgoingToolTip {
+			get {
+				{
+					var c = OutgoingTab.GetOutgoingCounts();
+					if( c.forAlliance==0) {
+						return "No outgoing";
+					}
+					else {
+						return $"{c.forAlliance} outgoing for alliance\n{c.forMe} outgoing for {Player.myShortName}\nNext: {c.nextArrival}";
+
+					}
+				}
+			}
+		}
+		
+		internal void UpdateIncomingText() {
+			var c = IncomingTab.GetIncomingCounts();
+			if(c.forAlliance==0 ) {
+				outgoing.Visibility = Visibility.Collapsed;
+			}
+			else {
+				outgoing.Text = $"{c.forAlliance}({c.forMe})";
+				outgoing.Visibility = Visibility.Visible;
+			}
+		}
+		internal string incomingToolTip {
+			get {
+				{
+					var c = IncomingTab.GetIncomingCounts();
+					if(c.forAlliance==0 ) {
+						return "No Incoming";
+					}
+					else {
+						return $"{c.forAlliance} incoming for alliance\n{c.forMe} incoming for {Player.myShortName}\nNext: {c.nextArrival}";
+
+					}
+				}
+			}
+		}
+
+		private void IncomingTapped(object sender,RoutedEventArgs e) {
+			IncomingTab.instance.Show();
+
+		}
 	}
 }

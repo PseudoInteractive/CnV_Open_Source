@@ -36,7 +36,7 @@
 
                         x:FieldModifier="public"
 						IsTabStop="True"
-               AllowFocusOnInteraction="True"
+			              AllowFocusOnInteraction="True"
 						Loaded="DataGridLoaded"
                         AutoGenerateColumns="False"
                         
@@ -44,10 +44,11 @@
                         FontSize="{StaticResource MediumFontSize}"
                         RowHeight="{StaticResource MediumGridRowHeight}"
                                 IsTextScaleFactorEnabled="False"
-
+	
+					   AllowSelectionOnPointerPressed="True"
                         
-                        
-                        SelectionMode="Extended"
+                        ItemsSource="{x:Bind citiesWithIncoming, Mode=OneWay}"
+                        SelectionMode="Single"
                         SelectionUnit="Row"
                         SelectionChanged="defenderGrid_SelectionChanged"
                         >
@@ -151,14 +152,12 @@
                         AllowFocusOnInteraction="True"
 						
 						
-                                    ItemsSource="{x:Bind game:Army.EmptyArray, Mode=OneWay}"
-                                    
 
 						
                                     FontSize="{StaticResource MediumFontSize}"
                                     HorizontalAlignment="Stretch"
                                     RowHeight="42"
-                                    
+                                    ItemsSource="{x:Bind armiesIncoming, Mode=OneWay}"
                                     
                                     
                                     AutoGenerateColumns="False">

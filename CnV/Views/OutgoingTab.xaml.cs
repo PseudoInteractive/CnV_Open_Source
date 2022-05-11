@@ -12,7 +12,7 @@ namespace CnV.Views
 
 	public sealed partial class OutgoingTab : UserTab
     {
-		bool includeInternal;
+		bool includeInternal=true;
 		int filterFrom = filterFromAlliance;
 		const int filterFromMe = 0;
 		const int filterFromSubs = 1;
@@ -57,39 +57,58 @@ namespace CnV.Views
 		}
 
 
-		NotifyCollection<City> attackerSource = new();
+		ObservableCollection<City> targets = new();
+		ObservableCollection<Army> targetIncoming = new();
 
-		
+		public static (int forAlliance, int forMe, ServerTime nextArrival) GetOutgoingCounts() {
+			int allianceOutgoing = 0;
+			int myOutgoing = 0;
+			ServerTime nextArrival = ServerTime.infinity;
+			foreach(var c in City.allianceCities) {
+				foreach(var o in c.outgoing)
+						{
+					if(o.isOutgoingAttack) {
+						allianceOutgoing++;
+						if(c.isMine)
+							++myOutgoing;
+						nextArrival = nextArrival.Min(o.arrival);
+					}
+				}
+			}
+			return (allianceOutgoing, myOutgoing,nextArrival);
+		}
 
 		public static void NotifyOutgoingUpdated()
         {
-			if(OutgoingTab.IsVisible())
-			{
-				AppS.QueueOnUIThread(() =>
-				{ 
-				try
-				{
-					instance.attackerSource.Set((instance.filterFrom switch
-					{
-						filterFromMe => City.myCities,
-						filterFromSubs => City.subCities,
-						filterFromAlliance => City.allianceCities,
-						_ => City.allCities,
+			if(!Sim.isPastWarmup)
+				return;
 
-					}).SelectMany(c => c.outgoing.Where(a => a.isOutgoingAttack ).Select(a => a.targetCity)).Distinct().
-					Where(w =>
-																					  w.testContinentFilter
-																					&& (instance.includeInternal || !w.isAllyOrNap)).OrderBy(w => w.firstIncoming)); ; ;
-					instance.attackerSource.ItemContentChanged();
-					selChanged.Go();
+				AppS.QueueOnUIThread(() => {
+					PlayerStats.instance.UpdateOutgoingText();
+					if(OutgoingTab.IsVisible()) {
+
+						try {
+							var _targets = (instance.filterFrom switch {
+								filterFromMe => City.myCities,
+								filterFromSubs => City.subCities,
+								filterFromAlliance => City.allianceCities,
+								_ => City.allCities,
+
+							}).SelectMany(c => c.outgoing.Where(a => a.isOutgoingAttack).Select(a => a.targetCity)).Distinct().
+							Where(w =>
+																							  w.testContinentFilter
+																							&& (instance.includeInternal || !w.isAllyOrNap)).OrderBy(w => w.firstIncoming).ToArray();
+							_targets.SyncList(instance.targets);
+							selChanged.Go();
+						}
+						catch(Exception e) {
+							LogEx(e);
+						}
+					}
 				}
-				catch(Exception e)
-				{
-					LogEx(e);
-				}
-			}
 				);
-            }
+			
+            
         }
 
 		
@@ -119,7 +138,8 @@ namespace CnV.Views
 			var sel = instance.attackerGrid.SelectedItem as Spot;
 			if (sel != null)
 			{
-				instance.armyGrid.ItemsSource = sel.incoming.Where( a => a.shareInfo );
+
+				sel.incoming.Where( a => a.shareInfo ).ToArray().SyncList(instance.targetIncoming);
 				if (Settings.fetchFullHistory)
 				{
 					var tab = HitHistoryTab.instance;
@@ -134,6 +154,9 @@ namespace CnV.Views
 						tab.refresh.Go();
 					}
 				}
+			}
+			else {
+				targetIncoming.Clear();
 			}
 			return Task.CompletedTask;
 		}

@@ -58,14 +58,10 @@
   </ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Azure.Data.Tables" Version="12.3.0" />
 		<PackageReference Include="CommunityToolkit.WinUI.Notifications" Version="7.1.2" />
 		<PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
 		<PackageReference Include="DirectXTexNet" Version="1.0.3" />
 		<PackageReference Include="DSharpPlus" Version="4.2.0" />
-		<PackageReference Include="Enums.NET" Version="4.0.0" />
-		<PackageReference Include="Humanizer.Core" Version="2.13.14" />
-		<PackageReference Include="MessagePack" Version="2.3.85" />
 		<PackageReference Include="MessagePackAnalyzer" Version="2.4.14-alpha">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -73,8 +69,8 @@
 		<PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.5.0" />
 		<PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.5.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0-preview.3.22175.4" />
-		<PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.4" />
-		<PackageReference Include="Microsoft.Extensions.Primitives" Version="7.0.0-preview.3.22175.4" />
+		<PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.5" />
+		<PackageReference Include="Microsoft.Extensions.Primitives" Version="7.0.0-preview.4.22229.4" />
 		<PackageReference Include="Microsoft.Identity.Client" Version="4.43.2">
 			<TreatAsUsed>true</TreatAsUsed>
 		</PackageReference>
@@ -83,17 +79,11 @@
 		<PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
 		<PackageReference Include="Azure.Data.Tables" Version="12.5.0" />
 		<PackageReference Include="Azure.Storage.Blobs" Version="12.12.0" />
-		<PackageReference Include="CommunityToolkit.WinUI.Notifications" Version="7.1.2" />
-		<PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
 		<PackageReference Include="Enums.NET" Version="4.0.0" />
 		<PackageReference Include="Grpc.Net.Client" Version="2.45.0" />
 		<PackageReference Include="Humanizer.Core" Version="2.14.1" />
 		<PackageReference Include="MessagePack" Version="2.4.14-alpha" />
 		<PackageReference Include="MagicOnion.Client" Version="4.4.1" />
-		<PackageReference Include="Microsoft.Toolkit" Version="7.1.2">
-			<TreatAsUsed>true</TreatAsUsed>
-		</PackageReference>
-		<PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
 		<PackageReference Include="Microsoft.Windows.CsWinRT" Version="1.6.3" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.197" />
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.3" />
@@ -116,13 +106,13 @@
 		<PackageReference Include="SharpDX.MediaFoundation" Version="4.2.0" />
 		<PackageReference Include="SharpGen.Runtime.COM" Version="2.0.0-beta.10" />
 		<PackageReference Include="Syncfusion.Scheduler.WinUI" Version="20.1.0.52" />
-		<PackageReference Include="System.Collections.Immutable" Version="7.0.0-preview.3.22175.4">
+		<PackageReference Include="System.Collections.Immutable" Version="7.0.0-preview.4.22229.4">
 			<TreatAsUsed>true</TreatAsUsed>
 		</PackageReference>
 		<PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="7.0.0-preview.2.22152.2">
 			<TreatAsUsed>true</TreatAsUsed>
 		</PackageReference>
-		<PackageReference Include="System.Text.Json" Version="7.0.0-preview.3.22175.4" />
+		<PackageReference Include="System.Text.Json" Version="7.0.0-preview.4.22229.4" />
 		<PackageReference Include="ZString" Version="2.4.4" />
 	</ItemGroup>
 	<ItemGroup>

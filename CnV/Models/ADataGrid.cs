@@ -259,11 +259,12 @@ public static partial class ADataGrid
 			 var _lock0 = new ADataGrid.ChangeContextDisposable(wantChangeContext ? grid : null);
 			//	grid.FontFamily = App.CnVFont;
 			//grid.FilterRowPosition=FilterRowPosition.FixedTop;
-			//	grid.ColumnSizer.FontStretch = Windows.UI.Text.FontStretch.Condensed;
+				grid.ColumnSizer.FontStretch = Windows.UI.Text.FontStretch.Condensed;
 				grid.ColumnSizer.FontFamily = XamlHelper.cnvFont;
 			//	grid.ColumnSizer.FontWeight = Microsoft.UI.Text.FontWeights.Normal;
-			grid.ColumnSizer.FontSize = Settings.mediumFontSize;
-			grid.ColumnSizer.Margin = new(16);
+//			grid.ColumnSizer.FontSize = Settings.mediumFontSize;
+			grid.ColumnSizer.AutoFitMode = AutoFitMode.Default;
+			//grid.ColumnSizer.Margin = new(16);
 		//	grid.FontSize = Settings.smallFontSize;
 			grid.AlternationCount = 2;
 		//	grid.AllowRowHoverHighlighting = true;
@@ -288,7 +289,7 @@ public static partial class ADataGrid
 			grid.AllowEditing=false;
 			grid.AllowDraggingColumns=true;
 			grid.AllowSorting=true;
-			grid.ColumnSizer.AutoFitMode = AutoFitMode.SmartFit;
+	//		grid.ColumnSizer.AutoFitMode = AutoFitMode.SmartFit;
 
 			grid.AllowTriStateSorting=true;
 //			grid.FontStretch = Windows.UI.Text.FontStretch.Condensed;
@@ -299,11 +300,16 @@ public static partial class ADataGrid
 			grid.GridContextFlyoutOpening += UserTab.ContextFlyoutOpening;
 			grid.RecordContextFlyout = new();
 			grid.RecordContextFlyout.SetXamlRoot(grid);
+
+			grid.HeaderContextFlyout = new();
+			grid.HeaderContextFlyout.SetXamlRoot(grid);
+
+
 			grid.CurrentCellRequestNavigate += UserTab.CelNavigate;
 			grid.CellTapped += ADataGrid.SfCellTapped;
 		//	grid.AllowGrouping = false;
 			grid.ShowToolTip=true;
-			grid.IsRightTapEnabled=true;
+		//	grid.IsRightTapEnabled=true;
 			grid.AllowFiltering = false;
 
 			//				grid.AllowFrozenGroupHeaders = false;
@@ -320,8 +326,8 @@ public static partial class ADataGrid
 				
 				//c.CellStyle = App.instance.Resources["SfTextCell"] as Style;
 			}
-					grid.ColumnSizer.ResetAutoCalculationforAllColumns();
-	
+			grid.ColumnSizer.ResetAutoCalculationforAllColumns();
+			grid.ColumnSizer.Refresh();
 			return _lock0;
 
 		}
