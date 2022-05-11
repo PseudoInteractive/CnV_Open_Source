@@ -31,7 +31,7 @@ Loaded="DataGridLoaded"
 					    FontSize="{StaticResource MediumFontSize}"
                          
                         RowHeight="{StaticResource ShortGridRowHeight}"
-                        
+                        ItemsSource="{x:Bind reports, Mode=OneWay}"
                         SelectionMode="Single"
                         SelectionUnit="Row"
 					   >

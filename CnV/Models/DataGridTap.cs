@@ -32,7 +32,7 @@ namespace CnV;
 				Assert(e.Column?.HeaderText is not null);
 				if(e.Record is null)
 				{
-					Assert(false);
+					//Assert(false);
 					return;
 				}
 				//	Note.Show($"Cell Tap {e.Column.HeaderText??"NA"}  {e.RowColumnIndex} {e.RowColumnIndex} {e.Record.ToString} ");

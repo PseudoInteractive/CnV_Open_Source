@@ -35,15 +35,14 @@
 						Grid.Row="1"
 
                         x:FieldModifier="public"
-						IsTabStop="True"
-			              AllowFocusOnInteraction="True"
+						
 						Loaded="DataGridLoaded"
                         AutoGenerateColumns="False"
                         
                         
                         FontSize="{StaticResource MediumFontSize}"
                         RowHeight="{StaticResource MediumGridRowHeight}"
-                                IsTextScaleFactorEnabled="False"
+                            
 	
 					   AllowSelectionOnPointerPressed="True"
                         
@@ -95,14 +94,14 @@
 									   
 
                                                       TextAlignment="Center" />
-				<sf:GridNumericColumn MappingName="incomingAttacks"
-                                            HeaderText="inA"
+				<sf:GridNumericColumn MappingName="incomingAttackCount"
+									  HeaderText="#atk"
 									   
 
                                             TextAlignment="Center"
                                             DisplayNumberFormat="N0" />
 				<sf:GridNumericColumn MappingName="incomingDefenders"
-                                            HeaderText="inD"
+                                            HeaderText="#def"
 									   
 
                                             TextAlignment="Center"
@@ -149,8 +148,7 @@
 
 		<sf:SfDataGrid x:Name="armyGrid"
                         Grid.Row="2"
-                        AllowFocusOnInteraction="True"
-						
+                       
 						
 
 						

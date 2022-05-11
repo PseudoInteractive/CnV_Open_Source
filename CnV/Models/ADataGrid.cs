@@ -283,9 +283,9 @@ public static partial class ADataGrid
 			grid.AllowResizingColumns = true;
 		//	grid.CanMaintainScrollPosition=true;
 			//grid.ShowToolTip=true;
-		//	grid.CellStyle = App.instance.Resources["SfTextCell"] as Style;
-	//		grid.RowStyle = App.instance.Resources["sfRowStyle"] as Style;
-	//		grid.HeaderStyle=App.instance.Resources["sfHeaderStyle"] as Style;
+			grid.CellStyle = App.instance.Resources["SfTextCell"] as Style;
+			grid.RowStyle = App.instance.Resources["sfRowStyle"] as Style;
+			grid.HeaderStyle=App.instance.Resources["sfHeaderStyle"] as Style;
 			grid.AllowEditing=false;
 			grid.AllowDraggingColumns=true;
 			grid.AllowSorting=true;
@@ -324,10 +324,12 @@ public static partial class ADataGrid
 				c.ShowHeaderToolTip=true;
 				c.ShowToolTip=true;
 				
-				//c.CellStyle = App.instance.Resources["SfTextCell"] as Style;
+			//	c.CellStyle = App.instance.Resources["SfTextCell"] as Style;
+				//c.
 			}
+			
 			grid.ColumnSizer.ResetAutoCalculationforAllColumns();
-			grid.ColumnSizer.Refresh();
+		//	grid.ColumnSizer.Refresh();
 			return _lock0;
 
 		}

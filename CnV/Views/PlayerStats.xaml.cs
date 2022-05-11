@@ -147,6 +147,7 @@ namespace CnV
 				outgoing.Text = $"{c.forAlliance}({c.forMe})";
 				outgoing.Visibility = Visibility.Visible;
 			}
+			OnPropertyChanged();
 		}
 		internal string outgoingToolTip {
 			get {
@@ -166,12 +167,13 @@ namespace CnV
 		internal void UpdateIncomingText() {
 			var c = IncomingTab.GetIncomingCounts();
 			if(c.forAlliance==0 ) {
-				outgoing.Visibility = Visibility.Collapsed;
+				incoming.Visibility = Visibility.Collapsed;
 			}
 			else {
-				outgoing.Text = $"{c.forAlliance}({c.forMe})";
-				outgoing.Visibility = Visibility.Visible;
+				incoming.Text = $"{c.forAlliance}({c.forMe})";
+				incoming.Visibility = Visibility.Visible;
 			}
+			OnPropertyChanged();
 		}
 		internal string incomingToolTip {
 			get {

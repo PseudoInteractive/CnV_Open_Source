@@ -53,10 +53,10 @@
 					 />
 							<StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal"  Margin="8,0,0,0" >
 						<TextBlock Text="{x:Bind ownedStr,Mode=OneWay}" Style="{StaticResource TextBlockMedium}"  Margin="3,0,3,0" VerticalAlignment="Center"  TextAlignment="Center"  TextWrapping="Wrap"/>
-						<NumberBox  Style="{StaticResource NumberBoxSmall}" Value="{x:Bind nbEnterUse,Mode=TwoWay}" ValueChanged="FilterPositive"  Margin="8,2,2,2" Width="110" />
+						<NumberBox  Style="{StaticResource NumberBoxSmallPositive}" Value="{x:Bind nbEnterUse,Mode=TwoWay}" ValueChanged="FilterPositive"  Margin="8,2,2,2" Width="110" />
 								<Button Content ="Use"  Margin="2,1,2,1" Click="{x:Bind UseClick}" Style="{StaticResource ButtonSmall}" />
 								<TextBlock Text="{x:Bind priceStr,Mode=OneWay}" Style="{StaticResource TextBlockMedium}"  Margin="3,0,3,0" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" />
-						<NumberBox Style="{StaticResource NumberBoxSmall}" Value="{x:Bind nbEnterBuy,Mode=TwoWay}"  ValueChanged="FilterPositive" Margin="8,2,2,0" Width="110" />
+						<NumberBox Style="{StaticResource NumberBoxSmallPositive}" Value="{x:Bind nbEnterBuy,Mode=TwoWay}"  ValueChanged="FilterPositive" Margin="8,2,2,0" Width="110" />
 								<Button Content ="Buy"  Margin="2,1,2,1" Click="{x:Bind BuyClick}" Style="{StaticResource ButtonSmall}" />
 							</StackPanel>
 

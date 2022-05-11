@@ -433,7 +433,7 @@ public partial class UserTab:UserControl, IANotifyPropertyChanged
 					break;
 				}
 			case ContextFlyoutType.Header: {
-					var info = e.ContextFlyoutInfo as GridContextFlyoutInfo;
+					var info = e.ContextFlyoutInfo as GridColumnContextFlyoutInfo;
 					var dg = info.DataGrid;
 					Assert(info is not null);
 					if(info is not null) {
@@ -447,6 +447,7 @@ public partial class UserTab:UserControl, IANotifyPropertyChanged
 							if(dg.FilterRowPosition == FilterRowPosition.Top) {
 								dg.FilterRowPosition = FilterRowPosition.None;
 								dg.AllowFiltering = true;
+							//	dg.filter
 							}
 							else if(dg.AllowFiltering) {
 								dg.AllowFiltering = false;
@@ -454,6 +455,7 @@ public partial class UserTab:UserControl, IANotifyPropertyChanged
 							}
 							else {
 								dg.FilterRowPosition = FilterRowPosition.Top;
+								dg.AllowFiltering = true;
 
 							}
 						});

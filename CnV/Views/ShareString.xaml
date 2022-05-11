@@ -108,14 +108,14 @@
 										Value="{x:Bind cnv:Settings.cottageLevel, Mode=TwoWay}"
 								   ToolTipService.ToolTip="level to which cottages are built during autobuild"
 										Width="100"
-										Style="{StaticResource NumberBoxSmall}"
+										Style="{StaticResource NumberBoxSmallPositive}"
 										SmallChange="1" />
 
 						<ToggleSwitch Header="Clear Res" IsOn="{x:Bind cnv:Settings.clearRes, Mode=TwoWay}" OnContent="Yes" OffContent="Leave" />
 						<ToggleSwitch Header="Place Cabins" IsOn="{x:Bind cnv:Settings.autoBuildCabins, Mode=TwoWay}" OnContent="Yes" OffContent="Skip" ToolTipService.ToolTip="If set, cabins will be places when setup is complete" />
-						<NumberBox Header="Cabins to place" Value="{x:Bind cnv:Settings.startCabinCount,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="The number of cabins to place if PlaceCabins is set" />
-						<NumberBox  Header="TS Castle" Value="{x:Bind cnv:Settings.tsForCastle, Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="When a city has this many TS or more, it will start its castle" />
-						<NumberBox Header="TS Sorc Tower" Value="{x:Bind cnv:Settings.tsForSorcTower, Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="When a city has this many TS or more, the sorc tower will be raised to level 10" />
+						<NumberBox Header="Cabins to place" Value="{x:Bind cnv:Settings.startCabinCount,Mode=TwoWay}" Style="{StaticResource NumberBoxSmallPositive}" ToolTipService.ToolTip="The number of cabins to place if PlaceCabins is set" />
+						<NumberBox  Header="TS Castle" Value="{x:Bind cnv:Settings.tsForCastle, Mode=TwoWay}" Style="{StaticResource NumberBoxSmallPositive}" ToolTipService.ToolTip="When a city has this many TS or more, it will start its castle" />
+						<NumberBox Header="TS Sorc Tower" Value="{x:Bind cnv:Settings.tsForSorcTower, Mode=TwoWay}" Style="{StaticResource NumberBoxSmallPositive}" ToolTipService.ToolTip="When a city has this many TS or more, the sorc tower will be raised to level 10" />
 
 						<CheckBox Content="AutobuildWalls"
 							  Margin="4"
@@ -123,7 +123,7 @@
 							ToolTipService.ToolTip="Checked: Turn on autobuild walls, Unchecked; Turn off autobuild walls, Kind of checked: Leave it"
 							  IsChecked="{x:Bind cnv:Settings.autobuildWalls, Mode=TwoWay}" />
 
-						<NumberBox Header="WallLevel" Value="{x:Bind cnv:Settings.autoWallLevel, Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="How high to automatically build the wall during 'do the stuff'. The wall is built right before the clastle.  If set to 10, autobuild is turned on.  Values other than 1 or 10 are not guaranteed"/>
+						<NumberBox Header="WallLevel" Value="{x:Bind cnv:Settings.autoWallLevel, Mode=TwoWay}" Style="{StaticResource NumberBoxSmallPositive}" ToolTipService.ToolTip="How high to automatically build the wall during 'do the stuff'. The wall is built right before the clastle.  If set to 10, autobuild is turned on.  Values other than 1 or 10 are not guaranteed"/>
 
 						<CheckBox Content="AutobuildTowers"
 							  Margin="4"
@@ -131,10 +131,10 @@
 							ToolTipService.ToolTip="Checked: Turn on autobuild towers, Unchecked; Turn off autobuild towers, Kind of checked: Leave it"
 							  IsChecked="{x:Bind cnv:Settings.autobuildTowers, Mode=TwoWay}" />
 
-						<NumberBox Header="TowerLevel" Value="{x:Bind cnv:Settings.autoTowerLevel,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="How high to automatically build towers during 'do the stuff'.  Towers are placed right before the clastle.  If set to 10, autobuild is turned on. Values other than 1 or 10 are not guaranteed" />
-						<NumberBox Header="Scout Towers" Value="{x:Bind cnv:Settings.scoutpostCount,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="The number of scout towers to place.  They are placed with the castle  during 'do the stuff'" />
-						<NumberBox Header="Storehouses" Value="{x:Bind cnv:Settings.intialStorehouses,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="The number of storehouses to start a city with" />
-						<NumberBox Header="Markets" Value="{x:Bind cnv:Settings.intialMarkets,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="The number of markets to start a city with" />
+						<NumberBox Header="TowerLevel" Value="{x:Bind cnv:Settings.autoTowerLevel,Mode=TwoWay}" Style="{StaticResource NumberBoxSmallPositive}" ToolTipService.ToolTip="How high to automatically build towers during 'do the stuff'.  Towers are placed right before the clastle.  If set to 10, autobuild is turned on. Values other than 1 or 10 are not guaranteed" />
+						<NumberBox Header="Scout Towers" Value="{x:Bind cnv:Settings.scoutpostCount,Mode=TwoWay}" Style="{StaticResource NumberBoxSmallPositive}" ToolTipService.ToolTip="The number of scout towers to place.  They are placed with the castle  during 'do the stuff'" />
+						<NumberBox Header="Storehouses" Value="{x:Bind cnv:Settings.intialStorehouses,Mode=TwoWay}" Style="{StaticResource NumberBoxSmallPositive}" ToolTipService.ToolTip="The number of storehouses to start a city with" />
+						<NumberBox Header="Markets" Value="{x:Bind cnv:Settings.intialMarkets,Mode=TwoWay}" Style="{StaticResource NumberBoxSmallPositive}" ToolTipService.ToolTip="The number of markets to start a city with" />
 					</StackPanel>
 				</Border>
 

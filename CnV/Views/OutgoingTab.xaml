@@ -24,13 +24,14 @@
         <sf:SfDataGrid Grid.Row="1" x:Name="attackerGrid"
 						x:FieldModifier="public"
                         AutoGenerateColumns="False"
-						IsTabStop="True"
+						
 						Loaded="DataGridLoaded"
                         FontSize="{StaticResource MediumFontSize}"
                         RowHeight="{StaticResource MediumGridRowHeight}"
                         SelectionMode="Single"
+					   AllowSelectionOnPointerPressed="True"
 						ItemsSource="{x:Bind targets,Mode=OneWay}"
-                        AllowFocusOnInteraction="True"
+                      
                         SelectionChanged="defenderGrid_SelectionChanged"
                         SelectionUnit="Row"
        >
@@ -50,11 +51,11 @@
 									   HeaderText="First"
                                        TextAlignment="Left"
                                         />
-				<sf:GridNumericColumn MappingName="incomingAttacks"
-                                            HeaderText="inA"
+				<sf:GridNumericColumn MappingName="incomingAttackCountIncludingOutOfRange"
+                                            HeaderText="#atk"
                                             
                                             TextAlignment="Center"
-                                            DisplayNumberFormat="N0"
+                                      
                                              />
                 <sf:GridNumericColumn MappingName="incTotal"
                                             HeaderText="incTS"
@@ -90,13 +91,13 @@
         </sf:SfDataGrid>
         <sf:SfDataGrid x:Name="armyGrid"
                                     ItemsSource="{x:Bind targetIncoming, Mode=OneWay}"
-									IsTabStop="True"
+									
                                     Grid.Row="2"
                                     FontSize="{StaticResource MediumFontSize}"
                                     HorizontalAlignment="Stretch"
                                     RowHeight="{StaticResource MediumGridRowHeight}"
                                     
-                        AllowFocusOnInteraction="True"
+                       
                                     
                                     
                                     AutoGenerateColumns="False">

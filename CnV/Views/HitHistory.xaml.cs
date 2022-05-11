@@ -15,24 +15,27 @@ namespace CnV.Views
 				cityFilterCombo.SelectedItem = c;
 			});
 		}
-
+		ObservableCollection<BattleReport> reports = new(); 
 		public override TabPage defaultPage => TabPage.secondaryTabs;
 		//public ArmyArray history { get; set; } = ArmyArray.Empty;
 		public void UpdateDataGrid() {
 
 			var sel = instance.cityFilterCombo.SelectedItem as City;
+
+			BattleReport[] items;
 			if(sel == null || sel.IsInvalid())
-				historyGrid.ItemsSource = BattleReport.all;
+				items= BattleReport.all.ToArray();
 			else {
 				var cid = sel.cid;
-				historyGrid.ItemsSource = BattleReport.all.Where(s => s.targetCid == cid || s.sourceCid==cid).ToArray();
+				items = BattleReport.all.Where(s => s.targetCid == cid || s.sourceCid==cid).ToArray();
 			}
-			if(IncomingTab.IsVisible()) {
-				IncomingTab.NotifyIncomingUpdated();
-			}
-			if(OutgoingTab.IsVisible()) {
-				OutgoingTab.NotifyOutgoingUpdated();
-			}
+			items.SyncList(reports);
+			//if(IncomingTab.IsVisible()) {
+			//	IncomingTab.NotifyIncomingUpdated();
+			//}
+			//if(OutgoingTab.IsVisible()) {
+			//	OutgoingTab.NotifyOutgoingUpdated();
+			//}
 
 		}
 		public static void CombatNotify() {

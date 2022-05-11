@@ -134,23 +134,23 @@
 									 Value="{x:Bind cnv:Settings.uiUpdateDelay,Mode=TwoWay}"
 									 SmallChange="1"
 									 LargeChange="10"
-									 Style="{StaticResource NumberBoxSmall}" />
+									 Style="{StaticResource NumberBoxSmallPositive}" />
 				<NumberBox  Header="Debug Layer"
 									 Value="{x:Bind cnv:GameClient.debugLayer,Mode=TwoWay}"
 									 SmallChange="1"
 									 LargeChange="10"
-									 Style="{StaticResource NumberBoxSmall}" />
+									 Style="{StaticResource NumberBoxSmallPositive}" />
 				<NumberBox  Header="Show Attacks Limit"
 									 Value="{x:Bind cnv:Settings.showAttacksLimit,Mode=TwoWay}"
 									 SmallChange="1"
 									 ToolTipService.ToolTip="If there are more incoming attacks than this, only attacks for selected cities will be shown, can be combined with Outgoing Visible or Incoming Visble to see everything (tip: use a continent filter to help performance)"
 									 LargeChange="10"
-									 Style="{StaticResource NumberBoxSmall}" />
+									 Style="{StaticResource NumberBoxSmallPositive}" />
 				<NumberBox  Header="Spot MRU count"
 									 Value="{x:Bind cnv:Settings.mruSize,Mode=TwoWay}"
 									 SmallChange="1"
 									 LargeChange="10"
-									 Style="{StaticResource NumberBoxSmall}" />
+									 Style="{StaticResource NumberBoxSmallPositive}" />
 
 				<ToggleSwitch  Header="City Tint"
 							   IsOn="{x:Bind cnv:Settings.tintCities, Mode=TwoWay}"
@@ -192,20 +192,21 @@
 									 Value="{x:Bind cnv:Settings.resetRaidsCarry,Mode=TwoWay}"
 									 SmallChange="1" ToolTipService.ToolTip="When resetting raids, if [Min(carry%)] &lt;= [Reset Raids Carry %] raids are reset"
 									 LargeChange="5"
-									 Style="{StaticResource NumberBoxSmall}" />
+									 Style="{StaticResource NumberBoxSmallPositive}" />
 				<NumberBox Header="Reset Raids Idle %"
 									 Value="{x:Bind cnv:Settings.resetRaidsIdle,Mode=TwoWay}"
 									 SmallChange="1" ToolTipService.ToolTip="When resetting raids, if [idle troops]/[total troops] > [Reset Raids Idle %] raids are reset"
 									 LargeChange="5"
-									 Style="{StaticResource NumberBoxSmall}" />
+									 Style="{StaticResource NumberBoxSmallPositive}" />
 				<NumberBox Header="Return Raids Offset"
 									 Value="{x:Bind cnv:Settings.returnRaidsBias,Mode=TwoWay}"
 									 SmallChange="0.125"
 									ToolTipService.ToolTip="When attacks are scheduled and raids are asked to return before departure, they will come home this many hours before departure"
 									 LargeChange="1"
-									 Style="{StaticResource NumberBoxSmall}" />
+									 Style="{StaticResource NumberBoxSmallPositive}" />
 				<NumberBox Header="NotificationDuration"
 									Value="{x:Bind cnv:Settings.notificationDuration, Mode=TwoWay }"
+						    Style="{StaticResource NumberBoxSmallPositive}"
 									SmallChange="1"
 									ToolTipService.ToolTip="Specifies how long notications delays last on screen, regardless of durations you can click on the notifications to dismiss them"
 									/>
@@ -233,19 +234,19 @@
 								<wct:WrapPanel Orientation="Horizontal" Margin="4">
 									<NumberBox x:Name="exportRanksCont"
 										NumberFormatter="{x:Bind cnv:App.formatterInt,Mode=OneTime}"
-										Style="{StaticResource NumberBoxSmall}"
+										Style="{StaticResource NumberBoxSmallPositive}"
 										Header="Continent"
 										ToolTipService.ToolTip="56 means world"
 										Value="3" />
 									<NumberBox x:Name="exportRanksCities"
 										NumberFormatter="{x:Bind cnv:App.formatterInt,Mode=OneTime}"
-										Style="{StaticResource NumberBoxSmall}"
+										Style="{StaticResource NumberBoxSmallPositive}"
 										Header="Min Cities"
 										ToolTipService.ToolTip="Alliances with fewer than this many cities are skipped"
 										Value="300" />
 									<NumberBox x:Name="exportRanksDays"
 										NumberFormatter="{x:Bind cnv:App.formatter2Digit,Mode=OneTime}"
-										Style="{StaticResource NumberBoxSmall}"
+										Style="{StaticResource NumberBoxSmallPositive}"
 										Header="Days"
 										ToolTipService.ToolTip="Max number of days to export"
 										Value="7" />
@@ -268,13 +269,13 @@
 									<NumberBox 
 									Value="{x:Bind cnv:Settings.exportContinent, Mode=TwoWay}"
 									NumberFormatter="{x:Bind cnv:App.formatterInt,Mode=OneTime}"
-									Style="{StaticResource NumberBoxSmall}"
+									Style="{StaticResource NumberBoxSmallPositive}"
 									Header="Continent"
 									ToolTipService.ToolTip="56 means world"
 									 />
 									<NumberBox x:Name="exportTSPlayers"
 									NumberFormatter="{x:Bind cnv:App.formatterInt,Mode=OneTime}"
-									Style="{StaticResource NumberBoxSmall}"
+									Style="{StaticResource NumberBoxSmallPositive}"
 									Header="Players"
 									ToolTipService.ToolTip="Max # of players to export"
 									Value="10" />
@@ -409,7 +410,7 @@
 					<NumberBox Header="Cottage Level"
 										Value="{x:Bind cnv:Settings.cottageLevel, Mode=TwoWay}"
 										Width="120"
-										Style="{StaticResource NumberBoxSmall}"
+										Style="{StaticResource NumberBoxSmallPositive}"
 										SmallChange="1" />
 					<CheckBox Content="Autobuild"
 							  Margin="4"

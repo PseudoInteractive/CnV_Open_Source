@@ -99,7 +99,7 @@ namespace CnV.Views
 																							  w.testContinentFilter
 																							&& (instance.includeInternal || !w.isAllyOrNap)).OrderBy(w => w.firstIncoming).ToArray();
 							_targets.SyncList(instance.targets);
-							selChanged.Go();
+							UpdateTargetIncoming();
 						}
 						catch(Exception e) {
 							LogEx(e);
@@ -131,42 +131,44 @@ namespace CnV.Views
 
 		public static bool IsVisible() => instance.isFocused;
 
-		static Debounce selChanged = new Debounce(SelChanged) { runOnUiThread = true };
-
-		static Task SelChanged()
+		//static Debounce selChanged = new Debounce(SelChanged) { runOnUiThread = true };
+		static City lastSelected;
+		static void UpdateTargetIncoming()
 		{
 			var sel = instance.attackerGrid.SelectedItem as Spot;
+			lastSelected =sel;
 			if (sel != null)
 			{
 
-				sel.incoming.Where( a => a.shareInfo ).ToArray().SyncList(instance.targetIncoming);
-				if (Settings.fetchFullHistory)
-				{
-					var tab = HitHistoryTab.instance;
-					tab.SetFilter(sel);
-					if (!tab.isFocused)
-					{
-						tab.ShowOrAdd(true, onlyIfClosed: true);
+				if(sel.incoming.Where(a => a.shareInfo).ToArray().SyncList(instance.targetIncoming)) {
+					if(Settings.fetchFullHistory) {
+						var tab = HitHistoryTab.instance;
+						tab.SetFilter(sel);
+						if(!tab.isFocused) {
+							tab.ShowOrAdd(true,onlyIfClosed: true);
 
-					}
-					else
-					{
-						tab.refresh.Go();
+						}
+						else {
+							tab.refresh.Go();
+						}
 					}
 				}
 			}
 			else {
-				targetIncoming.Clear();
+				instance.targetIncoming.Clear();
 			}
-			return Task.CompletedTask;
 		}
-		
 
+	
         private void defenderGrid_SelectionChanged(object sender, GridSelectionChangedEventArgs e)
 		{
 			if (!isOpen)
 				return;
-			selChanged.Go();
+			if(instance.attackerGrid.SelectedItem as Spot != lastSelected) {
+				AppS.QueueOnUIThread(UpdateTargetIncoming);
+		
+			}
+
 		}
 
 		private void ToggleSwitch_Toggled(object sender, RoutedEventArgs e)

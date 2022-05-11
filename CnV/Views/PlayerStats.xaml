@@ -48,13 +48,13 @@
 		
 		
 		<Button  VerticalAlignment="Center" Click="OutgoingTapped" Padding="1,0" 
-			   ToolTipService.ToolTip="{x:Bind outgoingToolTip}" >
+			   ToolTipService.ToolTip="{x:Bind outgoingToolTip,Mode=OneWay}" >
 			<Button.Content>
 				<cnv:IconText x:Name="outgoing"  Text="2/3"  Image="{x:Bind cnv:ImageHelper.Get('UI/icons/icon_attack_warning.gif')}" MaxWidth="64" />
 			</Button.Content>
 		</Button>
 		<Button  VerticalAlignment="Center" Click="IncomingTapped" Padding="1,0" 
-			   ToolTipService.ToolTip="{x:Bind incomingToolTip}">
+			   ToolTipService.ToolTip="{x:Bind incomingToolTip,Mode=OneWay}">
 			<Button.Content>
 				<cnv:IconText x:Name="incoming" Text="2/1" Image="{x:Bind cnv:ImageHelper.Get('region/UI/icon_player_own_support_inc.png')}" MaxWidth="64"  />
 			</Button.Content>

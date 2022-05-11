@@ -86,14 +86,14 @@
 			<ToggleButton Content="Only home" IsChecked="{x:Bind onlyHome, Mode=TwoWay}" VerticalAlignment="Center" Margin="12"  Click="PropChanged"
                           Width="70" HorizontalAlignment="Center" Style="{ThemeResource ToggleButtonRevealStyle}"
                       ToolTipService.ToolTip="If on, the # to send only counts troops at home" />
-            <NumberBox Value="{x:Bind _filterTime,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}" 
+			<NumberBox Value="{x:Bind _filterTime,Mode=TwoWay}" Style="{StaticResource NumberBoxRightAlignPositive}" 
                           Header="Max Travel" Width="140" Margin="6,0,6,0" AcceptsExpression="True" SmallChange="0.5"
                           NumberFormatter="{x:Bind cnv:App.formatter2Digit}"
                           />
-            <NumberBox Value="{x:Bind _filterTSHome,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
+			<NumberBox Value="{x:Bind _filterTSHome,Mode=TwoWay}" Style="{StaticResource NumberBoxRightAlignPositive}"
                           NumberFormatter="{x:Bind cnv:App.formatterInt,Mode=OneTime}" 
                           Header="Min TS(Home)" Width="140" Margin="6,0,6,0" AcceptsExpression="True" SmallChange="5000"  />
-            <NumberBox Value="{x:Bind _filterTSTotal,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
+			<NumberBox Value="{x:Bind _filterTSTotal,Mode=TwoWay}" Style="{StaticResource NumberBoxRightAlignPositive}"
                            NumberFormatter="{x:Bind cnv:App.formatterInt,Mode=OneTime}" 
                           Header="Min TS(Total)" Width="140" Margin="6,0,6,0" AcceptsExpression="True" SmallChange="5000" />
         </tk:WrapPanel>

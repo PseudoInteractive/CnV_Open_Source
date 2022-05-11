@@ -366,7 +366,7 @@ namespace CnV
 					var anyRemoved = SyncLists(displayQueue,bq,(rt,city) => new CommandItem(rt),(a,b) => a == b.army);
 				}
 				{
-					var displayQueue = city.incoming.Where(a => a.isAttack).OrderBy(a => a.arrival).ToArray();
+					var displayQueue = city.incomingAttacks.OrderBy(a => a.arrival).ToArray();
 					int lg = displayQueue.Length;
 					var bq = instance.incomingItems;
 
@@ -450,7 +450,7 @@ namespace CnV
 
 		internal Visibility TroopsHomeVisible => city?.troopsOwned != new TroopTypeCounts(city.troopsHere) ? Visibility.Visible : Visibility.Collapsed;
 
-		internal Visibility incomingVisible => city.incoming.Any(a => a.isAttack) ? Visibility.Visible : Visibility.Collapsed;
+		internal Visibility incomingVisible => city.hasIncomingAttacks ? Visibility.Visible : Visibility.Collapsed;
 
 		internal Visibility IncomingReinforcementsVisible => city.allReinforcements.Any()==true ? Visibility.Visible : Visibility.Collapsed;
 

@@ -552,6 +552,11 @@ namespace CnV.Views
 				//});
 				FindName(nameof(playerStats));
 				FindName(nameof(cityStats));
+
+				
+				PlayerStats.instance.UpdateIncomingText();
+				PlayerStats.instance.UpdateOutgoingText();
+
 				KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Left,NavStack.BackInvoked,
 																VirtualKeyModifiers.Menu));
 				KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F1,(_,m) => { m.Handled=true; ErrorReport(); },

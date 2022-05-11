@@ -271,7 +271,7 @@ namespace CnV.Views
 			{ "officer" ,Symbol.Admin },
 			{ "BossHits", Symbol.Play },
 			{ "Timeline", Symbol.Calendar },
-			{ "Palace", Symbol.LikeDislike }
+			{ "Palace", Symbol.Like }
 		};
 
 		static Dictionary<string,string> tabFontIcons = new Dictionary<string,string> {

@@ -149,7 +149,7 @@ namespace CnV.Views
 
 				AppS.QueueOnUIThreadIdle(() => {
 					
-					PlayerStats.instance.UpdateOutgoingText();
+					PlayerStats.instance.UpdateIncomingText();
 					if(IncomingTab.IsVisible()) {
 						try {
 							var typeFilter = instance.typeFilter;

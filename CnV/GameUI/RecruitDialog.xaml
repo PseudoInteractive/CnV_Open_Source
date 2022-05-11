@@ -50,7 +50,7 @@
 							</tk:WrapPanel>
 							<TextBlock Grid.Column="1" Text="{x:Bind recruitTime,Mode=OneWay}" Style="{StaticResource TextBlockSmall}" VerticalAlignment="Center"/>
 							<StackPanel Orientation="Horizontal"   Grid.Column="2"  >
-								<NumberBox  Style="{StaticResource NumberBoxMedium}" Value="{x:Bind count,Mode=TwoWay}" Width="120"  ValueChanged="{x:Bind CountChanged}" 
+								<NumberBox  Style="{StaticResource NumberBoxMediumPositive}" Value="{x:Bind count,Mode=TwoWay}" Width="120"  ValueChanged="{x:Bind CountChanged}" 
                                             Margin="8,0,8,0" VerticalAlignment="Center" IsEnabled="{x:Bind isEnabled}"/>
 								<Button Content ="Max"  Margin="2,1,2,1" Click="{x:Bind SetMax}" Style="{StaticResource ButtonSmall}"   />
 								<Button Content ="Recruit"  Margin="2,1,4,1" Click="{x:Bind Recruit}" Style="{StaticResource ButtonSmall}"  IsEnabled="{x:Bind isEnabled}"  />

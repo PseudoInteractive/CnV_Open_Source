@@ -84,9 +84,18 @@ namespace CnV
 
 		}
 
-
+		public static bool IsVisible() => instance.isFocused;
 		public override TabPage defaultPage => TabPage.secondaryTabs;
 
+		public static void NotifyChange() {
+			// called from UI thread
+
+			if(!IsVisible())
+				return;
+			if(instance.isInUpdateI==0)
+				AppS.QueueOnUIThread(instance.UpdateDataI);
+	
+		}
 
 		override public Task VisibilityChanged(bool visible,bool longTerm) {
 			//   Log("Vis change" + visible);
