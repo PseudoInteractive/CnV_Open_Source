@@ -128,6 +128,17 @@ namespace CnV
 					rv.isSettle = isSettle;
 					rv.viaWater = viaWater;
 					rv.UpdateTroopItems(troops);
+					var isAttack = type is (>=Army.attackFirst and <= Army.attackLast);
+					if(isAttack && rv.type is (>=Army.attackFirst and <= Army.attackLast)) {
+						// leave it
+					}
+					else {
+						if(rv.type != type) {
+							rv.type = type;
+							rv.arrival.Clear();
+						}
+					}
+
 					if(isRaid||isSettle)
 						rv.arrival.Clear();
 					else if(arrival is not null)
@@ -135,13 +146,7 @@ namespace CnV
 					else if(depart is not null)
 						rv.arrival.SetDateTime(depart.Value + rv.travelTime);
 
-					var isAttack = type is (>=Army.attackFirst and <= Army.attackLast);
-					if(isAttack && rv.type is (>=Army.attackFirst and <= Army.attackLast)) {
-						// leave it
-					}
-					else {
-						rv.type = type;
-					}
+					
 					rv.armyTypeCombo.Visibility = isAttack ? Visibility.Visible : Visibility.Collapsed;
 
 
@@ -213,7 +218,7 @@ namespace CnV
 				}
 				// check for water
 				if(transport is (ArmyTransport.land or ArmyTransport.carts)) {
-					if(troopItems.Any(a => a.count>0 && IsTTNaval(a.type))) {
+					if((troopItems.Any(a => a.count>0 && IsTTNaval(a.type))) &&!target.isOnWater) {
 						if(verbose) AppS.MessageBox($"Boats must go by water");
 						return false;
 					}
@@ -224,12 +229,19 @@ namespace CnV
 				}
 				else {
 					// by water
-					// check galley space todo
+					
 					if(!city.isOnWater || !target.isOnWater) {
 						if(verbose) AppS.MessageBox($"Source and target must be on water");
 						return false;
 					}
-
+					// check galley space
+					var galleys = troops.GetCount(ttGalley);
+					var tsLand = (int)troops.Where(t => !t.isNaval).Sum(tt => tt.ts);
+					var neededGalleys = tsLand.DivideRoundUp(tsCarryPerGalley);
+					if(neededGalleys > galleys) {
+						if(verbose) AppS.MessageBox($"Need at least {neededGalleys} to transport troops");
+						return false;
+					}
 				}
 				var arrivalTime = arrival.dateTime;
 			if(arrivalTime != default) {

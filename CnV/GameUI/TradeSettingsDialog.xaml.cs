@@ -11,9 +11,10 @@ public sealed partial class TradeSettingsDialog:DialogG, INotifyPropertyChanged 
 
 	internal async void WoodSource_PropertyChanged(object? sender,PropertyChangedEventArgs m) {
 
-		if(m.PropertyName==nameof(woodSource.city)) {
+//		if(m.PropertyName==nameof(woodSource.city)) 
+			{
 
-			woodSource.PropertyChanged-=WoodSource_PropertyChanged;
+		//	woodSource.PropertyChanged-=WoodSource_PropertyChanged;
 			//if(woodSource.city != null)
 			{
 				var rv = await AppS.DoYesNoBox("Sources","Set hub for all res?","Yes","Yes and set targets","No");
