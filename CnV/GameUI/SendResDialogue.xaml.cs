@@ -149,6 +149,11 @@ namespace CnV
 				AppS.MessageBox("Not enough ships or carts to send this much");
 				return;
 			}
+			if( !(source.sampleResources - res).allPositive ) {
+				AppS.MessageBox("Insufficient resources");
+				return;
+
+			}
 
 
 			Done();

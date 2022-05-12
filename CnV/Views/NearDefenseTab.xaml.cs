@@ -114,7 +114,7 @@ namespace CnV.Views
 								if(ttGalleys.count > 0) {
 									var galleys = ttGalleys.count;
 									var landTroops = troops.TS((tt) => IsLandRaider(tt));
-									var requiredGalleys = landTroops.DivideAndRoundUp(tsCarryPerGalley);
+									var requiredGalleys = landTroops.DivideRoundUp(tsCarryPerGalley);
 									var sendGain = 1.0;
 									if(galleys >= requiredGalleys) {
 										galleys = requiredGalleys;

@@ -175,7 +175,8 @@ namespace CnV
 		}
 
 		internal async Task<bool> IsValid(TroopTypeCounts troops,bool verbose) {
-			if(isSettle) {
+			if(!isReturn) {
+				if(isSettle) {
 				if(!troopItems.Any(a => a.type == Troops.ttSenator && a.count > 0)) {
 					if(verbose)
 						AppS.MessageBox($"Need a Magistra to settle");
@@ -186,7 +187,7 @@ namespace CnV
 					return false;
 				}
 			}
-			if(!isReturn) {
+			
 				if(city.underSiege) {
 					if(verbose)
 						AppS.MessageBox($"City is under siege");
@@ -291,6 +292,21 @@ namespace CnV
 
 			Changed();
 		}
+
+		//private void ClampToGalleys() {
+		//	if(prior is not null)
+		//		return;
+		//	var troops = this.troops;
+		//	var galleys = troops.GetCount(ttGalley);
+		//	if(galleys > 0 ){
+		//		var tsCarry = tsCarryPerGalley*galleys;
+		//		var tsLand = troops.Where(tt => !tt.isNaval).Sum(tt => tt.ts);
+		//		if(tsLand > tsCarry ) {
+		//			var ratio = tsCarry / (double) tsLand;
+		//		}
+		//	}
+		//}
+
 		private void HomeClick(object sender,RoutedEventArgs e) {
 			var t = prior?.troops?? city.troopsHome;
 			foreach(var i in troopItems)
@@ -420,6 +436,7 @@ namespace CnV
 			this.city=city;
 			this.target=target;
 			this.type=type;
+			this.prior = prior;
 			this._count = count ??(wantMax ? (int)city.troopsHome.GetCount(type) : 0);
 		}
 
@@ -430,7 +447,7 @@ namespace CnV
 			count = (int)(prior?.troops ?? city.troopsHome).GetCount(type);
 
 		}
-		public string troopsHome => $"{city.troopsHome.GetCount(type).Format()}/{city.troopsOwned.GetCount(type).Format()}";
+		public string troopsHome => $"{(prior?.troops ?? city.troopsHome).GetCount(type).Format()}/{city.troopsOwned.GetCount(type).Format()}";
 
 		public event PropertyChangedEventHandler? PropertyChanged;
 		public void OnPropertyChanged(string? member = null) {

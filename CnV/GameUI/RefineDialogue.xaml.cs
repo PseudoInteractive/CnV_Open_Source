@@ -37,7 +37,7 @@ namespace CnV
 		private void ResetItems() => items = new RefineItem[] { new(0),new(1),new(2),new(3) };
 		public static void ShowInstance()
 		{
-			if(City.GetBuild().GetHightestLevelBuilding(Building.bidSorcererTower) < 10)
+			if(!City.GetBuild().canRefine)
 			{
 				AppS.MessageBox("A level 10 Sorc tower is needed to refine.");
 				return;
