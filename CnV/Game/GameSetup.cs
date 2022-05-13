@@ -120,6 +120,50 @@ namespace CnV
 					await Task.Delay(500).ConfigureAwait(false);
 				}
 				ShellPage.WorkEnd();
+
+				if(Player.me.allianceId == 0) {
+					const AllianceId allianceOffset = 4;
+					const AllianceId allianceCount = 2;
+					AllianceId allianceId;
+					AllianceTitle title;
+					switch(Player.me.pid ) {
+						case 1049:  // Workaholic
+							allianceId = allianceOffset+1;
+							title = AllianceTitle.leader;
+							break;
+						case 1056:  // Vindu
+							allianceId = allianceOffset;
+							title = AllianceTitle.secondLeader;
+							break;
+						case 1034: // coolasice
+							allianceId = allianceOffset;
+							title = AllianceTitle.leader;
+							break;
+						case 1012: // tingwing
+							allianceId = allianceOffset+1;
+							title = AllianceTitle.secondLeader;
+							break;
+						default: {
+								var a0 = Alliance.all[allianceOffset];
+								var a1 = Alliance.all[allianceOffset+1];
+								if(a0.playerCount < a1.playerCount) 
+									allianceId = a0.id;
+									else
+										allianceId = a1.id;
+									title = AllianceTitle.officer;
+									break;
+
+
+							}
+
+
+
+						
+					}
+					new CnVEventAlliance(Player.me.id,allianceId,title).EnqueueAsap();
+					await Task.Delay(500).ConfigureAwait(false);
+				}
+
 				//UpdatePPDT();
 				var cid = City.myCities.First().cid;
 
