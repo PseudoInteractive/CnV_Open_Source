@@ -492,7 +492,7 @@ namespace CnV
 					InitAppCenter(args.Arguments);
 
 					AppS.appWindow.Title = "Conquest and Virtue Alpha sign in to Discord";
-					AppS.appWindow.SetIcon("assets\\cnvIcon.ico");
+					AppS.appWindow.SetIcon("assets\\cnv.ico");
 					//				
 					//				window.SetTitleBar
 					//ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;

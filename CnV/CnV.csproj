@@ -71,6 +71,7 @@
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0-preview.4.22229.4" />
 		<PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.5" />
 		<PackageReference Include="Microsoft.Extensions.Primitives" Version="7.0.0-preview.4.22229.4" />
+		<PackageReference Include="Microsoft.Graphics.Win2D" Version="1.0.3.1" />
 		<PackageReference Include="Microsoft.Identity.Client" Version="4.43.2">
 			<TreatAsUsed>true</TreatAsUsed>
 		</PackageReference>
@@ -89,10 +90,10 @@
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.3" />
 		<PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
 		<PackageReference Include="PlayFabAllSDK" Version="1.108.220118" />
-		<PackageReference Include="Syncfusion.Chart.WinUI" Version="20.1.0.52" />
-		<PackageReference Include="Syncfusion.Editors.WinUI" Version="20.1.0.52" />
-		<PackageReference Include="Syncfusion.Grid.WinUI" Version="20.1.0.52" />
-		<PackageReference Include="Syncfusion.Licensing" Version="20.1.0.52" />
+		<PackageReference Include="Syncfusion.Chart.WinUI" Version="20.1.0.55" />
+		<PackageReference Include="Syncfusion.Editors.WinUI" Version="20.1.0.55" />
+		<PackageReference Include="Syncfusion.Grid.WinUI" Version="20.1.0.55" />
+		<PackageReference Include="Syncfusion.Licensing" Version="20.1.0.55" />
 		<PackageReference Include="SharpDX" Version="4.2.0">
 			<TreatAsUsed>true</TreatAsUsed>
 		</PackageReference>
@@ -105,7 +106,7 @@
 		</PackageReference>
 		<PackageReference Include="SharpDX.MediaFoundation" Version="4.2.0" />
 		<PackageReference Include="SharpGen.Runtime.COM" Version="2.0.0-beta.10" />
-		<PackageReference Include="Syncfusion.Scheduler.WinUI" Version="20.1.0.52" />
+		<PackageReference Include="Syncfusion.Scheduler.WinUI" Version="20.1.0.55" />
 		<PackageReference Include="System.Collections.Immutable" Version="7.0.0-preview.4.22229.4">
 			<TreatAsUsed>true</TreatAsUsed>
 		</PackageReference>
@@ -647,7 +648,6 @@
 		</Page>
 	</ItemGroup>
 	<ItemGroup>
-		<None Remove="Assets\cnvIcon.ico" />
 		<None Remove="cnvCover.png" />
 		<None Remove="GameUI\AllianceDialog.xaml" />
 		<None Remove="GameUI\ArtifactDialogue.xaml" />
@@ -739,7 +739,7 @@
 		<ImplicitUsings>True</ImplicitUsings>
 		<Nullable>annotations</Nullable>
 		<SupportedOSPlatformVersion>10.0.18362.0</SupportedOSPlatformVersion>
-		<ApplicationIcon>Assets\cnvIcon.ico</ApplicationIcon>
+		<ApplicationIcon>Assets\cnv.ico</ApplicationIcon>
 		<PackageIcon>Square44x44Logo.targetsize-256.png</PackageIcon>
 		<PackageCertificateKeyFile>CnV_TemporaryKey.pfx</PackageCertificateKeyFile>
 		<AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
@@ -818,6 +818,9 @@
 		</Reference>
 	</ItemGroup>
 	<ItemGroup>
+		<Content Update="Assets\cnv.ico">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
 		<Content Update="Assets\cnvIcon.ico">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>

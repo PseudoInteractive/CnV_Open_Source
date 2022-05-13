@@ -24,7 +24,7 @@ namespace CnV.Views
 
 			BattleReport[] items;
 			if(sel == null || sel.IsInvalid())
-				items= BattleReport.all.ToArray();
+				items= BattleReport.all.Where(a=> a.sourcePlayer.sharesInfo||a.targetPlayer.sharesInfo).ToArray();
 			else {
 				var cid = sel.cid;
 				items = BattleReport.all.Where(s => s.targetCid == cid || s.sourceCid==cid).ToArray();

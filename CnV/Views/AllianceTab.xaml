@@ -104,7 +104,9 @@
 										    />
 
 								<sf:GridTextColumn MappingName="Title"  />
-
+								
+								<sf:GridNumericColumn MappingName="cityFaith"/>
+								
 								<sf:GridNumericColumn MappingName="ts"/>
 								<sf:GridNumericColumn MappingName="tsOffense"/>
 								<sf:GridNumericColumn MappingName="tsDefense"/>
