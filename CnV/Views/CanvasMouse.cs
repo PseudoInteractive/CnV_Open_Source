@@ -283,7 +283,13 @@ partial class ShellPage
 		}
 		//	Canvas_PointerPressed((point.Position, point.PointerId, point.IsInContact, point.Timestamp, point.Properties.PointerUpdateKind));
 		args.Handled=true;
+		if(canvas != AppS.focused ) {
+			
+			AppS.QueueOnUIThread( ()=>	canvas.Focus(Microsoft.UI.Xaml.FocusState.Programmatic) );
+		}
+		else {
 
+		}
 	}
 
 	public static void CoreInputSource_PointerMoved(InputPointerSource sender,PointerEventArgs e)

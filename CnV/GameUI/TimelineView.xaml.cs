@@ -140,7 +140,7 @@ namespace CnV
 
 				List<ScheduleAppointment> appointments = new();
 				var players = new HashSet<Player>();
-				var alliance = Alliance.MyId; // only have visibility of alliance members
+				var alliance = Alliance.MyIdOr0; // only have visibility of alliance members
 
 				foreach(var e in Sim.GetAllEvents()) {
 
@@ -243,7 +243,7 @@ namespace CnV
 				// Must be part of player list we are filtering for
 			// And must have intel on at least one participant
 			bool IsRelevant( (ushort p0, ushort p1) ps) {
-				return (playerFilter.ContainsAny(ps) && (Player.Get(ps.p0).allianceId==alliance |
+				return alliance== 0 ? playerFilter.ContainsAny(ps)&(Player.IsSubOrMe(ps.p0)|Player.IsSubOrMe(ps.p1) ): (playerFilter.ContainsAny(ps) && (Player.Get(ps.p0).allianceId==alliance |
 																				Player.Get(ps.p1).allianceId==alliance));
 			}
 
