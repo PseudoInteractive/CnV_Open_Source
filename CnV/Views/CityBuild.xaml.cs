@@ -119,7 +119,7 @@ namespace CnV
 		static readonly BuildMenuItem amLayout = new BuildMenuItem("Smart", CityBuildAction.layout, "City/decal_building_valid_multi.png", "Smart build based on city layouts");
 		static readonly BuildMenuItem amNone = new BuildMenuItem();
 		static readonly BuildMenuItem amUpgrade = new BuildMenuItem("Upgrade", CityBuildAction.upgrade, "City/decal_building_valid.png", "Upgrade buildings");
-		static readonly BuildMenuItem amBuild = new BuildMenuItem("Build", CityBuildAction.upgrade, "City/decal_building_valid.png", "Buidl this");
+		static readonly BuildMenuItem amBuild = new BuildMenuItem("Build", CityBuildAction.upgrade, "City/decal_building_valid.png", "Build this");
 		static readonly BuildMenuItem amDowngrade = new BuildMenuItem("Downgrade", CityBuildAction.downgrade, "City/decal_building_invalid.png", "Downgrade buildings");
 		static readonly BuildMenuItem amFlipLayoutH = new BuildMenuItem("Flip H", CityBuildAction.flipLayoutH, "City/build_details_gloss_overlay.png", "Flip Layout Horizontally");
 		static readonly BuildMenuItem amFlipLayoutV = new BuildMenuItem("Flip V", CityBuildAction.flipLayoutV, "City/build_details_gloss_overlay.png", "Flip Layout Vertically");

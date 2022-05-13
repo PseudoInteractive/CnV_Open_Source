@@ -480,7 +480,10 @@ namespace CnV.Views
 		private static void Canvas_PointerExited(Windows.Foundation.Point Point,uint PointerId)
 		{
 			UpdateMousePosition(Point);
-			mouseOverCanvas = false;
+			if(mouseOverCanvas) {
+				//Note.Show("Mouse exited");
+				mouseOverCanvas = false;
+			}
 			//			e.KeyModifiers.UpdateKeyModifiers();
 			//Gesture.ProcessPointerExited(PointerId);
 			//	PointerInfo(e);

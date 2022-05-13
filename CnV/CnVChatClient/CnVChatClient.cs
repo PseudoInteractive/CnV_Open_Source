@@ -213,7 +213,7 @@ namespace CnVDiscord
 			//AppS.QueueOnUIThread(() =>
 			{
 				var isNew = messageArgs.discordMessages.Length==1; // Does the server ever batch them up?
-				for(int i = 0;i<messageArgs.discordMessages.Length;++i)
+				for(int i = 0;i<messageArgs.discordMessages.Length.Min(50);++i)
 				{
 					var message = CnVJsonMessagePackDiscordMessage.Get(messageArgs.discordMessages[i]);
 					var senderOverrides = messageArgs.senderOverrides;

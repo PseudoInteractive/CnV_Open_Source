@@ -138,6 +138,8 @@ namespace CnV.Views
 //		}
 		public static void TakeFocus()
 		{
+			if(!View.IsCityView())
+				return;
 			if(!mouseOverCanvas)
 			{
 			//	Note.Show($"Pointer focus not over canvas!");
