@@ -138,16 +138,20 @@ namespace CnV.Views
 //		}
 		public static void TakeFocus()
 		{
-			if(!View.IsCityView())
-				return;
-			if(!mouseOverCanvas)
-			{
-			//	Note.Show($"Pointer focus not over canvas!");
-				return;
-			}
-			if(CityBuild.menuOpen)
-				return;
-			takeFocusIfAppropriate.Go();
+			return;
+			//if(!View.IsCityView())
+			//	return;
+			
+			//if(!mouseOverCanvas)
+			//{
+			////	Note.Show($"Pointer focus not over canvas!");
+			//	return;
+			//}
+			//if(CityBuild.menuOpen) {
+			//	Assert(false);
+			//	return;
+			//}
+			//takeFocusIfAppropriate.Go();
 		}
 		static Debounce takeFocusIfAppropriate = new(() =>
 	  {
@@ -402,13 +406,13 @@ namespace CnV.Views
 	//		}
 	//		args.Handled=DoKeyDown(acc.Key);
 	//	}
-		public static void KeyboardProxy_KeyDown(object sender,Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
-		{
-		//	Log($"KeyDown {e.Key} handled:{e.Handled} mouse:{mouseOverCanvas}"); 
-			//KeyDown(e.Key);
-			if(!e.Handled)
-				e.Handled= DoKeyDown(e.Key);
-		}
+		//public static void KeyboardProxy_KeyDown(object sender,Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
+		//{
+		////	Log($"KeyDown {e.Key} handled:{e.Handled} mouse:{mouseOverCanvas}"); 
+		//	//KeyDown(e.Key);
+		//	if(!e.Handled)
+		//		e.Handled= DoKeyDown(e.Key);
+		//}
 		static HashSet<VirtualKey> GetBuildKeys()
 		{
 			var rv = new HashSet<VirtualKey>();
@@ -435,51 +439,30 @@ namespace CnV.Views
 //				Log("Not a build Key " + key);
 				return false;
 			}
+			if(!Sim.isInteractive)
+				return false;
 			if(!mouseOverCanvas)
 			{
 			//	Note.Show("Not over canvas");
 				return false;
 			}
+			if(AppS.focusedOnTextBox) {
+			//	Note.Show("Text focus");
+				return false;
+			}
+			if(CityBuild.menuOpen) {
+				Assert(false);
+				return false ;
+			}
 			// don't process if chat has focus
 			//AppS.UpdateKeyStates();
 			//if(ChatTabHasFocus)
 			//	return false;
-			return _KeyDown(key);
-		}
-
-		//internal static bool ChatTabHasFocus()
-		//{
-		//	foreach (var tab in ChatTab.all)
-		//	{
-		//		if (tab.input.FocusState != FocusState.Unfocused)
-		//		{
-		//		//	Note.Show($"Chat Focus {tab.Name} {tab.input.FocusState}");
-		//			return true;
-		//		}
-		//	}
-
-		//	return false;
-		//}
-
-		public static bool _KeyDown(VirtualKey key)
-		{
+		
 //			Log("SomeKeyDown " + key);
+			
 
-			AppS.UpdateKeyStates();
-
-
-
-			if(!mouseOverCanvas)
-			{
-		//		Note.Show("Mouse not over canvas");
-				return false;
-		//		Log("Mouse not over");
-			}
-			App.InputRecieved();
-
-			if(!isHitTestVisible)
-				return false;
-
+		
 			//if (CityBuild.menuOpen)
 			//{
 			//	// todo:  Handle naviation menu items and selection

@@ -45,7 +45,7 @@ partial class ShellPage
 
 	//	canvas.PointerEntered+=KeyboardProxy_PointerEntered;
 	//	canvas.PointerExited +=KeyboardProxy_PointerExited;
-		canvas.KeyDown += KeyboardProxy_KeyDown;
+	//	canvas.KeyDown += KeyboardProxy_KeyDown;
 		//FocusManager.GotFocus +=FocusManager_GotFocus;
 		//FocusManager.LostFocus +=FocusManager_LostFocus;
 		canvas.IsHitTestVisible = true;

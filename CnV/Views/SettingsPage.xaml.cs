@@ -901,6 +901,10 @@ namespace CnV
 				LogEx(ex);
 			}
 		}
+		private void MouseScrollTapped(object sender,RoutedEventArgs e) {
+			Windows.System.Launcher.LaunchUriAsync(new Uri($"ms-settings:mousetouchpad"));
+		}
+
 		static StorageFolder folder => ApplicationData.Current.LocalFolder;
 		public static async void ShowWhatsNew()
 		{
@@ -927,11 +931,13 @@ namespace CnV
 			AppS.Exit();
 			await Task.Delay(-1);
 		}
+
+		
 		//private async void ChangeNameTapped(object sender, RoutedEventArgs e)
 		//{
 		//	Hide();
 		//	await CnVSignin.EditProfile();
-			
+
 		//}
 	}
 

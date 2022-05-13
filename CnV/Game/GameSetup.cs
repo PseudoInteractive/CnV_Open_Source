@@ -115,10 +115,10 @@ namespace CnV
 				
 				while(!Sim.isPastWarmup) {
 					await Task.Delay(250).ConfigureAwait(false);
+				}re
+				while(!City.myCities.Any()) {
+					await Task.Delay(500).ConfigureAwait(false);
 				}
-				//while(!City.myCities.Any()) {
-				//	await Task.Delay(500).ConfigureAwait(false);
-				//}
 				ShellPage.WorkEnd();
 				//UpdatePPDT();
 				var cid = City.myCities.First().cid;

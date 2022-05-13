@@ -813,7 +813,7 @@ namespace CnV.Views
 			UpdateMousePosition(point);
 			///Note.Show($"Wheel");
 
-			ShellPage.TakeFocus();
+		//	ShellPage.TakeFocus();
 			//PointerInfo(e);
 			//if (ShellPage.IsCityView())
 			//{

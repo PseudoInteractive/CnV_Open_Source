@@ -606,6 +606,7 @@ namespace CnV
 			}
 
 			InputRecieved();
+			ShellPage.DoKeyDown(key);
 		}
 
 		private static void DebugSettings_BindingFailed(object sender,BindingFailedEventArgs e)

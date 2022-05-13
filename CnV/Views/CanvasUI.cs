@@ -35,13 +35,13 @@ using Game;
 			//				Log("Mouse Moved Canvas");
 			//	App.cursorDefault.Set();
 			// prevent idle timer;
-		//	mouseOverCanvas = true;
+			mouseOverCanvas = true;
 			//	instance.mouseOverCanvasBox.IsChecked = mouseOverCanvas;
 
 
 			//	PointerInfo(e);
 			UpdateMousePosition(point.Position);
-			//	TakeFocusIfAppropriate();
+		//	ShellPage.TakeFocus();
 			//UpdateFocus();
 			//	if (!isFocused)
 			//		return;
