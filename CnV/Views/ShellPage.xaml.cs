@@ -538,6 +538,21 @@ namespace CnV.Views
 					await CnVSignin.SignOut();
 
 				}
+				if(Program.appAlreadyRunning) {
+					var a = await AppS.DoYesNoBox(title:"Conquest and Virtue already running",text:"Please close all game windows, of if you see none, restart computer",
+								yes: "Close",
+								no: "Ignore"							
+
+								);
+								if(a != 0) {
+									Application.Current.Exit();
+									await Task.Delay(-1).ConfigureAwait(false);
+								}
+						
+						
+						
+					}
+
 				WorkUpdate("Init");
 				await Task.Run(CnVClient.InitializeGame);
 				//		Player.activePlayerChanged += (p0,p1) => AppS.UpdateAppTitle();
@@ -1766,7 +1781,7 @@ namespace CnV.Views
 		}
 
 		private void FormAlliance(object sender,RoutedEventArgs e) {
-			if(Player.active.title.rank < (byte)TitleName.Dame) {
+			if(Player.active.title.rank < (byte)TitleName.Baronetess) {
 				AppS.MessageBox("Must be Dame/Knight to create alliance");
 			}
 			else {

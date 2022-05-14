@@ -176,9 +176,6 @@ namespace CnV
 			RequestedTheme = ApplicationTheme.Dark;
 			InitializeComponent();
 	//		UnhandledException += App_UnhandledException;
-
-
-
 			//try
 			//{
 			//    {
@@ -231,7 +228,6 @@ namespace CnV
 		{
 			e.SetObserved();
 			LogEx(e.Exception);
-
 		}
 
 		//		public static Windows.Foundation.IAsyncOperation<CoreWebView2Environment> createWebEnvironmentTask;
@@ -509,9 +505,9 @@ namespace CnV
 					//}
 
 
-
+					
 					// if (!args.PrelaunchActivated)
-
+					
 					await OnLaunchedOrActivated(args);
 				//	InitAppCenter();
 //					var w2 = new Window();
@@ -693,6 +689,7 @@ namespace CnV
 						AppS.window.Content = new ShellPage();
 
 					}
+					
 				}
 			
 
@@ -725,6 +722,40 @@ namespace CnV
 					AppS.presenter.Maximize();
 					//await Task.Delay(500);
 					Log("Max");
+					//if(Program.appAlreadyRunning) {
+					//	await AppS.QueueOnUIThreadTask(async void () => {
+					//		try {
+					//			var dialog = new ContentDialog() {
+
+					//				Title = "Conquest and Virtue already running",
+					//				Content = "Please close all game windows, of if you see none, restart computer",
+					//				PrimaryButtonText = "Close",
+					//				SecondaryButtonText = "Ignore",
+					//				IsSecondaryButtonEnabled = true,
+					//				IsPrimaryButtonEnabled = true,
+
+
+
+					//			};
+					//			//	dialog.XamlRoot = AppS.window.Content.XamlRoot;
+					//			//dialog.Hide();
+
+
+					//			var hr = await dialog.ShowAsync2().ConfigureAwait(false);
+					//			if(hr != ContentDialogResult.Secondary) {
+					//				Application.Current.Exit();
+					//				await Task.Delay(-1).ConfigureAwait(false);
+					//			}
+					//		}
+
+					//		catch(Exception _ex) {
+					//			LogEx(_ex);
+
+					//		}
+						
+					//	});
+						
+					//}
 					//				App.window.Maximize();
 					//				_ = PInvoke.User32.ShowWindow(WinRT.Interop.WindowNative.GetWindowHandle(App.window), PInvoke.User32.WindowShowStyle.SW_MAXIMIZE);
 					//User32.WINDOWPLACEMENT placement = new()

@@ -226,6 +226,9 @@ namespace CnV
 			s = regexReport.Replace(s, @" [Report:$1](/r/$1)");
 			return s;
 		}
+
+		
+
 		public static void MarkDownLinkClicked(object sender, LinkClickedEventArgs e)
 		{
 

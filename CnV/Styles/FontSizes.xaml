@@ -16,9 +16,9 @@
 
 
 	<FontFamily x:Key="ContentControlThemeFontFamily">ms-appx:///Content/CnvIcons-Regular-SVG.ttf#CnvIcons,Segoe UI*</FontFamily>
-			<FontFamily x:Key="KeyTipFontFamily" >ms-appx:///Assets/CnvIcons.ttf#CnvIcons,Segoe UI*</FontFamily>
+	<FontFamily x:Key="KeyTipFontFamily" >ms-appx:///Content/CnvIcons-Regular-SVG.ttf#CnvIcons,Segoe UI*</FontFamily>
 
-
+		
 
 
 	<Style x:Key="BaseControlStyle" TargetType="Control">
@@ -42,12 +42,14 @@
 			</Style>
 			<Style x:Key="BaseTextBlockStyleWrap" TargetType="TextBlock" BasedOn="{StaticResource BaseTextBlockStyle}">
 				<Setter Property="TextWrapping" Value="Wrap" />
+				<Setter Property="FontStretch" Value="Condensed" />
 		</Style>
 
 			<Style x:Key="PageTitleStyle" TargetType="TextBlock" BasedOn="{StaticResource BaseTextBlockStyleWrap}" >
 				<Setter Property="VerticalAlignment" Value="Center" />
 				<Setter Property="FontSize" Value="{StaticResource  LargeFontSize}" />
 				<Setter Property="TextWrapping" Value="Wrap" />
+				<Setter Property="FontStretch" Value="Condensed" />
 
 			</Style>
 

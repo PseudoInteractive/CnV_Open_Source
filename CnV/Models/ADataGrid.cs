@@ -275,6 +275,7 @@ public static partial class ADataGrid
 			grid.FontSize = Settings.smallFontSize;
 			grid.FontStretch = Windows.UI.Text.FontStretch.Condensed;
 			grid.FontFamily=XamlHelper.cnvFont;
+			Assert(grid.FontFamily is not null);
 			grid.SelectionMode = GridSelectionMode.Extended;
 		//	grid.GridLinesVisibility = GridLinesVisibility.Both;
 		

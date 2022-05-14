@@ -473,11 +473,7 @@ namespace CnV
 
 		public static void Initialize()
 		{
-			var package = Package.Current;
-			var packageId = package.Id;
-			var version = packageId.Version;
-
-			versionDescription =   $"{package.DisplayName} - {version.Major}.{version.Minor}.{version.Build}.{version.Revision}\nInstalled {package.InstalledDate}";
+			
 
 			//      IdentityService.LoggedIn += OnLoggedIn;
 			//       IdentityService.LoggedOut += OnLoggedOut;

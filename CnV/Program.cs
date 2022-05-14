@@ -25,7 +25,7 @@ namespace CnV
 #if DISABLE_XAML_GENERATED_MAIN
 	public static class Program
 	{
-
+		public static bool appAlreadyRunning;
 
 		[global::System.Runtime.InteropServices.DllImport("Microsoft.ui.xaml.dll")]
 		private static extern void XamlCheckProcessRequirements();
@@ -76,7 +76,7 @@ namespace CnV
 
             ExtendedActivationKind kind = args.Kind;
 			 System.Diagnostics.Trace.WriteLine($"Launch {kind}");
-			bool isRedirect = false;
+			const bool isRedirect = false;
 
 
             // Find out what kind of activation this is.
@@ -93,12 +93,13 @@ namespace CnV
 
                             // Hook up the Activated event, to allow for this instance of the app
                             // getting reactivated as a result of multi-instance redirection.
-                            keyInstance.Activated += OnActivated;
+                         //   keyInstance.Activated += OnActivated;
                         }
                         else
                         {
-                            isRedirect = true;
-                            RedirectActivationTo(args, keyInstance);
+							appAlreadyRunning=true;
+    //                        isRedirect = true;
+     //                       RedirectActivationTo(args, keyInstance);
                         }
 
             return isRedirect;

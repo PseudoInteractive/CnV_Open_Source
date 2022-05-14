@@ -149,7 +149,7 @@
 					              ToolTipService.ToolTip="Switch to next city in the current city list" 
 							             AccessKey="Right" Icon="Next"/>
 					<AppBarButton x:Name="focus" Margin="4,0,4,0" Width="140"  VerticalAlignment="Center" x:FieldModifier="public"
-                            Click="FocusClick" RightTapped="{x:Bind views:ShellPage.CityRightTapped}" FontFamily="{StaticResource CnvIcons}"
+                            Click="FocusClick" RightTapped="{x:Bind views:ShellPage.CityRightTapped}" 
                             ToolTipService.ToolTip="Spot with Focus.&#x0a;Click to re-center or swith to this city&#x0a;Right clck for menu" Visibility="Collapsed"/>
 
 
@@ -362,7 +362,7 @@
 					  Canvas.ZIndex="35"   >
 				<Expander.Header   >
 					<TextBlock Text="Info" FontSize="{StaticResource MediumFontSize}"  Margin="0" Padding="0"
-		              FontFamily="{StaticResource CnvIcons}"  HorizontalAlignment="Right" />
+		               HorizontalAlignment="Right" />
 				</Expander.Header>
 				<ListView x:Name="InAppNote" x:FieldModifier="public"  Margin="0" Padding="0"
 						  Background="#aa140030"

@@ -81,7 +81,7 @@
 		<PackageReference Include="Azure.Data.Tables" Version="12.5.0" />
 		<PackageReference Include="Azure.Storage.Blobs" Version="12.12.0" />
 		<PackageReference Include="Enums.NET" Version="4.0.0" />
-		<PackageReference Include="Grpc.Net.Client" Version="2.45.0" />
+		<PackageReference Include="Grpc.Net.Client" Version="2.46.0" />
 		<PackageReference Include="Humanizer.Core" Version="2.14.1" />
 		<PackageReference Include="MessagePack" Version="2.4.14-alpha" />
 		<PackageReference Include="MagicOnion.Client" Version="4.4.1" />
@@ -123,7 +123,6 @@
 		<Compile Include="Draw\DrawX.cs" />
 		<Compile Include="Draw\StatsView.cs" />
 		<Compile Include="Draw\ViewStep.cs" />
-		<Compile Include="FormatParameterObject.cs" />
 		<Compile Include="GameUI\AllianceDialog.xaml.cs" />
 		<Compile Include="GameUI\ArtifactDialogue.xaml.cs" />
 		<Compile Include="GameUI\Artifacts.xaml.cs" />
@@ -210,7 +209,6 @@
 		<Compile Include="Game\PlayerPresence.cs" />
 		<Compile Include="Game\Supporter.cs" />
 		<Compile Include="Game\WorldUI.cs" />
-		<Compile Include="GlobalSuppressions2.cs" />
 		<Compile Include="JSON\Errors.cs" />
 		<Compile Include="JSON\GetIO.cs" />
 		<Compile Include="JSON\gFRep2.cs" />

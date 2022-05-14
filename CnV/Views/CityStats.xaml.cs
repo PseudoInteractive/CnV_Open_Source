@@ -542,7 +542,7 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 							ShellPage.instance.timeDisplay.Foreground=timeBrush;
 						if(expResource.IsExpanded)
 						{
-							var resources = city.SampleResources();
+							var resources = city.SampleResources().Min(city.resourceStorage);
 							//var panels = expResource.Child<CommunityToolkit.WinUI.UI.Controls.WrapPanel>().Children<StackPanel>();
 							var prod = city.stats.production;
 							var incoming = new CnV.Resources();

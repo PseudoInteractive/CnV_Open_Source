@@ -25,13 +25,13 @@
 					   FontSize="12" Click="SignoutTapped"  Margin="4" />
 
 				<HyperlinkButton    Content="Monitor Scale"
-						   Style="{ThemeResource ButtonRevealStyle}"
+						 
 						   ToolTipService.ToolTip="Launches display settings page to set display scale (if things don't look right, set 'Scale' to 100%)"
 					   FontSize="12" Click="DisplayTapped"  Margin="4" />
 				
 				<HyperlinkButton  Content="Mouse scroll"
 								   ToolTipService.ToolTip="Launches mouse settings page to set scrolling options, try setting 'Scroll inactve windows when hovering over them' to On"
-					   FontSize="12" Click= "MouseScrollTapped" />
+					   FontSize="12" Click= "MouseScrollTapped" Margin="4" />
 				
 			</StackPanel>
 			

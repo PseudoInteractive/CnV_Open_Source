@@ -65,6 +65,12 @@ namespace CnV
 				if(AppS.isSinglePlayer)
 				{
 					// Kick off sim ourselves
+					//if(!(AppS.currentVersion >= AppS.minCompatibleVersion) ) {
+					//			var	error = $"To version: {AppS.minCompatibleVersion}\n\nhttps://www.microsoft.com/store/apps/9NC40PRJ3ZG4";
+					//			Trace(error);
+					//	await AppS.Fatal(error,"Game update needed");
+					//}
+
 					await Sim.StartSim(null).ConfigureAwait(false);
 				}
 				else
