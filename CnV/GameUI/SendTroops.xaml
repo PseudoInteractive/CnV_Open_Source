@@ -72,16 +72,11 @@
                                          ValueChanged="FilterPositive"
                                         Value="{x:Bind count,Mode=TwoWay}" Width="120"   Margin="8,0,8,0" VerticalAlignment="Center" SmallChange="1000"
                                         HorizontalAlignment="Right" />
-								
-
-						
-
 					</Grid>
 				</Grid>
-
-
 			</DataTemplate>
 		</GridView.ItemTemplate>
+
 	</GridView>
 	</Grid>
 </cnv:DialogG>

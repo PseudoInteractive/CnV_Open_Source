@@ -111,6 +111,13 @@ namespace CnV
 				AppS.MessageBox(title:"Not enough funds for recruit",hero: AppS.heroMissingFunds);
 			}
 		}
+		public string troopsHome => $"{(city.troopsHome).GetCount(type).Format()}/{city.troopsOwned.GetCount(type).Format()}";
+		
+		internal void SetHome(object sender,RoutedEventArgs e)
+		{
+			count = (int)city.troopsHome.GetCount(type);
+			OnPropertyChanged();
+		}
 
 		internal string ResRequiredS(int id)
 		{

@@ -47,9 +47,10 @@
 				<sf:GridNumericColumn MappingName="playerCount"/>
 				<sf:GridNumericColumn MappingName="cityFaith"/>
 				<sf:GridNumericColumn MappingName="cityCount"/>
-				<sf:GridNumericColumn MappingName="ts"/>
-				<sf:GridNumericColumn MappingName="tsOffense"/>
-				<sf:GridNumericColumn MappingName="tsDefense"/>
+				<sf:GridNumericColumn MappingName="points"  DisplayNumberFormat="N0" />
+				<sf:GridNumericColumn MappingName="ts"  DisplayNumberFormat="N0" />
+				<sf:GridNumericColumn MappingName="tsOffense"  DisplayNumberFormat="N0" HeaderText="Offense"/>
+				<sf:GridNumericColumn MappingName="tsDefense"  DisplayNumberFormat="N0" HeaderText="Defense"/>
 
 			</sf:SfDataGrid.Columns>
 			<sf:SfDataGrid.DetailsViewDefinition>
@@ -89,7 +90,7 @@
 										
 										    />
 								<sf:GridNumericColumn MappingName="points"
-				                      TextAlignment="Center"
+				                    
 									  DisplayNumberFormat="N0"
 											 />
 
@@ -106,50 +107,40 @@
 								<sf:GridTextColumn MappingName="Title"  />
 								
 								<sf:GridNumericColumn MappingName="cityFaith"/>
-								
-								<sf:GridNumericColumn MappingName="ts"/>
-								<sf:GridNumericColumn MappingName="tsOffense"/>
-								<sf:GridNumericColumn MappingName="tsDefense"/>
+
+								<sf:GridNumericColumn MappingName="ts"  DisplayNumberFormat="N0" />
+								<sf:GridNumericColumn MappingName="tsOffense"  DisplayNumberFormat="N0" HeaderText="Offense"/>
+								<sf:GridNumericColumn MappingName="tsDefense" DisplayNumberFormat="N0" HeaderText="Defense" />
 								<sf:GridNumericColumn MappingName="kills"
-				                      TextAlignment="Center"
 									  DisplayNumberFormat="N0" />
 
 								<sf:GridNumericColumn MappingName="defKills"
-				                      TextAlignment="Center"
 									  DisplayNumberFormat="N0"
 											 />
 								<sf:GridNumericColumn MappingName="supportKills"
-				                      TextAlignment="Center"
 									  DisplayNumberFormat="N0"
 											 />
 
-								<sf:GridNumericColumn MappingName="offReputation"
-				                      TextAlignment="Center"
+								<sf:GridNumericColumn MappingName="offReputation" HeaderText="Off Rep"
 									  DisplayNumberFormat="N0"
 											 />
 								<sf:GridNumericColumn MappingName="npcKills"
 									  HeaderText="Bosses"
-				                      TextAlignment="Center"
 									  DisplayNumberFormat="N0"
 											 />
-								<sf:GridNumericColumn MappingName="recruitedTroops"
-				                      TextAlignment="Center"
+								<sf:GridNumericColumn MappingName="recruitedTroops" HeaderText="recruited"
 									  DisplayNumberFormat="N0"
 											 />
 								<sf:GridNumericColumn MappingName="raiding"
-				                      TextAlignment="Center"
 									  DisplayNumberFormat="N0"
 											 />
 								<sf:GridNumericColumn MappingName="plundered"
-				                      TextAlignment="Center"
 									  DisplayNumberFormat="N0"
 											 />
 								<sf:GridNumericColumn MappingName="caps"
-				                      TextAlignment="Center"
 									  DisplayNumberFormat="N0"
 											 />
 								<sf:GridNumericColumn MappingName="buildingDamage"
-				                      TextAlignment="Center"
 									  DisplayNumberFormat="N0"
 											 />
 

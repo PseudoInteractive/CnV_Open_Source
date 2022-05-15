@@ -189,20 +189,20 @@ public static partial class CityUI
 
 				}
 				//else
-				if (!Alliance.IsAllyOrNap(me))
-				{
-					aWar.AddItem("Add funky Attack String", async (_, _) =>
-															{
-																using var work =
-																		new WorkScope("Add to attack string..");
+				//if (!Alliance.IsAllyOrNap(me))
+				//{
+				//	aWar.AddItem("Add funky Attack String", async (_, _) =>
+				//											{
+				//												using var work =
+				//														new WorkScope("Add to attack string..");
 
-																foreach (var id in sel)
-																{
-																	await Sim.AddToAttackSender(id);
-																}
-															}
-								);
-				}
+				//												foreach (var id in sel)
+				//												{
+				//													await Sim.AddToAttackSender(id);
+				//												}
+				//											}
+				//				);
+				//}
 				//AApp.AddItem(flyout, "Add as Fake (2)", (_, _) => AttackTab.AddTarget(cid, 2));
 				//AApp.AddItem(flyout, "Add as Fake (3)", (_, _) => AttackTab.AddTarget(cid, 3));
 				//AApp.AddItem(flyout, "Add as Fake (4)", (_, _) => AttackTab.AddTarget(cid, 3));
@@ -232,6 +232,7 @@ public static partial class CityUI
 			AApp.AddItem(flyout, "Near Res", me.ShowNearRes);
 			if (me.canVisit)
 			{
+				aWar.AddItem("Dismiss..",(_,_) => DismissDialog.ShowInstance(me));
 				AApp.AddItem(flyout, "Do the stuff",  (_, _) => me.DoTheStuff());
 			//	AApp.AddItem(flyout, "Food Warnings", (_, _) => CitySettings.SetFoodWarnings(cid));
 				flyout.AddItem("Ministers", me.ministersOn, me.SetMinistersOn);
