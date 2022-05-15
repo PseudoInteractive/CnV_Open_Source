@@ -53,6 +53,7 @@ namespace CnV
 				AppS.QueueOnUIThread(() => PropertyChanged?.Invoke(this,new(member)));
 		}
 		public static void Changed(string? member = null) {
+			nextTextUpdateTick=0;
 			if(instance is not null)
 				instance.OnPropertyChanged(member);
 		}
@@ -171,7 +172,7 @@ namespace CnV
 
 			ClearLastDisplayed();
 			Changed();
-			// Close misc dialogs
+
 
 
 
@@ -500,8 +501,8 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 		}
 		//public void OnPropertyChanged() =>
 		//		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
-		
 
+		static internal long nextTextUpdateTick; // tick64
 		// called from Sim
 		public void UpdateUI()
 		{
@@ -532,6 +533,12 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 						}
 						var bdd = !hasBeenDisplayed ? GetBuildingCounts(city) : default;
 						var t = Sim.simTime;
+						var tick64 = Tick.MS;
+						var wantTextUpdate = false;
+						if(tick64 > nextTextUpdateTick) {
+							wantTextUpdate=true;
+							nextTextUpdateTick = tick64 + 5*1000;
+						}
 #if DEBUG
 						ShellPage.instance.timeDisplay.Text = $"{t.FormatWithYear()}\n{GameClient.renderFrame/60} 0:{AppS.dispatches0} 1:{AppS.dispatches1}";
 #else
@@ -540,7 +547,7 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 						var timeBrush = AppS.Brush( Sim.isWarmup? (Sim.isHistoric ? Colors.Orange: Colors.Gray ): Sim.isHistoric ? Colors.Yellow : Colors.White);
 						if(ShellPage.instance.timeDisplay.Foreground != timeBrush)
 							ShellPage.instance.timeDisplay.Foreground=timeBrush;
-						if(expResource.IsExpanded)
+						if(expResource.IsExpanded && wantTextUpdate)
 						{
 							var resources = city.SampleResources().Min(city.resourceStorage);
 							//var panels = expResource.Child<CommunityToolkit.WinUI.UI.Controls.WrapPanel>().Children<StackPanel>();
@@ -597,7 +604,7 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 								rr.OnPropertyChangedImmediate();
 							}
 						}
-						if(expBuildQueue.IsExpanded)
+						if(expBuildQueue.IsExpanded) // update each tick
 						{
 							foreach(var b in buildQueue)
 							{
@@ -613,13 +620,16 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 								++counter;
 							}
 						}
+						if(wantTextUpdate) {
+							PlayerStats.instance.karma.Text = Player.active.sampleMana.Format();
+						}
 
 						if(!hasBeenDisplayed)
 						{
 							var txt = (expBuildings.Header as DependencyObject).Child<TextBlock>(1);
 							txt.UpdateLazy($"Buildings: [{bdd.buildingCount}/{bdd.townHallLevel*10}]");
 							var hasHammerTime = city.hammerTime > 0;
-							queueText.UpdateLazy($"CS:{city.stats.cs:N0}%{ (hasHammerTime ? " +" +city.hammerTime.Format() : "" )}", hasHammerTime ? Colors.GreenYellow : Colors.White); 
+							queueText.UpdateLazy($"cs:{city.stats.cs:N0}%{ (hasHammerTime ? " +" +city.hammerTime.Format() : "" )}", hasHammerTime ? Colors.GreenYellow : Colors.White); 
 						
 							var bd = new List<BuildingCountAndBrush>();
 							foreach(var i in bdd.counts)
@@ -1076,8 +1086,8 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 		public string resTip => $"{ status.EnumTitle()}\n{
 			(op.op switch
 			{
-				Op.upgrade or Op.build => (-op.BuildOrUpgradeResourceBalance()).Format(),
-				Op.demo or Op.downgrade => op.DemoOrDowngradeResourceBalance().Format(),
+				Op.upgrade or Op.build => (op.BuildOrUpgradCost()).Format(),
+				Op.demo or Op.downgrade => op.DemoOrDowngradeRefund().Format(),
 				_ => null
 			}) }";
 

@@ -17,8 +17,7 @@
 					  
 					  
 					 />
-		<cnv:ManaText Text="{x:Bind manaS, Mode=OneWay}" MaxWidth="90" 
-					 />
+		<cnv:ManaText x:Name="karma"   x:FieldModifier="internal" MaxWidth="90" ToolTipService.ToolTip="{x:Bind karmaRegenS}"		 />
 
 		<Image Source="{x:Bind cnv:ImageHelper.Get('UI/icons_ressource_all.png')}" VerticalAlignment="Center"
 					  Tapped="AllTapped"

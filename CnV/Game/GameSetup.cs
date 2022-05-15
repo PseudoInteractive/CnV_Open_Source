@@ -137,6 +137,10 @@ namespace CnV
 							allianceId = allianceOffset+1;
 							title = AllianceTitle.leader;
 							break;
+						case 1054:  // popov
+							allianceId = allianceOffset+1;
+							title = AllianceTitle.officer;
+							break;
 						case 1056:  // Vindu
 							allianceId = allianceOffset;
 							title = AllianceTitle.secondLeader;
@@ -144,6 +148,10 @@ namespace CnV
 						case 1034: // coolasice
 							allianceId = allianceOffset;
 							title = AllianceTitle.leader;
+							break;
+						case 1006: // tlgger
+							allianceId = allianceOffset;
+							title = AllianceTitle.officer;
 							break;
 						case 1012: // tingwing
 							allianceId = allianceOffset+1;
@@ -156,7 +164,7 @@ namespace CnV
 									allianceId = a0.id;
 									else
 										allianceId = a1.id;
-									title = AllianceTitle.officer;
+									title = AllianceTitle.member;
 									break;
 
 

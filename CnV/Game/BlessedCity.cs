@@ -64,7 +64,7 @@ namespace CnV
 				Assert(resoucesToSend.food==0);
 			}
 			all.Add(new(this,false));
-			Note.Show($"Orders: {all.Count}");
+			//Note.Show($"Orders: {all.Count}");
 			
 		}
 		public static DonationOrder GetOrAdd(City target,TimeSpanS travelTime,City senderCity,bool isTempleDonation) {
@@ -92,7 +92,7 @@ namespace CnV
 					all.Remove(i);
 				}
 			}
-			Note.Show($"Orders: {initial}=>{all.Count}");
+		//	Note.Show($"Orders: {initial}=>{all.Count}");
 		}
 		public int tradeTransport => DonationTab.ViaWater ? (senderCity.shipsHome - Settings.tradeSendReserveShips).Max(0)*10_000 : (senderCity.cartsHome - Settings.tradeSendReserveCarts).Max(0)*1000;
 		public int wood => resoucesToSend.wood;

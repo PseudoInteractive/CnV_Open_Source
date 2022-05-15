@@ -39,6 +39,7 @@ namespace CnV
 
 		private void PlayerChanged(object? sender,PropertyChangedEventArgs e)
 		{
+			CityStats.nextTextUpdateTick=0;
 			Changed();
 
 		}
@@ -62,14 +63,14 @@ namespace CnV
 
 		public static Player player => Player.active;
 		public string zirconiaS => player.zirconia.Format();
-		public string manaS => player.sampleMana.Format();
+		public string karmaRegenS => $"+{player.manaRegenRate*ServerTime.secondsPerHour:N1} karma/h";
 		public string goldS => player.SampleGold().Format();
 		public string RefineS(int id) => player.data.refines[id].Format();
-		internal static void GoldChanged()	=> Changed(nameof(goldS));
-		internal static void ManaChanged()	=> Changed(nameof(manaS));
+		//internal static void GoldChanged()	=> Changed(nameof(goldS));
+		//internal static void ManaChanged()	=> Changed(nameof(manaS));
 
-		internal static void ZirconiaChanged() => Changed(nameof(zirconiaS));
-		internal static void RefinesChanged() => Changed(nameof(RefineS));
+		//internal static void ZirconiaChanged() => Changed(nameof(zirconiaS));
+		//internal static void RefinesChanged() => Changed(nameof(RefineS));
 
 		public string title => player.Title;
 

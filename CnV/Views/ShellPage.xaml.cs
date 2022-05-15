@@ -571,7 +571,8 @@ namespace CnV.Views
 				
 				PlayerStats.instance.UpdateIncomingText();
 				PlayerStats.instance.UpdateOutgoingText();
-
+				
+				KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F5,Refresh )  );
 				KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Left,NavStack.BackInvoked,
 																VirtualKeyModifiers.Menu));
 				KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F1,(_,m) => { m.Handled=true; ErrorReport(); },
@@ -914,7 +915,24 @@ namespace CnV.Views
 			keyboardAccelerator.Invoked   += OnKeyboardAcceleratorInvoked;
 			return keyboardAccelerator;
 		}
+		private static KeyboardAccelerator BuildKeyboardAccelerator(VirtualKey key,
+																	Action OnKeyboardAcceleratorInvoked,
+																	VirtualKeyModifiers modifiers =
+																			VirtualKeyModifiers.None) {
+			var keyboardAccelerator = new KeyboardAccelerator() { Key = key,Modifiers = modifiers };
+			keyboardAccelerator.Invoked   += (m,a) => {
+				try {
+					a.Handled=true;
+					OnKeyboardAcceleratorInvoked();
+				}
+				catch(Exception _ex) {
+					LogEx(_ex);
 
+				}
+			};
+			return keyboardAccelerator;
+		}
+		
 		//private static void OnKeyboardAcceleratorInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
 		//{
 		//    var result = NavigationService.GoBack();

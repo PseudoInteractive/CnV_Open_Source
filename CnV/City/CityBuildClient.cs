@@ -112,6 +112,7 @@ namespace CnV
 			quickBuildId              = quickBuildItemBid;
 			//	AppS.DispatchOnUIThreadLow( ()=> instance.quickBuild.SelectedIndex = (int)_action ); /// the first 3 are mapped. this triggers a selectedPoint changed event
 		}
+
 		public static async Task PerformAction(City build,CityBuildAction action,BuildC cc,BuildingId _quickBuildId,bool dryRun)
 		{
 			try
@@ -306,7 +307,7 @@ namespace CnV
 							}
 							else
 							{
-								Status($"Left click modify {b.def.Bn}, Right click to select a quick build tool\nUpgrade cost:\n{b.BuildOrUpgradeCost().Format()}\n{b.UpgradeTimeRequired().Format()}",dryRun);
+								Status(build.GetBuildingInfo(b,cc, b.isRes? BuildQueueItem.Op.demo : BuildQueueItem.Op.upgrade ),dryRun);
 							}
 
 							break;

@@ -300,11 +300,11 @@ partial class ShellPage
 		recognizer.ProcessMoveEvents(points);
 		
 
-		if(point.PointerDeviceType == PointerDeviceType.Touchpad)
-			Note.Show("Touchpad");
+		//if(point.PointerDeviceType == PointerDeviceType.Touchpad)
+		//	Note.Show("Touchpad");
 
-		if(point.Properties.ContactRect._width> 1)
-			Note.Show(point.Properties.ContactRect.ToString());
+		//if(point.Properties.ContactRect._width> 1)
+		//	Note.Show(point.Properties.ContactRect.ToString());
 		e.KeyModifiers.UpdateKeyModifiers();
 		Canvas_PointerMoved((pointC, point.PointerId, point.IsInContact, point.Timestamp, point.Properties.PointerUpdateKind));
 		e.Handled=true;
@@ -314,8 +314,8 @@ partial class ShellPage
 		View.EndCoasting();
 		var pt = e.CurrentPoint;
 		var point = pt.Position;
-		if(pt.PointerDeviceType == PointerDeviceType.Touchpad)
-			Note.Show("Touchpad");
+		//if(pt.PointerDeviceType == PointerDeviceType.Touchpad)
+		//	Note.Show("Touchpad");
 
 		if(  pt.PointerDeviceType == PointerDeviceType.Mouse && (Settings.pointerGestureMode == PointerGestureMode.wheelIsZoom) )
 		{
