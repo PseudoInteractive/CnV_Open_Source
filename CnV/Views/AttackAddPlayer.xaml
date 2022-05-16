@@ -6,7 +6,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-	xmlns:winui="using:Microsoft.UI.Xaml.Controls"
     Title="Add Attack Castles for Player"
     PrimaryButtonText="Okay"
     SecondaryButtonText="Cancel" >
@@ -14,8 +13,8 @@
 		<AutoSuggestBox Header="Player" x:Name="playerName" PlaceholderText="Type a player name" TextChanged="{x:Bind local:PlayerGroup.PlayerNameSuggest_TextChanged}"
                 QueryIcon="Find" 
                 Width="300" HorizontalAlignment="Left" />
-		<winui:RadioButtons x:Name="troopType" SelectedIndex="0" MaxColumns="2" >
-			<winui:RadioButtons.Items>
+		<RadioButtons x:Name="troopType" SelectedIndex="0" MaxColumns="2" >
+			<RadioButtons.Items>
 				
 			<x:String>Vanq</x:String>
 			<x:String>Sorc</x:String>
@@ -25,11 +24,11 @@
 			<x:String>SE</x:String>
 			<x:String>Ballista</x:String>
 			<x:String>Unknown</x:String>
-			</winui:RadioButtons.Items>
-		</winui:RadioButtons>
-		<winui:NumberBox x:Name="cont" Value="22" Header="Continent" Style="{StaticResource NumberBoxSmall}" />
+			</RadioButtons.Items>
+		</RadioButtons>
+		<NumberBox x:Name="cont" Value="22" Header="Continent" Style="{StaticResource NumberBoxSmall}" />
 		<StackPanel Orientation="Horizontal">
-			<winui:NumberBox x:Name="count" Value="1" Header="Count" Style="{StaticResource NumberBoxSmall}" />
+			<NumberBox x:Name="count" Value="1" Header="Count" Style="{StaticResource NumberBoxSmall}" />
 			<CheckBox x:Name="academy" Content="Has Academy" IsChecked="True" Margin="8,0,8,0" IsThreeState="True"  />
 		</StackPanel>
 	</StackPanel>

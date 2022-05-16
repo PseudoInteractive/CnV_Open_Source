@@ -4,7 +4,6 @@
 			  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			  xmlns:sf="using:Syncfusion.UI.Xaml.DataGrid"
-			  xmlns:winui="using:Microsoft.UI.Xaml.Controls"
 			  xmlns:game="using:CnV"
 			  xmlns:cnv="using:CnV"
 			  xmlns:view="using:CnV.Views"
@@ -68,7 +67,7 @@
 									AllowSorting="False"
 											HeaderText="I"
 											Width="32"
-											winui:ToolTipService.ToolTip="Click to switch to this city"
+											ToolTipService.ToolTip="Click to switch to this city"
 											 />
 				<sf:GridTextColumn MappingName="nameAndRemarks"
 										   HeaderText="Name"
@@ -77,7 +76,7 @@
 										    />
 				<sf:GridHyperlinkColumn MappingName="bStage"
 									HeaderText="stage"	 
-				                   winui:ToolTipService.ToolTip="Click 'Do all the stuff'"
+				                   ToolTipService.ToolTip="Click 'Do all the stuff'"
 										   TextAlignment="Center"
 									    ColumnWidthMode="SizeToHeader"
 										    />
@@ -94,44 +93,44 @@
 
 				<sf:GridCheckBoxColumn MappingName="isBuilding"
 										   ShowHeaderToolTip="True"
-											winui:ToolTipService.ToolTip="True if anything is currently building, false if stalled or complete"
+											ToolTipService.ToolTip="True if anything is currently building, false if stalled or complete"
 										   TextAlignment="Center"
 										  Width="32"
 										    />
 				<sf:GridCheckBoxColumn MappingName="stalled"
 										   ShowHeaderToolTip="True"
-											winui:ToolTipService.ToolTip="True building is stalled on resources or rougue build ops (i.e. towers but no wall, too many buildings)"
+											ToolTipService.ToolTip="True building is stalled on resources or rougue build ops (i.e. towers but no wall, too many buildings)"
 										   TextAlignment="Center"
 										  Width="32"
 										    />
 				<sf:GridCheckBoxColumn MappingName="autobuild"
 										   ShowHeaderToolTip="True"
-											winui:ToolTipService.ToolTip="Whether or not anything is set to autobuild"
+											ToolTipService.ToolTip="Whether or not anything is set to autobuild"
 										   TextAlignment="Center"
 										  Width="32"
 										    />
 				<sf:GridCheckBoxColumn MappingName="AutoTowers"
 									    ShowHeaderToolTip="True"
-										   winui:ToolTipService.ToolTip="Towers are set to autobuild?"
+										   ToolTipService.ToolTip="Towers are set to autobuild?"
 										  Width="32"
 										    />
 				<sf:GridCheckBoxColumn MappingName="AutoWalls"
 									    ShowHeaderToolTip="True"
-										   winui:ToolTipService.ToolTip="Walls are set to autobuild?"
+										   ToolTipService.ToolTip="Walls are set to autobuild?"
 										  Width="32"
 										    />
 				<!--<sf:GridTextColumn MappingName="buildingStr"
 										   HeaderTip="Buildings"
-										   winui:ToolTipService.ToolTip="Number of buildings"
+										   ToolTipService.ToolTip="Number of buildings"
 										   CellStyle="{StaticResource CenterAlignLink}"
 										    />-->
 				<sf:GridNumericColumn MappingName="Bldgs"
-										   winui:ToolTipService.ToolTip="May or may not include queued buildings"
+										   ToolTipService.ToolTip="May or may not include queued buildings"
 										   TextAlignment="Right"
 											Width="48"
 										    />
 				<sf:GridNumericColumn MappingName="points"
-												winui:ToolTipService.ToolTip="City score"
+												ToolTipService.ToolTip="City score"
 											Width="64"
 												DisplayNumberFormat="N0"
 												TextAlignment="Right"
@@ -139,13 +138,13 @@
 				<sf:GridNumericColumn MappingName="constructionSpeed"
 											HeaderText="cs"
 											Width="64"
-													winui:ToolTipService.ToolTip="Construction Speed"
+													ToolTipService.ToolTip="Construction Speed"
 												TextAlignment="Right"
 											DisplayNumberFormat="N0"
 												 />
 				<sf:GridNumericColumn MappingName="tsTotal"
 												TextAlignment="Right"
-												winui:ToolTipService.ToolTip="TS enlisted in city"
+												ToolTipService.ToolTip="TS enlisted in city"
 												DisplayNumberFormat="N0"
 												AllowSorting="True"
 												
@@ -172,11 +171,11 @@
 											  ColumnWidthMode="Auto"
 											   />
 				<sf:GridNumericColumn MappingName="bcTowers"
-										  winui:ToolTipService.ToolTip="Towers count"
+										  ToolTipService.ToolTip="Towers count"
 										   ColumnWidthMode="Auto"
 											HeaderText="twr" />
 				<sf:GridCheckBoxColumn MappingName="ministersOn"
-										  winui:ToolTipService.ToolTip="Whether Ministers are on or temporarily disabled"
+										  ToolTipService.ToolTip="Whether Ministers are on or temporarily disabled"
 										   ColumnWidthMode="Auto"
 											HeaderText="mOn" />
 			</sf:SfDataGrid.Columns>

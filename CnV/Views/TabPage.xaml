@@ -3,7 +3,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:winui="using:Microsoft.UI.Xaml.Controls"
+    
     mc:Ignorable="d"
     
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -28,14 +28,14 @@
                              TabStripDragOver="Tabs_TabStripDragOver"
                              TabStripDrop="Tabs_TabStripDrop"
                              TabDragStarting="Tabs_TabDragStarting">
-		<winui:TabView.TabStripHeader>
+		<TabView.TabStripHeader>
 			<Grid x:Name="ShellTitlebarInset"  Background="{x:Null}" />
-		</winui:TabView.TabStripHeader>
+		</TabView.TabStripHeader>
 		
-		<winui:TabView.TabStripFooter>
+		<TabView.TabStripFooter>
 			<Grid x:Name="CustomDragRegion"  Background="{x:Null}">
 				<TextBlock x:Name="tip" x:FieldModifier="public" VerticalAlignment="Center" HorizontalAlignment="Center"  />
 			</Grid>
-		</winui:TabView.TabStripFooter>
+		</TabView.TabStripFooter>
 	</TabView>
 </Grid>

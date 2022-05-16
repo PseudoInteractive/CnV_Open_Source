@@ -4,7 +4,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:winui="using:Microsoft.UI.Xaml.Controls"
+    
     xmlns:sf="using:Syncfusion.UI.Xaml.DataGrid"
       xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:local="using:CnV.Views"
@@ -55,7 +55,7 @@
                                        />
                <sf:GridCheckBoxColumn  MappingName="pinned"
                                          IsHidden="False"
-                                         winui:ToolTipService.ToolTip="Hold down shift to toggle pinned status for all selected spots"
+                                         ToolTipService.ToolTip="Hold down shift to toggle pinned status for all selected spots"
                                           Width="32" />
 
                 <sf:GridNumericColumn MappingName="cont"

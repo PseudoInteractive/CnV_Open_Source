@@ -6,9 +6,11 @@
 		<TargetPlatformVersion>10.0.22000.0</TargetPlatformVersion>
 		<TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
 		<RootNamespace>CnV</RootNamespace>
+		<ApplicationManifest>app.manifest</ApplicationManifest>
 		<Platforms>x64</Platforms>
 		<MonoGamePlatform>WindowsStoreApp</MonoGamePlatform>
 		<RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
+		<PublishProfile>Properties\PublishProfiles\win10-$(Platform).pubxml</PublishProfile>
 		<UseWinUI>True</UseWinUI>
 		<EnableDefaultCompileItems>false</EnableDefaultCompileItems>
 		<EnableDefaultPageItems>false</EnableDefaultPageItems>
@@ -172,7 +174,6 @@
 		<Compile Include="Activation\SchemeActivationData.cs" />
 		<Compile Include="Activation\SchemeActivationHandler.cs" />
 		<Compile Include="Activation\ShareTargetActivationHandler.cs" />
-		<Compile Include="Activation\WebToAppLinkActivationHandler.cs" />
 		<Compile Include="Audio\Audio.cs" />
 		<Compile Include="Bookmarks.cs" />
 		<Compile Include="City\CityBuildClient.cs" />
@@ -223,23 +224,15 @@
 		<Compile Include="JSON\SpotJson.cs" />
 		<Compile Include="Models\ADataGrid.cs" />
 		<Compile Include="Models\DataGridTap.cs" />
-		<Compile Include="Models\GoogleSheets.cs" />
 		<Compile Include="Models\JsNative.cs" />
 		<Compile Include="Models\JSPopup.cs" />
 		<Compile Include="NoteClient.cs" />
 		<Compile Include="Services\Avatarslate.cs" />
 		<Compile Include="Services\Cosmos.cs" />
-		<Compile Include="Models\DragDropCompletedData.cs" />
-		<Compile Include="Models\DragDropData.cs" />
-		<Compile Include="Models\DragDropStartingData.cs" />
 		<Compile Include="Models\JSClient.cs" />
 		<Compile Include="Services\ActivationService.cs" />
 		<Compile Include="Activation\DefaultActivationHandler.cs" />
 		<Compile Include="Services\Discord.cs" />
-		<Compile Include="Services\DragAndDrop\DragDropService.cs" />
-		<Compile Include="Services\DragAndDrop\DropConfiguration.cs" />
-		<Compile Include="Services\DragAndDrop\ListViewDropConfiguration.cs" />
-		<Compile Include="Services\DragAndDrop\VisualDropConfiguration.cs" />
 		<Compile Include="Services\FirstRunDisplayService.cs" />
 		<Compile Include="Services\HubNotificationsService.cs" />
 		<Compile Include="Services\LiveTileService.cs" />
@@ -801,6 +794,7 @@
 	<ItemGroup>
 		<Folder Include="Base\" />
 		<Folder Include="Resources\" />
+		<Folder Include="Services\DragAndDrop\" />
 	</ItemGroup>
 	<ItemGroup>
 		<Reference Include="Cyotek.Drawing.BitmapFont">

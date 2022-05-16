@@ -120,8 +120,8 @@
 						<x:String>Zoom</x:String>
 					</RadioButtons.Items>
 				</RadioButtons>
-				<Slider Height="128" Header="Font Size" Value="{x:Bind cnv:Settings.tabZoom, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.0625" SmallChange="0.0625" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Must restart to see changes" ValueChanged="{x:Bind cnv:Settings.UpdateZoom}" />
-				<Slider Height="128" Header="Chat Font Size" Value="{x:Bind cnv:Settings.chatZoom, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.0625" SmallChange="0.0625" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Must restart to see changes" ValueChanged="{x:Bind cnv:Settings.UpdateZoom}" />
+				<Slider Height="128" Header="UI Font Size" Value="{x:Bind cnv:Settings.tabZoom, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.0625" SmallChange="0.0625" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Must restart to see changes" ValueChanged="{x:Bind cnv:Settings.UpdateZoom}" />
+				<Slider Height="128" Header="UI Chat Size" Value="{x:Bind cnv:Settings.chatZoom, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.0625" SmallChange="0.0625" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Must restart to see changes" ValueChanged="{x:Bind cnv:Settings.UpdateZoom}" />
 			</wct:WrapPanel>
 
 			<wct:WrapPanel Orientation="Horizontal" HorizontalSpacing="2" VerticalSpacing="2" >

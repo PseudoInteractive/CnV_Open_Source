@@ -4,7 +4,7 @@
 			  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			  xmlns:sf="using:Syncfusion.UI.Xaml.DataGrid"
-			  xmlns:winui="using:Microsoft.UI.Xaml.Controls"
+			  
 			  xmlns:game="using:CnV"
 			  xmlns:cnv="using:CnV"
 			  xmlns:view="using:CnV.Views"
@@ -155,7 +155,7 @@
 									AllowSorting="False"
 											HeaderText="I"
 											Width="32"
-											winui:ToolTipService.ToolTip="Click to switch to this city"
+											ToolTipService.ToolTip="Click to switch to this city"
 											 />
 								<sf:GridTextColumn MappingName="nameAndRemarks"
 										   HeaderText="Name"
@@ -176,7 +176,7 @@
 
 								
 								<sf:GridNumericColumn MappingName="points"
-												winui:ToolTipService.ToolTip="City score"
+												ToolTipService.ToolTip="City score"
 											Width="64"
 												DisplayNumberFormat="N0"
 												TextAlignment="Right"
@@ -184,7 +184,7 @@
 							
 								<sf:GridNumericColumn MappingName="tsTotal"
 												TextAlignment="Right"
-												winui:ToolTipService.ToolTip="TS enlisted in city"
+												ToolTipService.ToolTip="TS enlisted in city"
 												DisplayNumberFormat="N0"
 												AllowSorting="True"
 												

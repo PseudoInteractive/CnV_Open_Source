@@ -158,7 +158,7 @@ namespace CnV.Views
 			var city = City.GetBuild();
 			
 			var bds = city.GetLayoutBuildingsWithRes();
-			var s = City.StaticUpdateBuildingStats(city,bds);
+			var s = City.ComputeBuildingStats(city,bds);
 
 
 			instance.ships.Text = $"{s.ships:N0}";
@@ -540,6 +540,61 @@ namespace CnV.Views
 
 		}
 
-		
+		static BuildingId[] buildingsToTry = { bidCottage,bidForester,bidStoneMine,bidIronMine,bidFarm,bidSmelter,bidStonemason,bidGrainMill,bidSawmill };
+		private void ModifyBuildings(bool remove=false, bool replace=false,bool add=false) {
+			var city = City.GetBuild();
+			var bds = city.GetLayoutBuildingsWithRes();
+			var bestId = 0;
+			BuildingId bestBid = 0;
+			var baseStats = City.ComputeBuildingStats(city,bds);
+			var initialProd = baseStats.productionPerSec.sum;;
+			var bestProd = remove ? -1f : initialProd; ;
+			foreach(var i in city.buildingSpotsExcludingShore ) {
+				var bdi = bds[i];
+				if(bdi.isRes)
+					continue;
+				if(replace || remove) {
+					if(!bdi.isBuilding)
+						continue;
+				}
+				else if(add) {
+					if(bdi.isBuilding)
+						continue;
+				}
+
+				foreach(var bid in buildingsToTry) 
+				{
+					var _bid = remove ? bidNone : bid;
+					bds[i] = new Building(_bid,remove ? (byte)0 : (byte)10);
+					var score = City.ComputeBuildingStats(city,bds).productionPerSec.sum;
+					if(score > bestProd) {
+						bestId = i;
+						bestBid = _bid;
+						bestProd = score;
+					}
+					if(remove)
+						break;
+				}
+				bds[i] = bdi; // restore
+
+			}
+			if(bestId != 0 ) {
+				city.layoutWritable[bestId]= bestBid;
+				city.BuildingsChanged();
+				Note.Show($"Added {bestBid}, production {initialProd:N0}=>{bestProd:N0}");
+			}
+			else {
+				Note.Show("Could not find a good buildnig to add");
+			}
+		}
+		private void AddBuilding(object sender,RoutedEventArgs e) {
+			ModifyBuildings(add: true);
+		}
+		private void RemoveBuilding(object sender,RoutedEventArgs e) {
+			ModifyBuildings(remove: true);
+		}
+		private void ReplaceBuilding(object sender,RoutedEventArgs e) {
+			ModifyBuildings(replace: true);
+		}
 	}
 }

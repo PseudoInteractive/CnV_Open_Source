@@ -9,7 +9,6 @@
     xmlns:animatedvisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
 			 xmlns:tkui="using:CommunityToolkit.WinUI.UI"
       xmlns:views="using:CnV.Views"
-      xmlns:winui="using:Microsoft.UI.Xaml.Controls"
       x:Name="shellPage"
 		RequestedTheme="Dark"   
 	  Loaded="OnLoaded"

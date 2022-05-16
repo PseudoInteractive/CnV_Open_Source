@@ -93,7 +93,7 @@ namespace CnV
 			var rr = tt.resResquired;
 			var p = city.player;
 			if(type==Troops.ttMagistra) {
-				if( (int)p.freeSenatorCount <= count) {
+				if( (int)p.freeSenatorCount < count) {
 					AppS.MessageBox(title:$"Can recruit at most {p.freeSenatorCount} Magistra",hero: AppS.heroMissingFunds);
 					return;
 				}

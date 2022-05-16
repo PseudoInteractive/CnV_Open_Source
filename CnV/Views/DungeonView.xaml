@@ -9,7 +9,6 @@
 	xmlns:views="using:CnV.Views"
 	  xmlns:model="using:CnV.Models"
 	xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
-			  xmlns:winui="using:Microsoft.UI.Xaml.Controls"
 	 xmlns:game="using:CnV"
     xmlns:sf="using:Syncfusion.UI.Xaml.DataGrid"
 	DefaultButton="Close"
@@ -41,17 +40,17 @@
                               AutoGenerateColumns="False">
 			<sf:SfDataGrid.Columns>
 				<sf:GridHyperlinkColumn MappingName="dispatch"
-				                        winui:ToolTipService.ToolTip="Click here to send raids" />
+				                        ToolTipService.ToolTip="Click here to send raids" />
 
 				<sf:GridHyperlinkColumn MappingName="plan"
-										   winui:ToolTipService.ToolTip="Click here to send raids" />
+										   ToolTipService.ToolTip="Click here to send raids" />
 				<sf:GridNumericColumn MappingName="distance"
 												TextAlignment="Right"
-												winui:ToolTipService.ToolTip="Distance to dungeon" />
+												ToolTipService.ToolTip="Distance to dungeon" />
 				<sf:GridNumericColumn MappingName="level"
 												TextAlignment="Right" />
 				<sf:GridNumericColumn MappingName="completion"
-												winui:ToolTipService.ToolTip="How worn out the dungeon is&#x0a;When this reaches 0 the dungeon disappears and troops stop raiding&#x0a;Preferring dungeons with lower completion is a way to prevent raid carry from falling too far, a form of auto reseting raids"
+												ToolTipService.ToolTip="How worn out the dungeon is&#x0a;When this reaches 0 the dungeon disappears and troops stop raiding&#x0a;Preferring dungeons with lower completion is a way to prevent raid carry from falling too far, a form of auto reseting raids"
 												DisplayNumberFormat="N3"
 												TextAlignment="Right" />
 				<sf:GridTextColumn MappingName="kind"
@@ -66,7 +65,7 @@
 						Orientation="Horizontal"
 						VerticalAlignment="Center"
 						>
-			<winui:NumberBox x:Name="raidCarryMinBox"
+			<NumberBox x:Name="raidCarryMinBox"
 						Header="Min Carry%"
 						Value="{x:Bind cnv:Settings.raidCarryMinPercent, Mode=TwoWay }"
 						ValueChanged="RaidCarrySelChanged"
@@ -75,14 +74,14 @@
 							 SmallChange="5"
 						FontSize="{StaticResource MediumFontSize}"
 						Margin="4" ToolTipService.ToolTip="Troops will be divided up into batches that will carry this amount or greater.  Dungeons that that require more troops than the city has at home will not be shown.  When raid carry % drops below 100% your raiding income is as high as it is at 100% but your raiding losses will be higher.  As the dungeon progresses the loot per raid goes up, along with the strength of the monsters, thereby resulting in progressively greater losses.  Establishing an upper bound on the resulting raid loses is that rationale behind setting a min carry above 100%" />
-			<winui:NumberBox x:Name="raidCarryTargetBox"
+			<NumberBox x:Name="raidCarryTargetBox"
 						  Header="Target Carry%"
 						  Value="{x:Bind cnv:Settings.raidCarryTargetPercent, Mode=TwoWay}"
 						 ValueChanged="RaidCarrySelChanged"
 							
 							 SmallChange="5"
 						  Margin="4" ToolTipService.ToolTip="Raids will be selected that are as close as possible to this target, provided that they are greater than carry Min and less than carry Max" />
-			<winui:NumberBox x:Name="raidCarryMaxBox"
+			<NumberBox x:Name="raidCarryMaxBox"
 						  Value="{x:Bind cnv:Settings.raidCarryMaxPercent, Mode=TwoWay}"
 							SmallChange="5"
 						  Header="Max Carry%"
@@ -92,7 +91,7 @@
 					 	  IsTextScaleFactorEnabled="False"
 						
 						  Margin="4" ToolTipService.ToolTip="If the resulting raids computed via min Carry have a carry % that is greater than this number, the dungeon will be ignored.  Total raiding income goes down as carry % goes up (startong at 100%) and sometimes it is better to send to a farther dungeon if that dungeons carry % is closer to 100%.  A common case where a high % carry is required is when you attempt to raid a lower level dungeon and you run out of command slots" />
-			<winui:DropDownButton x:Name="includeButton"
+			<DropDownButton x:Name="includeButton"
 									  Content="Include"
 									  Margin="6,18,6,2"
 									  FontSize="{StaticResource MediumFontSize}"
@@ -118,14 +117,14 @@
 						  OnContent="Yes"
 						  OffContent="Once" />
 
-			<winui:NumberBox 
+			<NumberBox 
 								  Header="Max Triari Ratio"
 								  Margin="6,2,6,2"
 								  Value="{x:Bind cnv:Settings.raidMaxTriariRatio,Mode=TwoWay}"
 								  ValueChanged="SomethingChanged"
 				Style="{StaticResource NumberBoxRightAlignPositive}"
 							ToolTipService.ToolTip="Sometimes you have many triari at home (maybe a training tower hit level 10).  Sending them to raid without others to protect the is not always the best idea.  This limits the ratio of triari to other troops when sending raids" />
-			<winui:NumberBox 
+			<NumberBox 
 								  Header="Reserve Commands"
 								  Margin="6,2,6,2"
 								  Value="{x:Bind cnv:Settings.raidReserveCommandSlots,Mode=TwoWay}"
@@ -133,7 +132,7 @@
 				Style="{StaticResource NumberBoxRightAlignPositive}"
 							ToolTipService.ToolTip="Limits the number of raids sent to ensure that this many command slots are free for other purposes" />
 
-			<winui:NumberBox 
+			<NumberBox 
 								  Header="CarryVsDistance"
 								  Margin="6,2,6,2"
 								  Value="{x:Bind cnv:Settings.raidCarryVsDistance,Mode=TwoWay}"
@@ -141,14 +140,14 @@
 				Style="{StaticResource NumberBoxRightAlignPositive}"
 							ToolTipService.ToolTip="Determines the relative weighting between getting a good carry % and getting a close dungeon, 0 means favour dungeons where you can get a good carry %, 1 means favour the closest dungeon, 0.5 is a balance between the two" />
 			
-			<winui:NumberBox  x:Name="raidFraction"
+			<NumberBox  x:Name="raidFraction"
 								  Header="Use fraction"
 								  Margin="6,2,6,2"
 								  Value="{x:Bind cnv:Settings.raidTroopFraction,Mode=TwoWay}"
 								  ValueChanged="SomethingChanged"
 							ToolTipService.ToolTip="0.5 means leave half of the raiding troops at home"
 								  Style="{StaticResource NumberBoxPercent}" />
-			<winui:NumberBox  
+			<NumberBox  
 						  Header="Min Progress"
 						  ValueChanged="SomethingChanged"
 						  Value="{x:Bind cnv:Settings.minDungeonCompletion,Mode=TwoWay}"
@@ -157,7 +156,7 @@
 						LargeChange="25"
 				
 						  Margin="6,2,6,2" ToolTipService.ToolTip="If a dungeons progress is lower than this number, it will be ignored.  This helps you avoid cases where your dungeons finish and your troops come home and sit idle waiting for you to log in, with nothing to do but drink your wine and smoke your weed (or do whatever it is you do when you are offline)" />
-			<winui:NumberBox  
+			<NumberBox  
 				Header="Min Idle"
 				ValueChanged="SomethingChanged"
 				Value="{x:Bind cnv:Settings.raidSendMinIdle,Mode=TwoWay}"
@@ -175,7 +174,7 @@
 							
 							  ToolTipService.ToolTip="Whether to include dungeons that do not match your troop type (i.e. mountains for infantry)"
 								  Margin="6,2,6,2" />
-			<winui:NumberBox Header="Penalty for wrong Dungeon Type"
+			<NumberBox Header="Penalty for wrong Dungeon Type"
 									 Value="{x:Bind cnv:Settings.penaltyForWrongDungeonType,Mode=TwoWay}"
 									 SmallChange="0.5"
 									 LargeChange="2"

@@ -8,7 +8,6 @@
 			  xmlns:game="using:CnV"
 			  xmlns:view="using:CnV.Views"
 			  xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
-			  xmlns:winui="using:Microsoft.UI.Xaml.Controls"
 			  xmlns:storage="using:Windows.Storage"
 			  
 			
@@ -25,64 +24,64 @@
 			<TextBlock x:Name="planName" Padding="4" Margin="4,4,24,4" ToolTipService.ToolTip="Plans are stored as files, this will be the filename" />
 			<tk:WrapPanel Orientation="Horizontal">
 				
-				<winui:NumberBox Header="Max travel hours Sen"
+				<NumberBox Header="Max travel hours Sen"
                              Style="{StaticResource NumberBoxSmall}"
                              Value="{x:Bind game:AttackPlan.plan.attackMaxTravelHoursSen, Mode=TwoWay}"
                              ToolTipService.ToolTip="Magistra targets that require longer travel times are ignored"
                              NumberFormatter="{x:Bind cnv:App.formatter2Digit,Mode=OneTime}"
                              SmallChange="0.25" />
-				<winui:NumberBox Header="Max travel hours SE"
+				<NumberBox Header="Max travel hours SE"
                              Style="{StaticResource NumberBoxSmall}"
                              Value="{x:Bind game:AttackPlan.plan.attackMaxTravelHoursSE, Mode=TwoWay}"
                              ToolTipService.ToolTip="SE targets that require longer travel times are ignored"
                              NumberFormatter="{x:Bind cnv:App.formatter2Digit,Mode=OneTime}"
                              SmallChange="0.25" />
-				<winui:NumberBox Header="Max SE fakes"
+				<NumberBox Header="Max SE fakes"
                              ToolTipService.ToolTip="The maximum number of fakes, if there are more fakes provided, the closest ones will be used"
                              Style="{StaticResource NumberBoxSmall}"
                              Value="{x:Bind game:AttackPlan.plan.attackSEMaxFakes, Mode=TwoWay}"
                              NumberFormatter="{x:Bind cnv:App.formatterInt,Mode=OneTime}"
                              SmallChange="1" />
-				<winui:NumberBox Header="Min SE fakes"
+				<NumberBox Header="Min SE fakes"
                              ToolTipService.ToolTip="The minimum number of fakes per se target"
                              Style="{StaticResource NumberBoxSmall}"
                              Value="{x:Bind game:AttackPlan.plan.attackSEMinFakes, Mode=TwoWay}"
                              NumberFormatter="{x:Bind cnv:App.formatterInt,Mode=OneTime}"
                              SmallChange="1" />
-				<winui:NumberBox Header="Max Sen fakes"
+				<NumberBox Header="Max Sen fakes"
                              ToolTipService.ToolTip="The maximum number of fakes, if there are more fakes provided, the closest ones will be used"
                              Style="{StaticResource NumberBoxSmall}"
                              Value="{x:Bind game:AttackPlan.plan.attackSenMaxFakes, Mode=TwoWay}"
                              NumberFormatter="{x:Bind cnv:App.formatterInt,Mode=OneTime}"
                              SmallChange="1" />
-				<winui:NumberBox Header="Min Sen fakes"
+				<NumberBox Header="Min Sen fakes"
                              ToolTipService.ToolTip="The minimum number of fakes per se target"
                              Style="{StaticResource NumberBoxSmall}"
                              Value="{x:Bind game:AttackPlan.plan.attackSenMinFakes, Mode=TwoWay}"
                              NumberFormatter="{x:Bind cnv:App.formatterInt,Mode=OneTime}"
                              SmallChange="1" />
-				<winui:NumberBox Header="Min SE Assaults"
+				<NumberBox Header="Min SE Assaults"
                              ToolTipService.ToolTip="If assults are culled due to distance and there are fewer assaults than this left, the target will be discarded"
                              Style="{StaticResource NumberBoxSmall}"
                              Value="{x:Bind game:AttackPlan.plan.attackSEMinAssaults, Mode=TwoWay}"
                              NumberFormatter="{x:Bind cnv:App.formatterInt,Mode=OneTime}"
                              SmallChange="1" />
-				<winui:NumberBox Header="Max SE Assaults"
+				<NumberBox Header="Max SE Assaults"
                              Style="{StaticResource NumberBoxSmall}"
                              Value="{x:Bind game:AttackPlan.plan.attackSEMaxAssaults, Mode=TwoWay}"
                              NumberFormatter="{x:Bind cnv:App.formatterInt,Mode=OneTime}"
                              SmallChange="1" />
-				<winui:NumberBox Header="Min Sen Assaults"
+				<NumberBox Header="Min Sen Assaults"
                              Style="{StaticResource NumberBoxSmall}"
                              Value="{x:Bind game:AttackPlan.plan.attackSenMinAssaults, Mode=TwoWay}"
                              NumberFormatter="{x:Bind cnv:App.formatterInt,Mode=OneTime}"
                              SmallChange="1" />
-				<winui:NumberBox Header="Max Sen Assaults"
+				<NumberBox Header="Max Sen Assaults"
                              Style="{StaticResource NumberBoxSmall}"
                              Value="{x:Bind game:AttackPlan.plan.attackSenMaxAssaults, Mode=TwoWay}"
                              NumberFormatter="{x:Bind cnv:App.formatterInt,Mode=OneTime}"
                              SmallChange="1" />
-				<winui:NumberBox Header="Ticks to Cap"
+				<NumberBox Header="Ticks to Cap"
                              Style="{StaticResource NumberBoxSmall}"
                              Value="{x:Bind game:AttackPlan.plan.ticksToCapture, Mode=TwoWay}"
                              NumberFormatter="{x:Bind cnv:App.formatterInt,Mode=OneTime}"
@@ -90,25 +89,25 @@
                              SmallChange="1" />
 			</tk:WrapPanel>
 			<tk:WrapPanel Orientation="Horizontal">
-				<winui:NumberBox Header="Distance Penalty"
+				<NumberBox Header="Distance Penalty"
                              Style="{StaticResource NumberBoxSmall}"
                              Value="{x:Bind game:AttackPlan.plan.distancePenalty, Mode=TwoWay}"
                              ToolTipService.ToolTip="Higher: Value short travel distances.  Lower:  Value other criteria more"
                              NumberFormatter="{x:Bind cnv:App.formatter2Digit,Mode=OneTime}"
                              SmallChange="1" />
-				<winui:NumberBox Header="Morale Penalty"
+				<NumberBox Header="Morale Penalty"
                              Style="{StaticResource NumberBoxSmall}"
                              Value="{x:Bind game:AttackPlan.plan.moralPenalty, Mode=TwoWay}"
                              ToolTipService.ToolTip="Higher: Attacks with moral penalty are less likely.  Lower:  Value other criteria more"
                              NumberFormatter="{x:Bind cnv:App.formatter2Digit,Mode=OneTime}"
                              SmallChange="1" />
-				<winui:NumberBox Header="Unbalanced Assault Penalty"
+				<NumberBox Header="Unbalanced Assault Penalty"
                              Style="{StaticResource NumberBoxSmall}"
                              Value="{x:Bind game:AttackPlan.plan.unbalancedAssaultPenalty, Mode=TwoWay}"
                              ToolTipService.ToolTip="Higher: Each target will have a similar number of assaults.  Lower:  Value other criteria more"
                              NumberFormatter="{x:Bind cnv:App.formatter2Digit,Mode=OneTime}"
                              SmallChange="1" />
-				<winui:NumberBox Header="Troop Match Bonus"
+				<NumberBox Header="Troop Match Bonus"
                              Style="{StaticResource NumberBoxSmall}"
                              Value="{x:Bind game:AttackPlan.plan.troopMatchBonus, Mode=TwoWay}"
                              ToolTipService.ToolTip="Higher: Attacks will be chosen where the attacker troop type does well against defender troop type (i.e. Horse vs Prae).  Lower:  Value other criteria more"

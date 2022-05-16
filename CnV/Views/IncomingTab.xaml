@@ -7,7 +7,7 @@
                xmlns:cnv="using:CnV"
 
                xmlns:local="using:CnV.Views"
-			   xmlns:winui="using:Microsoft.UI.Xaml.Controls"  
+			     
                xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
                xmlns:sf="using:Syncfusion.UI.Xaml.DataGrid"
                Background="{x:Null}"
@@ -22,11 +22,11 @@
 			<RowDefinition />
 		</Grid.RowDefinitions>
 		<tk:WrapPanel>
-			<winui:RadioButtons SelectedIndex="{x:Bind typeFilter,Mode=TwoWay}" MaxColumns="3" SelectionChanged="filterChanged" >
+			<RadioButtons SelectedIndex="{x:Bind typeFilter,Mode=TwoWay}" MaxColumns="3" SelectionChanged="filterChanged" >
 				<x:String>Alliance</x:String>
 				<x:String>Watched</x:String>
 				<x:String>Me</x:String>
-			</winui:RadioButtons>
+			</RadioButtons>
 			<ToggleSwitch IsOn="{x:Bind includeInternal,Mode=TwoWay}" Header="Internal" OffContent="Exclude" OnContent="Include" Toggled="filterChanged" />
 			<Button Content="To Sheet" Click="ExportSheetsClick" />
 

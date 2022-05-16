@@ -5,7 +5,7 @@
 			  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			  xmlns:sf="using:Syncfusion.UI.Xaml.DataGrid"
 			  xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
-			  xmlns:winui="using:Microsoft.UI.Xaml.Controls"
+			  
 			  xmlns:game="using:CnV"
 			  xmlns:views="using:CnV.Views"
 			  mc:Ignorable="d"
@@ -47,11 +47,11 @@
 				<sf:GridHyperlinkColumn HeaderText= "+" 
 				                        MappingName="dungeonsToggle"
 				                        Width="20"
-				                        winui:ToolTipService.ToolTip="Tap to expend or collapse dungeons" />
+				                        ToolTipService.ToolTip="Tap to expend or collapse dungeons" />
 					<sf:GridImageColumn MappingName="icon"
 											HeaderText="I"
 											Width="32"
-											winui:ToolTipService.ToolTip="Click to switch to this city"
+											ToolTipService.ToolTip="Click to switch to this city"
 											 />
 					<sf:GridTextColumn MappingName="nameAndRemarks"
 										 
@@ -61,7 +61,7 @@
 										   TextAlignment="Left"
 										    />
 					<sf:GridHyperlinkColumn MappingName="xy"
-										   winui:ToolTipService.ToolTip="Click to view this city"
+										   ToolTipService.ToolTip="Click to view this city"
 										 
 										    />
 					<sf:GridNumericColumn MappingName="cont"
@@ -71,33 +71,33 @@
 				<sf:GridNumericColumn MappingName="tsTotal"
 												HeaderText="TS"
 												TextAlignment="Right"
-												winui:ToolTipService.ToolTip="TS enlisted in city"
+												ToolTipService.ToolTip="TS enlisted in city"
 												DisplayNumberFormat="N0"
 												 />
 				<sf:GridNumericColumn MappingName="tsRaid"
 												HeaderText="Raid"
 												TextAlignment="Right"
 												DisplayNumberFormat="N0"
-												winui:ToolTipService.ToolTip="TS of Troops at home that can raid"/>
+												ToolTipService.ToolTip="TS of Troops at home that can raid"/>
 				<sf:GridNumericColumn MappingName="raidIdle"
 												HeaderText="%Idle"
 												TextAlignment="Right"
 												DisplayNumberFormat="P1"
-												winui:ToolTipService.ToolTip="% raiding troops idle" />
+												ToolTipService.ToolTip="% raiding troops idle" />
 				<sf:GridNumericColumn MappingName="tsHome"
 												TextAlignment="Right"
-												winui:ToolTipService.ToolTip="TS of Troops at home (including non raiding troops)"
+												ToolTipService.ToolTip="TS of Troops at home (including non raiding troops)"
 												DisplayNumberFormat="N0"
 												IsHidden="True"/>
 				<sf:GridHyperlinkColumn MappingName="raidReturn"
-				                        winui:ToolTipService.ToolTip="Click here to bring troops home asap"
+				                        ToolTipService.ToolTip="Click here to bring troops home asap"
 				                        />
 				<sf:GridNumericColumn MappingName="raidCarry"
-												winui:ToolTipService.ToolTip="% of loot carried per raid&#x0a;Click here to bring troops home after the next raid"
+												ToolTipService.ToolTip="% of loot carried per raid&#x0a;Click here to bring troops home after the next raid"
 												DisplayNumberFormat="N1"
 												 />
 				<sf:GridNumericColumn MappingName="points"
-												winui:ToolTipService.ToolTip="City score"
+												ToolTipService.ToolTip="City score"
 												TextAlignment="Right"
 												DisplayNumberFormat="N0"
 												 />
@@ -159,12 +159,12 @@
 						</MenuFlyout>
 					</Button.Flyout>
 					<!--<Button.Resources>
-						<winui:TeachingTip x:Key="TipResetRaids1"
+						<TeachingTip x:Key="TipResetRaids1"
 						   x:FieldModifier="public"
-						   Title="Reset Raids winui:ToolTipService.ToolTip"
+						   Title="Reset Raids ToolTipService.ToolTip"
 						  
 						   Subtitle="Resetting raids is used bring troops home if their carry% is too low (which means that you are taking more raids losses) or the % idle troops in a city is high (this typically occurs while your cities are not full and still recruiting, i.e. for early cities or after a battle.  By bringing raids home you can consoldate your raids).  Warning: it can take some time for all troops to return, only use this button if you will be around about 1 hour after the reset to set them raiding again">
-						</winui:TeachingTip>
+						</TeachingTip>
 					</Button.Resources>-->
 				</Button>
 
@@ -267,16 +267,16 @@
 			</tk:WrapPanel>
 		
 
-		<!--<winui:TeachingTip x:Name="TipRaiding101"
+		<!--<TeachingTip x:Name="TipRaiding101"
 						   x:FieldModifier="public"
 						   Title="Raiding 101"
 						  
 						   CloseButtonContent="Okay"
 						   PreferredPlacement="LeftTop"
 						   Subtitle="Tap the 'tsRaid' column header to sort your cities in order of their # of troops available for raiding">
-		</winui:TeachingTip>
+		</TeachingTip>
 
-		<winui:TeachingTip x:Name="TipRaiding102"
+		<TeachingTip x:Name="TipRaiding102"
 						   x:FieldModifier="public"
 						   Title="Raiding 102"
 						   CloseButtonContent="Okay"
@@ -287,8 +287,8 @@
 				Possible raid choices will be shown sorted in order of closest to farthest, with dungeons appropriate for the city troop types listed first.
 				To adjust the relative weight of distance vs ideal dungeon type, please see 'Settings:penaltyForWrongDungeonType'
 			</TextBlock>
-		</winui:TeachingTip>
-		<winui:TeachingTip x:Name="TipRaiding103"
+		</TeachingTip>
+		<TeachingTip x:Name="TipRaiding103"
 						   x:FieldModifier="public"
 						   Title="Dungeons 101"
 						   CloseButtonContent="Okay"
@@ -297,8 +297,8 @@
 						   Subtitle="Select a dungeon that you would like to send raids to (the first one in the list is often the best choice)">
 			<TextBlock  TextWrapping="Wrap">                    
                 The 'plan' cell displays the raids that will be dispatced, click on it to dispatch raids</TextBlock>
-		</winui:TeachingTip>
-		<winui:TeachingTip x:Name="TipRaidReturn101"
+		</TeachingTip>
+		<TeachingTip x:Name="TipRaidReturn101"
 						   x:FieldModifier="public"
 						   Title="Raid Return Column"
 						  
@@ -310,8 +310,8 @@
                     <LineBreak />    -   Otherwise they are returning
                     <LineBreak />    -   means that there are no raids 
                     </TextBlock>
-		</winui:TeachingTip>
-		<winui:TeachingTip x:Name="TipRaidReturn102"
+		</TeachingTip>
+		<TeachingTip x:Name="TipRaidReturn102"
 						   x:FieldModifier="public"
 						   Title="Raid Return Column"
 						  
@@ -322,8 +322,8 @@
                     <LineBreak />    -   If the raiders are on their way to a dungeon, 'Return Asap' will tell them to come home immediately, without loot, while 'End Raids' will tell them to complete their current raid first and then return.
                     <LineBreak />    -   If raiders are returning from a dungeon, 'Home Please' and 'End Raids' are the same.
 			</TextBlock>
-		</winui:TeachingTip>
-		<winui:TeachingTip x:Name="TipRaidReturn103"
+		</TeachingTip>
+		<TeachingTip x:Name="TipRaidReturn103"
 						   x:FieldModifier="public"
 						   Title="Multiple Cities"
 						  
@@ -333,8 +333,8 @@
                     <LineBreak />If you hold down 'shift' or 'control' you can select multiple cities at once.
                     <LineBreak />If you keep 'shift' held down and right click to return raids, you can return troops for multiple cities in one action
 			</TextBlock>
-		</winui:TeachingTip>
-		<winui:TeachingTip x:Name="TipRaidReturn104"
+		</TeachingTip>
+		<TeachingTip x:Name="TipRaidReturn104"
 						    x:FieldModifier="public"
 						   Title="Shortcuts"
 						  
@@ -344,8 +344,8 @@
                      Clicking on the 'Raid Return' cell is a shortcut for selecting 'Return ASAP from the context menu'<LineBreak />
                      Clicking on the 'Carry Capacity' cell is a shortcut for selecting 'End Raids' from the context menu'<LineBreak />
 			</TextBlock>
-		</winui:TeachingTip>
-		<winui:TeachingTip x:Name="TipCarryCapacity101"
+		</TeachingTip>
+		<TeachingTip x:Name="TipCarryCapacity101"
 						   x:FieldModifier="public"
 						   Title="Reseting Raids"
 						  
@@ -360,7 +360,7 @@
 				<LineBreak />     - Allow raids to run to until the dungeon is finished (the progress goes to 0), at which point your troops will be idle and you can send them out to a different dungeon
 				<LineBreak />		- The downside with this approach is that near the end your raids will be at as low as 50% carry capacity (usuually not that low)  which means that your raiding losses will be higher than ideal.
 			</TextBlock>
-		</winui:TeachingTip>
+		</TeachingTip>
 		-->
 	</Grid>
 </views:UserTab>

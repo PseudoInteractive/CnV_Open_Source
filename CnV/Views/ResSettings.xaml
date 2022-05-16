@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
      xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
-	xmlns:winui="using:Microsoft.UI.Xaml.Controls"
+	
     mc:Ignorable="d"
 	 xmlns:cnv="using:CnV"
 	 xmlns:game="using:CnV"
@@ -40,27 +40,27 @@
 			<!--<ToggleSwitch Header="Request Resources" OnContent="Set" OffContent="Ignore" IsOn="{x:Bind applyRequested}" />-->
 
 
-			<winui:NumberBox	Grid.Column="0" Grid.Row="0"
+			<NumberBox	Grid.Column="0" Grid.Row="0"
 								Header="&#xA040; Request" Margin="8"
 										PlaceholderText="No Change"
 										Value="{x:Bind req.wood, Converter={StaticResource NullableIntConverter}, Mode=TwoWay}"
 										Style="{StaticResource NumberBoxRes}" 
 										ToolTipService.ToolTip="A blank value means leave as is"	 />
-			<winui:NumberBox	Grid.Column="1" Grid.Row="0"
+			<NumberBox	Grid.Column="1" Grid.Row="0"
 								Header="&#xA041; Request" Margin="8"
 										PlaceholderText="No Change"
 										Value="{x:Bind req.stone, Converter={StaticResource NullableIntConverter},Mode=TwoWay}"
 										Style="{StaticResource NumberBoxRes}"
 										ToolTipService.ToolTip="A blank value means leave as is"			
 										 />
-			<winui:NumberBox Grid.Column="2" Grid.Row="0"
+			<NumberBox Grid.Column="2" Grid.Row="0"
 								Header="&#xA042; Request" Margin="8"
 										PlaceholderText="No Change"
 										Value="{x:Bind req.iron, Converter={StaticResource NullableIntConverter},Mode=TwoWay}"
 										Style="{StaticResource NumberBoxRes}"
 										ToolTipService.ToolTip="A blank value means leave as is"			
 										 />
-			<winui:NumberBox Grid.Column="3" Grid.Row="0"
+			<NumberBox Grid.Column="3" Grid.Row="0"
 								Header="&#xA043; Request" Margin="8"
 										PlaceholderText="No Change"
 										Value="{x:Bind req.food,Converter={StaticResource NullableIntConverter}, Mode=TwoWay}"
@@ -69,28 +69,28 @@
 										 />
 
 
-			<winui:NumberBox Grid.Column="0" Grid.Row="1"
+			<NumberBox Grid.Column="0" Grid.Row="1"
 								Header="&#xA040; Max" Margin="8"
 										PlaceholderText="No Change"
 										Value="{x:Bind max.wood, Converter={StaticResource NullableIntConverter},Mode=TwoWay}"
 										Style="{StaticResource NumberBoxRes}"
 										ToolTipService.ToolTip="If there is more res than this number the excess will be exported, an empty value means leave it as is, a negative value means use max storage - [value] i.e. -75,000 with a storage of 375,000 would be 300,000"
 										 />
-			<winui:NumberBox Grid.Column="1" Grid.Row="1"
+			<NumberBox Grid.Column="1" Grid.Row="1"
 							Header="&#xA041; Max" Margin="8"
 										PlaceholderText="No Change"
 										Value="{x:Bind max.stone,Converter={StaticResource NullableIntConverter}, Mode=TwoWay}"
 										Style="{StaticResource NumberBoxRes}"
 										ToolTipService.ToolTip="If there is more res than this number the excess will be exported, an empty value means leave it as is, a negative value means use max storage - [value] i.e. -75,000 with a storage of 375,000 would be 300,000"
 										 />
-			<winui:NumberBox Grid.Column="2" Grid.Row="1"
+			<NumberBox Grid.Column="2" Grid.Row="1"
 							Header="&#xA042; Max" Margin="8"
 										PlaceholderText="No Change"
 										Value="{x:Bind max.iron,Converter={StaticResource NullableIntConverter}, Mode=TwoWay}"
 										Style="{StaticResource NumberBoxRes}"
 										ToolTipService.ToolTip="If there is more res than this number the excess will be exported, an empty value means leave it as is, a negative value means use max storage - [value] i.e. -75,000 with a storage of 375,000 would be 300,000"
 										/>
-			<winui:NumberBox Grid.Column="3" Grid.Row="1"
+			<NumberBox Grid.Column="3" Grid.Row="1"
 							Header="&#xA043; Max" Margin="8"
 										PlaceholderText="No Change"
 										Value="{x:Bind max.food,Converter={StaticResource NullableIntConverter}, Mode=TwoWay}"
@@ -131,13 +131,13 @@
 		</Grid>
 
 		<tk:WrapPanel  Orientation="Horizontal" >
-			<winui:NumberBox Header="Cart Reserve" Margin="8"
+			<NumberBox Header="Cart Reserve" Margin="8"
 							PlaceholderText="No Change"
 							Value="{x:Bind cartReserve,Converter={StaticResource NullableIntConverter}, Mode=TwoWay}"
 							Style="{StaticResource RightAlignNumberBox}"
 							ToolTipService.ToolTip="% carts reserved for trades that are not the result of sending overflow"
 							 />
-			<winui:NumberBox Header="Ship Reserve"  Margin="8"
+			<NumberBox Header="Ship Reserve"  Margin="8"
 							PlaceholderText="No Change"
 							Value="{x:Bind shipReserve,Converter={StaticResource NullableIntConverter}, Mode=TwoWay}"
 							Style="{StaticResource RightAlignNumberBox}"

@@ -25,6 +25,9 @@
 					<Button Content="Rotate Center" ToolTipService.ToolTip="Rotates buildings in the center" Style="{StaticResource ButtonMedium}" Click="RotateCenterClick" />
 					<Button Content="Rotate Outer" ToolTipService.ToolTip="Rotates buildings outside of the center, do not use with water" Style="{StaticResource ButtonMedium}" Click="RotateOuterClick" />
 					<Button Content="To Clipboard" ToolTipService.ToolTip="Copies layout to clipboard" Style="{StaticResource ButtonMedium}" Click="SharestringToClipboardClick" />
+					<Button Content="Add Building" ToolTipService.ToolTip="Copies layout to clipboard" Style="{StaticResource ButtonMedium}" Click="AddBuilding" />
+					<Button Content="Remove Building" ToolTipService.ToolTip="Copies layout to clipboard" Style="{StaticResource ButtonMedium}" Click="RemoveBuilding" />
+					<Button Content="Replace Building" ToolTipService.ToolTip="Copies layout to clipboard" Style="{StaticResource ButtonMedium}" Click="ReplaceBuilding" />
 					<Button Content="Smart Rearrange" ToolTipService.ToolTip="Moves buildings whose positions don't matter to where existing corresponding buildings are located or to locations without res nodes" Style="{StaticResource ButtonMedium}" Click="SmartRearrange" />
 					<Button Content="Back To Build" ToolTipService.ToolTip="Return to normal building" Style="{StaticResource ButtonMedium}" Click="Done" />
 				</tk:WrapPanel>

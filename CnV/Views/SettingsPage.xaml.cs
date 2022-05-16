@@ -279,7 +279,7 @@ namespace CnV
 				// incomingWatch = st.Read(nameof(incomingWatch), Array.Empty<string>() );
 				//    autoBuildOn = st.Read(nameof(autoBuildOn)+'2', -1) switch {  0 => false, 1 => true, _ => null };
 				// AttackTab.time = st.Read("attacktime", DateTime.UtcNow.Date);
-				AppS.QueueOnUIThreadIdle( ()=>
+				AppS.DispatchOnUIThread( ()=>
 				{
 					SetSoundOn(soundOn);
 					ElementSoundPlayer.Volume = volume;
