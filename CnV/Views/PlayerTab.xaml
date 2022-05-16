@@ -82,12 +82,12 @@
 										   ShowHeaderToolTip="True"
 										   TextAlignment="Center"
 										    />
-				
-				<sf:GridNumericColumn MappingName="donations"/>
 
-				<sf:GridNumericColumn MappingName="ts"/>
-				<sf:GridNumericColumn MappingName="tsOffense"/>
-				<sf:GridNumericColumn MappingName="tsDefense"/>
+				<sf:GridNumericColumn MappingName="donations" DisplayNumberFormat="N0" />
+
+				<sf:GridNumericColumn MappingName="Ts" DisplayNumberFormat="N0" />
+				<sf:GridNumericColumn MappingName="TsOffense" DisplayNumberFormat="N0"/>
+				<sf:GridNumericColumn MappingName="TsDefense" DisplayNumberFormat="N0" />
 
 				<sf:GridNumericColumn MappingName="kills"
 				                      TextAlignment="Center"
@@ -182,7 +182,7 @@
 												TextAlignment="Right"
 												 />
 							
-								<sf:GridNumericColumn MappingName="tsTotal"
+								<sf:GridNumericColumn MappingName="TsTotal"
 												TextAlignment="Right"
 												ToolTipService.ToolTip="TS enlisted in city"
 												DisplayNumberFormat="N0"

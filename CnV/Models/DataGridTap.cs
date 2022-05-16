@@ -39,7 +39,7 @@ namespace CnV;
 				switch (e.Record)
 				{
 					case Player player: {
-						if(ChartDialog.ShowPlayerMetric(e.Column.MappingName,false))
+						if(ChartDialog.ShowPlayerMetric(e.Column.MappingName.ToLowerInvariant(),false))
 							return;
 						break;
 
