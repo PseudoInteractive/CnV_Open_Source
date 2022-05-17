@@ -212,6 +212,11 @@ namespace CnV
 				}
 			}
 		}
+		// processing connect 2
+		// move bounding
+		//random offset
+		// show res full
+		// random 5
 
 
 		public static void LoadAll()

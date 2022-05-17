@@ -68,6 +68,7 @@ namespace CnV
 
 		};
 		private bool _byAlliance;
+		internal  bool isMetricHidden => _metric is (>=5 and <= 7);
 
 		public int selectedSeries { get => selectedSeries1; set {
 				Note.Show($"Sel series {value}");
@@ -96,13 +97,28 @@ namespace CnV
 				sfChart.Series.Clear();
 				var member = metrics[_metric];
 				var doAlliances = byAlliance;
+				var hidden = isMetricHidden && !doAlliances;
 				var items = doAlliances ? allianceStats.Values.ToArray() : playerStats.Values.ToArray(); // takea  copy in case it changes
+				var playerIds = playerStats.Keys.ToArray();
+				var keyId = -1;
+				var seriesList = new List<FastLineSeries>();
 				foreach(var item in items) {
-					
-					
+					++keyId;
 					var values = item.ToArray();
+					string name;
+					if( doAlliances ) {
+						name = values.First().name;
+					}
+					else {
+						var player = Player.Get(playerIds[keyId]);
+						name = !hidden || player.sharesInfo ? player.shortName : "?";
+						foreach(var v in values) {
+							v.name = name;
+						}
+
+					}
+					
 					Assert(values.Length > 0);
-					var name = values.First().name;
 					var series = new FastLineSeries() {
 						YBindingPath=member,XBindingPath="t",Label=name,
 						ItemsSource=values,
@@ -127,9 +143,12 @@ namespace CnV
 						var st = ServerTime.PseudoLocalAsServerTime(t.t); 
 						Sim.GotoTime(st);
 					};
-					
-					sfChart.Series.Add(series);
+					seriesList.Add(series);
 				}
+				if(hidden)
+					seriesList.ShuffleInPlace( (ulong)metric );
+				sfChart.Series.AddRange(seriesList);
+
 			}
 			catch(Exception _ex) {
 				LogEx(_ex);

@@ -25,9 +25,6 @@
 					<Button Content="Rotate Center" ToolTipService.ToolTip="Rotates buildings in the center" Style="{StaticResource ButtonMedium}" Click="RotateCenterClick" />
 					<Button Content="Rotate Outer" ToolTipService.ToolTip="Rotates buildings outside of the center, do not use with water" Style="{StaticResource ButtonMedium}" Click="RotateOuterClick" />
 					<Button Content="To Clipboard" ToolTipService.ToolTip="Copies layout to clipboard" Style="{StaticResource ButtonMedium}" Click="SharestringToClipboardClick" />
-					<Button Content="Add Building" ToolTipService.ToolTip="Copies layout to clipboard" Style="{StaticResource ButtonMedium}" Click="AddBuilding" />
-					<Button Content="Remove Building" ToolTipService.ToolTip="Copies layout to clipboard" Style="{StaticResource ButtonMedium}" Click="RemoveBuilding" />
-					<Button Content="Replace Building" ToolTipService.ToolTip="Copies layout to clipboard" Style="{StaticResource ButtonMedium}" Click="ReplaceBuilding" />
 					<Button Content="Smart Rearrange" ToolTipService.ToolTip="Moves buildings whose positions don't matter to where existing corresponding buildings are located or to locations without res nodes" Style="{StaticResource ButtonMedium}" Click="SmartRearrange" />
 					<Button Content="Back To Build" ToolTipService.ToolTip="Return to normal building" Style="{StaticResource ButtonMedium}" Click="Done" />
 				</tk:WrapPanel>
@@ -102,6 +99,28 @@
 			</Border>
 			<TextBox x:Name="storage" Header="Storage"  Style="{StaticResource RightAlignBox}"  TextWrapping="Wrap" />
 			<TextBox x:Name="production" Header="Prouction"  Style="{StaticResource RightAlignBox}"  TextWrapping="Wrap" />
+			<Border Style="{StaticResource BorderReveal}" ToolTipService.ToolTip="Try Adding, removing replacing and moving in a random order until it is perfect" >
+				<StackPanel>
+				<TextBlock Text="Res Optimizer"  Style="{StaticResource TextBlockMedium}"  />
+					<tk:WrapPanel Orientation="Horizontal"   Margin="4">
+						<NumberBox  Value="{x:Bind cnv:Settings.resOptGains.wood, Mode=TwoWay}" Margin="8,2"  Description="&#xA040; gain" ToolTipService.ToolTip="How much to emphasize wood production relative to others"
+					   SmallChange="0.25" />
+						<NumberBox Value="{x:Bind cnv:Settings.resOptGains.stone, Mode=TwoWay}"  Margin="8,2" Description="&#xA041; gain" ToolTipService.ToolTip="How much to emphasize stone production relative to others"
+					   SmallChange="0.25"/>
+						<NumberBox Value="{x:Bind cnv:Settings.resOptGains.iron, Mode=TwoWay}"   Margin="8,2" Description="&#xA042; gain" 	   SmallChange="0.25" ToolTipService.ToolTip="How much to emphasize iron production relative to others" />
+						<NumberBox Value="{x:Bind cnv:Settings.resOptGains.food, Mode=TwoWay}"   Margin="8,2" Description="&#xA043; gain" ToolTipService.ToolTip="How much to emphasize food production relative to others"
+					   SmallChange="0.25" />
+						<NumberBox Value="{x:Bind cnv:Settings.resOptCSGain, Mode=TwoWay}"   Margin="8,2" Description="CS" ToolTipService.ToolTip="How much to favour higher production speeds"
+					   SmallChange="0.25" />
+					</tk:WrapPanel>
+					<tk:WrapPanel Orientation="Horizontal"   Margin="4">
+					<Button Content="Add" ToolTipService.ToolTip="Adds a building that maximizes production" Style="{StaticResource ButtonMedium}" Click="AddBuilding" />
+					<Button Content="Remove" ToolTipService.ToolTip="Removes the building with the least benefit to production" Style="{StaticResource ButtonMedium}" Click="RemoveBuilding" />
+					<Button Content="Replace" ToolTipService.ToolTip="Replaces a buiding if total production is improved" Style="{StaticResource ButtonMedium}" Click="ReplaceBuilding" />
+					<Button Content="Move" ToolTipService.ToolTip="Moves a building to maxmize output" Style="{StaticResource ButtonMedium}" Click="SwapBuilding" />
+				</tk:WrapPanel>
+				</StackPanel>
+			</Border>
 		</StackPanel>
 
 	</Grid>

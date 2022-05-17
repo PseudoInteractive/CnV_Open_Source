@@ -540,48 +540,95 @@ namespace CnV.Views
 
 		}
 
+		static float GetScore( CityBuildingStats stats) => stats.productionPerSec * Settings.resOptGains + stats.cs*(Settings.resOptCSGain*(2f/ServerTime.secondsPerHour));
 		static BuildingId[] buildingsToTry = { bidCottage,bidForester,bidStoneMine,bidIronMine,bidFarm,bidSmelter,bidStonemason,bidGrainMill,bidSawmill };
-		private void ModifyBuildings(bool remove=false, bool replace=false,bool add=false) {
+		private void ModifyBuildings(bool remove=false, bool replace=false,bool add=false, bool isSwap=false) {
+			var rnd = new XXRand((ulong)Tick.MS);
 			var city = City.GetBuild();
 			var bds = city.GetLayoutBuildingsWithRes();
 			var bestId = 0;
+			var bestId1 = 0;
 			BuildingId bestBid = 0;
-			var baseStats = City.ComputeBuildingStats(city,bds);
-			var initialProd = baseStats.productionPerSec.sum;;
+			var baseStats = City.ComputeBuildingStats(city,bds,true);
+			var initialProd = GetScore(baseStats);
 			var bestProd = remove ? -1f : initialProd; ;
 			foreach(var i in city.buildingSpotsExcludingShore ) {
 				var bdi = bds[i];
 				if(bdi.isRes)
 					continue;
-				if(replace || remove) {
-					if(!bdi.isBuilding)
+				// only replace certain buildings
+				if(replace || remove || isSwap) {
+					if(!buildingsToTry.Contains(bdi.bid) )
 						continue;
 				}
 				else if(add) {
 					if(bdi.isBuilding)
 						continue;
 				}
+				if(isSwap) {
+					foreach(var cc1 in city.buildingSpotsExcludingShore ) {
+						var bd2 = bds[cc1];
+						if( !(bd2.isEmpty || buildingsToTry.Contains(bd2.bid))  ) {
+							continue;
+						}
+						
+						bds[i] = bd2;
+						bds[cc1] = bdi;
+						
 
-				foreach(var bid in buildingsToTry) 
-				{
-					var _bid = remove ? bidNone : bid;
-					bds[i] = new Building(_bid,remove ? (byte)0 : (byte)10);
-					var score = City.ComputeBuildingStats(city,bds).productionPerSec.sum;
-					if(score > bestProd) {
-						bestId = i;
-						bestBid = _bid;
-						bestProd = score;
+						var score = GetScore(City.ComputeBuildingStats(city,bds,true)) + rnd.NextSingle().Lerp(-0.25f,0.25f);
+						if(score > bestProd) {
+							bestId = i;
+							bestId1 = cc1;
+							bestBid = bdi.bid;
+							bestProd = score;
+						}
+						//restore
+						bds[cc1] = bd2;
+						bds[i] = bdi;
+						
+
 					}
-					if(remove)
-						break;
 				}
-				bds[i] = bdi; // restore
+				else {
+					foreach(var bid in buildingsToTry) {
+						var _bid = remove ? bidNone : bid;
+						var bdNew = new Building(_bid,remove ? (byte)0 : (byte)10);
+						
+						if(!remove && ResProcessingIdFromBid(_bid) >= 0) {
+							if(city.GetProdcessingBuldingGains(i,bdNew,bds).contactCount < 2)
+								continue;
+						}
+
+						bds[i] = bdNew;
+						var score = GetScore(City.ComputeBuildingStats(city,bds,true)) + rnd.NextSingle().Lerp(-0.25f,0.25f);
+						//restore
+						bds[i] = bdi;
+						if(score > bestProd) {
+							bestId = i;
+							bestId1=0;
+							bestBid = _bid;
+							bestProd = score;
+						}
+						if(remove)
+							break;
+					}
+				}
+				Assert( bds[i] == bdi ); // restore
 
 			}
 			if(bestId != 0 ) {
-				city.layoutWritable[bestId]= bestBid;
+				if(bestId1 != 0) {
+
+					AUtil.Swap( ref city.layoutWritable[bestId],ref city.layoutWritable[bestId1] );
+					AUtil.Swap(ref bds[bestId],ref bds[bestId1]);
+				}
+				else {
+					city.layoutWritable[bestId]= bestBid;
+					bds[bestId] = new(bestBid,bestBid ==0 ? (byte)0 : (byte)10);
+				}
 				city.BuildingsChanged();
-				Note.Show($"Added {bestBid}, production {initialProd:N0}=>{bestProd:N0}");
+				Note.Show($"{(add ? "Added ": remove? "remove " : "" )}{(bestBid!=0?BuildingDef.FromId(bestBid):string.Empty) }, production {initialProd:N0}=>{bestProd:N0}\nChange: { (City.ComputeBuildingStats(city,bds,true).productionPerSec-baseStats.productionPerSec).ratePerHour }");
 			}
 			else {
 				Note.Show("Could not find a good buildnig to add");
@@ -595,6 +642,9 @@ namespace CnV.Views
 		}
 		private void ReplaceBuilding(object sender,RoutedEventArgs e) {
 			ModifyBuildings(replace: true);
+		}
+		private void SwapBuilding(object sender,RoutedEventArgs e) {
+			ModifyBuildings(isSwap: true);
 		}
 	}
 }
