@@ -71,7 +71,7 @@ namespace CnV.Views
 		public ChatEntry(string _player,string _text,DateTimeOffset _time,byte _type)
 		{
 			avatar = GetAvatar(_player);
-			text = _text.Truncate(maxMessageLength);
+			text =  Note.TranslateCOTGChatToMarkdown(_text.Truncate(maxMessageLength));
 			time = _time;
 			type = _type;
 			player = _player;

@@ -26,6 +26,7 @@ namespace CnV.Views
 	{
 		public static PlannerTab instance;
 		public static bool IsVisible() => instance.isFocused;
+		internal static ulong lastSavedLayout;
 
 		public  override async Task VisibilityChanged(bool visible, bool longTerm)
 		{
@@ -551,7 +552,7 @@ namespace CnV.Views
 			BuildingId bestBid = 0;
 			var baseStats = City.ComputeBuildingStats(city,bds,true);
 			var initialProd = GetScore(baseStats);
-			var bestProd = remove ? -1f : initialProd; ;
+			var bestProd = (remove ? -1f : initialProd + 0.25f); ;
 			foreach(var i in city.buildingSpotsExcludingShore ) {
 				var bdi = bds[i];
 				if(bdi.isRes)
@@ -607,7 +608,7 @@ namespace CnV.Views
 						if(score > bestProd) {
 							bestId = i;
 							bestId1=0;
-							bestBid = _bid;
+							bestBid = bid;
 							bestProd = score;
 						}
 						if(remove)
@@ -618,17 +619,24 @@ namespace CnV.Views
 
 			}
 			if(bestId != 0 ) {
+				Assert(bestBid !=0);
+				BuildingId bid1 = 0;
 				if(bestId1 != 0) {
-
+					Assert(isSwap);
+					bid1 = bds[bestId1].bid;
 					AUtil.Swap( ref city.layoutWritable[bestId],ref city.layoutWritable[bestId1] );
 					AUtil.Swap(ref bds[bestId],ref bds[bestId1]);
 				}
 				else {
-					city.layoutWritable[bestId]= bestBid;
-					bds[bestId] = new(bestBid,bestBid ==0 ? (byte)0 : (byte)10);
+					Assert(!isSwap);
+					if(replace)
+						bid1 = bds[bestId].bid;
+					var _bid = remove ? (byte)0 : bestBid;
+					city.layoutWritable[bestId]= _bid;
+					bds[bestId] = new(_bid,remove? (byte)0 : (byte)10);
 				}
 				city.BuildingsChanged();
-				Note.Show($"{(add ? "Added ": remove? "remove " : "" )}{(bestBid!=0?BuildingDef.FromId(bestBid):string.Empty) }, production {initialProd:N0}=>{bestProd:N0}\nChange: { (City.ComputeBuildingStats(city,bds,true).productionPerSec-baseStats.productionPerSec).ratePerHour }");
+				Note.Show($"{(add ? "Added ": remove? "Removed " :  replace ?"Replaced " : "Moved " )}{(bid1!=0?BuildingDef.FromId(bid1):string.Empty) } {BuildingDef.FromId(bestBid) }, production {initialProd:N0}=>{bestProd:N0}\nChange: { (City.ComputeBuildingStats(city,bds,true).productionPerSec-baseStats.productionPerSec).ratePerHour }");
 			}
 			else {
 				Note.Show("Could not find a good buildnig to add");

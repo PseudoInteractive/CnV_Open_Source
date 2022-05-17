@@ -539,7 +539,7 @@ namespace CnV
 				var b = City.GetBuild();
 				//b.BuildingsCacheToShareString();
 				// Todo: Check has for changes
-				b.SaveLayout();
+				//b.SaveLayout();
 
 				//await GetCity.Post(City.build);
 

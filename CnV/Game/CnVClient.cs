@@ -459,11 +459,11 @@ namespace CnV
 
 								//	var wasPlanner = CityBuild.isPlanner;
 
-								if (CityBuild.isPlanner)
-								{
-									var prior = City.GetBuild();
-									prior.SaveLayout(); // Todo check hash etc
-								}
+								//if (CityBuild.isPlanner)
+								//{
+								//	var prior = City.GetBuild();
+								//	prior.SaveLayout(); // Todo check hash etc
+								//}
 
 								//	Assert(pid == Player.myId);
 								//Cosmos.PublishPlayerInfo(CnVServer.jsBase.pid, City.build, CnVServer.jsBase.token, CnVServer.jsBase.cookies); // broadcast change

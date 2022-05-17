@@ -169,17 +169,17 @@ namespace CnV
 						}
 						continue;
 					}
-					Player p0;
-					Player p1 = null;
+				//	Player p0;
+				//	Player p1 = null;
 
-					var city = e.city;
-					p0 = city.player;
+			//		var city = e.city;
+				//	p0 = city.player;
 
 
 
-					if(e is CnVEventSendTroops st) {
-						p1 = st.troops.sourcePlayer;
-					}
+				//	if(e is CnVEventSendTroops st) {
+				//		p1 = st.troops.sourcePlayer;
+			//		}
 					var rv = CreateAppointment(e);
 					appointments.Add(rv);
 
@@ -192,8 +192,8 @@ namespace CnV
 
 					var a = b.attackArmy;
 					var rv = CreateAppointment(b);
-					var p0 = b.targetPlayer;
-					var p1 = b.sourcePlayer;
+				//	var p0 = b.targetPlayer;
+				//	var p1 = b.sourcePlayer;
 					//					var res1 = AddPlayer(p1);
 					//	Assert(p0 != p1);
 					//		Assert(res0 != res1);
