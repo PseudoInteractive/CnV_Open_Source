@@ -612,7 +612,7 @@ public static partial class CityUI
 
 public partial class City
 {
-	internal bool isLawless => pid == default;
+	
 
 	public void SetFocus(bool scrollIntoView, bool select = true, bool bringIntoWorldView = true, bool lazyMove = true)
 	{
