@@ -1035,6 +1035,8 @@ namespace CnV.Views
 
 		private static void Refresh() {
 			try {
+
+				//PlayerTables.LoadPlayersAndAlliances();
 				RefreshX();
 				//using var s = new WorkScope("Refresh...");
 				//foreach(var city in City.myCities)

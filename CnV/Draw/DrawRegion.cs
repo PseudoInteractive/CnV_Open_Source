@@ -1128,19 +1128,20 @@ internal partial class GameClient
 											//	var t = (tick +i.sourceCid.CidToRandom()).Wave(1.5f / 512.0f+0.25f,2.0f / 512f+ 0.25f) ;
 												var r = t.Ramp();
 												var alpha = 1.0f;
-												TType ttype;
-												if(i.shareInfo && i.troops.Length > 0) {
-													var nSprite = i.troops.Count;
+												TType ttype=Troops.ttZero;;
+												if(i.troops.Length > 0) {
+													if(i.shareInfo ) {
+														var last = i.lastSeen;
+														var nSprite = last.troops.Count;
 
-													(int iType, alpha) = GetTroopBlend((float)t,nSprite);
-													ttype = i.troops.GetIndexType(iType);
+														(int iType, alpha) = GetTroopBlend((float)t,nSprite);
+														ttype = last.troops.GetIndexType(iType);
+													}
+													else {
+														// TODO base it on travel time
+														ttype = i.travelType.TTypeGuess();
+													}
 												}
-												else if(i.troops.Any()){
-													// TODO base it on travel time
-													ttype = i.travelType.TTypeGuess();
-												}
-												else { ttype = Troops.ttZero; }
-
 												(int x, int y) _c0, _c1;
 												
 												if(isIncoming ^ i.isReturn)

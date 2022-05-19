@@ -153,13 +153,22 @@ namespace CnV.Views
 				var text = args.Text.ToLower();
 
 				Log($"Summitted {text}");
+				//var coords = text.FromCoordinate();
+				//if(coords != 0) {
+				//	var city = City.Get(coords);
+				//	sender.Text = city.nameAndRemarks;
+				//	sender.SelectedItem = city;
+				//	args.Handled = true;
+				//	return;
+
+				//}
 
 				var items = sender.ItemsSource as IEnumerable<City>;
 				Assert(items is not null);
 				foreach(var it in items)
 				{
 					// its good
-					if(it.nameAndRemarks == text)
+					if(it.nameAndRemarks.ToLower() == text)
 					{
 						return;
 					}
