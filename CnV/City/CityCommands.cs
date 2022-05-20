@@ -110,7 +110,7 @@ public partial class City
 				var wantDef = false;
 				if(city.incoming.Any(i => i.isAttack))
 				{
-					sb.AppendFormat("\n{0} incoming attacks",city.incoming.Count(i => i.isAttack));
+					sb.AppendFormat("\nꁑ{0} incoming",city.incoming.Count(i => i.isAttack));
 
 					var incAttacks = 0;
 				//	var incTs = 0u;
@@ -135,7 +135,7 @@ public partial class City
 					//			sb.AppendFormat("\n({0} total TS)",incTs);
 
 					if(city.claim != 0)
-						sb.AppendFormat("\n{0}% Claim",city.claim);
+						sb.AppendFormat("\nꁒ{0}% Claim",city.claim);
 
 
 					if(share)
@@ -171,7 +171,7 @@ public partial class City
 								sb.AppendLinePre("...");
 								break;
 							}
-							sb.Append($"\nFrom {City.GetOrAddCity(i.sourceCid).FormatName(false,true,false)}");
+							sb.Append($"\nꁔ← {City.GetOrAddCity(i.sourceCid).FormatName(false,true,false)}\n{i.troops.Format()}");
 						}
 
 					}

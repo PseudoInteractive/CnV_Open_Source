@@ -862,7 +862,6 @@ internal partial class GameClient
 							var c = l;
 							if(IsCulledWC(c))
 								continue;
-							// Todo: Color by faith
 							Material sprite = blessedMaterials[(int)shrine.virtue];
 							float sizeGain = 0.5f;
 							var dimX = sizeGain * (168.0f/100.0f);
@@ -874,6 +873,27 @@ internal partial class GameClient
 
 						}
 					}
+
+					// Draw Rich presence
+					foreach(var p in World.activePlayers) {
+						if(!p.isOnline)
+							continue;
+							var c = p.visitingCid;
+							if(IsCulledWC(c))
+								continue;
+							// Todo: Draw avatar
+
+							Material sprite = blessedMaterials[(int)0];
+							float sizeGain = 0.25f;
+							var dimX = sizeGain * (168.0f/100.0f);
+							var dimY = sizeGain;
+							var y = c.y+0.125f;
+							var _c0 = new Vector2(c.x - dimX,y - dimY);
+							var _c1 = new Vector2(c.x + dimX,y + dimY);
+							draw.AddQuad(Layer.action + 4,sprite,_c0,_c1,new Color(255,255,255,192),zCities);
+
+					}
+
 
 					var incomingVisible = IncomingTab.IsVisible() || ReinforcementsTab.IsVisible() || NearDefenseTab.IsVisible() || Settings.incomingAlwaysVisible;
 					var outgoingVisible = AttackTab.IsVisible() || OutgoingTab.IsVisible() || Settings.attacksAlwaysVisible;
@@ -1446,35 +1466,35 @@ internal partial class GameClient
 							}
 						}
 						//if(!defenderVisible && !attacksVisible)
-						{
-							if(Spot.settles.Any())
-							{
-								try
-								{
-									foreach(var s in Spot.settles)
-									{
-										var wc0 = s.cid.CidToWorld();
-										var wc1 = s.rcid.CidToWorld();
-										if(!IsSegmentCulledWC(wc0,wc1))
-										{
+					//	{
+					//		if(Spot.settles.Any())
+					//		{
+					//			try
+					//			{
+					//				foreach(var s in Spot.settles)
+					//				{
+					//					var wc0 = s.cid.CidToWorld();
+					//					var wc1 = s.rcid.CidToWorld();
+					//					if(!IsSegmentCulledWC(wc0,wc1))
+					//					{
 
-											DrawAction(0.5f,1.0f,1.0f,wc0.ToVector(),wc1.ToVector(),senatorColor,
-											troopImages[ttSenator],false,null,highlight: Spot.IsSelectedOrHovered(s.cid));
-											DrawFlag(s.rcid,SpriteAnim.flagGrey,System.Numerics.Vector2.Zero);
+					//						DrawAction(0.5f,1.0f,1.0f,wc0.ToVector(),wc1.ToVector(),senatorColor,
+					//						troopImages[ttSenator],false,null,highlight: Spot.IsSelectedOrHovered(s.cid));
+					//						DrawFlag(s.rcid,SpriteAnim.flagGrey,System.Numerics.Vector2.Zero);
 
-										}
+					//					}
 
 
 
-									}
-								}
-								catch(Exception ex)
-								{
+					//				}
+					//			}
+					//			catch(Exception ex)
+					//			{
 
-								}
-							}
+					//			}
+					//		}
 
-						}
+					//	}
 						
 					}
 

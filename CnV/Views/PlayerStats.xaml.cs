@@ -29,10 +29,11 @@ namespace CnV
 			instance = this;
 			this.InitializeComponent();
 			Player.active.PropertyChanged += PlayerChanged;
-			City.buildCityChanged += (oldCity,newCity) =>
+			Player.activePlayerChanged += (priorPlayer,newPlayer) =>
 				{
-					oldCity.player.PropertyChanged-= PlayerChanged;
-					newCity.player.PropertyChanged+= PlayerChanged;
+					if(priorPlayer != null)
+						priorPlayer.PropertyChanged-= PlayerChanged;
+					newPlayer.PropertyChanged+= PlayerChanged;
 					Changed();
 				};
 		}
