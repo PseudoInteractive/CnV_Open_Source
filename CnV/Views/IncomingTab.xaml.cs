@@ -138,6 +138,17 @@ namespace CnV.Views
 			return (forAlliance, forMe, nextArrival);
 		}
 
+		static int lastAllianceIncoming=-1;
+		internal static void UpdateIncomingStatus() {
+			var c = GetIncomingCounts();
+			if(c.forAlliance != lastAllianceIncoming) {
+				lastAllianceIncoming = c.forAlliance;
+				NotifyIncomingUpdated();
+			}
+			
+			AppS.QueueIdleTask( UpdateIncomingStatus, 3*1000*60 ); // every three minutes
+
+		}
 
 		public static void NotifyIncomingUpdated() {
 

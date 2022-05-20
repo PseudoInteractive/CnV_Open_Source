@@ -127,11 +127,7 @@ internal partial class GameClient
 	const float drawActionLength = 32;
 	const float lineAnimationRate = 0.5f;
 
-	class IncomingCounts
-	{
-		public int prior;
-		public int incoming;
-	};
+	
 
 	const float postAttackDisplayTime = 15 * 60; // 11 min
 
@@ -180,6 +176,7 @@ internal partial class GameClient
 	internal static HashSet<int> drawTradesHash = new();
 	internal static HashSet<int> drawArmyHash = new();
 	internal static HashSet<int> targetOpponents = new();
+	internal static Dictionary<SpotId,int> cityVisitorCounts = new();
 
 	protected override void Draw(GameTime gameTime)
 	{
@@ -869,7 +866,7 @@ internal partial class GameClient
 							var y = c.y+0.125f;
 							var _c0 = new Vector2(c.x - dimX,y - dimY);
 							var _c1 = new Vector2(c.x + dimX,y + dimY);
-							draw.AddQuad(Layer.action + 4,sprite,_c0,_c1,new Color(255,255,255,192),zCities);
+							draw.AddQuad(Layer.blessedOverlay + 4,sprite,_c0,_c1,new Color(255,255,255,192),zCities);
 
 						}
 					}
@@ -878,22 +875,29 @@ internal partial class GameClient
 					foreach(var p in World.activePlayers) {
 						if(!p.isOnline)
 							continue;
-							var c = p.visitingCid;
-							if(IsCulledWC(c))
-								continue;
-							// Todo: Draw avatar
-
-							Material sprite = blessedMaterials[(int)0];
-							float sizeGain = 0.25f;
-							var dimX = sizeGain * (168.0f/100.0f);
-							var dimY = sizeGain;
-							var y = c.y+0.125f;
-							var _c0 = new Vector2(c.x - dimX,y - dimY);
-							var _c1 = new Vector2(c.x + dimX,y + dimY);
-							draw.AddQuad(Layer.action + 4,sprite,_c0,_c1,new Color(255,255,255,192),zCities);
+						var c = p.visitingCid;
+						if(IsCulledWC(c))
+							continue;
+						// Todo: Draw avatar
+							var id = cityVisitorCounts.AddOrUpdate(c,(key) =>0, (key,prior)=>prior+1); 
+							Material sprite = p.GetAvatarMaterial();
+							float sizeGain = Settings.iconScale * 64.0f;
+							var dim = spriteSizeGain;// *1.25f; // square
+						float x, y;
+						switch(id&3) {
+							case 0:x = c.x-0.25f; y = c.y-0.25f; break;
+							case 1:x = c.x+0.25f; y = c.y-0.25f; break;
+							case 2:x = c.x+0.25f; y = c.y+0.25f; break;
+							default:x = c.x-0.25f; y = c.y+0.25f; break;
+								
+							}
+							var _c0 = new Vector2(x - dim,y - dim);
+							var _c1 = new Vector2(x + dim,y + dim);
+							draw.AddQuad(Layer.avatarOverlay,sprite,_c0,_c1,new Color(255,255,255,255),zCities);
 
 					}
 
+					cityVisitorCounts.Clear();
 
 					var incomingVisible = IncomingTab.IsVisible() || ReinforcementsTab.IsVisible() || NearDefenseTab.IsVisible() || Settings.incomingAlwaysVisible;
 					var outgoingVisible = AttackTab.IsVisible() || OutgoingTab.IsVisible() || Settings.attacksAlwaysVisible;
@@ -1083,7 +1087,7 @@ internal partial class GameClient
 															var mid = c0;
 															var _c0 = new Vector2(mid.x - spriteSize,mid.y - spriteSize);
 															var _c1 = new Vector2(mid.x + spriteSize,mid.y + spriteSize);
-															draw.AddQuadWithShadow(Layer.action + 4,Layer.effectShadow,sprite,_c0,_c1,Color.White,shadowColor,zEffects);
+															draw.AddQuadWithShadow(Layer.statusOverlay,Layer.effectShadow,sprite,_c0,_c1,Color.White,shadowColor,zEffects);
 														}
 														else
 														{
@@ -1210,7 +1214,7 @@ internal partial class GameClient
 													var mid = new Vector2(c1.x + 0.25f,c1.y-0.25f);
 													var _c0 = new Vector2(mid.X - spriteSize,mid.Y - spriteSize);
 													var _c1 = new Vector2(mid.X + spriteSize,mid.Y + spriteSize);
-													draw.AddQuadWithShadow(Layer.action + 4,Layer.effectShadow,sprite,_c0,_c1,Color.White,shadowColor,zEffects);
+													draw.AddQuadWithShadow(Layer.statusOverlay,Layer.effectShadow,sprite,_c0,_c1,Color.White,shadowColor,zEffects);
 												}
 												if(incDef > 0)
 												{
@@ -1220,7 +1224,7 @@ internal partial class GameClient
 													var mid = new Vector2(c1.x - 0.25f,c1.y-0.25f);
 													var _c0 = new Vector2(mid.X - spriteSize,mid.Y - spriteSize);
 													var _c1 = new Vector2(mid.X + spriteSize,mid.Y + spriteSize);
-													draw.AddQuadWithShadow(Layer.action + 4,Layer.effectShadow,sprite,_c0,_c1,Color.White,shadowColor,zEffects);
+													draw.AddQuadWithShadow(Layer.statusOverlay,Layer.effectShadow,sprite,_c0,_c1,Color.White,shadowColor,zEffects);
 												}
 											}
 
@@ -1285,7 +1289,7 @@ internal partial class GameClient
 									var mid = new Vector2(c1.x + 0.25f,c1.y-0.25f);
 									var _c0 = new Vector2(mid.X - spriteSize,mid.Y - spriteSize);
 									var _c1 = new Vector2(mid.X + spriteSize,mid.Y + spriteSize);
-									draw.AddQuadWithShadow(Layer.action + 4,Layer.effectShadow,sprite,_c0,_c1,Color.White,shadowColor,zEffects);
+									draw.AddQuadWithShadow(Layer.statusOverlay,Layer.effectShadow,sprite,_c0,_c1,Color.White,shadowColor,zEffects);
 
 								}
 							}
@@ -1419,9 +1423,9 @@ internal partial class GameClient
 																		wc.y   + (0.25f - yt1 * 0.5f));
 											var c1 = new System.Numerics.Vector2(wc.x + (xT1 * 0.8f - 0.5f),
 																		wc.y   + 0.25f);
-											DrawRect(Layer.actionOverlay,c0,c1,color,zEffects);
+											DrawRect(Layer.materialOverlay,c0,c1,color,zEffects);
 											// shadow TODO
-											DrawRect(Layer.action,c0,c1,CColor(a: 192),0);
+											DrawRect(Layer.overlay,c0,c1,CColor(a: 192),0);
 
 										}
 									}
@@ -1698,14 +1702,14 @@ internal partial class GameClient
 			//	System.Numerics.Vector2 c = new System.Numerics.Vector2(clientSpan.X-2,2).ScreenToWorld();
 			//	DrawTextBox(_toolTip,c,tipTextFormatRight,Color.White,192,Layer.overlay,4,4,ConstantDepth,0,scale: baseFontScale);
 			//}
-			var _contTip = ToolTips.contToolTip;
-			if(_contTip != null)
-			{
-				var alpha = pixelScale.SmoothStep(cityZoomThreshold - 128,cityZoomThreshold + 128).
-					Max(pixelScale.SmoothStep(cityZoomWorldThreshold + 16,cityZoomWorldThreshold - 16));
-				System.Numerics.Vector2 c = new System.Numerics.Vector2(clientSpan.X/2,2).ScreenToWorld();
-				DrawTextBox(_contTip,c,tipTextFormatCentered,Color.White.Scale(alpha),(byte)(alpha * 192.0f).RoundToInt(),Layer.overlay,4,4,ConstantDepth,0,scale: baseFontScale);
-			}
+			//var _contTip = ToolTips.contToolTip;
+			//if(_contTip != null)
+			//{
+			//	var alpha = pixelScale.SmoothStep(cityZoomThreshold - 128,cityZoomThreshold + 128).
+			//		Max(pixelScale.SmoothStep(cityZoomWorldThreshold + 16,cityZoomWorldThreshold - 16));
+			//	System.Numerics.Vector2 c = new System.Numerics.Vector2(clientSpan.X/2,2).ScreenToWorld();
+			//	DrawTextBox(_contTip,c,tipTextFormatCentered,Color.White.Scale(alpha),(byte)(alpha * 192.0f).RoundToInt(),Layer.overlay,4,4,ConstantDepth,0,scale: baseFontScale);
+			//}
 			//if(View.IsCityView())
 			//{
 			//	var                     alpha = 255;
@@ -1724,7 +1728,7 @@ internal partial class GameClient
 				ToolTips.debugTip=null;
 				var alpha = 255;
 				System.Numerics.Vector2 c = new Vector2(clientSpan.X/2,clientSpan.Y -16).ScreenToWorld();
-				DrawTextBox(_debugTip,c,tipTextFormatCenteredBottom,Color.White.Scale(alpha),(byte)(alpha * 192.0f).RoundToInt(),Layer.overlay,4,4,ConstantDepth,0,scale: baseFontScale);
+				DrawTextBox(_debugTip,c,tipTextFormatCenteredBottom,Color.White.Scale(alpha),(byte)(alpha * 192.0f).RoundToInt(),Layer.overlay2d,4,4,ConstantDepth,0,scale: baseFontScale);
 			}
 #if DEBUG
 			//	DrawRectOutlineShadow(Layer.effects,new Vector2(16,16).ScreenToWorld(),clientSpan.ScreenToWorld() - new Vector2(16f.ScreenToWorld()),Color.Yellow,4,0);
@@ -1733,7 +1737,7 @@ internal partial class GameClient
 			{
 
 				fadeCounter = (float)(fadeCounter - (timeSinceLastFrame*0.125f)).Max(0.0);
-				DrawRect(Layer.overlay-1,new Vector2(-4,-4).ScreenToWorld(),(clientSpan+new Vector2(4f)).ScreenToWorld(),new Color(byte.MinValue,default,default,fadeCounter.SCurve().UNormToByte()),0);
+				DrawRect(Layer.overlay2d-1,new Vector2(-4,-4).ScreenToWorld(),(clientSpan+new Vector2(4f)).ScreenToWorld(),new Color(byte.MinValue,default,default,fadeCounter.SCurve().UNormToByte()),0);
 			}
 
 
@@ -2015,7 +2019,7 @@ internal partial class GameClient
 		if(wantShadow)
 			DrawLine(Layer.effectShadow,c0,c1,GetLineUs(c0,c1,lineThickness,lineRate,animWave),shadowColor,zEffectShadow,thickness: lineThickness);
 
-		DrawLine(Layer.action + 2,c0,c1,GetLineUs(c0,c1,lineThickness,lineRate,animWave),color,zEffects,thickness: lineThickness);
+		DrawLine(Layer.lineOverlay,c0,c1,GetLineUs(c0,c1,lineThickness,lineRate,animWave),color,zEffects,thickness: lineThickness);
 		//if(applyStopDistance)
 		//{
 		//	DrawSquare(Layer.action + 3,c0,color,zEffects);
@@ -2028,7 +2032,7 @@ internal partial class GameClient
 			var mid = progress.Lerp(c0,c1);
 			var _c0 = new Vector2(mid.X - spriteSize,mid.Y - spriteSize);
 			var _c1 = new Vector2(mid.X + spriteSize,mid.Y + spriteSize);
-			draw.AddQuadWithShadow(Layer.action + 4,Layer.effectShadow,bitmap,_c0,_c1,HSLToRGB.ToRGBA(wave,0.3f,gain * 1.1875f,alpha),shadowColor,zEffects);
+			draw.AddQuadWithShadow(Layer.lineIconOverlay,Layer.effectShadow,bitmap,_c0,_c1,HSLToRGB.ToRGBA(wave,0.3f,gain * 1.1875f,alpha),shadowColor,zEffects);
 		}
 		//            ds.DrawRoundedSquare(midS, rectSpan, color, 2.0f);
 
@@ -2177,7 +2181,7 @@ internal partial class GameClient
 		var angle = angularSpeed * AGame.animationT;
 		if(wantShadow)
 			DrawAccentBase(c.X,c.Y,radius,angle,brush.GetShadowColorDark(),Layer.effectShadow,zEffectShadow);
-		DrawAccentBase(c.X,c.Y,radius,angle,brush,Layer.overlay,zEffects);
+		DrawAccentBase(c.X,c.Y,radius,angle,brush,Layer.overlay2d,zEffects);
 	}
 	public static void DrawAccent(int cid,float angularSpeedBase,Color brush,float radiusScale = 1.0f)
 	{

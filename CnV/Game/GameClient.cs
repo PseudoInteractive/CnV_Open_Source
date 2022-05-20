@@ -291,7 +291,7 @@ namespace CnV
 			rv.SetData(pixels);
 			return rv;
 		}
-		static SurfaceFormat GetFormat(DXGI_FORMAT format, bool wantSRGB)
+		static internal SurfaceFormat GetFormat(DXGI_FORMAT format, bool wantSRGB)
 		{
 			switch(format) {
 				case DXGI_FORMAT.BC1_UNORM: return wantSRGB? SurfaceFormat.Dxt1SRgb : SurfaceFormat.Dxt1;
@@ -312,16 +312,16 @@ namespace CnV
 				case DXGI_FORMAT.BC7_UNORM: return wantSRGB ?   SurfaceFormat.BC7SRgb  : SurfaceFormat.BC7;
 				case DXGI_FORMAT.BC7_UNORM_SRGB: return SurfaceFormat.BC7SRgb;
 				case DXGI_FORMAT.A8_UNORM: return SurfaceFormat.Alpha8;
-				case DXGI_FORMAT.B8G8R8A8_UNORM: return SurfaceFormat.Bgra32;
-				case DXGI_FORMAT.R8G8B8A8_UNORM: return SurfaceFormat.Color;
+				case DXGI_FORMAT.B8G8R8A8_UNORM: return  wantSRGB ?  SurfaceFormat.Bgra32SRgb : SurfaceFormat.Bgra32;
+				case DXGI_FORMAT.R8G8B8A8_UNORM: return  wantSRGB ?  SurfaceFormat.ColorSRgb: SurfaceFormat.Color;
 
 				default: throw new InvalidDataException($"Unsupported DDS format {format}");
 			}
 
 		}
-		private static int RoundUpTo4(int v) => (v+3)&(~3);
-		private static int RoundDownTo4(int v) => (v)&(~3);
-		private static bool IsMultipleOf4(int w,int h) => ((h&3)|(w&3)) ==0;//(v+3)&(~3);
+		internal static int RoundUpTo4(int v) => (v+3)&(~3);
+		internal  static int RoundDownTo4(int v) => (v)&(~3);
+		internal  static bool IsMultipleOf4(int w,int h) => ((h&3)|(w&3)) ==0;//(v+3)&(~3);
 		public static Texture2D CreateFromDDS(string fileName,  bool wantSRGB)
 		{
 			try
@@ -405,7 +405,7 @@ namespace CnV
 			}
 			return null;
 		}
-
+		
 		public static bool TryLoadLitMaterialFromDDS(string nameAndPath, out Material main, out Material shadow,bool wantShadow,bool unlit, bool city, bool opaque=false )
 		{
 			try

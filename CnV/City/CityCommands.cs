@@ -84,6 +84,10 @@ public partial class City
 				sb.Append(player.isValid ? player.shortName : "Lawless")
 					.AppendLinePre(city.nameAndRemarks)
 				.AppendFormat("\npts:{0:N0}",city.points);
+
+				
+				// Todo: avatars
+
 				if(player.allianceId!= 0)
 					sb.AppendLinePre(Alliance.IdToName(player.allianceId));
 				var share = sharesInfo;
@@ -189,7 +193,18 @@ public partial class City
 					sb.AppendLinePre($"Iron:{res[2].Format()}, Food:{res[3].Format()}");
 				}
 				
-
+				// check visiting:
+				var anyVisiting = false;
+				foreach(var p in World.activePlayers) {
+					if(p.visitingCid != cid) {
+						continue;
+					}
+					if(!anyVisiting) {
+						anyVisiting =true;
+						sb.Append("\nVisiting:");
+					}
+					sb.AppendLinePre(p.shortName);
+				}
 				return sb.ToString();
 
 			}

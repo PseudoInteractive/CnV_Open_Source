@@ -78,8 +78,9 @@
 																		 />
 
 
-				<sf:GridCheckBoxColumn MappingName="isOnline"
-										   ShowHeaderToolTip="True"
+				<sf:GridCheckBoxColumn MappingName="Online"
+										IsThreeState="True"   
+									   ShowHeaderToolTip="True"
 										   TextAlignment="Center"
 										    />
 

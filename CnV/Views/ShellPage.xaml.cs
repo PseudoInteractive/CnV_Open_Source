@@ -568,8 +568,8 @@ namespace CnV.Views
 				FindName(nameof(playerStats));
 				FindName(nameof(cityStats));
 
-				
-				PlayerStats.instance.UpdateIncomingText();
+
+				IncomingTab.UpdateIncomingStatus();
 				PlayerStats.instance.UpdateOutgoingText();
 				
 				KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F5,Refresh )  );

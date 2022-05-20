@@ -97,7 +97,8 @@
 																		 />
 
 
-								<sf:GridCheckBoxColumn MappingName="isOnline"
+								<sf:GridCheckBoxColumn MappingName="Online"
+													   IsThreeState="True"
 										   ShowHeaderToolTip="True"
 										   TextAlignment="Center"
 										    />
