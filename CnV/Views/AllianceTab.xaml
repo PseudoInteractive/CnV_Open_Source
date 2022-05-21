@@ -129,6 +129,7 @@
 											 />
 								<sf:GridNumericColumn MappingName="recruitedTroops" HeaderText="recruited"
 									  DisplayNumberFormat="N0"
+													  IsHidden="True"
 											 />
 								<sf:GridNumericColumn MappingName="raiding"
 									  DisplayNumberFormat="N0"

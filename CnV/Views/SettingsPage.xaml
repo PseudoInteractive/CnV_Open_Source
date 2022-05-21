@@ -378,10 +378,10 @@
 						MinWidth="60" />
 				</wct:WrapPanel>
 			</StackPanel>
+			<cnv:PlayerListBox x:Name="subs" Width="400" Height="128" />
 
 			<wct:WrapPanel Orientation="Horizontal"
 						   Margin="4">
-				<cnv:PlayerListBox x:Name="PlayerFilter" Width="400" Height="128" />
 				
 				<Button Content="Watch incoming for players"
 						Click="WatchIncomingForPlayers"

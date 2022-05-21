@@ -10,7 +10,7 @@
     mc:Ignorable="d"
 			HorizontalAlignment="Stretch"
             x:Name="TokenBox"
-            ItemsSource="{x:Bind cnv:Player.allSorted}"
+            ItemsSource="{x:Bind cnv:World.activePlayers}"
 			SelectionMode="Multiple"
 			IsMultiSelectCheckBoxEnabled="True"
 			DelimiterText=","
