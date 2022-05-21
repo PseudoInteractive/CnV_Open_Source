@@ -186,7 +186,7 @@ namespace CnV.Views
             var i = sender as FrameworkElement;
 
             var atk = i.DataContext as City;
-				if (atk.isMine)
+				if (atk.isSubOrMine)
 				{
 					if (attackStrings.TryGetValue(atk.cid, out var script))
 					{

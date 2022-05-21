@@ -1,84 +1,84 @@
-﻿using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
+﻿//using Microsoft.UI.Xaml;
+//using Microsoft.UI.Xaml.Controls;
+//using Microsoft.UI.Xaml.Controls.Primitives;
+//using Microsoft.UI.Xaml.Data;
+//using Microsoft.UI.Xaml.Input;
+//using Microsoft.UI.Xaml.Media;
+//using Microsoft.UI.Xaml.Navigation;
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
+//using System;
+//using System.Collections.Generic;
+//using System.IO;
+//using System.Linq;
+//using System.Runtime.InteropServices.WindowsRuntime;
 
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+//using Windows.Foundation;
+//using Windows.Foundation.Collections;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+//// To learn more about WinUI, the WinUI project structure,
+//// and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace CnV
-{
+//namespace CnV
+//{
 	
-	public sealed partial class ResearchPurchase:DialogG, INotifyPropertyChanged
-	{
-		public static Player player => Player.active;
+//	public sealed partial class ResearchPurchase:DialogG, INotifyPropertyChanged
+//	{
+//		public static Player player => Player.active;
 		
-		public static ResearchPurchase? instance;
-		internal TechTreeStep r;
-		protected override string title => r.title;
-		public ResearchPurchase()
-		{
-			this.InitializeComponent();
-			instance=this;
-		}
-		internal static void ShowInstance(TechTreeStep r)
-		{
-			var rv = instance ?? new ResearchPurchase();
-			rv.r = r;
-			rv.OnPropertyChanged();
-			rv.Show(false);
+//		public static ResearchPurchase? instance;
+//		internal TechTreeStep r;
+//		protected override string title => r.title;
+//		public ResearchPurchase()
+//		{
+//			this.InitializeComponent();
+//			instance=this;
+//		}
+//		internal static void ShowInstance(TechTreeStep r)
+//		{
+//			var rv = instance ?? new ResearchPurchase();
+//			rv.r = r;
+//			rv.OnPropertyChanged();
+//			rv.Show(false);
 			
-		}
-		private string Req(int r)
-		{
-			var have = player.RefinesOrGold(r);
-			return $"{have.Format()}, require {this.r.R(r).Format()}";
-		}
+//		}
+//		private string Req(int r)
+//		{
+//			var have = player.RefinesOrGold(r);
+//			return $"{have.Format()}, require {this.r.R(r).Format()}";
+//		}
 
-			public event PropertyChangedEventHandler? PropertyChanged;
-	public void OnPropertyChanged(string? member = null)
-	{
-		if (this.PropertyChanged is not null) 
-			AppS.QueueOnUIThread(() => PropertyChanged?.Invoke(this,new(member)));
-	}
-		public static void Changed(string? member = null)
-		{
-			if(instance is not null)
-				instance.OnPropertyChanged(member);
-		}
+//			public event PropertyChangedEventHandler? PropertyChanged;
+//	public void OnPropertyChanged(string? member = null)
+//	{
+//		if (this.PropertyChanged is not null) 
+//			AppS.QueueOnUIThread(() => PropertyChanged?.Invoke(this,new(member)));
+//	}
+//		public static void Changed(string? member = null)
+//		{
+//			if(instance is not null)
+//				instance.OnPropertyChanged(member);
+//		}
 
-		bool hasEnough { get {
-				if(r.IsFree(player))
-					return true;
-				for(int r=0;r<5;++r)
-				{
-					if(player.RefinesOrGold(r) < this.r.R(r) )
-						return false;
-				}
-				return true;
-			} }
-		private void DoResarch(object sender,RoutedEventArgs e)
-		{
-			Assert(hasEnough);
-			new CnVEventResearch(player.id,r.id).EnqueueAsap();
-			Done();
-		}
+//		bool hasEnough { get {
+//				if(r.IsFree(player))
+//					return true;
+//				for(int r=0;r<5;++r)
+//				{
+//					if(player.RefinesOrGold(r) < this.r.R(r) )
+//						return false;
+//				}
+//				return true;
+//			} }
+//		private void DoResarch(object sender,RoutedEventArgs e)
+//		{
+//			Assert(hasEnough);
+//			new CnVEventResearch(player.id,r.id).EnqueueAsap();
+//			Done();
+//		}
 
-		private void Refine(object sender,RoutedEventArgs e)
-		{
-			RefineDialogue.ShowInstance();
-		}
-	}
-}
+//		private void Refine(object sender,RoutedEventArgs e)
+//		{
+//			RefineDialogue.ShowInstance();
+//		}
+//	}
+//}

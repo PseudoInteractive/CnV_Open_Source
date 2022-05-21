@@ -83,7 +83,10 @@ namespace CnV
 				AppS.MessageBox("Already claimed 🙃");
 				return;
 			}
-
+			if(Player.isSubbing) {
+				AppS.MessageBox("Cannot claim quests while subbing 🙃");
+				return;
+			}
 
 			new CnVEventClaimQuest(City.GetBuild().c,questId).EnqueueAsap();
 			

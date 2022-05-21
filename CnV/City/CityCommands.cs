@@ -112,15 +112,15 @@ public partial class City
 					city.GetTroopsString(sb, "\n");
 				}
 				var wantDef = false;
-				if(city.incoming.Any(i => i.isAttack))
+				if(city.hasIncomingAttacks )
 				{
-					sb.AppendFormat("\nꁑ{0} incoming",city.incoming.Count(i => i.isAttack));
+					sb.AppendFormat("\nꁑ{0} incoming",city.incomingAttackCount );
 
 					var incAttacks = 0;
 				//	var incTs = 0u;
 					foreach(var i in city.incoming)
 					{
-						if(i.isAttack)
+						if(IsVisibleIncomingAttack(i))
 						{
 							++incAttacks;
 				//			incTs += i.ts;

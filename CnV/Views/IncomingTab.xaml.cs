@@ -129,7 +129,7 @@ namespace CnV.Views
 						continue;
 
 					forAlliance++;
-					if(c.isMine)
+					if(c.isSubOrMine)
 						++forMe;
 					nextArrival = nextArrival.Min(i.arrival);
 				}

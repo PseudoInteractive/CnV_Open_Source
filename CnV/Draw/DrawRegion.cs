@@ -644,12 +644,12 @@ internal partial class GameClient
 			{
 				nameColor = new Color() { A = nameAlpha,G = 0,B = 0,R = 0 };
 				nameColorOutgoing = new Color() { A = nameAlpha,G = 8,B = 14,R = 22 };
-				nameColorHover = new Color() { A = nameAlpha,G = 20,B = 0,R = 20 };
+				nameColorHover = new Color() { A = nameAlpha,G = 00,B = 0,R = 40 };
 				myNameColor = new Color() { A = nameAlpha,G = 0,B = 30,R = 15 };
 				nameColorIncoming = new Color() { A = nameAlpha,G = 0,B = 12,R = 6 };
 				nameColorSieged = new Color() { A = nameAlpha,G = 10,B = 16,R = 25 };
-				nameColorIncomingHover = new Color() { A = nameAlpha,G = 10,B = 17,R = 25 };
-				nameColorSiegedHover = new Color() { A = nameAlpha,G = 10,B = 14,R = 25 };
+				nameColorIncomingHover = new Color() { A = nameAlpha,G = 00,B = 34,R = 50 };
+				nameColorSiegedHover = new Color() { A = nameAlpha,G = 20,B = 28,R = 50 };
 				myNameColorIncoming = new Color() { A = nameAlpha,G = 12,B = 12,R = 25 };
 				myNameColorSieged = new Color() { A = nameAlpha,G = 10,B = 12,R = 25 };
 				nameColorDungeon = new Color() { A = nameAlpha,G = 0,B = 15,R = 0 };
@@ -1108,7 +1108,7 @@ internal partial class GameClient
 														if(isIncoming)
 															++incDef;
 													}
-													else if(i.isAttack)
+													else if(i.isAttack &&  (!isIncoming || city.IsVisibleIncomingAttack(i) ) )
 													{
 														if(isIncoming)
 														{
@@ -1200,7 +1200,7 @@ internal partial class GameClient
 													}
 													else
 													{
-														if(city.isMine)
+														if(city.isSubOrMine)
 															sprite = attack2Material;
 														else if(city.isAllyOrNap)
 															sprite = attack0Material;

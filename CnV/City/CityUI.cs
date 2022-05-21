@@ -652,11 +652,12 @@ public partial class City
 		//	AttackTab.WaitAndSaveAttacks();
 		//}
 		//else
-		if(City.CanVisit(cid) && !mod.IsShiftOrControl())
+		if( ((City.CanVisit(cid) && cid==focus) || Player.IsMyCity(cid) ) && !mod.IsShiftOrControl())
 		{
 			if(City.IsBuild(cid))
 			{
-				View.SetViewMode(View.viewMode.GetNext());// toggle between city/region view
+				if( cid==focus)
+					View.SetViewMode(View.viewMode.GetNext());// toggle between city/region view
 				if(scrollIntoUI)
 				{
 					Spot.SetFocus(cid, scrollIntoUI, true, true, lazyMove);

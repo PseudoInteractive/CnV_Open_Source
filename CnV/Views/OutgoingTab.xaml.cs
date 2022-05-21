@@ -69,7 +69,7 @@ namespace CnV.Views
 						{
 					if(o.isOutgoingAttack) {
 						allianceOutgoing++;
-						if(c.isMine)
+						if(c.isSubOrMine)
 							++myOutgoing;
 						nextArrival = nextArrival.Min(o.arrival);
 					}

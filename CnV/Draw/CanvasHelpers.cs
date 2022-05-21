@@ -11,30 +11,30 @@ using static GameClient;
 {
 	
 		
-	public static string IncomingInfo(this City city)
-	{
-		if(!city.incoming.Any())
-			return string.Empty;
-		var ts = 0u;
-		var sieged = false;
-		var hasSen = false;
-		var hasArt = false;
-		var any = false;
-		foreach(var i in city.incoming)
-		{
-			if(i.isAttack)
-			{
-				any = true;
-				ts += i.ts;
-				sieged |= i.isSiege;
-				hasSen |= i.hasSenator;
-				hasArt |= i.hasArt;
-			}
-		}
-		if(!any)
-			return string.Empty;
-		return $"({(sieged ? ((hasArt&&hasSen ? "SgAr " : hasArt ? "Ar " : hasSen ? "Sg " : "Si ") + ((hasSen||city.claim>0) ? city.claim.ToString("00") + "% " : "")) : "i ") } { (ts ==0 ? "?" : (ts + 999) / 1000) }kTs)";
-	}
+	//public static string IncomingInfo(this City city)
+	//{
+	//	if(!city.incoming.Any())
+	//		return string.Empty;
+	//	var ts = 0u;
+	//	var sieged = false;
+	//	var hasSen = false;
+	//	var hasArt = false;
+	//	var any = false;
+	//	foreach(var i in city.incoming)
+	//	{
+	//		if(i.isAttack)
+	//		{
+	//			any = true;
+	//			ts += i.ts;
+	//			sieged |= i.isSiege;
+	//			hasSen |= i.hasSenator;
+	//			hasArt |= i.hasArt;
+	//		}
+	//	}
+	//	if(!any)
+	//		return string.Empty;
+	//	return $"({(sieged ? ((hasArt&&hasSen ? "SgAr " : hasArt ? "Ar " : hasSen ? "Sg " : "Si ") + ((hasSen||city.claim>0) ? city.claim.ToString("00") + "% " : "")) : "i ") } { (ts ==0 ? "?" : (ts + 999) / 1000) }kTs)";
+	//}
 	public static bool IsDark(this Color color) => ((int)color.R + color.G + color.B) < (int)color.A * 3 / 2;
 
 	public static Color AlphaToWhite(this int alpha) { return new Color(255,255,255,alpha); }

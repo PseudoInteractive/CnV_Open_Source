@@ -18,7 +18,7 @@
 	<FontFamily x:Key="ContentControlThemeFontFamily">ms-appx:///Content/CnvIcons-Regular-SVG.ttf#CnvIcons,Segoe UI*</FontFamily>
 	<FontFamily x:Key="KeyTipFontFamily" >ms-appx:///Content/CnvIcons-Regular-SVG.ttf#CnvIcons,Segoe UI*</FontFamily>
 
-		
+
 
 
 	<Style x:Key="BaseControlStyle" TargetType="Control">

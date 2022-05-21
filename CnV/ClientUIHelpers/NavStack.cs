@@ -23,9 +23,19 @@ namespace CnV
 			//	throw new NotImplementedException();
 			}
 		}
-
+		public static int navStackOperation;
+		 readonly ref  struct NavStackFrame {
+			public NavStackFrame() {
+				++navStackOperation;
+			}
+			public void Dispose() {
+				--navStackOperation; ;
+			}
+		}
 		public static void Push(int cid)
 		{
+			if(navStackOperation > 0)
+				return;
 			var cityView = false;// CnVServer.IsCityView();
 								 // end current stack naviation session?
 			if (position != -1)
@@ -49,6 +59,7 @@ namespace CnV
 		}
 		public static bool Back(bool cityBackOnEmpty = false, bool scanOnly = false)
 		{
+			using var __frame = new NavStackFrame();
 			if (position == -1)
 			{
 				if (backStack.Count <= 1)
@@ -56,8 +67,7 @@ namespace CnV
 					Note.Show("Please navigate first");
 					if (cityBackOnEmpty)
 					{
-						AppS.DispatchOnUIThread(() =>
-					   Views.ShellPage.instance.ChangeCityClick(-1));
+					   Views.ShellPage.instance.ChangeCityClick(-1);
 					}
 
 					return false;
@@ -69,8 +79,8 @@ namespace CnV
 				Note.Show("This is the first city");
 				if (cityBackOnEmpty)
 				{
-					AppS.DispatchOnUIThread(() =>
-				   Views.ShellPage.instance.ChangeCityClick(-1));
+				
+				   Views.ShellPage.instance.ChangeCityClick(-1);
 				}
 				return false;
 			}
@@ -92,13 +102,15 @@ namespace CnV
 		}
 		public static bool Forward(bool cityForwardOnEmpty = false, bool scanOnly = false)
 		{
+			using var __frame = new NavStackFrame();
+
 			if (position == -1 || position >= backStack.Count - 1)
 			{
 				Note.Show("No more forwards left");
 
 				if (cityForwardOnEmpty)
 				{
-					AppS.DispatchOnUIThread(() => Views.ShellPage.instance.ChangeCityClick(1));
+					Views.ShellPage.instance.ChangeCityClick(1);
 				}
 				return false;
 			}
@@ -118,22 +130,8 @@ namespace CnV
 			public bool cityView; // only valid for My Cities, not for other cities or Misc Spots 
 			public void Go()
 			{
-				if (City.CanVisit(cid))
-				{
-					Note.Show($"Navigate to {City.GetOrAddCity(cid).nameMarkdown} {position} {NavStack.backStack.Count}");
-					if (!City.IsBuild(cid) || !City.IsFocus(cid))
-					{
-						CnVClient.CitySwitch(cid, false);
-					}
-					//if (cityView != COTG.Views.ShellPage.IsCityView())
-					//{
-					//	View.SetViewMode(Views.ViewMode.city);
-					//}
-				}
-				else
-				{
-					CityUI.ShowCity(cid, false);
-				}
+				using var __frame = new NavStackFrame();
+				City.ProcessCoordClick(cid,true,AppS.keyModifiers);
 			}
 		}
 
