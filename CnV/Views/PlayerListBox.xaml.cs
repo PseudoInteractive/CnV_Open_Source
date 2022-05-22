@@ -35,12 +35,28 @@ namespace CnV
 			
 		}
 
-	
+		internal void SetPlayers(PlayerId[] ps) {
+
+			var prior = this.players;
+			// remove some
+			foreach(var p in prior) {
+				if(!ps.Contains(p)) {
+					this.SelectedItems.Remove( Player.Get(p) );
+				}
+			}
+			foreach(var p in ps) {
+				if(!prior.Contains(p)) {
+					this.SelectedItems.Add( Player.Get(p) );
+				}
+			}
+			//Assert(ps.SequenceEqual(players));
+			players = ps;
+		}
 
 		// Todo: Set players
 
 		private void _SelectionChanged(object sender,Syncfusion.UI.Xaml.Editors.ComboBoxSelectionChangedEventArgs e) {
-			players = TokenBox.SelectedItems.Select(a=> (a as Player).id).ToArray();
+			players = this.SelectedItems.Select(a=> (a as Player).id).ToArray();
 			Changed?.Invoke(this,new() { players=players });
 		}
 

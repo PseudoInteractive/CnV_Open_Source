@@ -72,6 +72,7 @@ namespace CnV
 
 		//internal static void ZirconiaChanged() => Changed(nameof(zirconiaS));
 		//internal static void RefinesChanged() => Changed(nameof(RefineS));
+		public string refinesAndGoldS => $"{CnV.Resources.goldGlyph} {Player.active.gold.Format()}\n    +{Player.active.goldPerHour.FormatJson()}/h\nRefines:\n{Player.active.refinesRef.Format("\n")}";
 
 		public string title => player.Title;
 

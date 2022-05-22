@@ -378,7 +378,9 @@
 						MinWidth="60" />
 				</wct:WrapPanel>
 			</StackPanel>
-			<cnv:PlayerListBox x:Name="subs" Width="400" Height="128" />
+			
+			<cnv:PlayerListBox x:Name="subbers" Header="Players who can sub you" HorizontalAlignment="stretch" />
+			<cnv:PlayerListBox x:Name="subbees" Header="Players who you can sub (read only)" HorizontalAlignment="stretch" />
 
 			<wct:WrapPanel Orientation="Horizontal"
 						   Margin="4">

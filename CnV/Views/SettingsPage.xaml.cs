@@ -824,16 +824,44 @@ namespace CnV
 				ElementSoundPlayer.Play(ElementSoundKind.Hide);
 				if (instance == null)
 					instance = new Settings();
-				
+
 				//shown = true;
-			
+				// set subbers
+		//		instance.subbers.ItemsSource = World.activePlayers;
+				instance.subbers.SetPlayers(Player.me.subbers);
+			//	instance.subbees.ItemsSource = World.activePlayers;
+				instance.subbees.SetPlayers(Player.me.subbees);
 			///	instance.stackRoot.MaxWidth = instance.ActualWidth;
 			//	instance.UpdateLayout();
 				var result = await instance.ShowAsync2();
-				if (!instance.visitToken.IsNullOrEmpty())
+				//if (!instance.visitToken.IsNullOrEmpty())
+				//{
+				//	//Cosmos.PublishPlayerInfo(56996, 220 + 226*65536, instance.visitToken, instance.visitCookie);
+					
+				//}
+				if(!Player.me.subbers.SequenceEqual(instance.subbers.players )) 
 				{
-					//Cosmos.PublishPlayerInfo(56996, 220 + 226*65536, instance.visitToken, instance.visitCookie);
+					Note.Show("Updated Sub privileges");
+					Player.me.subbers = instance.subbers.players;
+					(new CnVEventPlayerSubs(Player.me.myCities.First().c,Player.myId,Player.me.subbers)).EnqueueAsap();
 				}
+				if(AppS.isTest) {
+					var subbees = Player.me.subbees;
+					if(!subbees.SequenceEqual(instance.subbees.players)) {
+
+						Note.Show("Updated Sub privileges");
+						foreach(var subbee in instance.subbees.players) {
+							if(subbees.Contains(subbee))
+								continue;
+							var p2 = Player.Get(subbee);
+							Assert(!p2.subbers.Contains(Player.myId));
+							p2.subbers = p2.subbers.ArrayAppend(Player.myId);
+//							Player.me.subbers = instance.subbers.players;
+//							(new CnVEventPlayerSubs(Player.me.myCities.First().c,Player.myId,Player.me.subbers)).EnqueueAsap();
+						}
+					}
+				}
+					
 
 				Settings.SaveAll();
 				//   dialog.auto

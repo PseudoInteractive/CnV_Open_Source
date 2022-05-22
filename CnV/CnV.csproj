@@ -71,10 +71,10 @@
 		<PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.5.0" />
 		<PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.5.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0-preview.4.22229.4" />
-		<PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.5" />
+		<PackageReference Include="Microsoft.Extensions.ObjectPool" Version="7.0.0-preview.4.22251.1" />
 		<PackageReference Include="Microsoft.Extensions.Primitives" Version="7.0.0-preview.4.22229.4" />
 		<PackageReference Include="Microsoft.Graphics.Win2D" Version="1.0.3.1" />
-		<PackageReference Include="Microsoft.Identity.Client" Version="4.43.2">
+		<PackageReference Include="Microsoft.Identity.Client" Version="4.44.0">
 			<TreatAsUsed>true</TreatAsUsed>
 		</PackageReference>
 		<PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="2.20.1" />
@@ -86,7 +86,7 @@
 		<PackageReference Include="Grpc.Net.Client" Version="2.46.0" />
 		<PackageReference Include="Humanizer.Core" Version="2.14.1" />
 		<PackageReference Include="MessagePack" Version="2.4.14-alpha" />
-		<PackageReference Include="MagicOnion.Client" Version="4.4.1" />
+		<PackageReference Include="MagicOnion.Client" Version="4.5.0" />
 		<PackageReference Include="Microsoft.Windows.CsWinRT" Version="1.6.3" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.197" />
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.3" />

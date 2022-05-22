@@ -22,7 +22,7 @@
 		<Image Source="{x:Bind cnv:ImageHelper.Get('UI/icons_ressource_all.png')}" VerticalAlignment="Center"
 					  Tapped="AllTapped"
 					  ContextRequested="ResContextRequest" 
-			   ToolTipService.ToolTip="{x:Bind cnv:Player.active.refinesAndGoldS,Mode=OneWay}"
+			   ToolTipService.ToolTip="{x:Bind refinesAndGoldS,Mode=OneWay}"
 					 />
 
 		<Button  VerticalAlignment="Center" Margin="8,0,1,0" Click="QuestsTapped" Padding="1,0"
