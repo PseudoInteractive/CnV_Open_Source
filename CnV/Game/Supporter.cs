@@ -20,7 +20,7 @@ namespace CnV
         public string raidReturn => city.raidReturn;
         public uint tsHome => NearDefenseTab.includeOffense ? city.tsHome : city.tsDefCityHome;
         public uint tsTotal => NearDefenseTab.includeOffense ? city.tsTotal : city.tsDefCityTotal;
-        public int split { get; set; } = 1; // splits def and sends in batches for wings
+        public bool useHorns { get; set; } // splits def and sends in batches for wings
 		public TimeSpanS travel;
 		public int validTargets { get; set; }
 		public string travelTime => travel.Format();

@@ -425,9 +425,19 @@ public partial class UserTab:UserControl, IANotifyPropertyChanged
 						a.AddToFlyout(flyout);
 						break;
 					}
-					else if(info.Record is Reinforcement r)
+					else if(info.Record is Army army)
 					{
-						flyout.AddItem("Return",() => r.ReturnAsync());
+						if(army.sourceCity.isSubOrMine || (army.targetCity.isSubOrMine && army.isDefense ) ) {
+							flyout.AddItem("Return",() => {
+								if(army.isDefense || army.isSieging) {
+									SendTroops.ShowInstance(prior: army);
+								}
+								else {
+									CnVEventReturnTroops.TryReturn(army);
+								}
+							});
+						}
+
 						break;
 					}
 					break;

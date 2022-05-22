@@ -22,6 +22,7 @@ namespace CnV
 		}
 		internal bool viaWater;
 		internal bool isSettle;
+		internal bool useHorns;
 		internal bool isReturn => prior != null;
 		internal Army prior;
 		protected override string title => $"{(isReturn?"Return ": String.Empty)}{(isSettle ? "Settle" : target.isBoss ? "NPC Hit" : Army.typeStrings[(int)type])} => {target}";
@@ -94,14 +95,21 @@ namespace CnV
 		bool isDefense => type==ArmyType.defense && !isSettle;
 		int splits => isCavernRaid ? splitsCombo.SelectedIndex+1 : 1;
 
-		public static Task<bool> ShowInstance(City city = null,City target = null,bool isSettle = false,bool viaWater = false,ArmyType type = ArmyType.nop,Army? prior = null,TroopTypeCounts?troops=null,ServerTime?arrival=null,ServerTime? depart=null) {
+		public static Task<bool> ShowInstance(City city = null,City target = null,bool isSettle = false,bool viaWater = false,ArmyType type = ArmyType.nop,Army? prior = null,TroopTypeCounts?troops=null,ServerTime?arrival=null,ServerTime? depart=null, bool useHorns=false) {
 			try {
 				if(city == target && prior is null) {
 					AppS.MessageBox("Cannot send to self");
 					return Task.FromResult(false);
 				}
+				if(isSettle) {
+					Assert(type == ArmyType.defense);
+				}
+
 				var rv = instance ?? new SendTroops();
 				rv.prior = prior;
+				rv.useHorns = useHorns;
+				if(useHorns)
+					Assert(type == ArmyType.defense);
 				if(prior is not null) {
 					rv.arrival.Visibility = Visibility.Visible; // reset
 					rv.city =prior.sourceCity;
@@ -129,18 +137,20 @@ namespace CnV
 					rv.viaWater = viaWater;
 					rv.UpdateTroopItems(troops);
 					var isAttack = type is (>=Army.attackFirst and <= Army.attackLast);
+					rv.arrival.Clear();
 					if(isAttack && rv.type is (>=Army.attackFirst and <= Army.attackLast)) {
 						// leave it
 					}
 					else {
 						if(rv.type != type) {
 							rv.type = type;
-							rv.arrival.Clear();
+						//	rv.arrival.Clear();
 						}
 					}
 
-					if(isRaid||isSettle)
-						rv.arrival.Clear();
+					if(isRaid||isSettle) {
+	//					rv.arrival.Clear();
+					}
 					else if(arrival is not null)
 						rv.arrival.SetDateTime(arrival.Value);
 					else if(depart is not null)
@@ -244,14 +254,30 @@ namespace CnV
 						return false;
 					}
 				}
-				var arrivalTime = arrival.dateTime;
+			// need wings?
+			var neededHorns = 0;
+			var arrivalTime = arrival.dateTime;
 			if(arrivalTime != default) {
-				if(Sim.simTime + travelTime > arrivalTime) {
-					if(await AppS.DoYesNoBox("Arrival too soon",$"The earliest time that we can make is {Sim.simTime + travelTime}, send now?",no: string.Empty) != 1)
-						return false;
-					arrival.Clear(); ;
-					arrivalTime = arrival.dateTime;
+				var travelTime = this.travelTime;
+				Assert(travelTime > 0);
+				var canMakeIt = Sim.simTime + travelTime <= arrivalTime;
+				if(!canMakeIt) {
+					if(useHorns) {
+							var timeAvailable = (arrivalTime -Sim.simTime);
+							if(timeAvailable > 0) {
+								var speedupNeeded = (double)travelTime/(double)timeAvailable;
+								if(speedupNeeded < 2.0)
+									canMakeIt = true;
+
+							}
+						}
 				}
+						if(!canMakeIt) {
+							if(await AppS.DoYesNoBox("Arrival too soon",$"The earliest time that we can make is {Sim.simTime + useHorns.Switch(1.0f, 0.5f)*travelTime}, send now?",no: string.Empty) != 1)
+								return false;
+							arrival.Clear(); ;
+							arrivalTime = arrival.dateTime;
+						}
 			}
 			if(arrivalTime == default) {
 				// check for enough troops
@@ -352,16 +378,10 @@ namespace CnV
 										)
 										| Army.FlagSplits(splits) : Army.flagNone);
 					var arrival = this.arrival.dateTime;
-
-					if(arrival != default) {
-						okay =  Army.Send(ts,flags,city,target.cid,type,transport,arrival);
-						if(!okay) {
-
-						}
-					}
-					else
-						okay = Army.Send(ts,flags,city,target.cid,type,transport);
-
+				if(arrival == default)
+					arrival = Sim.simTime + (travelTime * useHorns.Switch(1.0f,0.5f)).RoundToInt(); 
+					
+					okay =  Army.Send(ts,flags,city,target.cid,type,transport,arrival);
 					
 				}
 				if(okay)

@@ -27,62 +27,146 @@
 							Grid.Row="1"
 					   AllowResizingColumns="True"
 							
-							FrozenColumnCount="1"
-							ItemsSource="{x:Bind reinforcementsIn, Mode=OneWay}"
+							ItemsSource="{x:Bind citiesIn, Mode=OneWay}"
 							SelectionMode="Extended"
 							FontSize="{StaticResource SmallFontSize}"
 							SelectionUnit="Row"
 					   AutoGenerateColumns="False"
 					   AllowEditing="False"
 					   AllowDraggingColumns="True"
-					   ColumnWidthMode="SizeToHeader"
+					
 		              
 
 
 					>
-		<sf:SfDataGrid.TableSummaryRows>
-			<sf:GridTableSummaryRow ShowSummaryInRow="False" TitleColumnCount="1" Position="Bottom"
-			                        Title="Reinforcements {Total}">
-				<sf:GridSummaryRow.SummaryColumns>
-					<sf:GridSummaryColumn Name="Total" 
-					                      Format=" {Count:d}"
-					                      MappingName="_cityName" 
-					                      SummaryType="CountAggregate" />
-				</sf:GridSummaryRow.SummaryColumns>
-			</sf:GridTableSummaryRow>
-		</sf:SfDataGrid.TableSummaryRows>
+			<sf:SfDataGrid.Columns>
+				<sf:GridImageColumn MappingName="icon"
+                                        HeaderText="I"
+                                        ColumnWidthMode="None" 
+                                        Width="32" />
+				<sf:GridTextColumn MappingName="cityName"
+                                      
+                                       TextAlignment="Left"
+                                       />
+				
+				<sf:GridTextColumn MappingName="Claim"
+									   
 
-	
-		</sf:SfDataGrid>
-		<TextBlock Grid.Row="2" Text="{x:Bind reinOutTitle, Mode=OneWay}" />
-		<sf:SfDataGrid 
-						Grid.Row="3" x:Name="reinOut"
-							x:FieldModifier="public"
+                                       TextAlignment="Center" />
+				<sf:GridHyperlinkColumn MappingName="xy"
+
+				                      />
+				<sf:GridNumericColumn MappingName="tsDefMax"
+											HeaderText="MaxD"
+									   
+
+                                       TextAlignment="Right"
+                                            DisplayNumberFormat="N0" />
+				<sf:GridTextColumn MappingName="defString"
+									   HeaderText="Total In"
+                                      />
+				<sf:GridNumericColumn MappingName="tsHome"
+                                            HeaderText="tsNow"
+									   IsHidden="True"
+
+                                            TextAlignment="Right"
+                                            DisplayNumberFormat="N0" />
+
 			
-							IsTabStop="True"
-							
-						FrozenColumnCount="1"
-							ItemsSource="{x:Bind reinforcementsOut, Mode=OneWay}"
-							AutoGenerateColumns="False"
+				<sf:GridCheckBoxColumn  MappingName="underSiege"
+									   
+
+                                                      TextAlignment="Center" />
+				<sf:GridNumericColumn MappingName="incomingAttackCount"
+									  HeaderText="#atk"
+									   
+
+                                            TextAlignment="Center"
+                                            DisplayNumberFormat="N0" />
+				<sf:GridNumericColumn MappingName="incomingDefenders"
+                                            HeaderText="#def"
+									   
+
+                                            TextAlignment="Center"
+                                            DisplayNumberFormat="N0" />
+				<sf:GridTextColumn MappingName="firstIncomingString"
+									   HeaderText="First"
+                                      
+                                       TextAlignment="Left" />
+
+				
+
+				<sf:GridNumericColumn MappingName="cont"
+                                            TextAlignment="Center" />
+				<sf:GridNumericColumn MappingName="scoutRangeHrs"
+                                            TextAlignment="Right"
+                                             IsHidden="True" />
+				<sf:GridTextColumn MappingName="incTT"
+                                       
+                                       TextAlignment="Left" />
+				<sf:GridTextColumn MappingName="attackers"
+                                 
+                                       
+                                       TextAlignment="Left" />
+			</sf:SfDataGrid.Columns>
+			<sf:SfDataGrid.DetailsViewDefinition>
+				<!--  FirstLevelNestedGrid1 is created here  -->
+				<sf:GridViewDefinition RelationalColumn="reinforcementsIn">
+					<sf:GridViewDefinition.DataGrid>
+						<sf:SfDataGrid x:Name="armiesIn" 
+									   AutoGenerateColumns="False"
 							SelectionMode="Extended"
-							FontSize="{StaticResource SmallFontSize}"
+							
 							SelectionUnit="Row"
-						ColumnWidthMode="SizeToHeader"
-						AllowTriStateSorting="True"
-					
-					  >
-			<sf:SfDataGrid.TableSummaryRows>
-				<sf:GridTableSummaryRow ShowSummaryInRow="False" TitleColumnCount="1" Position="Bottom"
-				                        Title="Reinforcements {Total}">
-					<sf:GridSummaryRow.SummaryColumns>
-						<sf:GridSummaryColumn Name="Total" 
-						                      Format=" {Count:d}"
-						                      MappingName="_cityName" 
-						                      SummaryType="CountAggregate" />
-					</sf:GridSummaryRow.SummaryColumns>
-				</sf:GridTableSummaryRow>
-			</sf:SfDataGrid.TableSummaryRows>
-	
+							AutoGenerateRelations="False"
+							ShowToolTip="True"
+							FontStretch="Condensed"
+									   >
+							<sf:SfDataGrid.Columns >
+
+								<sf:GridTimeColumn
+                                                   MappingName="T"
+                                                   DisplayTimeFormat="MM/dd',' HH':'mm':'ss"
+                                                   TextAlignment="Center" />
+
+
+								<sf:GridImageColumn MappingName="sourceIcon"
+                                        HeaderText="I"
+                                        ColumnWidthMode="None" 
+                                        Width="32" />
+								<sf:GridHyperlinkColumn MappingName="sXY"
+
+				                      />
+								<sf:GridTextColumn MappingName="sPlayer"
+                                                   HeaderText="Player"
+
+                                                   TextAlignment="Left" />
+								<sf:GridTextColumn MappingName="troopS"
+												HeaderText="Troops"
+                                                   ColumnWidthMode="Auto" 
+                                                   TextAlignment="Left" />
+								
+								<sf:GridNumericColumn MappingName="dist"
+
+                                       TextAlignment="Right"
+                                            DisplayNumberFormat="N0" />
+
+								<sf:GridTextColumn MappingName="sourceCN"
+                                                   HeaderText="City"
+
+                                                   ColumnWidthMode="Auto" 
+                                                   TextAlignment="Left" />
+
+
+							</sf:SfDataGrid.Columns>
+						</sf:SfDataGrid>
+					</sf:GridViewDefinition.DataGrid>
+				</sf:GridViewDefinition>
+				<!--  FirstLevelNestedGrid2 is created here  -->
+
+			</sf:SfDataGrid.DetailsViewDefinition>
+
 		</sf:SfDataGrid>
+		
 	</Grid>
 </view:UserTab>

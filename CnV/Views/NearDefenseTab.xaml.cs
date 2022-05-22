@@ -31,7 +31,7 @@ namespace CnV.Views
 		public int _filterTSHome { get => filterTSHome; set { filterTSHome = value; refresh.Go(); } } // need at this this many ts at home to be considered for def
 																									  //   public ServerTime arriveAt { get; set; } = default;
 		public static SupportByTroopType[] supportByTroopTypeEmpty = Array.Empty<SupportByTroopType>();
-		public static int[] splitArray = { 1,2,3,4,5 };
+//		public static int[] splitArray = { 1,2,3,4,5 };
 		public static bool Include(TType tt) => includeOffense || ttIsDef[tt];
 
 
@@ -278,7 +278,7 @@ namespace CnV.Views
 			var text = sender as FrameworkElement;
 			var supporter = text.DataContext as Supporter;
 			var city = supporter.city;
-			if(city.commandSlots!=0 &&  supporter.split > city.freeCommandSlots) {
+			if(1 > city.freeCommandSlots) {
 				Note.Show("To few command slots");
 				return;
 			}
@@ -321,7 +321,7 @@ namespace CnV.Views
 				var ts = supporter.tSend /  (def.Count);
 				var cid = d.cid;
 
-					success &= await SendTroops.ShowInstance(City.Get(supporter.cid),City.Get(cid),false,sendViaWater,ArmyType.defense,null,ts,_arriveAt,departAt);
+					success &= await SendTroops.ShowInstance(City.Get(supporter.cid),City.Get(cid),false,sendViaWater,ArmyType.defense,null,ts,_arriveAt,departAt, useHorns:supporter.useHorns);
 				Assert(success);
 				Log($"Sent {ts} from {supporter.cid.AsCity()} to {cid.AsCity()} @{_arriveAt.ToString()}");
 				//	await Task.Delay(500);

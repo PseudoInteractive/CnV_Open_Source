@@ -107,9 +107,9 @@
 								
 								<sf:GridNumericColumn MappingName="cityFaith"/>
 
-								<sf:GridNumericColumn MappingName="Ts"  DisplayNumberFormat="N0" />
-								<sf:GridNumericColumn MappingName="TsOffense"  DisplayNumberFormat="N0" HeaderText="Offense"/>
-								<sf:GridNumericColumn MappingName="TsDefense" DisplayNumberFormat="N0" HeaderText="Defense" />
+								<sf:GridNumericColumn MappingName="Ts"  DisplayNumberFormat="N0" SortMode="Value" />
+								<sf:GridNumericColumn MappingName="TsOffense"  DisplayNumberFormat="N0" HeaderText="Offense" SortMode="Value" />
+								<sf:GridNumericColumn MappingName="TsDefense" DisplayNumberFormat="N0" HeaderText="Defense" SortMode="Value" />
 								<sf:GridNumericColumn MappingName="kills"
 									  DisplayNumberFormat="N0" />
 

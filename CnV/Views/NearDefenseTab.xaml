@@ -181,24 +181,20 @@
                                        ToolTipService.ToolTip="Time at which troops would arrive if sent now without wings"
                                        Binding="{Binding eta,Converter={StaticResource DateTimeConverter},Mode=OneTime}"
                                        />
-                <tk:DataGridTextColumn Header="ETA Wings"
+                <tk:DataGridTextColumn Header="ETA Horn"
                                        IsReadOnly="False"
                                        ToolTipService.ToolTip="Time at which troops would arrive if sent now with wing speedup (2x speed)"
                                        CellStyle="{StaticResource CellCenter}"
                                        Binding="{Binding etaWings,Converter={StaticResource DateTimeConverter}, Mode=OneTime}"
                                        />
-                <tk:DataGridComboBoxColumn Header="Split" CanUserSort="False" Binding="{Binding split,Mode=OneTime}"
-                                       IsReadOnly="False"
-                                           ToolTipService.ToolTip=""
-                                           ItemsSource="{x:Bind views:NearDefenseTab.splitArray}"
-                                        >
-                    <tk:DataGridComboBoxColumn.CellStyle>
-                        <Style BasedOn="{StaticResource CellCenter}" TargetType="tk:DataGridCell">
-                            <Setter Property="ToolTipService.ToolTip" Value="Send multiple batches to allow more effective use of wings"/>
-                        </Style>
-                    </tk:DataGridComboBoxColumn.CellStyle>
-                </tk:DataGridComboBoxColumn>
-            </tk:DataGrid.Columns>
+				<tk:DataGridCheckBoxColumn Header="Horn" CanUserSort="False" Binding="{Binding useHorns,Mode=TwoWay}"
+											IsReadOnly="False"
+                                           ToolTipService.ToolTip="If the arrival time is set, horns will be used to make the arrival time, otherwise horns will be used to travel at 2x speed"
+                                       
+                                        />
+
+
+			</tk:DataGrid.Columns>
         </tk:DataGrid>
         <tk:GridSplitter Grid.Row="3"
                          ResizeDirection="Rows"

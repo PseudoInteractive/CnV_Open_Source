@@ -28,8 +28,8 @@ namespace CnV.Views
 		public override TabPage                defaultPage => TabPage.secondaryTabs;
 		public          string                 reinInTitle;
 		public          string                 reinOutTitle;
-		public          NotifyCollection<City> reinforcementsOut = new();
-		public          NotifyCollection<City> reinforcementsIn  = new();
+//		public          NotifyCollection<City> citiesOut = new();
+		public          NotifyCollection<City> citiesIn  = new();
 		public static   ReinforcementsTab      instance;
 		public          int                    targetCid;
 
@@ -65,45 +65,45 @@ namespace CnV.Views
 
 			await base.VisibilityChanged(visible, longTerm: longTerm);
 		}
-		void SetupReinforcementGrid(SfDataGrid grid, bool isOutgoing)
-		{
-			using var _lock = SetupDataGrid(grid,true);
-			grid.SourceType = typeof(City);
+		//void SetupReinforcementGrid(SfDataGrid grid, bool isOutgoing)
+		//{
+		//	using var _lock = SetupDataGrid(grid,true);
+		//	grid.SourceType = typeof(City);
 			
-			grid.AddCity(isOutgoing ? "Defender" : "Target", wantTroops:isOutgoing,wantDefense:!isOutgoing);
+		//	grid.AddCity(isOutgoing ? "Defender" : "Target", wantTroops:isOutgoing,wantDefense:!isOutgoing);
 
 
 			
-			{
-				SfDataGrid child0 = new() { AutoGenerateRelations = false, AutoGenerateColumns = false};
-				using var _lock1 = SetupDataGrid(child0,true);
-				child0.SourceType = typeof(Reinforcement);
-				child0.AddHyperLink(nameof(Reinforcement.retUri), "Return");
-				child0.AddTime(nameof(Reinforcement.dateTime), "Arrival", nullText: "Arrived");
-				child0.AddText(nameof(Reinforcement._Troops), "Troops",
-					widthMode: ColumnWidthMode.Star );
-				{
-					var details = new GridViewDefinition() { RelationalColumn=isOutgoing?nameof(City.reinforcementsOut) : nameof(City.reinforcementsIn) , DataGrid=child0 } ;
-					grid.DetailsViewDefinition.Add(details);
-				}
-				{
-					SfDataGrid child1 = new() { AutoGenerateRelations = false, AutoGenerateColumns = false};
-					using var _lock2 = SetupDataGrid(child1,true);
-					child1.SourceType = typeof(City);
-					child1.AddCity(!isOutgoing ? "Defender" : "Target",wantTroops:!isOutgoing,wantDefense:isOutgoing);
-					var details1 = new GridViewDefinition()
-					{
-						RelationalColumn = isOutgoing
-							? nameof(Reinforcement.targetCities)
-							: nameof(Reinforcement.sourceCities) ,
-						DataGrid = child1
-					};
-					child0.DetailsViewDefinition.Add(details1);
+		//	{
+		//		SfDataGrid child0 = new() { AutoGenerateRelations = false, AutoGenerateColumns = false};
+		//		using var _lock1 = SetupDataGrid(child0,true);
+		//		child0.SourceType = typeof(Reinforcement);
+		//		child0.AddHyperLink(nameof(Reinforcement.retUri), "Return");
+		//		child0.AddTime(nameof(Reinforcement.dateTime), "Arrival", nullText: "Arrived");
+		//		child0.AddText(nameof(Reinforcement._Troops), "Troops",
+		//			widthMode: ColumnWidthMode.Star );
+		//		{
+		//			var details = new GridViewDefinition() { RelationalColumn=isOutgoing?nameof(City.reinforcementsOut) : nameof(City.reinforcementsIn) , DataGrid=child0 } ;
+		//			grid.DetailsViewDefinition.Add(details);
+		//		}
+		//		{
+		//			SfDataGrid child1 = new() { AutoGenerateRelations = false, AutoGenerateColumns = false};
+		//			using var _lock2 = SetupDataGrid(child1,true);
+		//			child1.SourceType = typeof(City);
+		//			child1.AddCity(!isOutgoing ? "Defender" : "Target",wantTroops:!isOutgoing,wantDefense:isOutgoing);
+		//			var details1 = new GridViewDefinition()
+		//			{
+		//				RelationalColumn = isOutgoing
+		//					? nameof(Reinforcement.targetCities)
+		//					: nameof(Reinforcement.sourceCities) ,
+		//				DataGrid = child1
+		//			};
+		//			child0.DetailsViewDefinition.Add(details1);
 
-				}
+		//		}
 
-			}
-		}
+		//	}
+		//}
 
 		private bool hasLoaded;
 
@@ -112,23 +112,24 @@ namespace CnV.Views
 			if(!hasLoaded)
 			{
 				hasLoaded = true;
-				
-				SetupReinforcementGrid( reinIn,false);
-				SetupReinforcementGrid(reinOut,true);
+				SetupDataGrid(reinIn);
+				SetupDataGrid(armiesIn);
+				//SetupReinforcementGrid( reinIn,false);
+			//	SetupReinforcementGrid(reinOut,true);
 			}
 
 		}
 
 		public async Task Update()
 		{
-			reinforcementsIn.Clear();
-			reinforcementsOut.Clear();
-			var refreshTask = NotifyCollectionBase.ProcessAllCollectionChangesNow();
+			citiesIn.Clear();
+//			citiesOut.Clear();
+		//	var refreshTask = NotifyCollectionBase.ProcessAllCollectionChangesNow();
 			var _cid = targetCid;
 			var showAll = _cid == 0;
 			using var work = new WorkScope("Checking reinforcements..");
 			//await ReinforcementsOverview.instance.Post();
-			await refreshTask;
+//			await refreshTask;
 			
 			var _spot = _cid == 0 ? null : Spot.GetOrAdd(_cid);
 
@@ -140,28 +141,29 @@ namespace CnV.Views
 
 			if (showAll)
 			{
-				tab.reinInTitle = "All Incoming Reinforcements";
+				tab.reinInTitle = "All Reinforcements";
 				tab.reinOutTitle = "All Outgoing Reinforcements";
 			}
 			else
 			{
 
-				tab.reinInTitle = "Incoming Reinforcements";
+				tab.reinInTitle = "Reinforcements";
 				tab.reinOutTitle = "Outgoing Reinforcements";
 			}
 
 			//tab. panel.Children.Add(new TextBlock() { Text = showAll ? "All Incoming Reinforcements" : "Reinforcements Here:" });
 			{
-				tab.reinforcementsIn.Set(spots.Where(s => s.reinforcementsIn.AnyNullable()).OrderByDescending(s => s.reinforcementSortScore)
+				var targets = spots.SelectMany(s => s.reinforcementsOut).Select(s => s.targetCity).Distinct();
+				tab.citiesIn.Set(spots.Where(s => s.reinforcementsIn.AnyNullable()).Concat(targets).Distinct().ToArray().OrderByDescending(s => s.reinforcementSortScore)
 					.ToArray(), true, true,skipHashCheck:true);
 			}
-			{
-				tab.reinforcementsOut.Set(
-					spots.Where(s=>s.reinforcementsOut.AnyNullable()).
-						SelectMany(s => s.reinforcementsOut).
-						Select(s=>s.sourceCity).Distinct().
-						OrderByDescending(s=>s.reinforcementSortScore).ToArray(), true, true,skipHashCheck:true);
-			}
+			//{
+			//	tab.citiesOut.Set(
+			//		spots.Where(s=>s.reinforcementsOut.AnyNullable()).
+			//			SelectMany(s => s.reinforcementsOut).
+			//			Select(s=>s.sourceCity).Distinct().
+			//			OrderByDescending(s=>s.reinforcementSortScore).ToArray(), true, true,skipHashCheck:true);
+			//}
 			
 
 			tab.OnPropertyChanged();

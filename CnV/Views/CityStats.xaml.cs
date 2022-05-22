@@ -1395,10 +1395,11 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 
 			flyout.AddItem("Return",Symbol.Undo,() =>
 			{
-				CnVEventReturnTroops.TryReturn(army);
+				SendTroops.ShowInstance(prior: army);
+//				CnVEventReturnTroops.TryReturn(army);
 			});
-			if( army.canUseWings)
-				flyout.AddItem("Speedup",Symbol.Forward,SpeedupDefense);
+		//	if( army.canUseWings)
+	//			flyout.AddItem("Speedup",Symbol.Forward,SpeedupDefense);
 
 			flyout.ShowContext(sender,args);
 		}
