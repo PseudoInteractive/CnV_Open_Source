@@ -25,7 +25,7 @@
 			<Button Style="{StaticResource ButtonMedium}" Content="Zero" Click="ClearClick" Margin="8,2"  />
 			<ComboBox SelectedIndex="{x:Bind armyType, Mode=TwoWay}" ItemsSource="{x:Bind cnv:Army.typeStrings}" x:Name="armyTypeCombo" />
 			<ToggleSwitch IsOn="{x:Bind ViaWater, Mode=TwoWay}" OnContent="Water" OffContent="Land" />
-			
+			<CheckBox x:Name="useHornsCheckbox" Content="Horns" IsChecked="{x:Bind UseHorns, Mode=TwoWay}"  Margin="8,2" ToolTipService.ToolTip="If set, horns will be used to speed up defense arrival as needed" />
 			<!--<TextBox   VerticalAlignment="Center" Text="{x:Bind arrival,Mode=TwoWay,Converter={StaticResource SmallTimeConverter}}"
                Description="arrival" PlaceholderText="ASAP"    ToolTipService.ToolTip="Time of arrival, leave blank to send as soon as possible" />-->
 
@@ -35,7 +35,7 @@
 				<ComboBox x:Name="splitsCombo" ItemsSource="{x:Bind splitsItems}" SelectedIndex="0" Margin="12,2" VerticalAlignment="Center" />
 				<CheckBox x:Name="repeatCheckBox" Content="Repeat" IsChecked="True" Margin="8,2" />
 			</StackPanel>
-			<cnv:DateTimeBox Label="arrival" x:Name="arrival" ToolTipService.ToolTip="Clear both boxes to send immediately" />
+			<cnv:DateTimeBox Label="arrival" x:Name="arrivalUI" ToolTipService.ToolTip="Clear both boxes to send immediately" />
 			
 			<NumberBox Description="Min TS" Value="{x:Bind city.minTS,Mode=OneWay}" IsEnabled="false" />
 		</tk:WrapPanel>

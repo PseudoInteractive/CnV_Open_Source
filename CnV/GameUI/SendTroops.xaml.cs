@@ -23,17 +23,53 @@ namespace CnV
 		internal bool viaWater;
 		internal bool isSettle;
 		internal bool useHorns;
+		public bool UseHorns {
+			get => useHorns;
+			set {
+				if(value!=useHorns) {
+					useHorns=value;
+					UpdateTravelTime();
+				}
+			}
+		}
 		internal bool isReturn => prior != null;
 		internal Army prior;
-		protected override string title => $"{(isReturn?"Return ": String.Empty)}{(isSettle ? "Settle" : target.isBoss ? "NPC Hit" : Army.typeStrings[(int)type])} => {target}";
+		protected override string title => $"{(isReturn ? "Return " : String.Empty)}{(isSettle ? "Settle" : target.isBoss ? "NPC Hit" : Army.typeStrings[(int)type])} => {target}";
 		internal static SendTroops? instance;
 		internal City city;
 		internal City target;
 		internal ArmyType type;
-		//	internal ServerTime arrival;
+		internal ServerTime _departure;
+		internal ServerTime arrival {
+			get {
+				var a = this.arrivalUI.dateTime;
+				if(a.isNotZero)
+					return a;
+				return departure + travelTimeWithHorms;
+			}
+		}
 
 
-		//internal ServerTime departure;
+		internal ServerTime departure {
+			get {
+				var arrival = this.arrivalUI.dateTime;
+				if(_departure.isNotZero) {
+					// arrival takes precedence
+					if(arrival.isNotZero) {
+						return _departure.Max(arrival - travelTimeWithHorms);
+
+					}
+					return _departure;
+				}
+				
+				
+				if(arrival.isZero) {
+					return Sim.simTime;
+				}
+				return arrival - travelTimeWithHorms;
+
+			}
+		}
 		internal int armyType { get => (int)type; set => type=(ArmyType)(value); }
 
 		internal readonly int[] splitsItems = Enumerable.Range(1,16).ToArray();
@@ -43,7 +79,7 @@ namespace CnV
 			this.InitializeComponent();
 			instance = this;
 			PropertyChanged += SendTroops_PropertyChanged;
-			arrival.PropertyChanged += SendTroops_PropertyChanged;
+			arrivalUI.PropertyChanged += SendTroops_PropertyChanged;
 
 		}
 
@@ -53,26 +89,20 @@ namespace CnV
 		}
 
 		private void UpdateTravelTime() {
-			var arrival = this.arrival.dateTime;
-			var tt = travelTime;
-			if(arrival == default) {
-				travelInfo.Text= $"Travel time: {tt.Format()}\nArrival: {(Sim.simTime+tt)}";
+			var depart = departure;
+
+			var rv =  $"Travel time: {travelTimeWithHorms.Format()}\nDepart: {depart}\nArrival: {(arrival)}";
+			if(depart+10 < Sim.simTime) {
+				rv += " (depart is past)";
 			}
-			else {
-				var depart = (arrival-tt);
-				var rv = $"Travel time: {tt.Format()}\nDepart: {depart}";
-				if(depart <= Sim.simTime) {
-					rv += "(in the past)";
-				}
-				travelInfo.Text= rv;
-			}
+			travelInfo.Text= rv;
 		}
 
-		private void UpdateTroopItems(TroopTypeCounts?troops) {
+		private void UpdateTroopItems(TroopTypeCounts? troops) {
 			var troopItems = new List<SendTroopItem>();
 			if(troops is not null) {
 				foreach(var t in troops.Value) {
-					var rv = new SendTroopItem(target: target,city: city,type: t.t,count: (int)t.c, prior:prior);
+					var rv = new SendTroopItem(target: target,city: city,type: t.t,count: (int)t.c,prior: prior);
 					troopItems.Add(rv);
 					rv.PropertyChanged += SendTroops_PropertyChanged; // memory leak
 				}
@@ -81,7 +111,7 @@ namespace CnV
 				var ttHome = city.troopsOwnedPlusRecruiting;
 				for(var i = (TType)0;i<Troops.ttCount;++i) {
 					if(ttHome.GetCount(i) > 0) {
-						var rv = new SendTroopItem(target: target,city: city,type: i, prior:prior);
+						var rv = new SendTroopItem(target: target,city: city,type: i,prior: prior);
 						troopItems.Add(rv);
 						rv.PropertyChanged += SendTroops_PropertyChanged;
 					}
@@ -95,7 +125,7 @@ namespace CnV
 		bool isDefense => type==ArmyType.defense && !isSettle;
 		int splits => isCavernRaid ? splitsCombo.SelectedIndex+1 : 1;
 
-		public static Task<bool> ShowInstance(City city = null,City target = null,bool isSettle = false,bool viaWater = false,ArmyType type = ArmyType.nop,Army? prior = null,TroopTypeCounts?troops=null,ServerTime?arrival=null,ServerTime? depart=null, bool useHorns=false) {
+		public static Task<bool> ShowInstance(City city = null,City target = null,bool isSettle = false,bool viaWater = false,ArmyType type = ArmyType.nop,Army? prior = null,TroopTypeCounts? troops = null,ServerTime arrival = default,ServerTime depart = default, bool ? useHorns=null) {
 			try {
 				if(city == target && prior is null) {
 					AppS.MessageBox("Cannot send to self");
@@ -107,64 +137,82 @@ namespace CnV
 
 				var rv = instance ?? new SendTroops();
 				rv.prior = prior;
-				rv.useHorns = useHorns;
-				if(useHorns)
-					Assert(type == ArmyType.defense);
-				if(prior is not null) {
-					rv.arrival.Visibility = Visibility.Visible; // reset
-					rv.city =prior.sourceCity;
 				
+				
+				if(type == ArmyType.defense && !isSettle) {
+					if(useHorns is not null)
+						rv.useHorns = useHorns.Value;
+					rv.useHornsCheckbox.Visibility = Visibility.Visible;
+
+
+				}
+				else {
+					rv.useHorns=false;
+					rv.useHornsCheckbox.Visibility = Visibility.Collapsed;
+				}
+				rv._departure = depart;
+			
+
+				if(prior is not null) {
+					rv.arrivalUI.Visibility = Visibility.Visible; // reset
+					rv.city =prior.sourceCity;
+
 					rv.target = prior.targetCity;
 					rv.isSettle = prior.isSettle;
 					rv.viaWater = prior.isViaWater;
 					rv.type = prior.type;
 					rv.UpdateTroopItems(prior.troops);
-					rv.arrival.SetDateTime(prior.arrival);
+					rv.arrivalUI.SetDateTime(prior.arrival);
 					//rv.arrival.Visibility = !wantReturn ? Visibility.Visible : Visibility.Collapsed;
 					rv.buttoGo.Content = "Return";
 					rv.buttoGo.IsEnabled = prior.sourceCity.outgoing.Contains(prior);
 					//	rv.isReturn = wantReturn;
 					rv.armyTypeCombo.Visibility = Visibility.Collapsed;
+					
 				}
 				else {
 					//	Assert(wantReturn == false);
 
 					var isRaid = type == ArmyType.raid;
-					rv.arrival.Visibility = isRaid||isSettle ? Visibility.Collapsed : Visibility.Visible;
+					rv.arrivalUI.Visibility = isRaid||isSettle ? Visibility.Collapsed : Visibility.Visible;
 					rv.city =city;
 					rv.target = target;
 					rv.isSettle = isSettle;
 					rv.viaWater = viaWater;
 					rv.UpdateTroopItems(troops);
 					var isAttack = type is (>=Army.attackFirst and <= Army.attackLast);
-					rv.arrival.Clear();
+					rv.arrivalUI.Clear();
 					if(isAttack && rv.type is (>=Army.attackFirst and <= Army.attackLast)) {
 						// leave it
 					}
 					else {
 						if(rv.type != type) {
 							rv.type = type;
-						//	rv.arrival.Clear();
+							//	rv.arrival.Clear();
 						}
 					}
 
-					if(isRaid||isSettle) {
-	//					rv.arrival.Clear();
-					}
-					else if(arrival is not null)
-						rv.arrival.SetDateTime(arrival.Value);
-					else if(depart is not null)
-						rv.arrival.SetDateTime(depart.Value + rv.travelTime);
 
-					
+
+
+					if(isRaid||isSettle) {
+						//					rv.arrival.Clear();
+					}
+					else if(arrival.isNotZero)
+						rv.arrivalUI.SetDateTime(arrival);
+					else if(depart.isNotZero)
+						rv.arrivalUI.SetDateTime(depart + rv.travelTimeWithHorms);
+
+
 					rv.armyTypeCombo.Visibility = isAttack ? Visibility.Visible : Visibility.Collapsed;
 
 
 					rv.buttoGo.Content = "Send";
 					rv.buttoGo.IsEnabled=true;
-					
-					
+
+
 				}
+				
 
 
 				if(isSettle) {
@@ -184,66 +232,67 @@ namespace CnV
 
 		}
 
-		internal async Task<bool> IsValid(TroopTypeCounts troops,bool verbose) {
+		internal async Task<(bool okay, int usedHorns)> IsValid(TroopTypeCounts troops,bool verbose) {
+			var usedHorns = 0;
 			if(!isReturn) {
 				if(isSettle) {
-				if(!troopItems.Any(a => a.type == Troops.ttSenator && a.count > 0)) {
-					if(verbose)
-						AppS.MessageBox($"Need a Magistra to settle");
-					return false;
+					if(!troopItems.Any(a => a.type == Troops.ttSenator && a.count > 0)) {
+						if(verbose)
+							AppS.MessageBox($"Need a Magistra to settle");
+						return (false, 0);
+					}
+
+					if(!Army.CheckSettleResources(city)) {
+						return (false, 0);
+					}
 				}
 
-				if(!Army.CheckSettleResources(city)) {
-					return false;
-				}
-			}
-			
 				if(city.underSiege) {
 					if(verbose)
 						AppS.MessageBox($"City is under siege");
-					return false;
+					return (false, 0);
 				}
 
 				if(transport == ArmyTransport.carts && city.cartsHome < 250) {
 					if(verbose) AppS.MessageBox($"Need 250 carts.  Have {city.cartsHome} home of {city.carts} ");
-					return false;
+					return (false, 0);
 				}
 				if(transport == ArmyTransport.ports && city.shipsHome < 25) {
 					if(verbose) AppS.MessageBox($"Need 25 trading ships.  Have {city.shipsHome} home of {city.ships} ");
-					return false;
+					return (false, 0);
 				}
 				if(type is (>= Army.attackFirst and <= Army.attackLast)) {
 					if(!city.isCastle) {
 						if(verbose) AppS.MessageBox($"Only castles can attack like that");
-						return false;
+						return (false, 0);
 					}
 					if(troops.TS() < city.minTS) {
 						if(verbose) AppS.MessageBox($"Cannot send {troops.TS()}, min TS is {city.minTS}");
-						return false;
+						return (false, 0);
 
 					}
 				}
 				if((type is (ArmyType.siege or ArmyType.assault)) &&(!target.isCastle)) {
 					if(verbose) AppS.MessageBox($"Target must be castle");
-					return false;
+					return (false, 0);
 				}
 				// check for water
 				if(transport is (ArmyTransport.land or ArmyTransport.carts)) {
 					if((troopItems.Any(a => a.count>0 && IsTTNaval(a.type))) &&!target.isOnWater) {
 						if(verbose) AppS.MessageBox($"Boats must go by water");
-						return false;
+						return (false, 0);
 					}
 					if(city.cont != target.cont) {
 						if(verbose) AppS.MessageBox($"Land travel only to same continent");
-						return false;
+						return (false, 0);
 					}
 				}
 				else {
 					// by water
-					
+
 					if(!city.isOnWater || !target.isOnWater) {
 						if(verbose) AppS.MessageBox($"Source and target must be on water");
-						return false;
+						return (false, 0);
 					}
 					// check galley space
 					var galleys = troops.GetCount(ttGalley);
@@ -251,54 +300,74 @@ namespace CnV
 					var neededGalleys = tsLand.DivideRoundUp(tsCarryPerGalley);
 					if(neededGalleys > galleys) {
 						if(verbose) AppS.MessageBox($"Need at least {neededGalleys} to transport troops");
-						return false;
+						return (false, 0);
 					}
 				}
-			// need wings?
-			var neededHorns = 0;
-			var arrivalTime = arrival.dateTime;
-			if(arrivalTime != default) {
-				var travelTime = this.travelTime;
-				Assert(travelTime > 0);
-				var canMakeIt = Sim.simTime + travelTime <= arrivalTime;
-				if(!canMakeIt) {
-					if(useHorns) {
-							var timeAvailable = (arrivalTime -Sim.simTime);
+				// need wings?
+				var arrivalTime = arrivalUI.dateTime;
+				if(arrivalTime != default) {
+					var travelTime = this.travelTime;
+					Assert(travelTime > 0);
+					var canMakeIt =  departure + travelTime <= arrivalTime;
+					if(!canMakeIt) {
+						if(useHorns) {
+							var timeAvailable = (arrivalTime -departure);
 							if(timeAvailable > 0) {
 								var speedupNeeded = (double)travelTime/(double)timeAvailable;
-								if(speedupNeeded < 2.0)
+								Assert(speedupNeeded >= 1);
+								if(speedupNeeded < 2.0) {
 									canMakeIt = true;
 
+
+									//		1 + horns*tsPerHorn /ts  = speedupNeeded 
+									//  horns*tsPerHorn /ts  = ts * (speedupNeeded-1)/tsPerHorn
+									var ts = (int)troops.TS(); // TODO: 
+									var art = Artifact.GetForPlayerRank(Artifact.ArtifactType.Horn);
+									var tsPerHorn = art.r[13];
+									usedHorns = ((float)(ts *(speedupNeeded-1)/tsPerHorn)).CeilToInt(); ;
+									Note.Show($"{usedHorns} required for {ts} TS");
+
+								}
 							}
 						}
+					}
+					if(!canMakeIt) {
+						if(await AppS.DoYesNoBox("Arrival too soon",$"The earliest time that we can make is {departure + (useHorns.Switch(1.0f,0.5f)*travelTime).CeilToInt()}, send now?",no: string.Empty) != 1)
+							return (false, 0);
+						arrivalUI.Clear(); ;
+						arrivalTime = default;
+					}
 				}
-						if(!canMakeIt) {
-							if(await AppS.DoYesNoBox("Arrival too soon",$"The earliest time that we can make is {Sim.simTime + useHorns.Switch(1.0f, 0.5f)*travelTime}, send now?",no: string.Empty) != 1)
-								return false;
-							arrival.Clear(); ;
-							arrivalTime = arrival.dateTime;
-						}
-			}
-			if(arrivalTime == default) {
-				// check for enough troops
-				if(!city.troopsHome.IsSuperSetOf(troops) ) {
-					AppS.MessageBox($"Not enough troops. Here:\n{city.troopsHome.Format()}" );
-					return false;
+				else {
+					if(useHorns) {
+						var ts = (int)troops.TS(); // TODO: 
+						var art = Artifact.GetForPlayerRank(Artifact.ArtifactType.Horn);
+						var tsPerHorn = art.r[13];
+						usedHorns = ts.DivideRoundUp(tsPerHorn);
+						Note.Show($"{usedHorns} required for {ts} TS");
+					}
+				}
+				if(arrivalTime == default) {
+					// check for enough troops
+					if(!city.troopsHome.IsSuperSetOf(troops)) {
+						AppS.MessageBox($"Not enough troops. Here:\n{city.troopsHome.Format()}");
+						return (false, 0);
+					}
+				}
+				if(!troopItems.Any(a => a.count > 0)) {
+					if(verbose) AppS.MessageBox($"Please send something");
+					return (false, 0);
 				}
 			}
-			if(!troopItems.Any(a => a.count > 0)) {
-				if(verbose) AppS.MessageBox($"Please send something");
-				return false;
-			}
-			}
-			
+
 			if(city.freeCommandSlots+1 < splits) {
 				if(verbose) AppS.MessageBox($"Out of command slots");
-				return false;
+				return (false, 0);
 			}
-			
 
-			return true;
+
+
+			return (true, usedHorns);
 		}
 
 		//private bool isSettle => (transport == ArmyTransport.carts || transport==ArmyTransport.ports);
@@ -342,6 +411,7 @@ namespace CnV
 		}
 
 		internal TimeSpanS travelTime => Army.JourneyTime(city,target.cid,transport,troops,isCavernRaid);
+		internal TimeSpanS travelTimeWithHorms => new((travelTime*useHorns.Switch(1.0f,0.5f)).CeilToInt());
 
 
 		private async void SendTroopsClick(object sender,RoutedEventArgs e) {
@@ -358,34 +428,66 @@ namespace CnV
 			//}
 			TroopTypeCounts ts = troops;
 
-			if(! await IsValid(ts,true))
+			var valid = await IsValid(ts,true);
+			if(!valid.okay)
 				return;
 
 
 
 			Assert(ts.Any());
-				
 
-				bool okay;
-				if(isReturn) {
-					CnVEventReturnTroops.TryReturn(prior, ts.isEmpty || ts.IsSuperSetOf(prior.troops) ? default : ts);
-					okay = true;
-				}
-				else {
-					var splits = this.splits;
 
-					var flags = (byte)(isCavernRaid ? ((repeatCheckBox.IsChecked.Value ? Army.flagRepeating : Army.flagNone)
-										)
-										| Army.FlagSplits(splits) : Army.flagNone);
-					var arrival = this.arrival.dateTime;
-				if(arrival == default)
-					arrival = Sim.simTime + (travelTime * useHorns.Switch(1.0f,0.5f)).RoundToInt(); 
-					
-					okay =  Army.Send(ts,flags,city,target.cid,type,transport,arrival);
-					
+			bool okay;
+			if(isReturn) {
+				CnVEventReturnTroops.TryReturn(prior,ts.isEmpty || ts.IsSuperSetOf(prior.troops) ? default : ts);
+				okay = true;
+			}
+			else {
+				var usedHorns = valid.usedHorns;
+				if(usedHorns > 0) {
+					if(await AppS.DoYesNoBox($"Use {usedHorns} Horns?",$"This will require {usedHorns} horns, are you sure?") != 1)
+						return;
+					// can addord it?
+					var art = Artifact.GetForPlayerRank(Artifact.ArtifactType.Horn);
+
+					var artifact = art.id;
+
+					var needed = usedHorns- Player.active.ArtifactCount(artifact);
+					if(!Artifact.Get(artifact).IsOkayToUse(usedHorns))
+						return;
+					try {
+						SocketClient.DeferSendStart();
+
+						if(needed > 0) {
+							new CnVEventPurchaseArtifacts((ushort)artifact,(ushort)needed,Player.active.id).EnqueueAsap();
+						}
+						// TODO: HACK:
+					//	(new CnVEventUseArtifacts(city.c) { artifactId = (ushort)artifact,count = (ushort)usedHorns,flags=CnVEventUseArtifacts.Flags.noEffect }).EnqueueAsap();
+
+					}
+					catch(Exception _ex) {
+						LogEx(_ex);
+
+					}
+					finally {
+						SocketClient.DeferSendEnd();
+					}
 				}
-				if(okay)
-					Done();
+
+				var splits = this.splits;
+
+				var flags = (byte)(isCavernRaid ? ((repeatCheckBox.IsChecked.Value ? Army.flagRepeating : Army.flagNone)
+									)
+									| Army.FlagSplits(splits) : Army.flagNone);
+				//var arrival = this.arrivalUI.dateTime;
+				//if(arrival == default)
+				//	arrival = departure + travelTimeWithHorms;
+
+				okay =  Army.Send(ts,flags,city,target.cid,type,transport,arrival,_departure);
+
+			}
+			if(okay)
+				Done();
 		}
 
 		internal TroopTypeCounts troops {
@@ -452,7 +554,7 @@ namespace CnV
 			}
 		}
 
-		public SendTroopItem(City city,City target,byte type,bool wantMax = false,int? count = null, Army? prior=null) {
+		public SendTroopItem(City city,City target,byte type,bool wantMax = false,int? count = null,Army? prior = null) {
 			this.city=city;
 			this.target=target;
 			this.type=type;

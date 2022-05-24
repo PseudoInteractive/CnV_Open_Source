@@ -1330,8 +1330,7 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 		{
 			try
 			{
-				var aType = Artifact.ArtifactType.Horn;
-				var art = Artifact.GetForPlayerRank(aType);
+				var art = Artifact.GetForPlayerRank(Artifact.ArtifactType.Horn);
 				if(art is null)
 				{
 					Assert(false);

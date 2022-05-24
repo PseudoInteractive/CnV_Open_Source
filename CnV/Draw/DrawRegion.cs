@@ -1321,64 +1321,62 @@ internal partial class GameClient
 						var tradePartlyVisible = Settings.tradesVisible == null;
 						if(tradesVisible)
 						{
+							try {
 
+								var cullSlopSpace = (32 * pixelScale).RoundToInt();
+								for(int iOrO = 0;iOrO < 2;++iOrO) {
+									var isIncoming = (iOrO == 0);
 
-							var cullSlopSpace = (32 * pixelScale).RoundToInt();
-							for(int iOrO = 0;iOrO < 2;++iOrO)
-							{
-								var isIncoming = (iOrO == 0);
-
-								var list = City.subCities; //defenders ? Spot.defendersI : Spot.defendersO;
-								bool showAll = !tradePartlyVisible;
-								foreach(var city in list)
-								{
-									if(!city.testContinentFilter) // || !(showAll || Spot.IsSelectedOrHovered(city.cid) ))
-										continue;
-
-
-									{
-
-										var cityCid = city.cid;
-										var c1 = cityCid.CidToWorld();
-										if(IsSquareCulledWC(c1,cullSlopSpace))  // this is in pixel space - Should be normalized for screen resolution or world space (1 continent?)
+									var list = City.subCities; //defenders ? Spot.defendersI : Spot.defendersO;
+									bool showAll = !tradePartlyVisible;
+									foreach(var city in list) {
+										if(!city.testContinentFilter) // || !(showAll || Spot.IsSelectedOrHovered(city.cid) ))
 											continue;
 
 
-										foreach(var i in isIncoming ? city.tradesIn : city.tradesOut)
 										{
-											var c0 = isIncoming ? i.sourceCid.CidToWorld() : i.targetCid.CidToWorld();
-											if(IsSegmentCulledWC(c0,c1))
+
+											var cityCid = city.cid;
+											var c1 = cityCid.CidToWorld();
+											if(IsSquareCulledWC(c1,cullSlopSpace))  // this is in pixel space - Should be normalized for screen resolution or world space (1 continent?)
 												continue;
 
-											var c = i.isReturning ? returnColor : Color.Green;
-											if(!(showAll || Spot.IsSelectedOrHovered(i.sourceCid,i.targetCid)))
-											{
-												continue;
-											}
-											// don't double up
-											if(drawTradesHash.Add(i.GetHashCode()))
-											{
-												var t = (tick * i.sourceCid.CidToRandom().Lerp(1.0f,1.375f));
-												//var t = (tick + i.sourceCid.CidToRandom()).Wave(1.5f / 512.0f+0.25f,2.0f / 512f+0.25f);
-												var r = t.Ramp();
-												(int x, int y) _c0, _c1;
-												if(isIncoming ^ i.isReturning)
-												{
-													_c0 = c0; _c1 = c1;
+
+											foreach(var i in isIncoming ? city.tradesIn : city.tradesOut) {
+												var c0 = isIncoming ? i.sourceCid.CidToWorld() : i.targetCid.CidToWorld();
+												if(IsSegmentCulledWC(c0,c1))
+													continue;
+
+												var c = i.isReturning ? returnColor : Color.Green;
+												if(!(showAll || Spot.IsSelectedOrHovered(i.sourceCid,i.targetCid))) {
+													continue;
 												}
-												else
-												{
-													_c0 = c1; _c1 = c0;
+												// don't double up
+												if(drawTradesHash.Add(i.GetHashCode())) {
+													var t = (tick * i.sourceCid.CidToRandom().Lerp(1.0f,1.375f));
+													//var t = (tick + i.sourceCid.CidToRandom()).Wave(1.5f / 512.0f+0.25f,2.0f / 512f+0.25f);
+													var r = t.Ramp();
+													(int x, int y) _c0, _c1;
+													if(isIncoming ^ i.isReturning) {
+														_c0 = c0; _c1 = c1;
+													}
+													else {
+														_c0 = c1; _c1 = c0;
+													}
+													DrawAction((i.isReturning ? i.returnTime : i.arrival) - Sim.simTime,i.travelTime,r,
+														_c0.ToVector(),
+													_c1.ToVector(),c,tradeImages[i.viaWater.Switch(0,1)],
+													true,i,alpha: 255,lineThickness: lineThickness,highlight: false);
 												}
-												DrawAction((i.isReturning ? i.returnTime : i.arrival) - Sim.simTime,i.travelTime,r,
-													_c0.ToVector(),
-												_c1.ToVector(),c,tradeImages[i.viaWater.Switch(0,1)],
-												true,i,alpha: 255,lineThickness: lineThickness,highlight: false);
 											}
+
 										}
-
 									}
 								}
+							
+							}
+							catch(Exception ex) 
+							{ 
 							}
 							drawTradesHash.Clear();
 						}

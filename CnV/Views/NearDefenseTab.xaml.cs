@@ -23,6 +23,7 @@ namespace CnV.Views
 		public float filterTime = 6;
 		public int filterTSTotal = 10000;
 		public int filterTSHome;
+		public bool useHorns;
 		public bool portal { get; set; }
 		public bool onlyHome { get; set; } = true;
 
@@ -282,17 +283,13 @@ namespace CnV.Views
 				Note.Show("To few command slots");
 				return;
 			}
-			var departAt = ServerTime.zero;
+			var departAt = supporter.departure;
+			
 			var _arriveAt = sendAtUI.dateTime;
-			if(waitReturn && !supporter.city.troopsHome.IsSuperSetOf(supporter.tSend)) {
-				//RaidOverview.SendMaybe();
+			
 
-				if(city.MightRaidsRepeat()) {
-					Raiding.Return(city.cid,false,true);
-				}
 
-				departAt = city.GetRaidReturnTime() + TimeSpanS.FromSeconds(15);
-				var canArriveAt = departAt+ (supporter.travel);
+				var canArriveAt = departAt+ (supporter.travel*useHorns.Switch(1.0f,0.5f)).CeilToInt();
 				if(_arriveAt.isNotZero && _arriveAt < canArriveAt) {
 					var result = await AppS.DispatchOnUIThreadTask(async () => {
 						var msg = new ContentDialog() {
@@ -313,7 +310,7 @@ namespace CnV.Views
 						return;
 
 				}
-			}
+			
 			var hours = new TimeSpanS(0);
 			var def = FindValidDefendants(sendViaWater && defendants.Any(d => d.isOnWater),onlyHome,city,ref hours);
 			var success = true;
@@ -321,14 +318,14 @@ namespace CnV.Views
 				var ts = supporter.tSend /  (def.Count);
 				var cid = d.cid;
 
-					success &= await SendTroops.ShowInstance(City.Get(supporter.cid),City.Get(cid),false,sendViaWater,ArmyType.defense,null,ts,_arriveAt,departAt, useHorns:supporter.useHorns);
-				Assert(success);
+					success &= await SendTroops.ShowInstance(City.Get(supporter.cid),City.Get(cid),false,sendViaWater,ArmyType.defense,null,ts,_arriveAt,departAt > Sim.simTime+2 ? departAt : default,useHorns);
+			//	Assert(success);
 				Log($"Sent {ts} from {supporter.cid.AsCity()} to {cid.AsCity()} @{_arriveAt.ToString()}");
 				//	await Task.Delay(500);
 			}
 
-			if(success)
-				supporter.tSend.Clear();
+		//	if(success)
+		//		supporter.tSend.Clear();
 
 			supporter.OnPropertyChanged();
 		}

@@ -71,9 +71,7 @@
            
             <cnv:DateTimeBox x:Name="sendAtUI"  VerticalAlignment="Center" Label="arrive"
                                   ToolTipService.ToolTip="Time at which the defense should arrive. They will leave immediately if there is not enough time, otherwise they will wait and schedule their arrival for this time." />
-            <ToggleButton Content="Wait Return" IsChecked="{x:Bind waitReturn,Mode=TwoWay}" VerticalAlignment="Center" Margin="12"
-                          Width="70" HorizontalAlignment="Center" Style="{ThemeResource ToggleButtonRevealStyle}"
-                      ToolTipService.ToolTip="If on, wait until troops return from raids or to make the arrival time (left), whichever is later" />
+
             <ToggleButton Content="Portal" VerticalAlignment="Center" Margin="12" Click="PropChanged" IsChecked="{x:Bind portal, Mode=TwoWay}"
                           Width="70" HorizontalAlignment="Center" Style="{ThemeResource ToggleButtonRevealStyle}"
                       ToolTipService.ToolTip="If on, there are no restrictions on who can go where (but it won't work if they can't reach their target" />
@@ -86,6 +84,9 @@
 			<ToggleButton Content="Only home" IsChecked="{x:Bind onlyHome, Mode=TwoWay}" VerticalAlignment="Center" Margin="12"  Click="PropChanged"
                           Width="70" HorizontalAlignment="Center" Style="{ThemeResource ToggleButtonRevealStyle}"
                       ToolTipService.ToolTip="If on, the # to send only counts troops at home" />
+			<ToggleButton Content="Horns" IsChecked="{x:Bind useHorns, Mode=TwoWay}" VerticalAlignment="Center" Margin="12"  Click="PropChanged"
+                          Width="70" HorizontalAlignment="Center" Style="{ThemeResource ToggleButtonRevealStyle}"
+                      ToolTipService.ToolTip="If on, horns will be used to speed up defense" />
 			<NumberBox Value="{x:Bind _filterTime,Mode=TwoWay}" Style="{StaticResource NumberBoxRightAlignPositive}" 
                           Header="Max Travel" Width="140" Margin="6,0,6,0" AcceptsExpression="True" SmallChange="0.5"
                           NumberFormatter="{x:Bind cnv:App.formatter2Digit}"
@@ -147,13 +148,13 @@
                         </DataTemplate>
                     </tk:DataGridTemplateColumn.CellTemplate>
                 </tk:DataGridTemplateColumn>
-                <tk:DataGridTextColumn  Header="DT" 
-                                        Binding="{Binding travelTime,Mode=OneTime}"
+                <tk:DataGridTextColumn  Header="Travel" 
+                                        Binding="{Binding travelTime,Mode=OneWay}"
                                         IsReadOnly="True" Tag="travel"
                                             CellStyle="{StaticResource CellCenter}"
                                              />
-                <tk:DataGridTextColumn  Header="RR" 
-                                        Binding="{Binding raidReturn, Mode=OneTime }"
+                <tk:DataGridTextColumn  Header="RaidRet" 
+                                        Binding="{Binding raidReturn, Mode=OneWay }"
                                         IsReadOnly="True" Tag="raidReturn"
                                         >
                     <tk:DataGridTextColumn.CellStyle>
@@ -163,35 +164,26 @@
                     </tk:DataGridTextColumn.CellStyle>
                 </tk:DataGridTextColumn>
                 <tk:DataGridTextColumn  Header="City Name"
-                                        Binding="{Binding name, Mode=OneTime }"
+                                        Binding="{Binding name, Mode=OneWay }"
                                         IsReadOnly="True"
                                             CellStyle="{StaticResource CellLeft}" />
-                <tk:DataGridTextColumn Header="Send TS" Binding="{Binding tsSend,Converter={StaticResource IntConverter}, Mode=OneTime}"
+				<tk:DataGridTextColumn Header="Send TS" Binding="{Binding tsSend,Converter={StaticResource IntConverter}, Mode=OneWay}"
                                        CellStyle="{StaticResource CellRight}" IsReadOnly="True"  Tag="tsSend"
                                         />
-                <tk:DataGridTextColumn Header="Home TS" Binding="{Binding tsHome,Converter={StaticResource IntConverter}, Mode=OneTime}"
+				<tk:DataGridTextColumn Header="Home TS" Binding="{Binding tsHome,Converter={StaticResource IntConverter}, Mode=OneWay}"
                                        CellStyle="{StaticResource CellRight}" IsReadOnly="True" Tag="tsHome"
                                         />
-                <tk:DataGridTextColumn Header="Total TS"  Binding="{Binding tsTotal,Converter={StaticResource IntConverter}, Mode=OneTime}"
+				<tk:DataGridTextColumn Header="Total TS"  Binding="{Binding tsTotal,Converter={StaticResource IntConverter}, Mode=OneWay}"
                                        CellStyle="{StaticResource CellRight}" IsReadOnly="True" Tag="tsTotal"
                                         />
-                <tk:DataGridTextColumn Header="ETA"
+
+				<tk:DataGridTextColumn Header="ETA"
                                        CellStyle="{StaticResource CellCenter}"
-                                       IsReadOnly="False"
+                                       IsReadOnly="True"
                                        ToolTipService.ToolTip="Time at which troops would arrive if sent now without wings"
-                                       Binding="{Binding eta,Converter={StaticResource DateTimeConverter},Mode=OneTime}"
+                                       Binding="{Binding eta,Converter={StaticResource DateTimeConverter},Mode=OneWay}"
                                        />
-                <tk:DataGridTextColumn Header="ETA Horn"
-                                       IsReadOnly="False"
-                                       ToolTipService.ToolTip="Time at which troops would arrive if sent now with wing speedup (2x speed)"
-                                       CellStyle="{StaticResource CellCenter}"
-                                       Binding="{Binding etaWings,Converter={StaticResource DateTimeConverter}, Mode=OneTime}"
-                                       />
-				<tk:DataGridCheckBoxColumn Header="Horn" CanUserSort="False" Binding="{Binding useHorns,Mode=TwoWay}"
-											IsReadOnly="False"
-                                           ToolTipService.ToolTip="If the arrival time is set, horns will be used to make the arrival time, otherwise horns will be used to travel at 2x speed"
-                                       
-                                        />
+
 
 
 			</tk:DataGrid.Columns>

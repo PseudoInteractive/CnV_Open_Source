@@ -20,10 +20,9 @@ namespace CnV
         public string raidReturn => city.raidReturn;
         public uint tsHome => NearDefenseTab.includeOffense ? city.tsHome : city.tsDefCityHome;
         public uint tsTotal => NearDefenseTab.includeOffense ? city.tsTotal : city.tsDefCityTotal;
-        public bool useHorns { get; set; } // splits def and sends in batches for wings
 		public TimeSpanS travel;
 		public int validTargets { get; set; }
-		public string travelTime => travel.Format();
+		public string travelTime => travel.MulRoundUp(NearDefenseTab.instance.useHorns.Switch(1.0f,0.5f)).Format();
 		public TroopTypeCounts tSend = new();
 		public uint tsSend
         {
@@ -31,18 +30,37 @@ namespace CnV
         }
         
 
+        public ServerTime departure {
+			get {
+				ServerTime departAt = Sim.simTime;
+				if(city.troopsHome.IsSuperSetOf(tSend))
+					return departAt;
+				
+				
+				var missing = tSend.SubSaturate( city.troopsHome);
+				
+				foreach(var o in city.outgoing.OrderBy(a=>a.returnTime) ) {
+					if(o.isReturn || o.isRaid) {
+						if(o.troops.Intersect(missing).Any()) {
+
+							//if(o.isRaid && o.isRepeating) {
+							//	Note.Show("Warning:  Raids may need to be stopped");
+							//}
+							departAt = departAt.Max(o.returnTime+2);
+							missing = missing.SubSaturate(o.troops);
+							if(!missing.Any())
+								break;
+						}
+					}
+
+				}
+				return departAt;
+
+				
+			} }
        
-        public DateTimeOffset eta { get => Sim.serverTime + (TimeSpan)(travel);
-			set {
-				NearDefenseTab.instance.SetArrived( new ServerTime(value));
-			}
-		}
-        public DateTimeOffset etaWings { get => Sim.serverTime + 0.5f * (TimeSpan)(travel); 
-			set
-			{
-					NearDefenseTab.instance.SetArrived( new ServerTime(value));
-			}
-		}
+        public ServerTime eta =>departure +  travel.MulRoundUp(NearDefenseTab.instance.useHorns.Switch(1.0f,0.5f)); 
+
         public string troopInfo
         {
             get

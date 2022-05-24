@@ -86,7 +86,7 @@ public static partial class CityUI
 		if (me.isCityOrCastle)
 		{
 			// Look - its my city!
-			if (me.canVisit )
+			if (me.isSubOrMine )
 			{
 
 				//{
@@ -230,7 +230,7 @@ public static partial class CityUI
 			aExport.AddItem("Defense Sheet", me.ExportToDefenseSheet);
 			AApp.AddItem(flyout, "Send Res", (_, _) => SendResDialogue.ShowInstance(City.GetBuild(),me,null,null,palaceDonation:null));
 			AApp.AddItem(flyout, "Near Res", me.ShowNearRes);
-			if (me.canVisit)
+			if (me.isSubOrMine)
 			{
 				aWar.AddItem("Dismiss..",(_,_) => DismissDialog.ShowInstance(me));
 				AApp.AddItem(flyout, "Do the stuff",  (_, _) => me.DoTheStuff());
@@ -499,7 +499,7 @@ public static partial class CityUI
 				break;
 			case VirtualKey.Space:
 			{
-				if(spot.canVisit)
+				if(spot.isSubOrMine)
 					spot.ShowDungeons();
 				else
 					spot.SetFocus(false);
