@@ -104,7 +104,7 @@ namespace CnV.Views
 							if(supporter == null) {
 								supporter = new Supporter() { city = city };
 							}
-							var troops = (onlyHome ? city.troopsHome : city.troopsOwned);
+							var troops = (onlyHome ? city.troopsHome : city.troopsHomeAndReturning);
 							s.Add(supporter);
 							supporter.tSend.Clear();
 
@@ -238,6 +238,11 @@ namespace CnV.Views
 				supporter.tSend.SetInPlace( new(stt.type,stt.supporter.city.troopsHome.GetCount(stt.type)));
 				supporter.NotifyChange();
 			});
+			AApp.AddItem(flyout,"Troops home and returning",(_,_) => {
+				var supporter = stt.supporter;
+				supporter.tSend.SetInPlace( new TroopTypeCount(stt.type,stt.supporter.city.troopsHomeAndReturning.GetCount(stt.type)));
+				supporter.NotifyChange();
+			});
 			AApp.AddItem(flyout,"Total Troops",(_,_) => {
 				var supporter = stt.supporter;
 				supporter.tSend.SetInPlace( new TroopTypeCount(stt.type,stt.supporter.city.troopsOwned.GetCount(stt.type)));
@@ -260,6 +265,10 @@ namespace CnV.Views
 			flyout.SetXamlRoot(text);
 			AApp.AddItem(flyout,"Troops Home",(_,_) => {
 				supporter.tSend =  supporter.city.troopsHome.Where(t => Include(t) );
+				supporter.NotifyChange();
+			});
+			AApp.AddItem(flyout,"Troops home and returning",(_,_) => {
+				supporter.tSend = supporter.city.troopsHomeAndReturning.Where(t=>  Include(t) );
 				supporter.NotifyChange();
 			});
 			AApp.AddItem(flyout,"Total Troops",(_,_) => {

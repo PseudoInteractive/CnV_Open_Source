@@ -82,16 +82,20 @@ public sealed partial class TradeSettingsDialog:DialogG, INotifyPropertyChanged 
 
 
 	}
-	public static void ShowInstance()
+	public static async void ShowInstance()
 	{
 		var rv = instance ?? new TradeSettingsDialog();
+		// once in case of exception
 		rv.woodSource.PropertyChanged-=rv.WoodSource_PropertyChanged;
 		if(!rv.Hide(false))
 		{
 			rv.UpdateItems();
 
-			rv.Show(false);
-			Task.Delay(2000).ContinueWith((_) => rv.woodSource.PropertyChanged+=rv.WoodSource_PropertyChanged);
+			var t = rv.Show(false);
+			await Task.Delay(2000);
+			rv.woodSource.PropertyChanged+=rv.WoodSource_PropertyChanged;
+			await t;
+			rv.woodSource.PropertyChanged-=rv.WoodSource_PropertyChanged;
 		}
 
 	}
