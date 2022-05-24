@@ -56,17 +56,17 @@ namespace CnV
 				if(_departure.isNotZero) {
 					// arrival takes precedence
 					if(arrival.isNotZero) {
-						return _departure.Max(arrival - travelTimeWithHorms);
+						return _departure.Max(arrival - travelTimeWithHorms).Max(Sim.simTime);
 
 					}
-					return _departure;
+					return _departure.Max(Sim.simTime);
 				}
 				
 				
 				if(arrival.isZero) {
 					return Sim.simTime;
 				}
-				return arrival - travelTimeWithHorms;
+				return (arrival - travelTimeWithHorms).Max(Sim.simTime);
 
 			}
 		}
@@ -315,7 +315,7 @@ namespace CnV
 							if(timeAvailable > 0) {
 								var speedupNeeded = (double)travelTime/(double)timeAvailable;
 								Assert(speedupNeeded >= 1);
-								if(speedupNeeded < 2.0) {
+								if(speedupNeeded <= 2.125f) {
 									canMakeIt = true;
 
 
@@ -324,7 +324,7 @@ namespace CnV
 									var ts = (int)troops.TS(); // TODO: 
 									var art = Artifact.GetForPlayerRank(Artifact.ArtifactType.Horn);
 									var tsPerHorn = art.r[13];
-									usedHorns = ((float)(ts *(speedupNeeded-1)/tsPerHorn)).CeilToInt(); ;
+									usedHorns = ((float)(ts *(speedupNeeded.Min(2.0f)-1)/tsPerHorn)).CeilToInt(); ;
 									Note.Show($"{usedHorns} required for {ts} TS");
 
 								}

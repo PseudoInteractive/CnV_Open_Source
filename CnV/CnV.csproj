@@ -77,7 +77,7 @@
 		<PackageReference Include="Microsoft.Identity.Client" Version="4.44.0">
 			<TreatAsUsed>true</TreatAsUsed>
 		</PackageReference>
-		<PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="2.20.1" />
+		<PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="2.21.0" />
 		<PackageReference Include="Microsoft.Toolkit" Version="7.1.2" />
 		<PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
 		<PackageReference Include="Azure.Data.Tables" Version="12.5.0" />
@@ -92,10 +92,10 @@
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.3" />
 		<PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
 		<PackageReference Include="PlayFabAllSDK" Version="1.108.220118" />
-		<PackageReference Include="Syncfusion.Chart.WinUI" Version="20.1.0.56" />
-		<PackageReference Include="Syncfusion.Editors.WinUI" Version="20.1.0.56" />
-		<PackageReference Include="Syncfusion.Grid.WinUI" Version="20.1.0.56" />
-		<PackageReference Include="Syncfusion.Licensing" Version="20.1.0.56" />
+		<PackageReference Include="Syncfusion.Chart.WinUI" Version="20.1.0.57" />
+		<PackageReference Include="Syncfusion.Editors.WinUI" Version="20.1.0.57" />
+		<PackageReference Include="Syncfusion.Grid.WinUI" Version="20.1.0.57" />
+		<PackageReference Include="Syncfusion.Licensing" Version="20.1.0.57" />
 		<PackageReference Include="SharpDX" Version="4.2.0">
 			<TreatAsUsed>true</TreatAsUsed>
 		</PackageReference>
@@ -108,7 +108,7 @@
 		</PackageReference>
 		<PackageReference Include="SharpDX.MediaFoundation" Version="4.2.0" />
 		<PackageReference Include="SharpGen.Runtime.COM" Version="2.0.0-beta.10" />
-		<PackageReference Include="Syncfusion.Scheduler.WinUI" Version="20.1.0.56" />
+		<PackageReference Include="Syncfusion.Scheduler.WinUI" Version="20.1.0.57" />
 		<PackageReference Include="System.Collections.Immutable" Version="7.0.0-preview.4.22229.4">
 			<TreatAsUsed>true</TreatAsUsed>
 		</PackageReference>

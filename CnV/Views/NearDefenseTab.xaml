@@ -207,7 +207,7 @@
                         AutoGenerateColumns="False"
                      Grid.Row="3"
                         ItemsSource="{x:Bind views:NearDefenseTab.supportByTroopTypeEmpty, Mode=OneWay}"
-                       				 RowHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
+                       				
                     RowStyle="{StaticResource DataGridRowStyle}"
 					 IsRightTapEnabled="True"
 					 RightTapped="troopTypeGrid_RightTapped"
@@ -215,7 +215,7 @@
                      CanUserSortColumns="False"
                      GridLinesVisibility="All"
                      
-                     AlternatingRowBackground="#FF103020"
+                    
                      >
             <tk:DataGrid.Columns>
                 <tk:DataGridTemplateColumn Header="Icon" >
