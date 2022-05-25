@@ -135,8 +135,9 @@ public sealed partial class TradeSettingsDialog:DialogG, INotifyPropertyChanged 
 		{
 			new CnVEventCityTradeSettings(city.c,mo).EnqueueAsap();
 		}
-		var reqHash0 = HashCode.Combine(city.requestedResources,city.requestedResourceMaxTravel,city.resourcePaymentRate);
+		var reqHash0 = HashCode.Combine(city.requestedResources,city.requestedResourceMaxTravel,city.resourcePaymentRate,city.requestsOnlyForAlliance);
 		var _resourcePaymentRate=  payRate.FloatValue();
+		var _requestsOnlyForAlliance = false;
 		var _requestedResourceMaxTravel = TimeSpanS.FromHours(maxTravel.Value);
 		var _requestedResources = new Resources(
 			woodRequest.IntValue(),stoneRequest.IntValue(),ironRequest.IntValue(),foodRequest.IntValue()
@@ -147,9 +148,9 @@ public sealed partial class TradeSettingsDialog:DialogG, INotifyPropertyChanged 
 		}
 		else {
 
-			var reqHash1 = HashCode.Combine(_requestedResources,_requestedResourceMaxTravel,_resourcePaymentRate);
+			var reqHash1 = HashCode.Combine(_requestedResources,_requestedResourceMaxTravel,_resourcePaymentRate,_requestsOnlyForAlliance);
 			if(reqHash0 != reqHash1) {
-				new CnVEventCityTradeRequest(city.c,_requestedResources,_resourcePaymentRate,_requestedResourceMaxTravel).EnqueueAsap();
+				new CnVEventCityTradeRequest(city.c,_requestedResources,_resourcePaymentRate,_requestedResourceMaxTravel,_requestsOnlyForAlliance).EnqueueAsap();
 			}
 			Done();
 		}
