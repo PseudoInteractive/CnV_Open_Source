@@ -148,21 +148,27 @@ namespace CnV
 
 				var rv = instance ?? new SendTroops();
 				rv.prior = prior;
-				
-				
-				if(type == ArmyType.defense && !isSettle) {
+
+				if((type == ArmyType.defense && !isSettle)||prior is not null) {
 					if(useHorns is not null)
 						rv.useHorns = useHorns.Value;
 					rv.useHornsCheckbox.Visibility = Visibility.Visible;
 
+				}
+				else {
+					rv.useHorns=false;
+					rv.useHornsCheckbox.Visibility = Visibility.Collapsed;
+
+				}
+
+				if(type == ArmyType.defense && !isSettle) {
+				
 					if(waitReturn is not null)
 						rv.waitReturn = waitReturn.Value;
 					rv.waitReturnCheckbox.Visibility = Visibility.Visible;
 
 				}
 				else {
-					rv.useHorns=false;
-					rv.useHornsCheckbox.Visibility = Visibility.Collapsed;
 
 					rv.waitReturn=false;
 					rv.waitReturnCheckbox.Visibility = Visibility.Collapsed;
@@ -179,7 +185,8 @@ namespace CnV
 					rv.viaWater = prior.isViaWater;
 					rv.type = prior.type;
 					rv.UpdateTroopItems(prior.troops);
-					rv.arrivalUI.SetDateTime(prior.arrival);
+					rv.arrivalUI.Clear();
+//					rv.arrivalUI.SetDateTime(prior.arrival);
 					//rv.arrival.Visibility = !wantReturn ? Visibility.Visible : Visibility.Collapsed;
 					rv.buttoGo.Content = "Return";
 					rv.buttoGo.IsEnabled = prior.sourceCity.outgoing.Contains(prior);
@@ -456,7 +463,7 @@ namespace CnV
 
 			bool okay;
 			if(isReturn) {
-				CnVEventReturnTroops.TryReturn(prior,ts.isEmpty || ts.IsSuperSetOf(prior.troops) ? default : ts);
+				CnVEventReturnTroops.TryReturn(prior,ts.isEmpty || ts.IsSuperSetOf(prior.troops) ? default : ts, useHorns);
 				okay = true;
 			}
 			else {

@@ -214,6 +214,7 @@
                      CanUserReorderColumns="False"
                      CanUserSortColumns="False"
                      GridLinesVisibility="All"
+					 IsReadOnly="False"
                      
                     
                      >
@@ -232,7 +233,7 @@
                 <tk:DataGridTemplateColumn Header="Send" IsReadOnly="False">
                     <tk:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate x:DataType="cnv:SupportByTroopType">
-							<NumberBox Text= "{x:Bind send,Mode=TwoWay}"
+							<NumberBox Value= "{x:Bind send,Mode=TwoWay}"
                                       ToolTipService.ToolTip="Troops to send.  Right click to select troops home or total troops (if troops will return before the send).  You can use expressions i.e. if you want to send half the troops, right click and set Troops Home, then add /2 after the number"
                                    RightTapped="TTSendRightTapped" 
                                         />
@@ -240,7 +241,7 @@
                     </tk:DataGridTemplateColumn.CellTemplate>
                     <tk:DataGridTemplateColumn.CellEditingTemplate>
                         <DataTemplate x:DataType="cnv:SupportByTroopType">
-                            <NumberBox Text= "{x:Bind send,Mode=TwoWay}" HorizontalContentAlignment="Right" AcceptsExpression="True" SmallChange="1000" LargeChange="10000" VerticalAlignment="Center" FontSize="12"
+							<NumberBox Value= "{x:Bind send,Mode=TwoWay}" HorizontalContentAlignment="Right" AcceptsExpression="True" SmallChange="1000" LargeChange="10000" VerticalAlignment="Center" FontSize="12"
                                         />
                         </DataTemplate>
                     </tk:DataGridTemplateColumn.CellEditingTemplate>

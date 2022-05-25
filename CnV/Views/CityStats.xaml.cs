@@ -449,7 +449,7 @@ namespace CnV
 		internal string TroopsOwnedS => city?.troopsOwned.Format(separator: ',');
 		internal string IncomingReinforcements => city?.incomingReinforcements.Format(separator: ',');
 
-		internal Visibility TroopsHomeVisible => city?.troopsOwned != new TroopTypeCounts(city.troopsHere) ? Visibility.Visible : Visibility.Collapsed;
+		internal Visibility TroopsHomeVisible => city?.troopsOwned !=city.troopsHere ? Visibility.Visible : Visibility.Collapsed;
 
 		internal Visibility incomingVisible => city.hasIncomingAttacks ? Visibility.Visible : Visibility.Collapsed;
 
@@ -1348,34 +1348,31 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 					var needed = toUse- Player.active.ArtifactCount(artifact);
 					if(!Artifact.Get(artifact).IsOkayToUse(toUse))
 						return;
-					SocketClient.DeferSendStart();
-
+					
 					// do we need to return first
 					Assert(army.isDefense);
 					// return troops first
-					if( army.arrived)
-					{
-						CnVEventReturnTroops.TryReturn(army); 
+					if(army.arrived) {
+						CnVEventReturnTroops.TryReturn(army,default,true);
 					}
+					else {
+						SocketClient.DeferSendStart();
 
-					try
-					{
-						if(needed > 0)
-						{
-							new CnVEventPurchaseArtifacts((ushort)artifact,(ushort)needed,Player.active.id).EnqueueAsap();
+						try {
+							if(needed > 0) {
+								new CnVEventPurchaseArtifacts((ushort)artifact,(ushort)needed,Player.active.id).EnqueueAsap();
+							}
+
+							(new CnVEventUseArtifacts(city.c) { artifactId = (ushort)artifact,count = (ushort)toUse,aux=id }).EnqueueAsap();
+
 						}
+						catch(Exception _ex) {
+							LogEx(_ex);
 
-						(new CnVEventUseArtifacts(city.c) { artifactId = (ushort)artifact,count = (ushort)toUse,aux=id }).EnqueueAsap();
-
-					}
-					catch(Exception _ex)
-					{
-						LogEx(_ex);
-
-					}
-					finally
-					{
-						SocketClient.DeferSendEnd();
+						}
+						finally {
+							SocketClient.DeferSendEnd();
+						}
 					}
 				}
 			}
