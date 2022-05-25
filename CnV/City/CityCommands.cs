@@ -94,9 +94,12 @@ public partial class City
 
 				if(isTemple)
 					sb.AppendLinePre($"L{blessData.level} palace of\n{blessData.virtue.EnumName()}");
-				if(isBlessed)
+				if(isBlessed) {
 					sb.AppendLinePre($"Blessed{(isTemple ? "" : " with "+blessData.virtue.EnumName())}\nuntil {blessData.blessedUntil}");
-
+					if(share) {
+						sb.AppendLinePre($"needed:\n{templeMissing.Format("\n")}");
+					}
+				}
 
 				if(share & !city.notes.IsNullOrEmpty())
 					sb.AppendLinePre(city.notes.AsSpan().Wrap(20));

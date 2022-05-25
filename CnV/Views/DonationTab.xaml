@@ -158,14 +158,23 @@
                                                       HeaderText="Travel"
 									DisplayTimeFormat="HH:mm"
                                              />
-								<sf:GridNumericColumn MappingName="wood" HeaderText="&#xA040;"
+								<sf:GridNumericColumn MappingName="wood" HeaderText="Send &#xA040;"
 				                            DisplayNumberFormat="N0"
                                                      TextAlignment="Right"
                                               />
-								<sf:GridNumericColumn MappingName="stone" HeaderText="&#xA041;"
+								<sf:GridNumericColumn MappingName="stone" HeaderText="Send &#xA041;"
 				                            DisplayNumberFormat="N0"
                                                      TextAlignment="Right"
                                               />
+								<sf:GridNumericColumn MappingName="neededWood" HeaderText="Needed &#xA040;"
+				                            DisplayNumberFormat="N0"
+                                                     TextAlignment="Right"
+                                              />
+								<sf:GridNumericColumn MappingName="neededStone" HeaderText="Needed &#xA041;"
+				                            DisplayNumberFormat="N0"
+                                                     TextAlignment="Right"
+                                              />
+								
 								<sf:GridNumericColumn MappingName="level" />
 								<sf:GridTextColumn MappingName="notes"/>
 
@@ -175,7 +184,7 @@
 										   TextAlignment="Left"
 										 
 										    />
-								<sf:GridDateColumn  MappingName="BlessedUntil"
+								<sf:GridDateColumn  UseBindingValue="True" ValueBinding="{Binding blessedUntil,Converter={StaticResource DateTimeConverter},Mode=OneWay}"
                                DisplayDateFormat="MM/dd HH:mm"
                                              />
 

@@ -140,7 +140,7 @@ namespace CnV.Views
 			if (sel != null)
 			{
 
-				if(sel.incoming.Where(a => a.shareInfo).ToArray().SyncList(instance.targetIncoming)) {
+				if(sel.incoming.Where(a => a.shareInfo).OrderBy(a=>a.arrival).ToArray().SyncList(instance.targetIncoming)) {
 					if(Settings.fetchFullHistory) {
 						var tab = HitHistoryTab.instance;
 						tab.SetFilter(sel);

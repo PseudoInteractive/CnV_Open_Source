@@ -13,7 +13,7 @@ namespace CnV.Views
 
 		public static NearDefenseTab instance;
 		public static bool IsVisible() => instance.isFocused;
-		public bool waitReturn { get; set; }
+		const bool waitReturn = true;
 		public bool sendViaWater { get; set; }
 
 		public static NotifyCollection<City> defendants = new();
@@ -292,33 +292,33 @@ namespace CnV.Views
 				Note.Show("To few command slots");
 				return;
 			}
-			var departAt = supporter.departure;
+		//	var departAt = supporter.departure;
 			
 			var _arriveAt = sendAtUI.dateTime;
 			
 
 
-				var canArriveAt = departAt+ (supporter.travel*useHorns.Switch(1.0f,0.5f)).CeilToInt();
-				if(_arriveAt.isNotZero && _arriveAt < canArriveAt) {
-					var result = await AppS.DispatchOnUIThreadTask(async () => {
-						var msg = new ContentDialog() {
-							Title = "Home Too late to make arrival time",
-							Content = "Would you like to schedule as soon as they return?",
-							PrimaryButtonText = "Yes",
-							CloseButtonText = "Cancel"
-						};
-						ElementSoundPlayer.Play(ElementSoundKind.Show);
+				//var canArriveAt = departAt+ (supporter.travel*useHorns.Switch(1.0f,0.5f)).CeilToInt();
+				//if(_arriveAt.isNotZero && _arriveAt < canArriveAt) {
+				//	var result = await AppS.DispatchOnUIThreadTask(async () => {
+				//		var msg = new ContentDialog() {
+				//			Title = "Home Too late to make arrival time",
+				//			Content = "Would you like to schedule as soon as they return?",
+				//			PrimaryButtonText = "Yes",
+				//			CloseButtonText = "Cancel"
+				//		};
+				//		ElementSoundPlayer.Play(ElementSoundKind.Show);
 
-						if(await msg.ShowAsync2() != ContentDialogResult.Primary) {
-							return false;
-						}
-						_arriveAt = ServerTime.zero;
-						return true;
-					});
-					if(result == false)
-						return;
+				//		if(await msg.ShowAsync2() != ContentDialogResult.Primary) {
+				//			return false;
+				//		}
+				//		_arriveAt = ServerTime.zero;
+				//		return true;
+				//	});
+				//	if(result == false)
+				//		return;
 
-				}
+				//}
 			
 			var hours = new TimeSpanS(0);
 			var def = FindValidDefendants(sendViaWater && defendants.Any(d => d.isOnWater),onlyHome,city,ref hours);
@@ -327,7 +327,7 @@ namespace CnV.Views
 				var ts = supporter.tSend /  (def.Count);
 				var cid = d.cid;
 
-					success &= await SendTroops.ShowInstance(City.Get(supporter.cid),City.Get(cid),false,sendViaWater,ArmyType.defense,null,ts,_arriveAt,departAt > Sim.simTime+2 ? departAt : default,useHorns);
+					success &= await SendTroops.ShowInstance(City.Get(supporter.cid),City.Get(cid),false,sendViaWater,ArmyType.defense,null,ts,_arriveAt,useHorns:useHorns,waitReturn:waitReturn);
 			//	Assert(success);
 				Log($"Sent {ts} from {supporter.cid.AsCity()} to {cid.AsCity()} @{_arriveAt.ToString()}");
 				//	await Task.Delay(500);

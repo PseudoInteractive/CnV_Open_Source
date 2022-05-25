@@ -41,9 +41,7 @@ namespace CnV
 		public string player => target.playerName;
 		public string virtue => target.blessData.virtue.EnumName(); // only for temple
 		public ServerTime blessedUntil => target.blessData.blessedUntil; // only for temple
-		public DateTime BlessedUntil => blessedUntil; // only for temple
-													  //public Resources resoucesToSend;
-
+	
 		internal static ConcurrentHashSet<WeakReference<DonationOrder>> all = new();
 
 		public Resources resoucesToSend {
@@ -97,6 +95,10 @@ namespace CnV
 		public int tradeTransport => DonationTab.ViaWater ? (senderCity.shipsHome - Settings.tradeSendReserveShips).Max(0)*10_000 : (senderCity.cartsHome - Settings.tradeSendReserveCarts).Max(0)*1000;
 		public int wood => resoucesToSend.wood;
 		public int stone => resoucesToSend.stone;
+
+		public int neededWood => target.templeMissing.wood;
+		public int neededStone => target.templeMissing.stone;
+
 
 		public string goldReward => (resoucesToSend.sum * target.resourcePaymentRate).RoundToInt().Format();
 

@@ -409,7 +409,7 @@ namespace CnV
 
 		}
 		//internal DebounceA buildCityChangeDebounce = new(BuildCityChanged) { runOnUiThread=true,debounceDelay=100 };
-		internal Visibility palaceVisible => city.blessData.isValid.Switch(Visibility.Collapsed,Visibility.Visible);
+		internal Visibility palaceVisible => city.blessData.isBlessed.Switch(Visibility.Collapsed,Visibility.Visible);
 		internal string palaceVirtue => city.blessData.virtue.EnumName();
 		internal string palaceInfo { get{
 				using var sb = new PooledStringBuilder();

@@ -94,6 +94,25 @@
 										 
 									
 										    />
+				<sf:GridNumericColumn MappingName="blessData.wood" HeaderText="Stored &#xA040;"
+				                            DisplayNumberFormat="N0"
+                                                     TextAlignment="Right"
+                                              />
+				<sf:GridNumericColumn MappingName="blessData.stone" HeaderText="Stored &#xA041;"
+				                            DisplayNumberFormat="N0"
+                                                     TextAlignment="Right"
+                                              />
+
+				<sf:GridNumericColumn MappingName="templeMissing._wood" HeaderText="Needed &#xA040;"
+				                            DisplayNumberFormat="N0"
+                                                     TextAlignment="Right"
+                                              />
+				<sf:GridNumericColumn MappingName="templeMissing._stone" HeaderText="Needed &#xA041;"
+				                            DisplayNumberFormat="N0"
+                                                     TextAlignment="Right"
+                                              />
+				
+				
 			</sf:SfDataGrid.Columns>
 			
 

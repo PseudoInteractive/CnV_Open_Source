@@ -26,6 +26,7 @@ namespace CnV
 		protected override string title => "Use/Purchase Artifact";
 		bool free;
 		public Artifact a;
+		WorldC explicitTarget;
 		public ArtifactDialogue() 
 		{
 			this.InitializeComponent();
@@ -34,9 +35,10 @@ namespace CnV
 			//if(target is not null)
 			//	Target=target;
 		}
-		public static void ShowInstance(Artifact artifact, bool free = false)
+		public static void ShowInstance(Artifact artifact, bool free = false,WorldC explicitTarget=default)
 		{
 			var rv = instance ?? new ArtifactDialogue();
+			rv.explicitTarget = explicitTarget;
 			rv.a = artifact;
 			rv.free = free;
 		//	rv.HeroContent.Focus(FocusState.Programmatic);
@@ -51,11 +53,14 @@ namespace CnV
 		
 
 
-		private void Button_Click(object sender,RoutedEventArgs e)
+		private async void Button_Click(object sender,RoutedEventArgs e)
 		{
 			var wanted = count.Value.RoundToInt();
 			int have = a.owned;
 			if(!a.IsOkayToUse(wanted))
+				return;
+			var target = explicitTarget != 0 ? explicitTarget :  a.type is (Artifact.ArtifactType.Arch or Artifact.ArtifactType.Pillar) ? await XamlHelper.SelectBuildOrFocus() :default;
+			if(target == WorldC.Nan)
 				return;
 
 			SocketClient.DeferSendStart();
@@ -63,8 +68,12 @@ namespace CnV
 			{
 				if(wanted > have)
 					(new CnVEventPurchaseArtifacts( (ushort)a.id,(ushort)(wanted-have), Player.active.id, free:free )).EnqueueAsap();
-				if(wanted > 0 && !free)
-					(new CnVEventUseArtifacts(City.build) { artifactId = (ushort)a.id,count = (ushort)wanted,aux=0 }).EnqueueAsap();
+				if(wanted > 0 && !free) {
+					
+					
+					
+					(new CnVEventUseArtifacts((WorldC)City.build) { artifactId = (ushort)a.id,count = (ushort)wanted,aux=target }).EnqueueAsap();
+				}
 			}
 			catch(Exception ex)
 			{

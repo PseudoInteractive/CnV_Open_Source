@@ -32,30 +32,7 @@ namespace CnV
 
         public ServerTime departure {
 			get {
-				ServerTime departAt = Sim.simTime;
-				if(city.troopsHome.IsSuperSetOf(tSend))
-					return departAt;
-				
-				
-				var missing = tSend.SubSaturate( city.troopsHome);
-				
-				foreach(var o in city.outgoing.OrderBy(a=>a.returnTime) ) {
-					if(o.isReturn || o.isRaid) {
-						if(o.troops.Intersect(missing).Any()) {
-
-							//if(o.isRaid && o.isRepeating) {
-							//	Note.Show("Warning:  Raids may need to be stopped");
-							//}
-							departAt = departAt.Max(o.returnTime+2);
-							missing = missing.SubSaturate(o.troops);
-							if(!missing.Any())
-								break;
-						}
-					}
-
-				}
-				return departAt;
-
+				return city.WhenWillEnoughTroopsReturnToSend(tSend,considerDeparting: true);
 				
 			} }
        

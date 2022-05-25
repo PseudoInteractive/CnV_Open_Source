@@ -855,9 +855,11 @@ internal partial class GameClient
 					//
 					foreach(var shrine in Shrine.all)
 					{
-						foreach(var l in shrine.lit) {
+						foreach(var l in shrine.maybeLit) {
 							var c = l;
 							if(IsCulledWC(c))
+								continue;
+							if(!City.Get(c).isBlessed)
 								continue;
 							Material sprite = blessedMaterials[(int)shrine.virtue];
 							float sizeGain = 0.5f;

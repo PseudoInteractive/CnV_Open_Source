@@ -32,6 +32,17 @@ namespace CnV
 				}
 			}
 		}
+		public bool WaitReturn {
+			get => waitReturn;
+			set {
+				if(value!=waitReturn) {
+					waitReturn=value;
+					UpdateTravelTime();
+				}
+			}
+		}
+
+		internal bool waitReturn;
 		internal bool isReturn => prior != null;
 		internal Army prior;
 		protected override string title => $"{(isReturn ? "Return " : String.Empty)}{(isSettle ? "Settle" : target.isBoss ? "NPC Hit" : Army.typeStrings[(int)type])} => {target}";
@@ -39,7 +50,6 @@ namespace CnV
 		internal City city;
 		internal City target;
 		internal ArmyType type;
-		internal ServerTime _departure;
 		internal ServerTime arrival {
 			get {
 				var a = this.arrivalUI.dateTime;
@@ -53,13 +63,14 @@ namespace CnV
 		internal ServerTime departure {
 			get {
 				var arrival = this.arrivalUI.dateTime;
-				if(_departure.isNotZero) {
+				if(waitReturn ) {
+					var _departure = city.WhenWillEnoughTroopsReturnToSend(troops);
 					// arrival takes precedence
 					if(arrival.isNotZero) {
 						return _departure.Max(arrival - travelTimeWithHorms).Max(Sim.simTime);
 
 					}
-					return _departure.Max(Sim.simTime);
+					return  _departure.Max(Sim.simTime);
 				}
 				
 				
@@ -125,7 +136,7 @@ namespace CnV
 		bool isDefense => type==ArmyType.defense && !isSettle;
 		int splits => isCavernRaid ? splitsCombo.SelectedIndex+1 : 1;
 
-		public static Task<bool> ShowInstance(City city = null,City target = null,bool isSettle = false,bool viaWater = false,ArmyType type = ArmyType.nop,Army? prior = null,TroopTypeCounts? troops = null,ServerTime arrival = default,ServerTime depart = default, bool ? useHorns=null) {
+		public static Task<bool> ShowInstance(City city = null,City target = null,bool isSettle = false,bool viaWater = false,ArmyType type = ArmyType.nop,Army? prior = null,TroopTypeCounts? troops = null,ServerTime arrival = default, bool ? useHorns=null, bool? waitReturn=null) {
 			try {
 				if(city == target && prior is null) {
 					AppS.MessageBox("Cannot send to self");
@@ -144,13 +155,19 @@ namespace CnV
 						rv.useHorns = useHorns.Value;
 					rv.useHornsCheckbox.Visibility = Visibility.Visible;
 
+					if(waitReturn is not null)
+						rv.waitReturn = waitReturn.Value;
+					rv.waitReturnCheckbox.Visibility = Visibility.Visible;
 
 				}
 				else {
 					rv.useHorns=false;
 					rv.useHornsCheckbox.Visibility = Visibility.Collapsed;
+
+					rv.waitReturn=false;
+					rv.waitReturnCheckbox.Visibility = Visibility.Collapsed;
 				}
-				rv._departure = depart;
+				//rv._departure = depart;
 			
 
 				if(prior is not null) {
@@ -200,8 +217,8 @@ namespace CnV
 					}
 					else if(arrival.isNotZero)
 						rv.arrivalUI.SetDateTime(arrival);
-					else if(depart.isNotZero)
-						rv.arrivalUI.SetDateTime(depart + rv.travelTimeWithHorms);
+	//				else if(depart.isNotZero)
+	//					rv.arrivalUI.SetDateTime(depart + rv.travelTimeWithHorms);
 
 
 					rv.armyTypeCombo.Visibility = isAttack ? Visibility.Visible : Visibility.Collapsed;
@@ -347,7 +364,7 @@ namespace CnV
 						Note.Show($"{usedHorns} required for {ts} TS");
 					}
 				}
-				if(arrivalTime == default) {
+				if(arrivalTime == default && !waitReturn) {
 					// check for enough troops
 					if(!city.troopsHome.IsSuperSetOf(troops)) {
 						AppS.MessageBox($"Not enough troops. Here:\n{city.troopsHome.Format()}");
@@ -483,7 +500,7 @@ namespace CnV
 				//if(arrival == default)
 				//	arrival = departure + travelTimeWithHorms;
 
-				okay =  Army.Send(ts,flags,city,target.cid,type,transport,arrival,_departure);
+				okay =  Army.Send(ts,flags,city,target.cid,type,transport,arrival,departure);
 
 			}
 			if(okay)
