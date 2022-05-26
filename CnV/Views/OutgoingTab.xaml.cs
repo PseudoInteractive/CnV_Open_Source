@@ -99,7 +99,7 @@ namespace CnV.Views
 																							  w.testContinentFilter
 																							&& (instance.includeInternal || !w.isAllyOrNap)).OrderBy(w => w.firstIncoming).ToArray();
 							_targets.SyncList(instance.targets);
-							UpdateTargetIncoming();
+							UpdateTargetIncoming(false);
 						}
 						catch(Exception e) {
 							LogEx(e);
@@ -133,7 +133,7 @@ namespace CnV.Views
 
 		//static Debounce selChanged = new Debounce(SelChanged) { runOnUiThread = true };
 		static City lastSelected;
-		static void UpdateTargetIncoming()
+		static void UpdateTargetIncoming(bool showHistory)
 		{
 			var sel = instance.attackerGrid.SelectedItem as Spot;
 			lastSelected =sel;
@@ -141,16 +141,10 @@ namespace CnV.Views
 			{
 
 				if(sel.incoming.Where(a => a.shareInfo).OrderBy(a=>a.arrival).ToArray().SyncList(instance.targetIncoming)) {
-					if(Settings.fetchFullHistory) {
+					if(showHistory) {
 						var tab = HitHistoryTab.instance;
 						tab.SetFilter(sel);
-						if(!tab.isFocused) {
-							tab.ShowOrAdd(true,onlyIfClosed: true);
-
-						}
-						else {
-							tab.refresh.Go();
-						}
+						
 					}
 				}
 			}
@@ -165,7 +159,7 @@ namespace CnV.Views
 			if (!isOpen)
 				return;
 			if(instance.attackerGrid.SelectedItem as Spot != lastSelected) {
-				AppS.QueueOnUIThread(UpdateTargetIncoming);
+				AppS.QueueOnUIThread(() => UpdateTargetIncoming(true) );
 		
 			}
 

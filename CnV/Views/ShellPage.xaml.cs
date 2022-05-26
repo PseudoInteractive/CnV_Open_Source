@@ -1624,12 +1624,12 @@ namespace CnV.Views
 		private async void TimeForwardClick(object sender,RoutedEventArgs e) {
 			var dt = TimeSpanS.FromHours(gotoTimeOffset.Value);
 
-			if(!AppS.isSinglePlayer) {
-				if(AppS.isTest) {
-					(new SocketSimControlArgs() { timeScale = IServerTime.timeScale,deltaServerTickOffset=dt }).SendToServer();
-					return;
-				}
-			}
+			//if(!AppS.isSinglePlayer) {
+			//	if(AppS.isTest) {
+			//		(new SocketSimControlArgs() { timeScale = IServerTime.timeScale,deltaServerTickOffset=dt }).SendToServer();
+			//		return;
+			//	}
+			//}
 			Sim.GotoTime(Sim.simTime +dt);
 		}
 

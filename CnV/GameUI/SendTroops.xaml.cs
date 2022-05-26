@@ -160,8 +160,8 @@ namespace CnV
 					rv.useHornsCheckbox.Visibility = Visibility.Collapsed;
 
 				}
-
-				if(type == ArmyType.defense && !isSettle) {
+				var isAttack = type is (>=Army.attackFirst and <= Army.attackLast);
+				if((type == ArmyType.defense||isAttack) && !isSettle) {
 				
 					if(waitReturn is not null)
 						rv.waitReturn = waitReturn.Value;
@@ -204,7 +204,7 @@ namespace CnV
 					rv.isSettle = isSettle;
 					rv.viaWater = viaWater;
 					rv.UpdateTroopItems(troops);
-					var isAttack = type is (>=Army.attackFirst and <= Army.attackLast);
+					
 					rv.arrivalUI.Clear();
 					if(isAttack && rv.type is (>=Army.attackFirst and <= Army.attackLast)) {
 						// leave it
@@ -372,14 +372,14 @@ namespace CnV
 					Note.Show($"{usedHorns} required for {ts} TS");
 				}
 			}
-				if(arrivalTime == default && !waitReturn && !isDefense) {
+				if(arrivalTime == default && !waitReturn && (prior==null) ) {
 					// check for enough troops
 					if(!city.troopsHome.IsSuperSetOf(troops)) {
 						AppS.MessageBox($"Not enough troops. Here:\n{city.troopsHome.Format()}");
 						return (false, 0);
 					}
 				}
-				if(!troopItems.Any(a => a.count > 0)) {
+				if(!troopItems.Any(a => a.count > 0)&& (prior==null)) {
 					if(verbose) AppS.MessageBox($"Please send something");
 					return (false, 0);
 				}

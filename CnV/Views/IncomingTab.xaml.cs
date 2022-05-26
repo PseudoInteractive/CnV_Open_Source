@@ -182,7 +182,7 @@ namespace CnV.Views
 								instance.defenderGrid.ScrollItemIntoView(sel);
 
 							}
-							instance.UpdateArmyGrid(true,true);
+							instance.UpdateArmyGrid(true,false);
 						}
 						catch(Exception ex) { LogEx(ex); }
 
@@ -239,13 +239,7 @@ namespace CnV.Views
 						var tab = HitHistoryTab.instance;
 						tab.SetFilter(sel);
 
-						if(!tab.isFocused) {
-							tab.ShowOrAdd(true,onlyIfClosed: true);
-
-						}
-						else {
-							tab.refresh.Go();
-						}
+						
 					}
 				}
 				else {

@@ -216,12 +216,13 @@ public static partial class CityUI
 			}
 
 
-			aWar.AddItem("Attack",       (_, _) => Spot.JSAttack(cid));
+		//	aWar.AddItem("Attack",       (_, _) => Spot.JSAttack(cid));
 			aWar.AddItem("Near Defence", me.DefendMe);
-			//if (me.incoming.Any())
+			if (me.incoming.Any())
 				aWar.AddItem("Incoming", me.ShowIncoming);
+			aWar.AddItem("Hits", me.ShowHitHistory );
 			//if(me.outgoing.Any())
-				aWar.AddItem("Outgoing",me.ShowOutgoing);
+			
 			//	if (Raid.test)
 			aWar.AddItem("Send Defence",            (_, _) => City.GetBuild().SendDefence(WorldC.FromCid(cid) ));
 		//	aWar.AddItem("Recruit Sen",             (_, _) => Recruit.Send(cid, ttSenator, 1, true));
@@ -559,20 +560,19 @@ public static partial class CityUI
 				tab.refresh.Go();
 		}
 	}
-	public static async void ShowIncoming(this City me)
-	{
-	
+	public static void ShowIncoming(this City me) {
+		if(me.isInPlayerAlliance) {
+
+
 			var tab = IncomingTab.instance;
 			AppS.DispatchOnUIThread(() => tab.Show());
-			
-			AppS.DispatchOnUIThreadIdle(() =>
-										{
-											tab.defenderGrid.SetFocus(me);
-										});
+
+			AppS.DispatchOnUIThreadIdle(() => {
+				tab.defenderGrid.SetFocus(me);
+			});
 
 		}
-		public static async void ShowOutgoing(this City me)
-		{
+		else {
 			var tab = OutgoingTab.instance;
 			AppS.DispatchOnUIThread(() => tab.Show());
 			AppS.DispatchOnUIThreadIdle(() =>
@@ -580,7 +580,12 @@ public static partial class CityUI
 											tab.attackerGrid.SetFocus(me);
 										});
 		}
-
+	}
+	public static void ShowHitHistory(this City me) {
+			var tab = HitHistoryTab.instance;
+			AppS.DispatchOnUIThread(() => tab.SetFilter(me) );
+	
+	}
 
 
 //	public static async void DiscordClaim(WorldC cid)

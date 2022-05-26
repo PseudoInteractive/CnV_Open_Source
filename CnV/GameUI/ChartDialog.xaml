@@ -43,11 +43,11 @@
 			</sfc:SfCartesianChart.Legend>
 			
 			<sfc:SfCartesianChart.PrimaryAxis>
-				<sfc:DateTimeAxis  Interval="1" IntervalType="Days" LabelFormat="MM/dd"  ShowTrackballInfo="True"  LabelClicked="PrimaryAxisClicked" />
+				<sfc:DateTimeAxis  Interval="1" IntervalType="Days" LabelFormat="MM/dd"    LabelClicked="PrimaryAxisClicked" />
 			</sfc:SfCartesianChart.PrimaryAxis>
 
 			<sfc:SfCartesianChart.SecondaryAxis>
-				<sfc:NumericalAxis   ShowTrackballInfo="True" LabelClicked="SecondaryAxisClicked" />
+				<sfc:NumericalAxis    LabelClicked="SecondaryAxisClicked" />
 			</sfc:SfCartesianChart.SecondaryAxis>
 			<sfc:SfCartesianChart.Behaviors>
 				<sfc:ChartZoomPanBehavior   />

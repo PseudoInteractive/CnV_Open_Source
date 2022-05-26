@@ -13,6 +13,11 @@ namespace CnV.Views
 				cityFilter.AddIfAbsent(c);
 				cityFilter.OnReset();
 				cityFilterCombo.SelectedItem = c;
+				if(!isFocused) {
+					ShowOrAdd(true,onlyIfClosed: false);
+
+				}
+
 			});
 		}
 		ObservableCollection<BattleReport> reports = new(); 
