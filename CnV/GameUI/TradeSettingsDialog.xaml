@@ -94,7 +94,8 @@
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="*" />
 					<ColumnDefinition Width="*" />
-				</Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*" />
+					</Grid.ColumnDefinitions>
 
 				<NumberBox Grid.Column="0"  x:Name="cartReserve" Margin="8,2"  Description="&#xA04D; % Reserved"
 						   ToolTipService.ToolTip="This % carts will not be used to transport overflow to the destination city.  They will be reserved for trade requests from other cities" 
@@ -102,8 +103,10 @@
 				<NumberBox Grid.Column="1"  x:Name="shipReserve" Margin="8,2" Description="&#xA04E; % Reserved"
 						   ToolTipService.ToolTip="This % ships will not be used to transport overflow to the destination city.  They will be reserved for trade requests from other cities" 
 					   SmallChange="5"/>
-				
-			</Grid >
+
+					<CheckBox Grid.Column="2" x:Name="protectResources"  Content="Protect resources" ToolTipService.ToolTip="If set, city attempts to keep the resources specified in 'Limit Resources' on hand, when resources fall below the 'Limit Resqources' values, trades will not be sent out due to requsts from other cities" />
+
+				</Grid >
 		</StackPanel>
 
 		<Grid HorizontalAlignment="Stretch" Grid.Row="2" BorderThickness="1" Margin="0,4"
@@ -134,8 +137,8 @@
 				<NumberBox Grid.Column="1" Grid.Row="2" x:Name="maxTravel" Margin="8,2" Header="Max Travel (hours)"  ToolTipService.ToolTip="Max resource transit time for request"
 					   SmallChange="0.125" />
 
+				<CheckBox Grid.Column="2"  Grid.Row="2" x:Name="limitRequestsToAlliance"  Content="Limit requests to alliance" ToolTipService.ToolTip="If set, offers to buy resources for gold will only be available to alliance members, otherwise they will be public offers" />
 			</Grid>
-		<CheckBox Grid.Row="3" x:Name="protectResources"  Content="Protect resources" ToolTipService.ToolTip="If set, city only send resources in excess of its send levels (i.e. protect resources below the send level from requests)" />
 
 		<Button Grid.Row="3"   Content="Done" HorizontalAlignment="Right" Click="DoneClick" Margin="8,4" />
 

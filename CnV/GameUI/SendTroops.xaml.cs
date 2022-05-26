@@ -149,7 +149,7 @@ namespace CnV
 				var rv = instance ?? new SendTroops();
 				rv.prior = prior;
 
-				if((type == ArmyType.defense && !isSettle)||prior is not null) {
+				if((type == ArmyType.defense && !isSettle)||(prior is not null&&prior.isDefense)) {
 					if(useHorns is not null)
 						rv.useHorns = useHorns.Value;
 					rv.useHornsCheckbox.Visibility = Visibility.Visible;
@@ -327,51 +327,52 @@ namespace CnV
 						return (false, 0);
 					}
 				}
+			}
 				// need wings?
 				var arrivalTime = arrivalUI.dateTime;
-				if(arrivalTime != default) {
-					var travelTime = this.travelTime;
-					Assert(travelTime > 0);
-					var canMakeIt =  departure + travelTime <= arrivalTime;
-					if(!canMakeIt) {
-						if(useHorns) {
-							var timeAvailable = (arrivalTime -departure);
-							if(timeAvailable > 0) {
-								var speedupNeeded = (double)travelTime/(double)timeAvailable;
-								Assert(speedupNeeded >= 1);
-								if(speedupNeeded <= 2.125f) {
-									canMakeIt = true;
+			if(arrivalTime != default) {
+				var travelTime = this.travelTime;
+				Assert(travelTime > 0);
+				var canMakeIt = departure + travelTime <= arrivalTime;
+				if(!canMakeIt) {
+					if(useHorns) {
+						var timeAvailable = (arrivalTime -departure);
+						if(timeAvailable > 0) {
+							var speedupNeeded = (double)travelTime/(double)timeAvailable;
+							Assert(speedupNeeded >= 1);
+							if(speedupNeeded <= 2.125f) {
+								canMakeIt = true;
 
 
-									//		1 + horns*tsPerHorn /ts  = speedupNeeded 
-									//  horns*tsPerHorn /ts  = ts * (speedupNeeded-1)/tsPerHorn
-									var ts = (int)troops.TS(); // TODO: 
-									var art = Artifact.GetForPlayerRank(Artifact.ArtifactType.Horn);
-									var tsPerHorn = art.r[13];
-									usedHorns = ((float)(ts *(speedupNeeded.Min(2.0f)-1)/tsPerHorn)).CeilToInt(); ;
-									Note.Show($"{usedHorns} required for {ts} TS");
+								//		1 + horns*tsPerHorn /ts  = speedupNeeded 
+								//  horns*tsPerHorn /ts  = ts * (speedupNeeded-1)/tsPerHorn
+								var ts = (int)troops.TS(); // TODO: 
+								var art = Artifact.GetForPlayerRank(Artifact.ArtifactType.Horn);
+								var tsPerHorn = art.r[13];
+								usedHorns = ((float)(ts *(speedupNeeded.Min(2.0f)-1)/tsPerHorn)).CeilToInt(); ;
+								Note.Show($"{usedHorns} required for {ts} TS");
 
-								}
 							}
 						}
 					}
-					if(!canMakeIt) {
-						if(await AppS.DoYesNoBox("Arrival too soon",$"The earliest time that we can make is {departure + (useHorns.Switch(1.0f,0.5f)*travelTime).CeilToInt()}, send now?",no: string.Empty) != 1)
-							return (false, 0);
-						arrivalUI.Clear(); ;
-						arrivalTime = default;
-					}
 				}
-				else {
-					if(useHorns) {
-						var ts = (int)troops.TS(); // TODO: 
-						var art = Artifact.GetForPlayerRank(Artifact.ArtifactType.Horn);
-						var tsPerHorn = art.r[13];
-						usedHorns = ts.DivideRoundUp(tsPerHorn);
-						Note.Show($"{usedHorns} required for {ts} TS");
-					}
+				if(!canMakeIt) {
+					if(await AppS.DoYesNoBox("Arrival too soon",$"The earliest time that we can make is {departure + (useHorns.Switch(1.0f,0.5f)*travelTime).CeilToInt()}, send now?",no: string.Empty) != 1)
+						return (false, 0);
+					arrivalUI.Clear(); ;
+					arrivalTime = default;
 				}
-				if(arrivalTime == default && !waitReturn) {
+			}
+			else {
+				if(useHorns) {
+					var ts = (int)troops.TS(); // TODO: 
+					var art = Artifact.GetForPlayerRank(Artifact.ArtifactType.Horn);
+					var tsPerHorn = art.r[13];
+					usedHorns = ts.DivideRoundUp(tsPerHorn);
+					Note.Show($"{usedHorns} required for {ts} TS");
+				}
+			}
+				if(arrivalTime == default && !waitReturn && !isDefense) {
 					// check for enough troops
 					if(!city.troopsHome.IsSuperSetOf(troops)) {
 						AppS.MessageBox($"Not enough troops. Here:\n{city.troopsHome.Format()}");
@@ -382,7 +383,7 @@ namespace CnV
 					if(verbose) AppS.MessageBox($"Please send something");
 					return (false, 0);
 				}
-			}
+			
 
 			if(city.freeCommandSlots+1 < splits) {
 				if(verbose) AppS.MessageBox($"Out of command slots");
@@ -456,18 +457,7 @@ namespace CnV
 			if(!valid.okay)
 				return;
 
-
-
-			Assert(ts.Any());
-
-
-			bool okay;
-			if(isReturn) {
-				CnVEventReturnTroops.TryReturn(prior,ts.isEmpty || ts.IsSuperSetOf(prior.troops) ? default : ts, useHorns);
-				okay = true;
-			}
-			else {
-				var usedHorns = valid.usedHorns;
+			var usedHorns = valid.usedHorns;
 				if(usedHorns > 0) {
 					if(await AppS.DoYesNoBox($"Use {usedHorns} Horns?",$"This will require {usedHorns} horns, are you sure?") != 1)
 						return;
@@ -497,6 +487,19 @@ namespace CnV
 						SocketClient.DeferSendEnd();
 					}
 				}
+
+			Assert(ts.Any());
+
+
+			bool okay;
+
+
+			if(isReturn) {
+				CnVEventReturnTroops.TryReturn(prior,ts.isEmpty || ts.IsSuperSetOf(prior.troops) ? default : ts, useHorns);
+				okay = true;
+			}
+			else {
+				
 
 				var splits = this.splits;
 

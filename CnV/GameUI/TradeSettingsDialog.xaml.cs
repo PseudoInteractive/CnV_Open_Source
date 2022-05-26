@@ -77,6 +77,7 @@ public sealed partial class TradeSettingsDialog:DialogG, INotifyPropertyChanged 
 		foodRequest.Value = ToNumberBoxValue(city.requestedResources.food);
 		maxTravel.Value = city.requestedResourceMaxTravel.TotalHours;
 		payRate.Value = city.resourcePaymentRate;
+		limitRequestsToAlliance.IsChecked = city.limitRequestsToAlliance;
 
 		OnPropertyChanged();
 
@@ -135,9 +136,9 @@ public sealed partial class TradeSettingsDialog:DialogG, INotifyPropertyChanged 
 		{
 			new CnVEventCityTradeSettings(city.c,mo).EnqueueAsap();
 		}
-		var reqHash0 = HashCode.Combine(city.requestedResources,city.requestedResourceMaxTravel,city.resourcePaymentRate,city.requestsOnlyForAlliance);
+		var reqHash0 = HashCode.Combine(city.requestedResources,city.requestedResourceMaxTravel,city.resourcePaymentRate,city.limitRequestsToAlliance);
 		var _resourcePaymentRate=  payRate.FloatValue();
-		var _requestsOnlyForAlliance = false;
+		var _requestsOnlyForAlliance = limitRequestsToAlliance.IsChecked.GetValueOrDefault();
 		var _requestedResourceMaxTravel = TimeSpanS.FromHours(maxTravel.Value);
 		var _requestedResources = new Resources(
 			woodRequest.IntValue(),stoneRequest.IntValue(),ironRequest.IntValue(),foodRequest.IntValue()
