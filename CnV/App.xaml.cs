@@ -865,10 +865,12 @@ namespace CnV
 					await t2;
 					// Wait for sim thread to save
 					Log($"Await Sim");
-					while(Sim.isSimRunning)
-					{
-						await Task.Delay(500);
-					}
+					//while(Sim.isSimRunning)
+					//{
+					//	await Task.Delay(500);
+					//}
+					if(Sim.simThread is not null)
+						Sim.simThread.Join();
 					Log($"Destroyed");
 					//		args.Cancel=false;
 					//				window.Close();

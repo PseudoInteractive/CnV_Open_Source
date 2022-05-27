@@ -14,20 +14,23 @@ namespace CnV.Styles
 			public Style tieStyle { get; set; }
 			public Style noKillsStyle { get; set; }
 
-			protected override Style SelectStyleCore(object item, DependencyObject container)
+		protected override Style SelectStyleCore(object item, DependencyObject container)
 		{
 			//		var cell = (item as DataGridCellInfo);
 			var report = item as BattleReport;
 
 			var dKill = report.dTsKill;
 			var aKill = report.aTsKill;
+			var swap = report.sourcePlayer.isInPlayerAlliance;
 			if(dKill < 1000 && aKill < 1000)
-				return report.attacker.army.isScout ? attackerWinStyle : noKillsStyle;
-			if(report.attackRatio < 0.75f )
+				return (report.attacker.army.isScout ^ swap) ? attackerWinStyle : noKillsStyle;
+			if( (report.attackRatio - 1.0f).Abs() < 0.25f )
+				return tieStyle;
+			else if((report.attackRatio < 1)^swap )
 				return defenderWinStyle;
-			if(report.attackRatio > 1.25f )
+			else
 				return attackerWinStyle;
-			return tieStyle;
+			
 		}
 
 		
@@ -52,7 +55,7 @@ namespace CnV.Styles
 			protected override Style SelectStyleCore(object item, DependencyObject container)
 			{
 //				var cell = (item as DataGridCellInfo);
-				var report = item as Army;
+				var report = item as BattleReport;
 				if( report.claim >= 100)
 					return capturedStyle;
 				if (report.claim > 0)
@@ -63,8 +66,7 @@ namespace CnV.Styles
 				case ArmyType.assault: return assaultStyle;
 					case ArmyType.plunder: return plunderStyle;
 					case ArmyType.scout: return scoutStyle;
-					case ArmyType.siege	 when !report.isSieging: return siegeStyle;
-					case ArmyType.siege  : return siegingStyle;
+				case ArmyType.siege: return siegeStyle;
 				default: Assert(false); return scoutStyle;
 					
 			}

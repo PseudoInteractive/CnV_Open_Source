@@ -125,7 +125,7 @@ namespace CnV
 						overviewList.ItemsSource = Artifact.all.Where(a => a.owned > 0).ToArray();
 						break;
 					case 4:
-						var arr = Sim.retired.ToArray().OfType<CnVEventUseArtifacts>().Where(a=>a.player.isActive).ToArray();
+						var arr = Sim.retired.ToArray().OfType<CnVEventUseArtifacts>().Where(a=>a.player.isMe).ToArray();
 						historyList.ItemsSource = arr; // might crash if queue is changed while ToArray is called
 						break;
 				};

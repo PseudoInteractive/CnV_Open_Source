@@ -92,7 +92,7 @@
     <x:Double x:Key="ContentDialogMaxWidth">1024</x:Double>
 			<x:Double x:Key="TeachingTipMaxHeight">640</x:Double>
 	<x:Double x:Key="TeachingTipMaxWidth">640</x:Double>
-			<SolidColorBrush x:Key="HyperLinkBrush" Color="#FF7060FF" />
+			<SolidColorBrush x:Key="HyperLinkBrush" Color="#FF6010FF" />
 
 
 
@@ -188,20 +188,17 @@
 				<Setter Property="FontStretch" Value="Condensed" />
 				
 				<Setter Property="FontWeight" Value="Normal" />
+		<Setter Property="SelectionForeground" Value="#598F0A0B"/>
+	</Style>
 
-			</Style>
 	<Style  TargetType="sf:GridCell" BasedOn="{StaticResource SfTextCell}">
-		<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
-		<Setter Property="FontStretch" Value="Condensed"/>
-		<Setter Property="FontSize" Value="{StaticResource TinyFontSize}" />
-		<Setter Property="FontWeight" Value="Normal" />
 
 	</Style>
 	
 
 	<Style x:Key="SfGridColumnBase" TargetType="sf:GridColumn">
 				<Setter Property="ShowHeaderToolTip" Value="True"/>
-			
+		
 				
 				
 				

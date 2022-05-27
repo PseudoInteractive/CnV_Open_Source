@@ -47,7 +47,7 @@
 			</sfc:SfCartesianChart.PrimaryAxis>
 
 			<sfc:SfCartesianChart.SecondaryAxis>
-				<sfc:NumericalAxis    LabelClicked="SecondaryAxisClicked" />
+				<sfc:NumericalAxis    LabelClicked="SecondaryAxisClicked" ShowTrackballInfo="False" />
 			</sfc:SfCartesianChart.SecondaryAxis>
 			<sfc:SfCartesianChart.Behaviors>
 				<sfc:ChartZoomPanBehavior   />
@@ -55,7 +55,7 @@
 				<sfc:ChartSelectionBehavior  Type="Point"  />
 
 				<!--<sfc:ChartCrosshairBehavior  />-->
-				<sfc:ChartTrackballBehavior  />
+				<!--<sfc:ChartTrackballBehavior  />-->
 			<!--<sfc:ChartTooltipBehavior  ShowDuration="5000"   />-->
 
 			</sfc:SfCartesianChart.Behaviors>

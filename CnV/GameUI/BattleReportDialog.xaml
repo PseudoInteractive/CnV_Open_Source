@@ -44,8 +44,8 @@
 		<TextBlock  Grid.Row="2"  Grid.Column="1" Text="{x:Bind attackType}"  Margin="8"  Style="{StaticResource TextBlockLarge}"/>
 		<TextBlock  Grid.Row="2"   Text="{x:Bind wallInfo}"  Margin="8"  Style="{StaticResource TextBlockLarge}" />
 
-		<TextBlock Grid.Row="3" Grid.Column="1" Text="{x:Bind b.aTroops}" Margin="8,4" Style="{StaticResource TextBlockLarge}"/>
-		<TextBlock Grid.Row="3"  Text="{x:Bind b.dTroops}" Margin="8,4"  Style="{StaticResource TextBlockLarge}"/>
+		<TextBlock Grid.Row="3" Grid.Column="1" Text="{x:Bind b.aTroopsAndTS}" Margin="8,4" Style="{StaticResource TextBlockLarge}"/>
+		<TextBlock Grid.Row="3"  Text="{x:Bind b.dTroopsAndTS}" Margin="8,4"  Style="{StaticResource TextBlockLarge}"/>
 
 
 		<TextBlock  Grid.Row="4" Grid.ColumnSpan="2"  Text="ꁊ Kills"  Margin="8" HorizontalAlignment="Left" Style="{StaticResource TextBlockLarge}" />
@@ -58,7 +58,7 @@
 
 
 		<TextBlock Grid.Row="7" Grid.Column="1"  Text="{x:Bind b.attacker.refinesS}" Margin="8,4"  Style="{StaticResource TextBlockMedium}" TextWrapping="Wrap" />
-		<TextBlock Grid.Row="7" Text="{x:Bind b.defenders[0].refinesS}" Margin="8,4"  Style="{StaticResource TextBlockMedium}" TextWrapping="Wrap"/>
+			<TextBlock Grid.Row="7" Text="{x:Bind b.defenderRefinesS}" Margin="8,4"  Style="{StaticResource TextBlockMedium}" TextWrapping="Wrap"/>
 
 		<StackPanel Visibility="{x:Bind b.scoutVisibility}"  Grid.Row="8" Grid.ColumnSpan="2" >
 			<TextBlock Text="Scouted buildings:"  />
@@ -73,7 +73,7 @@
 			
 
 		</StackPanel>
-			<StackPanel  Grid.Row="9" Grid.ColumnSpan="2" >
+			<StackPanel Visibility="{x:Bind b.buildingDamageVisibility}"  Grid.Row="9" Grid.ColumnSpan="2" >
 				<TextBlock Text="Building Damage:"  />
 				<GridView ItemsSource="{x:Bind b.buildingDamage}">
 					<GridView.ItemTemplate>

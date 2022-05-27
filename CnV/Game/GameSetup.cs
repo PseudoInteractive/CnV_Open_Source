@@ -35,6 +35,20 @@ namespace CnV
 
 		public static async Task InitializeGame()
 	{
+			//	var selector = new RandomSelector<int>();
+			//selector.Add(1.0f,0);
+			//selector.Add(0.75f,1);
+			//selector.Add(0.5f,2);
+			//selector.Add(0.25f,3);
+			//selector.Add(0.25f,4);
+			//selector.Add(0.125f,5);
+			//var sels = new int[6];
+			//var rnd = new XXRand(11);
+			//for(int i =0;i<1000;++i) {
+			//	var sel = selector.Select(ref rnd);
+			//	++sels[sel];
+			//}
+			//int q = 0;
 
 		//					   CnVChatClient.instance = new();
 		//					   CnVChatClient.instance.Initialize();

@@ -149,7 +149,7 @@ namespace CnV
 				var rv = instance ?? new SendTroops();
 				rv.prior = prior;
 
-				if((type == ArmyType.defense && !isSettle)||(prior is not null&&prior.isDefense)) {
+				if((type == ArmyType.defense && !isSettle)||((prior is not null&&prior.isDefense))) {
 					if(useHorns is not null)
 						rv.useHorns = useHorns.Value;
 					rv.useHornsCheckbox.Visibility = Visibility.Visible;
@@ -271,7 +271,7 @@ namespace CnV
 					}
 				}
 
-				if(city.underSiege) {
+				if(city.underSiege && !AppS.isTest) {
 					if(verbose)
 						AppS.MessageBox($"City is under siege");
 					return (false, 0);

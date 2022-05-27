@@ -34,6 +34,7 @@ Loaded="DataGridLoaded"
                         ItemsSource="{x:Bind reports, Mode=OneWay}"
                         SelectionMode="Single"
                         SelectionUnit="Row"
+				FrozenColumnCount="2"
 					   >
 			
             <sf:SfDataGrid.Columns>
@@ -44,12 +45,14 @@ Loaded="DataGridLoaded"
                                        
                                        
                                        />
-				<sf:GridHyperlinkColumn 
+				<sf:GridTextColumn 
                                        MappingName="type"
+									CellStyleSelector="{StaticResource ReportTypeStyleSelector}"
                                         />
 				<sf:GridNumericColumn  
                                        MappingName="attackRatio"
-                                        />
+										CellStyleSelector="{StaticResource ReportKillStyleSelector}"
+					/>
                 <sf:GridTextColumn 
                                        TextAlignment="Left"
                                        HeaderText="dPlyr"

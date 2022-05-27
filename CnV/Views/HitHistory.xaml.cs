@@ -26,13 +26,14 @@ namespace CnV.Views
 		public void UpdateDataGrid() {
 
 			var sel = instance.cityFilterCombo.SelectedItem as City;
+			var filterDay = Sim.simTime - ServerTime.secondsPerDay*4;
 
 			BattleReport[] items;
 			if(sel == null || sel.IsInvalid())
-				items= BattleReport.all.Where(a=> a.sourcePlayer.sharesInfo||a.targetPlayer.sharesInfo).ToArray();
+				items= BattleReport.all.Where(a => (a.sourcePlayer.sharesInfo||a.targetPlayer.sharesInfo) && filterDay < a.arrival) .ToArray();
 			else {
 				var cid = sel.cid;
-				items = BattleReport.all.Where(s => s.targetCid == cid || s.sourceCid==cid).ToArray();
+				items = BattleReport.all.Where(a =>(a.targetCid == cid || a.sourceCid==cid) && filterDay < a.arrival).ToArray();
 			}
 			items.SyncList(reports);
 			//if(IncomingTab.IsVisible()) {

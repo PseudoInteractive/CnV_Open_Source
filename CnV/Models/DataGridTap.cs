@@ -138,6 +138,9 @@ namespace CnV;
 							switch (e.Column.MappingName)
 							{
 								case nameof(i.type):
+									case nameof(i.attackRatio):
+
+										case nameof(i.Arrival):
 									
 									Sim.ShowReport(i);
 									

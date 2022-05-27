@@ -279,7 +279,7 @@ public static partial class ADataGrid
 			grid.SelectionMode = GridSelectionMode.Extended;
 		//	grid.GridLinesVisibility = GridLinesVisibility.Both;
 		
-		//	grid.ShowGroupDropArea=false;
+			grid.ShowGroupDropArea=true;
 			grid.AllowResizingHiddenColumns = true;
 			grid.AllowResizingColumns = true;
 		//	grid.CanMaintainScrollPosition=true;

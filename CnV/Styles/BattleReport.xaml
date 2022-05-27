@@ -1,65 +1,63 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
   xmlns:style="using:CnV.Styles"
+	xmlns:sf="using:Syncfusion.UI.Xaml.DataGrid"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-	<Style TargetType="TextBlock" x:Key="ReportCellStyle">
-		<Setter Property="VerticalAlignment"
-                            Value="Center" />
-		<Setter Property="Margin"
-                            Value="4,0,0,0" />
+
+	<Style TargetType="sf:GridCell" x:Key="ReportCellStyle" BasedOn="{StaticResource SfTextCell}">
 	</Style>
-	<Style TargetType="TextBlock" BasedOn="{StaticResource ReportCellStyle}" x:Key="ReportCellCenterStyle">
+	<Style TargetType="sf:GridCell" BasedOn="{StaticResource ReportCellStyle}" x:Key="ReportCellCenterStyle">
 		<Setter Property="HorizontalAlignment"
                             Value="Center" />
 	</Style>
-	<Style TargetType="TextBlock" BasedOn="{StaticResource ReportCellStyle}" x:Key="ReportCellRightStyle">
+	<Style TargetType="sf:GridCell" BasedOn="{StaticResource ReportCellStyle}" x:Key="ReportCellRightStyle">
 		<Setter Property="HorizontalAlignment"
                             Value="Right" />
 	</Style>
 	<style:ReportTypeStyleSelector x:Key="ReportTypeStyleSelector">
 
 		<style:ReportTypeStyleSelector.assaultStyle>
-			<Style TargetType="TextBlock" BasedOn="{StaticResource ReportCellCenterStyle}">
+			<Style TargetType="sf:GridCell" BasedOn="{StaticResource ReportCellCenterStyle}">
 				<Setter Property="Foreground"
                             Value="#7E3ED4" />
 			</Style>
 		</style:ReportTypeStyleSelector.assaultStyle>
 		<style:ReportTypeStyleSelector.siegeStyle>
-			<Style TargetType="TextBlock" BasedOn="{StaticResource ReportCellCenterStyle}">
+			<Style TargetType="sf:GridCell" BasedOn="{StaticResource ReportCellCenterStyle}">
 				<Setter Property="Foreground"
                             Value="#CF5007" />
 			</Style>
 		</style:ReportTypeStyleSelector.siegeStyle>
 		<style:ReportTypeStyleSelector.siegingStyle>
-			<Style TargetType="TextBlock" BasedOn="{StaticResource ReportCellCenterStyle}">
+			<Style TargetType="sf:GridCell" BasedOn="{StaticResource ReportCellCenterStyle}">
 				<Setter Property="Foreground"
                             Value="#C57F4A" />
 			</Style>
 			</style:ReportTypeStyleSelector.siegingStyle>
 			<style:ReportTypeStyleSelector.capturingStyle>
-				<Style TargetType="TextBlock" BasedOn="{StaticResource ReportCellCenterStyle}">
+				<Style TargetType="sf:GridCell" BasedOn="{StaticResource ReportCellCenterStyle}">
 				<Setter Property="Foreground" Value="#F50F0A" />
 			</Style>
 			</style:ReportTypeStyleSelector.capturingStyle>
 		<style:ReportTypeStyleSelector.capturedStyle>
-			<Style TargetType="TextBlock" BasedOn="{StaticResource ReportCellCenterStyle}">
+			<Style TargetType="sf:GridCell" BasedOn="{StaticResource ReportCellCenterStyle}">
 				<Setter Property="Foreground" Value="#FFFF00" />
 			</Style>
 		</style:ReportTypeStyleSelector.capturedStyle>
 		<style:ReportTypeStyleSelector.scoutStyle>
-			<Style TargetType="TextBlock" BasedOn="{StaticResource ReportCellCenterStyle}">
+			<Style TargetType="sf:GridCell" BasedOn="{StaticResource ReportCellCenterStyle}">
 				<Setter Property="Foreground"
                             Value="#C82DBF" />
 			</Style>
 		</style:ReportTypeStyleSelector.scoutStyle>
 		<style:ReportTypeStyleSelector.plunderStyle>
-			<Style TargetType="TextBlock" BasedOn="{StaticResource ReportCellCenterStyle}">
+			<Style TargetType="sf:GridCell" BasedOn="{StaticResource ReportCellCenterStyle}">
 				<Setter Property="Foreground"
                             Value="#2886C0" />
 			</Style>
 		</style:ReportTypeStyleSelector.plunderStyle>
 		<style:ReportTypeStyleSelector.pendingStyle>
-			<Style TargetType="TextBlock" BasedOn="{StaticResource ReportCellCenterStyle}">
+			<Style TargetType="sf:GridCell" BasedOn="{StaticResource ReportCellCenterStyle}">
 				<Setter Property="Foreground"
                             Value="#8886C0" />
 			</Style>
@@ -67,25 +65,25 @@
 	</style:ReportTypeStyleSelector>
 	<style:ReportKillStyleSelector x:Key="ReportKillStyleSelector">
 		<style:ReportKillStyleSelector.attackerWinStyle>
-			<Style TargetType="TextBlock" BasedOn="{StaticResource ReportCellRightStyle}">
+			<Style TargetType="sf:GridCell" BasedOn="{StaticResource ReportCellRightStyle}">
 				<Setter Property="Foreground"
                             Value="#08B00F" />
 			</Style>
 		</style:ReportKillStyleSelector.attackerWinStyle>
 		<style:ReportKillStyleSelector.defenderWinStyle>
-			<Style TargetType="TextBlock" BasedOn="{StaticResource ReportCellRightStyle}">
+			<Style TargetType="sf:GridCell" BasedOn="{StaticResource ReportCellRightStyle}">
 				<Setter Property="Foreground"
                             Value="#E32B55" />
 			</Style>
 		</style:ReportKillStyleSelector.defenderWinStyle>
 		<style:ReportKillStyleSelector.noKillsStyle>
-			<Style TargetType="TextBlock" BasedOn="{StaticResource ReportCellRightStyle}">
+			<Style TargetType="sf:GridCell" BasedOn="{StaticResource ReportCellRightStyle}">
 				<Setter Property="Foreground"
                             Value="#45968C" />
 			</Style>
 		</style:ReportKillStyleSelector.noKillsStyle>
 		<style:ReportKillStyleSelector.tieStyle>
-			<Style TargetType="TextBlock" BasedOn="{StaticResource ReportCellRightStyle}">
+			<Style TargetType="sf:GridCell" BasedOn="{StaticResource ReportCellRightStyle}">
 				<Setter Property="Foreground"
                             Value="#939FC2" />
 			</Style>
