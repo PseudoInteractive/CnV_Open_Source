@@ -190,10 +190,21 @@
 					             
 					              Click="SendError"
 					              ToolTipService.ToolTip="Send an error Report"  />
-			
-					<AppBarButton Label="Settings" Icon="Setting"  Click="ShowSettings" />
 
-		</CommandBar.PrimaryCommands>
+					<AppBarButton Label="Settings"   Click="ShowSettings">
+						<AppBarButton.Icon>
+						<AnimatedIcon x:Name='AnimatedIcon'>
+							<AnimatedIcon.Source>
+								<animatedvisuals:AnimatedSettingsVisualSource/>
+							</AnimatedIcon.Source>
+							<AnimatedIcon.FallbackIconSource>
+								<FontIconSource FontFamily="Segoe MDL2 Assets" Glyph="&#xE713;"/>
+							</AnimatedIcon.FallbackIconSource>
+						</AnimatedIcon>
+						</AppBarButton.Icon>
+					</AppBarButton>
+
+				</CommandBar.PrimaryCommands>
 		<CommandBar.SecondaryCommands>
 					<AppBarButton 
 					             Icon="Save"

@@ -140,6 +140,7 @@
 		<Compile Include="GameUI\DialogG.cs" />
 		<Compile Include="GameUI\DismissDialog.xaml.cs" />
 		<Compile Include="GameUI\ErrorReport.xaml.cs" />
+		<Compile Include="GameUI\FixDialog.xaml.cs" />
 		<Compile Include="GameUI\JoinAlliance.xaml.cs" />
 		<Compile Include="GameUI\MessageBox.xaml.cs" />
 		<Compile Include="GameUI\PalaceTab.xaml.cs" />
@@ -148,11 +149,13 @@
 		<Compile Include="GameUI\RecruitTargetDialog.xaml.cs" />
 		<Compile Include="GameUI\RefineDialogue.xaml.cs" />
 		<Compile Include="GameUI\ResearchList.xaml.cs" />
+		<Compile Include="GameUI\RespourcesControl.xaml.cs" />
 		<Compile Include="GameUI\SendResDialogue.xaml.cs" />
 		<Compile Include="GameUI\SendTroops.xaml.cs" />
 		<Compile Include="GameUI\TimelineView.xaml.cs" />
 		<Compile Include="GameUI\ToolTipWindow.xaml.cs" />
 		<Compile Include="GameUI\TradeSettingsDialog.xaml.cs" />
+		<Compile Include="GameUI\TroopsControl.xaml.cs" />
 		<Compile Include="Program.cs" />
 		<Compile Include="Services\CnVSignin.cs" />
 		<Compile Include="Services\HostBuilder.cs" />
@@ -407,6 +410,9 @@
 		<Page Include="GameUI\ErrorReport.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
+		<Page Include="GameUI\FixDialog.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
 		<Page Include="GameUI\JoinAlliance.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
@@ -431,6 +437,9 @@
 		<Page Include="GameUI\ResearchList.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
+		<Page Include="GameUI\RespourcesControl.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
 		<Page Include="GameUI\SendResDialogue.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
@@ -445,6 +454,9 @@
 		</Page>
 		<Page Include="GameUI\TradeSettingsDialog.xaml">
 			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="GameUI\TroopsControl.xaml">
+		  <Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Include="Styles\BattleReport.xaml">
 			<SubType>Designer</SubType>
@@ -654,6 +666,7 @@
 		<None Remove="GameUI\DateTimeBox.xaml" />
 		<None Remove="GameUI\DismissDialog.xaml" />
 		<None Remove="GameUI\ErrorReport.xaml" />
+		<None Remove="GameUI\FixDialog.xaml" />
 		<None Remove="GameUI\JoinAlliance.xaml" />
 		<None Remove="GameUI\MessageBox.xaml" />
 		<None Remove="GameUI\PalaceTab.xaml" />
@@ -663,11 +676,13 @@
 		<None Remove="GameUI\RefineDialogue.xaml" />
 		<None Remove="GameUI\ResearchList.xaml" />
 		<None Remove="GameUI\ResearchPurchase.xaml" />
+		<None Remove="GameUI\RespourcesControl.xaml" />
 		<None Remove="GameUI\SendResDialogue.xaml" />
 		<None Remove="GameUI\SendTroops.xaml" />
 		<None Remove="GameUI\TimelineView.xaml" />
 		<None Remove="GameUI\ToolTipWindow.xaml" />
 		<None Remove="GameUI\TradeSettingsDialog.xaml" />
+		<None Remove="GameUI\TroopsControl.xaml" />
 		<None Remove="Package.StoreAssociation.xml" />
 		<None Remove="Resources\CnVFont-VF.ttf" />
 		<None Remove="Resources\Icon1.ico" />

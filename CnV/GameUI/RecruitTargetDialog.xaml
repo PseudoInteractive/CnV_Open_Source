@@ -26,7 +26,7 @@
 						<ColumnDefinition Width ="*" />
 					</Grid.ColumnDefinitions>
 
-					<Image Grid.Column="0" Source="{x:Bind image}" Margin="1"  />
+						<Image Grid.Column="0" Source="{x:Bind image}" Margin="1"  ToolTipService.ToolTip="{x:Bind info.desc}" />
 					<Grid  Grid.Column="1" >
 						<Grid.RowDefinitions>
 							<RowDefinition Height = "40" />

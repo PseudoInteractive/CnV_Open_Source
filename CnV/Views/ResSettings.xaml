@@ -134,13 +134,13 @@
 			<NumberBox Header="Cart Reserve" Margin="8"
 							PlaceholderText="No Change"
 							Value="{x:Bind cartReserve,Converter={StaticResource NullableIntConverter}, Mode=TwoWay}"
-							Style="{StaticResource RightAlignNumberBox}"
+							Style="{StaticResource NumberBoxRightAlignPositive}"
 							ToolTipService.ToolTip="% carts reserved for trades that are not the result of sending overflow"
 							 />
 			<NumberBox Header="Ship Reserve"  Margin="8"
 							PlaceholderText="No Change"
 							Value="{x:Bind shipReserve,Converter={StaticResource NullableIntConverter}, Mode=TwoWay}"
-							Style="{StaticResource RightAlignNumberBox}"
+							Style="{StaticResource NumberBoxRightAlignPositive}"
 							ToolTipService.ToolTip="% ships reserved for trades that are not the result of sending overflow"
 							 />
 

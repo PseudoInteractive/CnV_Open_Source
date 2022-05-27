@@ -54,6 +54,11 @@ namespace CnV
   typeof(CityBox),
   new PropertyMetadata(null)
 );
+		public string Label
+		{
+			get { return (string)GetValue(LabelProperty); }
+			set { SetValue(LabelProperty,value); }
+		}
 
 		public static readonly DependencyProperty CityProperty = DependencyProperty.Register(
 		  "City",
@@ -62,11 +67,7 @@ namespace CnV
 		  new PropertyMetadata(null)
 		);
 
-		public string Label
-		{
-			get { return (string)GetValue(LabelProperty); }
-			set { SetValue(LabelProperty,value); }
-		}
+		
 
 		public City City
 		{

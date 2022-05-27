@@ -266,6 +266,10 @@ public static partial class CityUI
 		aMisc.AddItem("Distance",       (_, _) => me.ShowDistanceTo());
 		aMisc.AddItem("Select",         (_, _) => me.SelectMe(true, AppS.keyModifiers));
 		aMisc.AddItem("Coords to Chat", () => CoordsToChat(cid));
+		if(AppS.isTest) {
+			aMisc.AddItem("Fixes",         (_, _) => FixDialog.ShowInstance(me));
+			
+		}
 		flyout.RemoveEmpy();
 	}
 

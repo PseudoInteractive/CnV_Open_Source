@@ -12,7 +12,7 @@
 	
 		
 		
-		<ListView x:Name="troopList"  Grid.Row="1"  ItemsSource="{x:Bind troopItems,Mode=OneWay}">
+		<ListView x:Name="troopList"   ItemsSource="{x:Bind troopItems,Mode=OneWay}">
 			<ListView.ItemTemplate >
 				<DataTemplate  x:DataType="cnv:RecruitTroopItem" >
 				<Grid  Height="Auto" Margin="1"  HorizontalAlignment="Stretch" >
@@ -22,8 +22,8 @@
 					
 						<ColumnDefinition Width ="*" />
 					</Grid.ColumnDefinitions>
-					
-					<Image Grid.Column="0" Source="{x:Bind image}" Margin="1"  />
+
+					<Image Grid.Column="0" Source="{x:Bind image}" Margin="1" ToolTipService.ToolTip="{x:Bind info.desc}"  />
 					<Grid  Grid.Column="1" >
 						<Grid.RowDefinitions>
 							<RowDefinition Height = "40" />

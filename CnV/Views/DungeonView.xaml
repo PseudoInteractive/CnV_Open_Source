@@ -69,7 +69,7 @@
 						Header="Min Carry%"
 						Value="{x:Bind cnv:Settings.raidCarryMinPercent, Mode=TwoWay }"
 						ValueChanged="RaidCarrySelChanged"
-						
+						Style="{StaticResource NumberBoxMediumPositive}"
 					 	IsTabStop="True"
 							 SmallChange="5"
 						FontSize="{StaticResource MediumFontSize}"
@@ -77,6 +77,8 @@
 			<NumberBox x:Name="raidCarryTargetBox"
 						  Header="Target Carry%"
 						  Value="{x:Bind cnv:Settings.raidCarryTargetPercent, Mode=TwoWay}"
+					   						Style="{StaticResource NumberBoxMediumPositive}"
+
 						 ValueChanged="RaidCarrySelChanged"
 							
 							 SmallChange="5"
@@ -85,7 +87,8 @@
 						  Value="{x:Bind cnv:Settings.raidCarryMaxPercent, Mode=TwoWay}"
 							SmallChange="5"
 						  Header="Max Carry%"
-						
+												Style="{StaticResource NumberBoxMediumPositive}"
+
 						  
 						  FontSize="{StaticResource MediumFontSize}"
 					 	  IsTextScaleFactorEnabled="False"

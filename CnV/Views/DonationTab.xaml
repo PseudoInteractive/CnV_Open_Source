@@ -31,7 +31,7 @@
 			              Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="If this is not -1, resources will be sent in a fixed ratio of wood vs stone, i.e. 0.5 means half of each, 0 means all stone, 1 means all wood" 
 			              NumberFormatter="{x:Bind cnv:App.formatter2Digit}" />-->
 			<NumberBox Header="Reserve Carts" Value="{x:Bind cnv:Settings.tradeSendReserveCarts,Mode=TwoWay}"
-						  Style="{StaticResource NumberBoxCarts}" Width="100"
+						  Style="{StaticResource NumberBoxCarts}" Width="100" 
 						  
 						  />
 			<NumberBox Header="Reserve Carts %" Value="{x:Bind cnv:Settings.tradeSendReserveCartsPCT,Mode=TwoWay}" 

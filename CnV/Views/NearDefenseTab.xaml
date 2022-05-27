@@ -236,12 +236,16 @@
 							<NumberBox Value= "{x:Bind send,Mode=TwoWay}"
                                       ToolTipService.ToolTip="Troops to send.  Right click to select troops home or total troops (if troops will return before the send).  You can use expressions i.e. if you want to send half the troops, right click and set Troops Home, then add /2 after the number"
                                    RightTapped="TTSendRightTapped" 
+									   						Style="{StaticResource NumberBoxMediumPositive}"
+
                                         />
                         </DataTemplate>
                     </tk:DataGridTemplateColumn.CellTemplate>
                     <tk:DataGridTemplateColumn.CellEditingTemplate>
                         <DataTemplate x:DataType="cnv:SupportByTroopType">
-							<NumberBox Value= "{x:Bind send,Mode=TwoWay}" HorizontalContentAlignment="Right" AcceptsExpression="True" SmallChange="1000" LargeChange="10000" VerticalAlignment="Center" FontSize="12"
+							<NumberBox Value= "{x:Bind send,Mode=TwoWay}" HorizontalContentAlignment="Right" AcceptsExpression="True" SmallChange="1000" LargeChange="10000" VerticalAlignment="Center" 
+									   						Style="{StaticResource NumberBoxMediumPositive}"
+
                                         />
                         </DataTemplate>
                     </tk:DataGridTemplateColumn.CellEditingTemplate>
