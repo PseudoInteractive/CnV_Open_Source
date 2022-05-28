@@ -76,6 +76,15 @@ namespace CnV
 		internal City city; // convienience
 		internal TType type;
 		internal int count;
+
+		public TType _type { get => type;
+			set {
+				if(value != type) {
+					type = value;
+					OnPropertyChanged();
+				}
+			}
+		}
 		internal TroopTypeCount tt => new(type,(uint)count.Max(0));
 		internal TroopTypeCount tt1 => new(type,(uint)count.Max(1));
 		internal ImageSource image => Troops.Image(type);

@@ -20,11 +20,23 @@ using Windows.Foundation.Collections;
 
 namespace CnV
 {
-	public class TroopTypeComboItem {
-		public byte type { get; set; }
+	public class TroopTypeComboItem:CNotifyPropertyChanged
+	{
+		private byte _type;
+
+		public byte type { get => _type;
+			set {
+				if(_type != value) {
+
+					_type=value;
+					OnPropertyChanged();
+				
+				}
+			} 
+		}
 		public ImageSource image => Troops.Image(type.Max(0),32);
 	}
-	public sealed partial class TroopsControl:UserControl
+	public sealed partial class TroopsControl:UserControl, INotifyPropertyChanged
 	{
 		public static readonly DependencyProperty troopsProperty = DependencyProperty.Register(
 		  "troops",
@@ -33,19 +45,15 @@ namespace CnV
 		  new PropertyMetadata(new TroopTypeCounts())
 		);
 
+		public string label { get; set; }
+
 		public City city { get; set; }
 
 		internal static TroopTypeComboItem[] troopTypeIds = Enumerable.Range(0,Troops.ttCount).Select(a => new TroopTypeComboItem() { type=(byte)a  } ).ToArray();
 		public TroopTypeCounts troops
 		{
-			get => ttCounts;
-			set {
-				troopItems.Clear();
-				foreach(var tt in value) {
-					troopItems.Add(new() { count=(int)tt.count,type=tt.type,city=city });
-				}
-			
-			}
+			get { return (TroopTypeCounts)GetValue(troopsProperty); }
+			set { SetValue(troopsProperty,value); }
 		}
 
 		internal TroopTypeCounts ttCounts {
@@ -57,15 +65,43 @@ namespace CnV
 				}
 				return rv;
 			}
+			set {
+				troopItems.Clear();
+				foreach(var tt in value) {
+					troopItems.Add(CreateTroopItem(tt.type,tt.count));
+				}
+			
+			}
+		}
+		RecruitTroopItem CreateTroopItem(byte type, uint count) {
+			var rv = new RecruitTroopItem() { count=(int)count,type=type,city=city };
+			rv.PropertyChanged+=TroopsPropertyChanged;
+			return rv;
+		}
+
+		private void TroopsPropertyChanged(object? sender,PropertyChangedEventArgs e) {
+			WriteBackTroops();
+			OnPropertyChanged();
 		}
 
 		internal ObservableCollection<RecruitTroopItem> troopItems = new();
 		public TroopsControl() {
 			this.InitializeComponent();
+			
+		}
+		private void WriteBackTroops() {
+			troops = ttCounts;
 		}
 
 		private void AddClick(object sender,RoutedEventArgs e) {
-			troopItems.Add(new() { city=city,count=1,type=Troops.ttVanq });
+			troopItems.Add(CreateTroopItem(Troops.ttVanq,1));
 		}
+
+		public event PropertyChangedEventHandler? PropertyChanged;
+	public void OnPropertyChanged(string? member = null)
+	{
+		if (this.PropertyChanged is not null)
+			AppS.QueueOnUIThread(() => PropertyChanged?.Invoke(this,new(member)));
+	}
 	}
 }

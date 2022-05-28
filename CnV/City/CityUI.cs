@@ -666,7 +666,7 @@ public partial class City
 		//	AttackTab.WaitAndSaveAttacks();
 		//}
 		//else
-		if( ((City.CanVisit(cid) && cid==focus) || Player.IsMyCity(cid) ) && !mod.IsShiftOrControl())
+		if( ((City.CanVisit(cid) && cid==focus) || Player.active.IsMyCity(cid) ) && !mod.IsShiftOrControl())
 		{
 			if(City.IsBuild(cid))
 			{

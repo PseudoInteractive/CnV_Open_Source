@@ -271,7 +271,7 @@ namespace CnV
 					}
 				}
 
-				if(city.underSiege && !AppS.isTest) {
+				if(city.underSiege ) {
 					if(verbose)
 						AppS.MessageBox($"City is under siege");
 					return (false, 0);

@@ -14,10 +14,24 @@
 	<ScrollViewer>
 		<StackPanel>
 
-			<cnv:ResourcesControl x:Name="_resources" Desc="Resources" Rss="{x:Bind fix.resources, Mode=TwoWay}" />
+			<cnv:ResourcesControl Width="300" x:Name="_resources" Desc="Resources" Rss="{x:Bind fix.resources, Mode=TwoWay}" />
 			<cnv:ResourcesControl x:Name="_refines" Desc="Refines" Rss="{x:Bind fix.refines, Mode=TwoWay}" />
-			<cnv:TroopsControl troops="{x:Bind fix.troops, Mode=TwoWay}" city="{x:Bind city}" />
-			<NumberBox Value="{x:Bind fix.cavernLootD,  Mode=TwoWay}" />
+			<cnv:TroopsControl Width="400" troops="{x:Bind fix.troops, Mode=TwoWay}" label="Troops" city="{x:Bind city}" />
+			<cnv:TroopsControl troops="{x:Bind fix.attackKills, Mode=TwoWay}" label="AtkKills" city="{x:Bind city}" />
+			<cnv:TroopsControl troops="{x:Bind fix.defenseKills, Mode=TwoWay}" label="DefKills" city="{x:Bind city}" />
+			<cnv:TroopsControl troops="{x:Bind fix.supportKills, Mode=TwoWay}" label="SupKills" city="{x:Bind city}" />
+			<NumberBox Value="{x:Bind fix.cavernLootD,  Mode=TwoWay}" Description="cavernLoot" />
+			<NumberBox Value="{x:Bind fix.npcKills,  Mode=TwoWay}" Description="npcKills" />
+			<NumberBox Value="{x:Bind fix.gold,  Mode=TwoWay}" Description="gold" />
+			<NumberBox Value="{x:Bind fix.karma,  Mode=TwoWay}" Description="karma" />
+			<NumberBox Value="{x:Bind fix.zirconia,  Mode=TwoWay}" Description="zirconia" />
+			<NumberBox Value="{x:Bind fix.caps,  Mode=TwoWay}" Description="caps" />
+			<NumberBox Value="{x:Bind fix.buildingDamage,  Mode=TwoWay}" Description="buildingDamage" />
+			<NumberBox Value="{x:Bind fix.palaceDamage,  Mode=TwoWay}" Description="palaceDamage" />
+			<NumberBox Value="{x:Bind fix.palaceDonationsD,  Mode=TwoWay}" Description="palaceDonations" />
+			<NumberBox Value="{x:Bind fix.plundered,  Mode=TwoWay}" Description="Plundered" />
+
+			
 		</StackPanel>
 				
 				</ScrollViewer>
