@@ -30,12 +30,12 @@ namespace CnV
 		  "troops",
 		  typeof(TroopTypeCounts),
 		  typeof(TroopsControl),
-		  new PropertyMetadata(new())
+		  new PropertyMetadata(new TroopTypeCounts())
 		);
 
 		public City city { get; set; }
 
-		internal static TroopTypeComboItem[] troopTypeIds = Enumerable.Range(0,Troops.ttCount).Select(a => new TroopTypeComboItem() { type=(byte)a } ).ToArray();
+		internal static TroopTypeComboItem[] troopTypeIds = Enumerable.Range(0,Troops.ttCount).Select(a => new TroopTypeComboItem() { type=(byte)a  } ).ToArray();
 		public TroopTypeCounts troops
 		{
 			get => ttCounts;
@@ -52,7 +52,7 @@ namespace CnV
 			get {
 				var rv = new TroopTypeCounts();
 				foreach(var ti in troopItems) {
-					if(ti.count >= 0)
+					if(ti.count > 0)
 						rv += ti.tt;
 				}
 				return rv;

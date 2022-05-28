@@ -79,7 +79,7 @@ namespace CnV
 		internal TroopTypeCount tt => new(type,(uint)count.Max(0));
 		internal TroopTypeCount tt1 => new(type,(uint)count.Max(1));
 		internal ImageSource image => Troops.Image(type);
-		internal TroopInfo info => TroopInfo.all[type];
+		internal TroopInfo info => TroopInfo.all[type.Min(Troops.ttLast) ];
 		internal bool isEnabled => city.CanRecruit(type);
 		internal void Recruit(object sender,RoutedEventArgs e)
 		{

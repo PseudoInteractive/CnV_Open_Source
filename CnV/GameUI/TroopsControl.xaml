@@ -19,7 +19,7 @@
 
 
 				<DataTemplate x:Key="TroopTypeTemplate" x:DataType="cnv:TroopTypeComboItem" >
-					<Image  Source="{x:Bind image }" />
+					<Image  Source="{x:Bind image }" Stretch="None" Width="64" Height="64" />
 				</DataTemplate>
 			</ResourceDictionary>
 		</Grid.Resources>
@@ -35,19 +35,19 @@
 					<Grid  Height="Auto" Margin="1"  HorizontalAlignment="Stretch" >
 
 						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width ="32"  />
+							<ColumnDefinition Width ="auto"  />
 
 							<ColumnDefinition Width ="*" />
 						</Grid.ColumnDefinitions>
 
-						<ComboBox Grid.Column="0" SelectedIndex="{x:Bind type, Mode=TwoWay}"  ItemTemplate="{StaticResource TroopTypeTemplate}"  ItemsSource="{x:Bind cnv:TroopsControl.troopTypeIds }" ToolTipService.ToolTip="{x:Bind info.desc}"  />
+						<ComboBox Grid.Column="0"  SelectedValue="{x:Bind type,  Mode=TwoWay}" SelectedValuePath="type"   ItemTemplate="{StaticResource TroopTypeTemplate}"  ItemsSource="{x:Bind cnv:TroopsControl.troopTypeIds }" ToolTipService.ToolTip="{x:Bind info.desc, Mode=OneWay}"  />
 						<Grid  Grid.Column="1" >
 							<Grid.RowDefinitions>
 								<RowDefinition Height = "auto" />
 								<RowDefinition Height ="auto" />
 							</Grid.RowDefinitions>
 						
-							<TextBlock Text="{x:Bind info.tn}" Margin="8,0,8,0" Style="{StaticResource TextBlockMedium}" TextWrapping="Wrap" TextAlignment="Center" MaxLines="3"  VerticalAlignment="Center" />
+							<TextBlock Text="{x:Bind info.tn, Mode=OneWay}" Margin="8,0,8,0" Style="{StaticResource TextBlockMedium}" TextWrapping="Wrap" TextAlignment="Center" MaxLines="3"  VerticalAlignment="Center" />
 							<NumberBox Grid.Row="1" Style="{StaticResource NumberBoxMediumPositive}" Value="{x:Bind count,Mode=TwoWay}" Width="120"  ValueChanged="{x:Bind CountChanged}" 
                                             Margin="8,0,8,0" VerticalAlignment="Center" SmallChange="1000" />
 								

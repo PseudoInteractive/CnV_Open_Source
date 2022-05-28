@@ -23,10 +23,10 @@ namespace CnV.Styles
 			var aKill = report.aTsKill;
 			var swap = report.sourcePlayer.isInPlayerAlliance;
 			if(dKill < 1000 && aKill < 1000)
-				return (report.attacker.army.isScout ^ swap) ? attackerWinStyle : noKillsStyle;
+				return  noKillsStyle;
 			if( (report.attackRatio - 1.0f).Abs() < 0.25f )
 				return tieStyle;
-			else if((report.attackRatio < 1)^swap )
+			else if((report.attackRatio > 1)^swap )
 				return defenderWinStyle;
 			else
 				return attackerWinStyle;

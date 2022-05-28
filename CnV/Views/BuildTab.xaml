@@ -95,7 +95,7 @@
 										   ShowHeaderToolTip="True"
 											ToolTipService.ToolTip="True if anything is currently building, false if stalled or complete"
 										   TextAlignment="Center"
-									   IsThreeState="True"
+									  
 										  Width="32"
 										    />
 				<sf:GridCheckBoxColumn MappingName="stalled"

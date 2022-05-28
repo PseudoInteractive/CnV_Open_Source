@@ -476,7 +476,8 @@ namespace CnV
 							new CnVEventPurchaseArtifacts((ushort)artifact,(ushort)needed,Player.active.id).EnqueueAsap();
 						}
 						// TODO: HACK:
-					//	(new CnVEventUseArtifacts(city.c) { artifactId = (ushort)artifact,count = (ushort)usedHorns,flags=CnVEventUseArtifacts.Flags.noEffect }).EnqueueAsap();
+						if(!AppS.isTest)
+							(new CnVEventUseArtifacts(city.c) { artifactId = (ushort)artifact,count = (ushort)usedHorns,flags=CnVEventUseArtifacts.Flags.noEffect }).EnqueueAsap();
 
 					}
 					catch(Exception _ex) {
