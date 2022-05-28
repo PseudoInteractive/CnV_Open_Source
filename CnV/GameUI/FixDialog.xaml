@@ -16,7 +16,7 @@
 
 			<cnv:ResourcesControl Width="300" x:Name="_resources" Desc="Resources" Rss="{x:Bind fix.resources, Mode=TwoWay}" />
 			<cnv:ResourcesControl x:Name="_refines" Desc="Refines" Rss="{x:Bind fix.refines, Mode=TwoWay}" />
-			<cnv:TroopsControl Width="400" troops="{x:Bind fix.troops, Mode=TwoWay}" label="Troops" city="{x:Bind city}" />
+			<cnv:TroopsControl  troops="{x:Bind fix.troops, Mode=TwoWay}" label="Troops" city="{x:Bind city}" />
 			<cnv:TroopsControl troops="{x:Bind fix.attackKills, Mode=TwoWay}" label="AtkKills" city="{x:Bind city}" />
 			<cnv:TroopsControl troops="{x:Bind fix.defenseKills, Mode=TwoWay}" label="DefKills" city="{x:Bind city}" />
 			<cnv:TroopsControl troops="{x:Bind fix.supportKills, Mode=TwoWay}" label="SupKills" city="{x:Bind city}" />
@@ -30,8 +30,8 @@
 			<NumberBox Value="{x:Bind fix.palaceDamage,  Mode=TwoWay}" Description="palaceDamage" />
 			<NumberBox Value="{x:Bind fix.palaceDonationsD,  Mode=TwoWay}" Description="palaceDonations" />
 			<NumberBox Value="{x:Bind fix.plundered,  Mode=TwoWay}" Description="Plundered" />
+			<Button Content="Post" Click="PostEvent" />
 
-			
 		</StackPanel>
 				
 				</ScrollViewer>

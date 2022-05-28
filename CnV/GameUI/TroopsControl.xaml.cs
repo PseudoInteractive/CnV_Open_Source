@@ -20,20 +20,20 @@ using Windows.Foundation.Collections;
 
 namespace CnV
 {
-	public class TroopTypeComboItem:CNotifyPropertyChanged
+	public class TroopTypeComboItem
 	{
-		private byte _type;
+		public byte type { get; set; }
 
-		public byte type { get => _type;
-			set {
-				if(_type != value) {
+		//public byte type { get => _type;
+		//	set {
+		//		if(_type != value) {
 
-					_type=value;
-					OnPropertyChanged();
+		//			_type=value;
+		//			OnPropertyChanged();
 				
-				}
-			} 
-		}
+		//		}
+		//	} 
+		//}
 		public ImageSource image => Troops.Image(type.Max(0),32);
 	}
 	public sealed partial class TroopsControl:UserControl, INotifyPropertyChanged

@@ -58,7 +58,14 @@ namespace CnV
 				instance.OnPropertyChanged(member);
 		}
 
-		
+		private void PostEvent(object sender,RoutedEventArgs e) {
+			// Clone
+			var data = MessagePack.MessagePackSerializer.Serialize(fix);
+			var fix2 = MessagePackSerializer.Deserialize<CnVEventFix>(data);
+			fix2.cityEtc = new WorldCPacked(city.c,0);
+			fix2.EnqueueAsap();
+			Hide(true);
+		}
 	}
 
 
