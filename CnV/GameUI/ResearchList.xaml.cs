@@ -76,7 +76,7 @@ namespace CnV
 			}
 		}
 
-		private void Claim(object sender,RoutedEventArgs e)
+		private async void Claim(object sender,RoutedEventArgs e)
 		{
 			//new CnVEventClaimQuest(City.GetBuild().c,(ushort)quest.id).EnqueueAsap();
 
@@ -87,11 +87,31 @@ namespace CnV
 			//foreach(var i in questGroups)
 			//	i.OnPropertyChanged();
 			//PropertyChanged?.Invoke(this,new(String.Empty));
-			var t = quest;
-			var s = t.step;
-			Assert(t.canClaim);
-			new CnVEventResearch(Player.active.id,s.id).EnqueueAsap();
-			Done();
+			try {
+				var t = quest;
+				var s = t.step;
+				Assert(t.canClaim);
+				var ev = new CnVEventResearch(Player.active.id,s.id);
+				if(ev.IsClaimed(true)) {
+					return;
+				}
+				ev.EnqueueAsap();
+				var b = sender as Button;
+				if(b is not null)
+					b.IsEnabled=false;
+				ShellPage.WorkStart("Researching");
+
+				await Task.Delay(1500); // wait 1s for event to execut
+				foreach(var i in questGroups)
+					i.OnPropertyChangedImmediate();
+				PropertyChanged?.Invoke(this,new(String.Empty));
+				ShellPage.WorkEnd();
+			}
+			catch(Exception _ex) {
+				LogEx(_ex);
+
+			}
+			//Done();
 		}
 
 		
