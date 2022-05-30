@@ -467,7 +467,7 @@ namespace CnV.Views
 				}
 				catch(Exception ex) {
 					LogEx(ex);
-					await AppS.Fatal(ex.ToString());
+					await AppS.Fatal(ex.ToString()).ConfigureAwait(false);
 				}
 
 
@@ -647,7 +647,7 @@ namespace CnV.Views
 			}
 			catch(Exception ex) {
 				LogEx(ex);
-				await AppS.Fatal(ex.ToString());
+				AppS.Fatal(ex.ToString());
 			}
 			//Task.Delay(5000).ContinueWith((_) =>
 			//{

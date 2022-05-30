@@ -70,7 +70,7 @@ namespace CnVDiscord
 			{
 				isBusy = false;
 			}
-			if(!permanent)
+			if(!permanent && !AppS.isShuttingDown)
 				isShuttingDown=false;
 
 		}
