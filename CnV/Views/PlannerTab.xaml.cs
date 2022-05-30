@@ -268,7 +268,7 @@ namespace CnV.Views
 
 				}
 			}
-			city.BuildingsChanged();
+			city.LayoutChanged();
 			// SaveLayout();
 		}
 
@@ -501,7 +501,7 @@ namespace CnV.Views
 			Note.Show($"Moved buildings to reduce overlaps, final layout match score: {CountResOverlaps(city, bds, ref allowed) }");
 			//city.TouchLayoutForWrite();
 			//City.buildingCache.Return(layoutB);
-			city.BuildingsChanged();
+			city.LayoutChanged();
 		//	if(wasPlanner == false && revertIsPlanner)
 		//		await CityBuild._IsPlanner(false);
 		}
@@ -537,7 +537,7 @@ namespace CnV.Views
 		{
 			var s = City.GetBuild();
 			s.layout =  await LayoutFromBuildings(s.postQueueBuildings);
-			s.BuildingsChanged();
+			s.LayoutChanged();
 
 		}
 
@@ -635,7 +635,7 @@ namespace CnV.Views
 					city.layoutWritable[bestId]= _bid;
 					bds[bestId] = new(_bid,remove? (byte)0 : (byte)10);
 				}
-				city.BuildingsChanged();
+				city.LayoutChanged();
 				Note.Show($"{(add ? "Added ": remove? "Removed " :  replace ?"Replaced " : "Moved " )}{(bid1!=0?BuildingDef.FromId(bid1):string.Empty) } {BuildingDef.FromId(bestBid) }, production {initialProd:N0}=>{bestProd:N0}\nChange: { (City.ComputeBuildingStats(city,bds,true).productionPerSec-baseStats.productionPerSec).ratePerHour }");
 			}
 			else {

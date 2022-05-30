@@ -877,7 +877,7 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 			catch(Exception ex)
 			{
 				LogEx(ex);
-				city.BuildingsOrQueueChanged();
+				city.BuildingsOrQueueChanged(false);
 			}
 			
 			//			Log(args.Items.Format());

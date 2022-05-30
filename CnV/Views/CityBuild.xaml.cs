@@ -529,7 +529,7 @@ namespace CnV
 					///	build.ShareStringToBuildingsCache();
 
 				}
-				City.GetBuild().BuildingsOrQueueChanged();
+				City.GetBuild().BuildingsOrQueueChanged(false);
 
 				if(syncPlannerTab && !PlannerTab.IsVisible())
 					await AppS.DispatchOnUIThreadTask(() => PlannerTab.instance.Show());
