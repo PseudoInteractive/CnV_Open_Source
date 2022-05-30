@@ -108,6 +108,10 @@ namespace CnV
 				}
 
 			}
+			if(count <=0) {
+				AppS.MessageBox(title:$"Please recruit at least 1");
+				return;
+			}
 			if((city.SampleResources() - rr.r).allPositive && p.gold >= rr.gold)
 			{
 				Note.Show("Recruit");
