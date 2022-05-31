@@ -4,7 +4,7 @@ using CnV.Helpers;
 
 using CnV.Services;
 
-using Microsoft.Toolkit.HighPerformance;
+using CommunityToolkit.HighPerformance;
 
 using System;
 using System.Collections.Generic;

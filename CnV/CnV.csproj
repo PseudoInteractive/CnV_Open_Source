@@ -60,6 +60,7 @@
   </ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.HighPerformance" Version="8.0.0-preview3" />
 		<PackageReference Include="CommunityToolkit.WinUI.Notifications" Version="7.1.2" />
 		<PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
 		<PackageReference Include="DirectXTexNet" Version="1.0.3" />
@@ -75,7 +76,6 @@
 		</PackageReference>
 		<PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="2.21.0" />
 		<PackageReference Include="Microsoft.Toolkit" Version="7.1.2" />
-		<PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
 		<PackageReference Include="Azure.Data.Tables" Version="12.5.0" />
 		<PackageReference Include="Azure.Storage.Blobs" Version="12.12.0" />
 		<PackageReference Include="Enums.NET" Version="4.0.0" />
@@ -88,17 +88,17 @@
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.3" />
 		<PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
 		<PackageReference Include="PlayFabAllSDK" Version="1.108.220118" />
-		<PackageReference Include="Syncfusion.Chart.WinUI" Version="20.1.0.57" />
-		<PackageReference Include="Syncfusion.Editors.WinUI" Version="20.1.0.57" />
-		<PackageReference Include="Syncfusion.Grid.WinUI" Version="20.1.0.57" />
-		<PackageReference Include="Syncfusion.Licensing" Version="20.1.0.57" />
+		<PackageReference Include="Syncfusion.Chart.WinUI" Version="20.1.0.58" />
+		<PackageReference Include="Syncfusion.Editors.WinUI" Version="20.1.0.58" />
+		<PackageReference Include="Syncfusion.Grid.WinUI" Version="20.1.0.58" />
+		<PackageReference Include="Syncfusion.Licensing" Version="20.1.0.58" />
 		<PackageReference Include="SharpDX" Version="4.2.0" />
 		<PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
 		<PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
 		<PackageReference Include="SharpDX.DXGI" Version="4.2.0" />
 		<PackageReference Include="SharpDX.MediaFoundation" Version="4.2.0" />
 		<PackageReference Include="SharpGen.Runtime.COM" Version="2.0.0-beta.10" />
-		<PackageReference Include="Syncfusion.Scheduler.WinUI" Version="20.1.0.57" />
+		<PackageReference Include="Syncfusion.Scheduler.WinUI" Version="20.1.0.58" />
 		<PackageReference Include="System.Collections.Immutable" Version="7.0.0-preview.4.22229.4" />
 		<PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="7.0.0-preview.2.22152.2" />
 		<PackageReference Include="System.Text.Json" Version="7.0.0-preview.4.22229.4" />
@@ -740,6 +740,7 @@
 		<ApplicationInsightsResourceId>/subscriptions/2a698fb0-55b8-4561-b722-2015b2c78d9c/resourceGroups/appcenter-export-Alliances/providers/microsoft.insights/components/AppCenterExport-Alliances</ApplicationInsightsResourceId>
 		<UserSecretsId>390b80fc-ab7a-4c55-9a54-5947221eec7e</UserSecretsId>
 		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+		<ErrorReport>none</ErrorReport>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
 		<Optimize>False</Optimize>
@@ -747,6 +748,7 @@
 		<DefineConstants>$(DefineConstants);CNV;CNVCLIENT;APPCENTER;DISABLE_XAML_GENERATED_MAIN</DefineConstants>
 		<Deterministic>True</Deterministic>
 		<FileAlignment>4096</FileAlignment>
+		<CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
 		<Optimize>False</Optimize>
@@ -761,6 +763,7 @@
     <DefineConstants>$(DefineConstants);CNV;CNVCLIENT;APPCENTER;DISABLE_XAML_GENERATED_MAIN;DEBUG</DefineConstants>
 		<Deterministic>True</Deterministic>
 		<FileAlignment>4096</FileAlignment>
+		<CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='SinglePlayer|ARM64'">
 		<Optimize>False</Optimize>
@@ -776,6 +779,7 @@
 		<Deterministic>True</Deterministic>
 		<FileAlignment>4096</FileAlignment>
 		<LayoutDir />
+		<CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
 		<Optimize>True</Optimize>
