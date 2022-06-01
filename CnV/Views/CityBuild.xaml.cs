@@ -907,7 +907,7 @@ namespace CnV
 			isSingleClickAction = false; // default
 										 // toggle visibility
 
-			contextMenuResultSelected = false;
+	//		contextMenuResultSelected = false;
 			//int bspot = XYToId(cc);
 			var b = city.GetBuildingOrLayout(cc);
 			
@@ -967,7 +967,7 @@ namespace CnV
 
 		public async void ItemClick(object sender, Microsoft.UI.Xaml.Controls.ItemClickEventArgs e)
 		{
-			contextMenuResultSelected = true;
+		//	contextMenuResultSelected = true;
 			var bi = e.ClickedItem as BuildMenuItem;
 		//	lastQuickBuildActionBSpot = BuildC.Nan; // reset
 		//	lastBuildToolTipSpot=BuildC.Nan;

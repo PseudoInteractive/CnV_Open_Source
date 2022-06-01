@@ -772,7 +772,7 @@ namespace CnV
 				incomingWatch = names;
 				SaveAll();
 				Note.Show("Updated incoming watch list");
-				IncomingOverview.ProcessTask();
+				//IncomingOverview.ProcessTask();
 			}
 		}
 
