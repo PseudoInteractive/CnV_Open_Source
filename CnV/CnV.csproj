@@ -4,7 +4,7 @@
 		<TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
 		<EnablePreviewFeatures>True</EnablePreviewFeatures>
 		<TargetPlatformVersion>10.0.22000.0</TargetPlatformVersion>
-		<TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
+		<TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
 		<RootNamespace>CnV</RootNamespace>
 		<ApplicationManifest>app.manifest</ApplicationManifest>
 		<Platforms>x64</Platforms>
@@ -61,28 +61,30 @@
 
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.HighPerformance" Version="8.0.0-preview3" />
-		<PackageReference Include="CommunityToolkit.WinUI.Notifications" Version="7.1.2" />
-		<PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
+		<PackageReference Include="CommunityToolkit.WinUI.UI.Controls.DataGrid" Version="7.1.2" />
+		<PackageReference Include="CommunityToolkit.WinUI.UI.Controls.Layout" Version="7.1.2" />
+		<PackageReference Include="CommunityToolkit.WinUI.UI.Controls.Markdown" Version="7.1.2" />
 		<PackageReference Include="DirectXTexNet" Version="1.0.3" />
-		<PackageReference Include="DSharpPlus" Version="4.2.0" />
+		<PackageReference Include="DSharpPlus" Version="4.3.0-nightly-01139" />
+		<PackageReference Include="Enums.NET" Version="4.0.0" />
+		<PackageReference Include="Grpc.Core" Version="2.46.3" />
+		<PackageReference Include="Grpc.Net.Client" Version="2.46.0" />
+		<PackageReference Include="Humanizer.Core" Version="2.14.1" />
+		<PackageReference Include="MagicOnion.Client" Version="4.5.0" />
 		<PackageReference Include="MessagePackAnalyzer" Version="2.4.14-alpha" />
 		<PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.5.0" />
 		<PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.5.0" />
-		<PackageReference Include="Microsoft.Extensions.ObjectPool" Version="7.0.0-preview.4.22251.1" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0-preview.4.22229.4" />
+		<PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.5" />
 		<PackageReference Include="Microsoft.Extensions.Primitives" Version="7.0.0-preview.4.22229.4" />
 		<PackageReference Include="Microsoft.Graphics.Win2D" Version="1.0.3.1" />
 		<PackageReference Include="Microsoft.Identity.Client" Version="4.44.0">
 			<TreatAsUsed>true</TreatAsUsed>
 		</PackageReference>
 		<PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="2.21.0" />
-		<PackageReference Include="Microsoft.Toolkit" Version="7.1.2" />
 		<PackageReference Include="Azure.Data.Tables" Version="12.5.0" />
 		<PackageReference Include="Azure.Storage.Blobs" Version="12.12.0" />
-		<PackageReference Include="Enums.NET" Version="4.0.0" />
-		<PackageReference Include="Grpc.Net.Client" Version="2.46.0" />
-		<PackageReference Include="Humanizer.Core" Version="2.14.1" />
 		<PackageReference Include="MessagePack" Version="2.4.14-alpha" />
-		<PackageReference Include="MagicOnion.Client" Version="4.5.0" />
 		<PackageReference Include="Microsoft.Windows.CsWinRT" Version="1.6.4" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.197" />
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.3" />
@@ -100,8 +102,13 @@
 		<PackageReference Include="SharpGen.Runtime.COM" Version="2.0.0-beta.10" />
 		<PackageReference Include="Syncfusion.Scheduler.WinUI" Version="20.1.0.58" />
 		<PackageReference Include="System.Collections.Immutable" Version="7.0.0-preview.4.22229.4" />
+		<PackageReference Include="System.ComponentModel.Annotations" Version="6.0.0-preview.4.21253.7" />
+		<PackageReference Include="System.Memory.Data" Version="7.0.0-preview.4.22229.4" />
+		<PackageReference Include="System.Net.Http.Json" Version="7.0.0-preview.4.22229.4" />
 		<PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="7.0.0-preview.2.22152.2" />
+		<PackageReference Include="System.Runtime.Experimental" Version="6.0.2" />
 		<PackageReference Include="System.Text.Json" Version="7.0.0-preview.4.22229.4" />
+		<PackageReference Include="System.Threading.Channels" Version="7.0.0-preview.4.22229.4" />
 		<PackageReference Include="ZString" Version="2.4.4" />
 	</ItemGroup>
 	<ItemGroup>
@@ -731,7 +738,7 @@
 		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 		<ImplicitUsings>True</ImplicitUsings>
 		<Nullable>annotations</Nullable>
-		<SupportedOSPlatformVersion>10.0.18362.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
 		<ApplicationIcon>Assets\cnv.ico</ApplicationIcon>
 		<PackageIcon>Square44x44Logo.targetsize-256.png</PackageIcon>
 		<PackageCertificateKeyFile>CnV_TemporaryKey.pfx</PackageCertificateKeyFile>
@@ -741,6 +748,7 @@
 		<UserSecretsId>390b80fc-ab7a-4c55-9a54-5947221eec7e</UserSecretsId>
 		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
 		<ErrorReport>none</ErrorReport>
+		<IncludeSymbols>False</IncludeSymbols>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
 		<Optimize>False</Optimize>

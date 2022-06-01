@@ -274,7 +274,7 @@ namespace CnV.Views
 				{
 					if( (text.Contains(Player.myName,StringComparison.OrdinalIgnoreCase) || text.Contains("@here",StringComparison.OrdinalIgnoreCase)))
 					{
-						ToastNotificationsService.instance.ShowNotification(entry.ToString(),"mention");
+					//	ToastNotificationsService.instance.ShowNotification(entry.ToString(),"mention");
 						Note.Show(entry.ToString());
 					}
 				}

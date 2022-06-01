@@ -16,7 +16,6 @@ using static CnV.View;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Microsoft.UI;
-using Humanizer;
 //using CommunityToolkit.WinUI.UI;
 //using CommunityToolkit.WinUI.UI.Controls;
 using static CnV.City;

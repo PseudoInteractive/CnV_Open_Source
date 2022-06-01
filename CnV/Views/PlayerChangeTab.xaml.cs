@@ -15,7 +15,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using System.Collections.Concurrent;
 using CnV.Helpers;
-using Microsoft.Toolkit;
+//using Microsoft.Toolkit;
 using CommunityToolkit.WinUI;
 using CnV.Game;
 using CommunityToolkit.WinUI.UI.Controls;
