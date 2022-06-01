@@ -901,7 +901,7 @@ namespace CnV
 		public const int buildToolSpan = 448;
 
 
-		static bool contextMenuResultSelected = false;
+		//static bool contextMenuResultSelected = false;
 		public static void ShowContextMenu(City city, BuildC cc, bool isRight)
 		{
 			isSingleClickAction = false; // default

@@ -34,8 +34,8 @@ internal partial class GameClient
 	public static Material worldObjects;
 	public static Material worldOwners;
 
-	public static VertexBuffer tesselatedWorldVB;
-	public static IndexBuffer tesselatedWorldIB;
+//	public static VertexBuffer tesselatedWorldVB;
+//	public static IndexBuffer tesselatedWorldIB;
 	static KeyF[] bulgeKeys = new[] { new KeyF(0.0f,0.0f),new KeyF(0.44f,0.44f),new KeyF(1.5f,0.44f),new KeyF(2.5f,0.0f) };
 
 	private static bool TilesReady()
@@ -44,9 +44,9 @@ internal partial class GameClient
 	}
 
 	private const int textBoxCullSlop = 80;
-	static byte clearCounter = 10;
+//	static byte clearCounter = 10;
 
-	public static bool tileSetsPending;
+	//public static bool tileSetsPending;
 	private static float smallRectSpan => 4f.ScreenToWorld();
 	public const float lightZNight = 200;
 	public const float lightZDay = 20f;
@@ -169,7 +169,6 @@ internal partial class GameClient
 	static long ticksAtDraw;
 	public static Matrix projection;
 	internal static double timeSinceLastFrame;
-	static float pitch;
 	internal const float targetStepsPerSecond = 128;
 	public static int drawCounter;
 	public static float fadeCounter = 1;

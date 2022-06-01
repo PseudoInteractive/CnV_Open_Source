@@ -172,11 +172,6 @@ namespace CnV.Views
 		static public ShellPage? instance;
 
 
-		private bool _isBackEnabled;
-		private WinUI.NavigationViewItem _selected;
-		private bool _isBusy;
-		private bool _isLoggedIn;
-		private bool _isAuthorized;
 
 		public static float webZoomLast; // for lazy setting of HTML zoom
 		public static TextBlock gridTip;

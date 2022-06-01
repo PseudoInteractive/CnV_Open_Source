@@ -27,8 +27,6 @@ namespace CnV
 
 	internal static partial class CnVClient
 	{
-		private static BackgroundTask reinforcementsTask;
-		private static BackgroundTask senInfoTask;
 
 
 		
@@ -91,12 +89,13 @@ namespace CnV
 				{
 					SocketClient.Init();
 					// Message from server will kick off sim
-					while(Sim.simPhase == Sim.SimPhase.init)
+					
+				}
+				while(Sim.simPhase == Sim.SimPhase.init)
 					{
 						await Task.Delay(500).ConfigureAwait(false);
 
 					}
-				}
 				//				await Sim.StartSim();
 
 				//	var str = timeOffsetSecondsRounded >= 0 ? " +" : " ";

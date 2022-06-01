@@ -452,7 +452,6 @@ public static class DoTheStuff
 							await city.MoveStuffLocked();
 						}
 
-						const int maxCommands = 15;
 						if(bc.unfinishedBuildings > 4)
 						{
 							if(await AppS.DoYesNoBox($"{bc.unfinishedBuildings} unfinished buildings",

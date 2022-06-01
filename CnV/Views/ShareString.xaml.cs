@@ -584,7 +584,7 @@ namespace CnV.Views
 			   foreach(var tag in TagHelper.tagsWithoutAliases)
 			   {
 
-				   var check = tagsPanel.Children.First((ch) => (ch as ToggleButton)?.Content == tag.s) as ToggleButton;
+				   var check = tagsPanel.Children.First((ch) => (ch as ToggleButton)?.Content.ToString() == tag.s) as ToggleButton;
 				   if(check.IsChecked.GetValueOrDefault())
 					   tags |= tag.v;
 

@@ -859,7 +859,7 @@ namespace CnV
 									-2 => build.overlay,
 									-1 => build.destroyImg, 
 									1 => build.dimg1, 2 => build.dimg2, 
-									3 => build.dimg3, 4 => build.dimg4 };
+									3 => build.dimg3, 4 => build.dimg4, _=>null };
 								if(str ==null)
 									continue;
 								if(GameClient.TryLoadLitMaterialFromDDS($"runtime\\city\\{str}", out var main1, out var shadow1,wantShadow:true,unlit:build.isUnlit, city:true ))

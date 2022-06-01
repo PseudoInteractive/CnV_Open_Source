@@ -15,7 +15,6 @@ namespace CnV
 		//	bool inputInitialized;
 
 		const  int musicCount = 7;
-		static int lastSongPlayed;
 		public static void UpdateMusic()
 		{
 			try
