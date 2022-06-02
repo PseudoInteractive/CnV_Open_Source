@@ -146,7 +146,7 @@ namespace CnV
 					seriesList.Add(series);
 				}
 				if(hidden)
-					seriesList.ShuffleInPlace( (ulong)metric );
+					seriesList.sShuffleInPlace( (ulong)metric );
 				sfChart.Series.AddRange(seriesList);
 
 			}

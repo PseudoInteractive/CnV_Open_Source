@@ -65,7 +65,7 @@ namespace CnV
 				
 				var t2 = CityCustom.Load();
 ;				var t3 = TTip.persist.Load();
-				BuildQueue.Initialize();
+				//BuildQueue.Initialize();
 
 				// World cannot load until tiles are loaded
 				
@@ -91,11 +91,11 @@ namespace CnV
 					// Message from server will kick off sim
 					
 				}
-				while(Sim.simPhase == Sim.SimPhase.init)
-					{
-						await Task.Delay(500).ConfigureAwait(false);
+				//while(Sim.simPhase == Sim.SimPhase.init)
+				//	{
+				//		await Task.Delay(500).ConfigureAwait(false);
 
-					}
+				//	}
 				//				await Sim.StartSim();
 
 				//	var str = timeOffsetSecondsRounded >= 0 ? " +" : " ";
