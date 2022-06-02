@@ -226,7 +226,7 @@ internal partial class GameClient
 			//                cameraZoomLag += (cameraZoom
 			// smooth ease towards target
 
-			var serverNow = Sim.simTime + ISmallTime.FromMinutes(eventTimeOffsetLag);
+			var serverNow = Sim.simTime + TimeSpanS.FromMinutes(eventTimeOffsetLag);
 
 			// not too high or we lose float precision
 			// not too low or people will see when when wraps
