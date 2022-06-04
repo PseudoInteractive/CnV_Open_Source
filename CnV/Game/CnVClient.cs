@@ -526,696 +526,696 @@ namespace CnV
 		}
 
 
-		private static void CoreWebView_WebMessageReceived(string eValue)
-		{
-			Task.Run(async () =>
-			{
-				try
-				{
-					var gotCreds = false;
-					Log($"Notify: {eValue.Length}:{eValue.Truncate(128) }");
-					using var jsDoc = JsonDocument.Parse(eValue);
-					var jsd = jsDoc.RootElement;
-					foreach(var jsp in jsd.EnumerateObject())
-						switch(jsp.Name)
-						{
-							//case "jsvars":
-							//	{
-							//		//	   AppS.DispatchOnUIThreadLow(() => ShellPage.instance.cookie.Visibility = Visibility.Collapsed);
+		//private static void CoreWebView_WebMessageReceived(string eValue)
+		//{
+		//	Task.Run(async () =>
+		//	{
+		//		try
+		//		{
+		//			var gotCreds = false;
+		//			Log($"Notify: {eValue.Length}:{eValue.Truncate(128) }");
+		//			using var jsDoc = JsonDocument.Parse(eValue);
+		//			var jsd = jsDoc.RootElement;
+		//			foreach(var jsp in jsd.EnumerateObject())
+		//				switch(jsp.Name)
+		//				{
+		//					//case "jsvars":
+		//					//	{
+		//					//		//	   AppS.DispatchOnUIThreadLow(() => ShellPage.instance.cookie.Visibility = Visibility.Collapsed);
 
-							//		var jso = jsp.Value;
+		//					//		var jso = jsp.Value;
 
-							//		//   var s = CookieDB.Serialize(cookieManager);// GetSecSessionId();
-							//		var token = jso.GetString("token");
-							//		var raidSecret = jso.GetString("raid");
-							//		var agent = jso.GetString("agent");
-							//		//cotgS = jso.GetString("s");
-							//		//  var cookie = jso.GetString("cookie");
-							//		//   Log(jsVars.cookie);
-							//		Log(token);
-							//		// Log(s);
-							//		//  for (int i = 0; i < clientCount; ++i)
-							//		//  {
-							//		//   await clientPoolSema.WaitAsync();//.ConfigureAwait(false);
-							//		////   httpFilter.CookieManager.SetCookie(new HttpCookie)
+		//					//		//   var s = CookieDB.Serialize(cookieManager);// GetSecSessionId();
+		//					//		var token = jso.GetString("token");
+		//					//		var raidSecret = jso.GetString("raid");
+		//					//		var agent = jso.GetString("agent");
+		//					//		//cotgS = jso.GetString("s");
+		//					//		//  var cookie = jso.GetString("cookie");
+		//					//		//   Log(jsVars.cookie);
+		//					//		Log(token);
+		//					//		// Log(s);
+		//					//		//  for (int i = 0; i < clientCount; ++i)
+		//					//		//  {
+		//					//		//   await clientPoolSema.WaitAsync();//.ConfigureAwait(false);
+		//					//		////   httpFilter.CookieManager.SetCookie(new HttpCookie)
 
-							//		//  }
-							//		//HTTPCook
-							//		// {
+		//					//		//  }
+		//					//		//HTTPCook
+		//					//		// {
 
-							//		//  var cooki
-							//		// }
+		//					//		//  var cooki
+		//					//		// }
 
-							//		for(; ; )
-							//		{
-							//			try
-							//			{
-							//				{
-							//					//    var clients = clientPool.ToArray();
-							//					//										   foreach (var httpClient in clientPool)
-							//					//										   {
-							//					//												  // httpClient.DefaultRequestHeaders.Cookie = "sec_session_id="+s;
+		//					//		for(; ; )
+		//					//		{
+		//					//			try
+		//					//			{
+		//					//				{
+		//					//					//    var clients = clientPool.ToArray();
+		//					//					//										   foreach (var httpClient in clientPool)
+		//					//					//										   {
+		//					//					//												  // httpClient.DefaultRequestHeaders.Cookie = "sec_session_id="+s;
 
-							//					////											   		if (subId == 0)
-							//					//											   		//  httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Cookie",cookies);//"sec_session_id=" + s);
-							//					//										   }
-							//				}
-							//			}
-							//			catch(Exception _ex)
-							//			{
-							//				LogEx(_ex);
-							//				await Task.Delay(1000);//.ConfigureAwait(false);
-							//				continue;
+		//					//					////											   		if (subId == 0)
+		//					//					//											   		//  httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Cookie",cookies);//"sec_session_id=" + s);
+		//					//					//										   }
+		//					//				}
+		//					//			}
+		//					//			catch(Exception _ex)
+		//					//			{
+		//					//				LogEx(_ex);
+		//					//				await Task.Delay(1000);//.ConfigureAwait(false);
+		//					//				continue;
 
-							//			}
-							//			break;
-							//		}
+		//					//			}
+		//					//			break;
+		//					//		}
 
-							//		//   clientPoolSema.Release(clientCount);
+		//					//		//   clientPoolSema.Release(clientCount);
 
-							////		var timeOffset = jso.GetAsInt64("timeoffset");
-							////		var timeOffsetSecondsRounded = Math.Round(timeOffset / (1000.0 * 60*30)) * 60 * 30.0f; // round to nearest half hour
-							////		gameTOffset = TimeSpan.FromSeconds(timeOffsetSecondsRounded);
-							////		gameTOffsetSeconds = (int)timeOffsetSecondsRounded;
-							////		//   gameTOffsetMs = (long)timeOffsetSecondsRounded*1000;
-							////		var str = timeOffsetSecondsRounded >= 0 ? " +" : " ";
-							////		str += $"{gameTOffset.Hours:D2}:{gameTOffset.Minutes:D2}";
-							////		Helpers.JSON.timeZoneString = str;
-							////		//   Log(JSONHelper.timeZoneString);
+		//					////		var timeOffset = jso.GetAsInt64("timeoffset");
+		//					////		var timeOffsetSecondsRounded = Math.Round(timeOffset / (1000.0 * 60*30)) * 60 * 30.0f; // round to nearest half hour
+		//					////		gameTOffset = TimeSpan.FromSeconds(timeOffsetSecondsRounded);
+		//					////		gameTOffsetSeconds = (int)timeOffsetSecondsRounded;
+		//					////		//   gameTOffsetMs = (long)timeOffsetSecondsRounded*1000;
+		//					////		var str = timeOffsetSecondsRounded >= 0 ? " +" : " ";
+		//					////		str += $"{gameTOffset.Hours:D2}:{gameTOffset.Minutes:D2}";
+		//					////		Helpers.JSON.timeZoneString = str;
+		//					////		//   Log(JSONHelper.timeZoneString);
 
-							////		Log($"TOffset {gameTOffset}");
-							////		Log(ServerTime().ToString("u"));
-							////	//	ppss = jso.GetAsInt("ppss");
-							////	//	Player.myName = jso.GetString("player");
-							////	//	if(Player.subOwner == null)
-							////	//		Player.subOwner = Player.myName;
-							////	//	Player.myId = Player.myId = jso.GetAsInt("pid"); ;
-							////		Player.myIds.Add(Player.myId);
-							////		var cid = jso.GetAsInt("cid");
-							////		Spot.build = Spot.focus = cid;
-							////		NavStack.Push(cid);
-							////		AGame.CameraC = cid.CidToWorldV();
-							////		//Note.L("cid=" + cid.CidToString());
-							////		//gameMSAtStart = jso.GetAsInt64("time");
-							////		//launchTime = DateTimeOffset.UtcNow;
-							////		//    Log(jsVars.ToString());
-							////		//  Settings.secSessionId = jso.GetAsString("s");
-							////		//		AGame.clientTL.X = jso.GetAsFloat("left");
-							////		//  AGame.clientTL.Y = jso.GetAsFloat("top");
-							////		//   Log($"WebClient:{AGame.clientTL} {ShellPage.webclientSpan.y}");
-							////		//     Note.Show($" {clientSpanX}:{clientSpanY} {ShellPage.clientTL} ");
-							////		gotCreds = true;
-							////		//			   spanX = jso.GetAsInt("spanX");
-							////		//			   spanY = jso.GetAsInt("spanY");
-							////		//			   Note.Show($"ClientSpan: {spanX}x{spanY}");
-							////		//    Log($"Built heades {httpClient.DefaultRequestHeaders.ToString() }");
+		//					////		Log($"TOffset {gameTOffset}");
+		//					////		Log(ServerTime().ToString("u"));
+		//					////	//	ppss = jso.GetAsInt("ppss");
+		//					////	//	Player.myName = jso.GetString("player");
+		//					////	//	if(Player.subOwner == null)
+		//					////	//		Player.subOwner = Player.myName;
+		//					////	//	Player.myId = Player.myId = jso.GetAsInt("pid"); ;
+		//					////		Player.myIds.Add(Player.myId);
+		//					////		var cid = jso.GetAsInt("cid");
+		//					////		Spot.build = Spot.focus = cid;
+		//					////		NavStack.Push(cid);
+		//					////		AGame.CameraC = cid.CidToWorldV();
+		//					////		//Note.L("cid=" + cid.CidToString());
+		//					////		//gameMSAtStart = jso.GetAsInt64("time");
+		//					////		//launchTime = DateTimeOffset.UtcNow;
+		//					////		//    Log(jsVars.ToString());
+		//					////		//  Settings.secSessionId = jso.GetAsString("s");
+		//					////		//		AGame.clientTL.X = jso.GetAsFloat("left");
+		//					////		//  AGame.clientTL.Y = jso.GetAsFloat("top");
+		//					////		//   Log($"WebClient:{AGame.clientTL} {ShellPage.webclientSpan.y}");
+		//					////		//     Note.Show($" {clientSpanX}:{clientSpanY} {ShellPage.clientTL} ");
+		//					////		gotCreds = true;
+		//					////		//			   spanX = jso.GetAsInt("spanX");
+		//					////		//			   spanY = jso.GetAsInt("spanY");
+		//					////		//			   Note.Show($"ClientSpan: {spanX}x{spanY}");
+		//					////		//    Log($"Built heades {httpClient.DefaultRequestHeaders.ToString() }");
 
-							////		//   UpdatePPDT(jso.GetProperty("ppdt"));
-							////		var ppdt = jso.GetProperty("ppdt");
-							////		// todo: utf
-							//////		AddPlayer(true, true, Player.myId, Player.myName, token, raidSecret, cookies);//, s, ppdt.ToString());
-
-
-							////		UpdatePPDT(ppdt, Player.myId, pruneCities: true);
-							//		//Alliance.alliancesFetchedTask.ContinueWith((_) =>
-							//		//{
-							//		//	if(Player.isSpecial)
-							//		//		Raid.test = true;
-
-							//		//});
+		//					////		//   UpdatePPDT(jso.GetProperty("ppdt"));
+		//					////		var ppdt = jso.GetProperty("ppdt");
+		//					////		// todo: utf
+		//					//////		AddPlayer(true, true, Player.myId, Player.myName, token, raidSecret, cookies);//, s, ppdt.ToString());
 
 
+		//					////		UpdatePPDT(ppdt, Player.myId, pruneCities: true);
+		//					//		//Alliance.alliancesFetchedTask.ContinueWith((_) =>
+		//					//		//{
+		//					//		//	if(Player.isSpecial)
+		//					//		//		Raid.test = true;
+
+		//					//		//});
 
 
 
-							//		//World.RunWhenLoaded(() => AppS.DispatchOnUIThreadIdle(CityUI.UpdateFocusText));
 
 
-							//		//BuildQueue.Initialize();
-							//		//AppS.DispatchOnUIThreadLow(() =>
-							//		//{
-							//		//	ShellPage.instance.coords.Text = cid.CidToString();
-							//		//	//		   ShellPage.instance.cookie.Visibility = Visibility.Collapsed;
-							//		//});
-
-							//		//break;
-							//	}
-							case "aexp":
-								{
-									var msg = jsp.Value.ToString();
-									Note.Show($"Exported Order to clipboard: {msg}");
-									AppS.CopyTextToClipboard(msg);
-									break;
-
-									;
-								}
-							case "buildFail":
-								{
-									var city = GetOrAddCity(jsp.Value.GetAsInt("cid"));
-									var e = jsp.Value.GetAsInt("e");
-									Log($"Build Command: {city.nameMarkdown} {e}, {jsp.Value.ToString()}");
+		//					//		//World.RunWhenLoaded(() => AppS.DispatchOnUIThreadIdle(CityUI.UpdateFocusText));
 
 
-									break;
-								}
-							case "error":
-								{
-									var msg = jsp.Value.GetString();
-									Trace(msg);
+		//					//		//BuildQueue.Initialize();
+		//					//		//AppS.DispatchOnUIThreadLow(() =>
+		//					//		//{
+		//					//		//	ShellPage.instance.coords.Text = cid.CidToString();
+		//					//		//	//		   ShellPage.instance.cookie.Visibility = Visibility.Collapsed;
+		//					//		//});
 
-									break;
-								}
-							case "sub":
-								{
-									var i = jsp.Value.GetAsInt();
-									AppS.DispatchOnUIThread(() => Windows.System.Launcher.LaunchUriAsync(new Uri($"{App.appLink}:launch?w={worldId}&s={i}&n=1&p={HttpUtility.UrlEncode(Player.myName, Encoding.UTF8)}", UriKind.Absolute)));
-									break;
-								}
-							case "shcit":
-								{
-									var jso = jsp.Value;
-									var cid = jso.GetAsInt();
-									ProcessCoordClick(cid, false, AppS.keyModifiers, true); // then normal click
-																								//AppS.DispatchOnUIThreadLow(async () =>
-																								//{
-																								// try
-																								// {
-																								//  var t = await App.GetClipboardText();
-																								//  if (t.StartsWith("{") && t.EndsWith("}"))
-																								//  {
-																								//   // is it json?
-																								//   var p = JsonSerializer.Deserialize<AttackSenderScript>(t);
-																								//   OpenAttackSender(t);
-																								//  }
-																								// }
-																								// catch (Exception ex)
-																								// {
+		//					//		//break;
+		//					//	}
+		//					case "aexp":
+		//						{
+		//							var msg = jsp.Value.ToString();
+		//							Note.Show($"Exported Order to clipboard: {msg}");
+		//							AppS.CopyTextToClipboard(msg);
+		//							break;
 
-									// }
-									//});
-									break;
-								}
-							//case "keyDown":
-							//	{
-							//		Log("Key");
-							//		//   Log($"Keydown: {jsp.Value.ToString()}");
-							//		VirtualKey key = default;
-							//		switch(jsp.Value.GetString("key"))
-							//		{
-							//			case "Control": key = VirtualKey.Control; break;
-							//			case "Shift": key = VirtualKey.Shift; break;
-							//			case "ScrollLock": key = VirtualKey.Scroll; break;
-							//		}
-							//		if(key != default)
-
-							//			App.OnKeyDown(key);
-							//		break;
-							//	}
-							//case "keyUp":
-							//	{
-							//		Log("Key");
-							//		VirtualKey key = default;
-							//		switch(jsp.Value.GetString("key"))
-							//		{
-							//			case "Control": key = VirtualKey.Control; break;
-							//			case "Shift": key = VirtualKey.Shift; break;
-							//			case "ScrollLock": key = VirtualKey.Scroll; break;
-							//		}
-							//		if(key != default)
-							//			//   Note.Show($"{key} Up");
-							//			App.OnKeyUp(key);
-							//		break;
-							//	}
-							//case "mouseDown":
-							//	{
-							//		Log($"mouseDown: {jsp.Value.ToString()}");
-							//		var but = jsp.Value.GetInt("button");
-							//		var x = jsp.Value.GetInt("x");
-							//		var y = jsp.Value.GetInt("y");
-							//		// 2 is context button
-							//		//if(but==2)
-							//		//    Spot.GetFocus().ShowContextMenu(this,App.Current.m.GetPointer)
-							//		//else
-							//		var kind = but switch
-							//		{
-							//			0 => PointerUpdateKind.LeftButtonPressed,
-							//			1 => PointerUpdateKind.MiddleButtonPressed,
-							//			2 => PointerUpdateKind.RightButtonPressed,
-							//			3 => PointerUpdateKind.XButton1Pressed,
-							//			4 => PointerUpdateKind.XButton2Pressed,
-							//			_ => PointerUpdateKind.Other
-							//		};
-
-							//		App.OnPointerPressed(kind);
-							//		{
-							//			AppS.DispatchOnUIThread(() =>
-							//			{
-							//				var c = view.TransformToVisual(ShellPage.canvas).TransformPoint(new(x, y));
-							//				ShellPage.Canvas_PointerPressed((c, 0, true, (ulong)Environment.TickCount64*1000, kind));
-							//			});
+		//							;
+		//						}
+		//					case "buildFail":
+		//						{
+		//							var city = GetOrAddCity(jsp.Value.GetAsInt("cid"));
+		//							var e = jsp.Value.GetAsInt("e");
+		//							Log($"Build Command: {city.nameMarkdown} {e}, {jsp.Value.ToString()}");
 
 
-							//		}
+		//							break;
+		//						}
+		//					case "error":
+		//						{
+		//							var msg = jsp.Value.GetString();
+		//							Trace(msg);
 
-							//		break;
-							//	}
-							//case "cityinfo":
-							//    {
-							//        var jso = jsp.Value;
-							//        var cid = jso.GetAsInt("cid");
-							//        var pid = Player.NameToId(jso.GetAsString("player"));
-							//        var city = Spot.GetOrAdd(cid);
-							//        var name = jso.GetString("name");
-							//        city.pid = pid; // todo: this shoule be an int playerId
-							//                        //Assert(city.pid > 0);
-							//        city.points = (ushort)jso.GetAsInt("score");
-							//        //   city.allianceId = jso.GetString("alliance"); // todo:  this should be an into alliance id
-							//        city.lastAccessed = DateTimeOffset.UtcNow;
-							//        // city.isCastle = jso.GetAsInt("castle") == 1;
-							//        city.isBlessed = city.pid > 0 ? jso.GetAsInt("bless") > 0 : false;
-							//        city.isOnWater |= jso.GetAsInt("water") != 0;  // Use Or in case the data is imcomplete or missing, in which case we get it from world data, if that is not incomplete or missing ;)
-							//        city.isTemple = jso.GetAsInt("plvl") != 0;
+		//							break;
+		//						}
+		//					case "sub":
+		//						{
+		//							var i = jsp.Value.GetAsInt();
+		//							AppS.DispatchOnUIThread(() => Windows.System.Launcher.LaunchUriAsync(new Uri($"{App.appLink}:launch?w={worldId}&s={i}&n=1&p={HttpUtility.UrlEncode(Player.myName, Encoding.UTF8)}", UriKind.Absolute)));
+		//							break;
+		//						}
+		//					case "shcit":
+		//						{
+		//							var jso = jsp.Value;
+		//							var cid = jso.GetAsInt();
+		//							ProcessCoordClick(cid, false, AppS.keyModifiers, true); // then normal click
+		//																						//AppS.DispatchOnUIThreadLow(async () =>
+		//																						//{
+		//																						// try
+		//																						// {
+		//																						//  var t = await App.GetClipboardText();
+		//																						//  if (t.StartsWith("{") && t.EndsWith("}"))
+		//																						//  {
+		//																						//   // is it json?
+		//																						//   var p = JsonSerializer.Deserialize<AttackSenderScript>(t);
+		//																						//   OpenAttackSender(t);
+		//																						//  }
+		//																						// }
+		//																						// catch (Exception ex)
+		//																						// {
 
+		//							// }
+		//							//});
+		//							break;
+		//						}
+		//					//case "keyDown":
+		//					//	{
+		//					//		Log("Key");
+		//					//		//   Log($"Keydown: {jsp.Value.ToString()}");
+		//					//		VirtualKey key = default;
+		//					//		switch(jsp.Value.GetString("key"))
+		//					//		{
+		//					//			case "Control": key = VirtualKey.Control; break;
+		//					//			case "Shift": key = VirtualKey.Shift; break;
+		//					//			case "ScrollLock": key = VirtualKey.Scroll; break;
+		//					//		}
+		//					//		if(key != default)
 
-							//        break;
-							//    }
-							case "notify":
-								{
-									//foreach(var note in jsp.Value.EnumerateArray())
-									//{
-									//	var str = note.GetString();
-									//	Log(str);
-									//	var ss = str.Split(',', StringSplitOptions.RemoveEmptyEntries);
-									//	if(int.TryParse(ss[0], out var id))
-									//		if(id == 99)
-									//		{
-									//			// online notify
-									//			var friend = ss[1];
-									//			var online = ss[2] == "1";
-									//			var msg = new ChatEntry(friend, online ? " has come online" : " has gone offline", serverTime, ChatEntry.typeAnnounce);
-									//			AppS.DispatchOnUIThreadLow(() =>
-									//			{
-									//				ChatTab.alliance.Post(msg, true);
-									//				ChatTab.world.Post(msg, true);
-									//			}); // post on both
-									//		}
-									//		else if(id == 9)
-									//		{
-									//			var cid = int.Parse(ss[1]);
-									//			// founded new city
-									//			await Task.Delay(30000);//.ConfigureAwait(false);
-									//			Note.Show($"You have founded a new city!  Would you like to run [Setup](/s/{cid.CidToString()})");
+		//					//			App.OnKeyDown(key);
+		//					//		break;
+		//					//	}
+		//					//case "keyUp":
+		//					//	{
+		//					//		Log("Key");
+		//					//		VirtualKey key = default;
+		//					//		switch(jsp.Value.GetString("key"))
+		//					//		{
+		//					//			case "Control": key = VirtualKey.Control; break;
+		//					//			case "Shift": key = VirtualKey.Shift; break;
+		//					//			case "ScrollLock": key = VirtualKey.Scroll; break;
+		//					//		}
+		//					//		if(key != default)
+		//					//			//   Note.Show($"{key} Up");
+		//					//			App.OnKeyUp(key);
+		//					//		break;
+		//					//	}
+		//					//case "mouseDown":
+		//					//	{
+		//					//		Log($"mouseDown: {jsp.Value.ToString()}");
+		//					//		var but = jsp.Value.GetInt("button");
+		//					//		var x = jsp.Value.GetInt("x");
+		//					//		var y = jsp.Value.GetInt("y");
+		//					//		// 2 is context button
+		//					//		//if(but==2)
+		//					//		//    Spot.GetFocus().ShowContextMenu(this,App.Current.m.GetPointer)
+		//					//		//else
+		//					//		var kind = but switch
+		//					//		{
+		//					//			0 => PointerUpdateKind.LeftButtonPressed,
+		//					//			1 => PointerUpdateKind.MiddleButtonPressed,
+		//					//			2 => PointerUpdateKind.RightButtonPressed,
+		//					//			3 => PointerUpdateKind.XButton1Pressed,
+		//					//			4 => PointerUpdateKind.XButton2Pressed,
+		//					//			_ => PointerUpdateKind.Other
+		//					//		};
 
-									//		}
-
-									//}
-									break;
-								}
-							//case "incoming":
-							//	{
-							//		AppS.QueueIdleTask(IncomingOverview.ProcessTask, 1000);
-							//		break;
-							//	}
-							//case "outgoing":
-							//	{
-							//		AppS.QueueIdleTask(OutgoingOverview.ProcessTask, 1000);
-							//		break;
-							//	}
-							//case "gstcb":
-							//	{
-							//		Note.Show(jsp.ToString());
-							//		var jso = jsp.Value;
-							//		var tag = jso.GetAsInt("tag");
-							//		if(gstCBs.TryGetValue(tag, out var cb))
-							//			cb(jso);
-
-							//		break;
-							//	}
-							case "rmp":
-								{
-									var str = jsp.ToString();
-									AppS.CopyTextToClipboard(str);
-									Note.Show(str);
-									//foreach(var o in jsp.Value.EnumerateObject())
-									//	foreach(var st in o.Value.EnumerateArray())
-									//		TileData.UpdateTile(st.GetAsString());
-									break;
-								}
-
-							//case "gstempty":
-							//	{
-							//		var jso = jsp.Value;
-							//		var water = jso.GetAsInt("water") == 1;
-							//		var res = jso.GetAsString("res").Split('^', StringSplitOptions.RemoveEmptyEntries);
-							//		var cid = jso.GetAsInt("cid");
-
-							//		var food = float.Parse(res[3]);
-							//		var wood = float.Parse(res[0]);
-							//		var stone = float.Parse(res[1]);
-							//		var iron = float.Parse(res[2]);
-							//		var sum = wood + stone + iron + food;
-							//		(var x, var y) = cid.CidToWorld();
-							//		float woodCount = 10, stoneCount = 10, ironCount = 10, plainsCount = 2;
-							//		TileData.instance.ResourceGain(x, y + 1, false, ref woodCount, ref stoneCount, ref ironCount, ref plainsCount);
-							//		TileData.instance.ResourceGain(x - 1, y, false, ref woodCount, ref stoneCount, ref ironCount, ref plainsCount);
-							//		TileData.instance.ResourceGain(x, y - 1, false, ref woodCount, ref stoneCount, ref ironCount, ref plainsCount);
-							//		TileData.instance.ResourceGain(x + 1, y, false, ref woodCount, ref stoneCount, ref ironCount, ref plainsCount);
-							//		TileData.instance.ResourceGain(x + 1, y + 1, true, ref woodCount, ref stoneCount, ref ironCount, ref plainsCount);
-							//		TileData.instance.ResourceGain(x - 1, y + 1, true, ref woodCount, ref stoneCount, ref ironCount, ref plainsCount);
-							//		TileData.instance.ResourceGain(x - 1, y - 1, true, ref woodCount, ref stoneCount, ref ironCount, ref plainsCount);
-							//		TileData.instance.ResourceGain(x + 1, y - 1, true, ref woodCount, ref stoneCount, ref ironCount, ref plainsCount);
-							//		//if (!AppS.IsKeyPressedShift())
-							//		//{
-							//		//    woodCount = woodCount.Min(30);
-							//		//    stoneCount = stoneCount.Min(30);
-							//		//    ironCount = ironCount.Min(30);
-							//		//}
-
-							//		var totalRes = woodCount + stoneCount + ironCount + plainsCount;
-							//		var iWood = ((int)(woodCount * 80.0 / totalRes)).Min(30);
-							//		var iStone = ((int)(stoneCount * 80.0 / totalRes)).Min(30);
-							//		var iIron = ((int)(ironCount * 80.0 / totalRes)).Min(30);
-							//		var maxDelta = (iWood - wood).Abs().Max((iStone - stone).Abs()).Max((iIron - iIron).Abs()).Max((food - plainsCount).Abs());
-							//		var predicted = iWood + iStone + iIron + plainsCount;
-							//		if(iWood - wood >= 1.0f)
-							//		{
-							//			Note.Show($"{predicted} predicted, {sum} actual, {iWood}:{wood} {iStone}:{stone} {iIron}:{iron} {plainsCount}:{food}");
-							//			SpotTab.TouchSpot(cid, VirtualKeyModifiers.None, false, true);
-							//		}
-							//		//  var nodes = (nodeCount+30)/(nodeCount+30+2+ plainsCount)*80 + 2+ plainsCount;
-							//		break;
-							//	}
-							//case "cityclick":
-							//	{
-							//		var jso = jsp.Value;
-							//		var cid = jso.GetAsInt("cid");
-							//		{
-							//			var pid = Player.NameToId(jso.GetAsString("player"));
-							//			var city = Spot.GetOrAdd(cid);
-							//			var name = jso.GetString("name");
-							//			city.pid = pid; // todo: this shoule be an int playerId
-							//			city.type = jso.GetAsByte("type");
-							//			city.remarks = jso.GetAsString("notes");                //Assert(city.pid > 0);
-							//			city.UpdateTags();
-							//			city.stats.points = (ushort)jso.GetAsInt("score");
-							//			//   city.allianceId = jso.GetString("alliance"); // todo:  this should be an into alliance id
-							//			//       city.lastAccessed = DateTimeOffset.UtcNow;
-							//			// city.isCastle = jso.GetAsInt("castle") == 1;
-							//			var blessed = city.pid > 0 ? jso.GetAsInt("bless") > 0 : false;
-							//			if(blessed != city.isBlessed)
-							//			{
-							//				city.isBlessed = blessed;
-							//				city.OnPropertyChanged(nameof(City.icon));
-							//			}
-							//			city.isOnWater |= jso.GetAsInt("water") != 0;  // Use Or in case the data is imcomplete or missing, in which case we get it from world data, if that is not incomplete or missing ;)
-							//			city.isTemple = jso.GetAsInt("plvl") != 0;
-
-							//			//if(City.focus != cid)
-							//			// cid.BringCidIntoWorldView(true,false);
-							//			if(city._cityName != name)
-							//			{
-							//				city._cityName = name;
-							//				if(cid == Spot.focus)
-							//					AppS.DispatchOnUIThreadLow(() => ShellPage.instance.focus.Content = city.nameAndRemarks);
-							//			}
-							//			if(Spot.focus != cid)
-							//				city.SetFocus(true);
-							//			//
-							//		}
-
-							//		break;
-
-							//	}
+		//					//		App.OnPointerPressed(kind);
+		//					//		{
+		//					//			AppS.DispatchOnUIThread(() =>
+		//					//			{
+		//					//				var c = view.TransformToVisual(ShellPage.canvas).TransformPoint(new(x, y));
+		//					//				ShellPage.Canvas_PointerPressed((c, 0, true, (ulong)Environment.TickCount64*1000, kind));
+		//					//			});
 
 
-							case "ext":
-								{
-									Assert(false);
-									break;
-								}
+		//					//		}
+
+		//					//		break;
+		//					//	}
+		//					//case "cityinfo":
+		//					//    {
+		//					//        var jso = jsp.Value;
+		//					//        var cid = jso.GetAsInt("cid");
+		//					//        var pid = Player.NameToId(jso.GetAsString("player"));
+		//					//        var city = Spot.GetOrAdd(cid);
+		//					//        var name = jso.GetString("name");
+		//					//        city.pid = pid; // todo: this shoule be an int playerId
+		//					//                        //Assert(city.pid > 0);
+		//					//        city.points = (ushort)jso.GetAsInt("score");
+		//					//        //   city.allianceId = jso.GetString("alliance"); // todo:  this should be an into alliance id
+		//					//        city.lastAccessed = DateTimeOffset.UtcNow;
+		//					//        // city.isCastle = jso.GetAsInt("castle") == 1;
+		//					//        city.isBlessed = city.pid > 0 ? jso.GetAsInt("bless") > 0 : false;
+		//					//        city.isOnWater |= jso.GetAsInt("water") != 0;  // Use Or in case the data is imcomplete or missing, in which case we get it from world data, if that is not incomplete or missing ;)
+		//					//        city.isTemple = jso.GetAsInt("plvl") != 0;
 
 
-							//case "citydata":
-							//	{
-							//		try
-							//		{
-							//			var jse = jsp.Value;
-							//			// var priorCid = cid;
-							//			var cid = jse.GetInt("cid");
-							//			//if (!ShellPage.IsWorldView())
-							//			// AGame.viewCW = cid.CidToWorldV();
-							//			var isFromTs = jse.TryGetProperty("ts", out _);
-							//			//Note.L("citydata=" + cid.CidToString());
-							//			var city = GetOrAddCity(cid);
-							//			city.LoadCityData(jse);
+		//					//        break;
+		//					//    }
+		//					case "notify":
+		//						{
+		//							//foreach(var note in jsp.Value.EnumerateArray())
+		//							//{
+		//							//	var str = note.GetString();
+		//							//	Log(str);
+		//							//	var ss = str.Split(',', StringSplitOptions.RemoveEmptyEntries);
+		//							//	if(int.TryParse(ss[0], out var id))
+		//							//		if(id == 99)
+		//							//		{
+		//							//			// online notify
+		//							//			var friend = ss[1];
+		//							//			var online = ss[2] == "1";
+		//							//			var msg = new ChatEntry(friend, online ? " has come online" : " has gone offline", serverTime, ChatEntry.typeAnnounce);
+		//							//			AppS.DispatchOnUIThreadLow(() =>
+		//							//			{
+		//							//				ChatTab.alliance.Post(msg, true);
+		//							//				ChatTab.world.Post(msg, true);
+		//							//			}); // post on both
+		//							//		}
+		//							//		else if(id == 9)
+		//							//		{
+		//							//			var cid = int.Parse(ss[1]);
+		//							//			// founded new city
+		//							//			await Task.Delay(30000);//.ConfigureAwait(false);
+		//							//			Note.Show($"You have founded a new city!  Would you like to run [Setup](/s/{cid.CidToString()})");
 
-							//			// If it does not include TS it is from a call to chcity
-							//			// Otherwise is is from a change in TS
+		//							//		}
 
-							//			if(!isFromTs)
-							//			{
-							//				//		if (cid != City.build)
-							//				//		   city.SetBuild(false);
-							//			}
-							//			if(isFromTs && cid == DungeonView.openCity && DungeonView.IsVisible())
-							//				//   if (jse.TryGetProperty("ts", out _))
-							//				//  {
-							//				ScanDungeons.Post(cid, city.commandSlots == 0, false);  // if command slots is 0, something was not send correctly
-							//			NavStack.Push(cid);
-							//			if(waitingOnCityData.Length > 0)
-							//			{
-							//				var allDone = true;
-							//				foreach(var i in waitingOnCityData)
-							//				{
-							//					if(i.cid == cid)
-							//						i.Done();
-							//					allDone &= i.isDone;
-							//				}
-							//				if(allDone)
-							//					waitingOnCityData = Array.Empty<WaitOnCityDataData>();
-							//			}
-							//		}
-							//		catch(Exception ex)
-							//		{
-							//			LogEx(ex);
-							//		}
-							//		finally
-							//		{
+		//							//}
+		//							break;
+		//						}
+		//					//case "incoming":
+		//					//	{
+		//					//		AppS.QueueIdleTask(IncomingOverview.ProcessTask, 1000);
+		//					//		break;
+		//					//	}
+		//					//case "outgoing":
+		//					//	{
+		//					//		AppS.QueueIdleTask(OutgoingOverview.ProcessTask, 1000);
+		//					//		break;
+		//					//	}
+		//					//case "gstcb":
+		//					//	{
+		//					//		Note.Show(jsp.ToString());
+		//					//		var jso = jsp.Value;
+		//					//		var tag = jso.GetAsInt("tag");
+		//					//		if(gstCBs.TryGetValue(tag, out var cb))
+		//					//			cb(jso);
 
-							//		}
+		//					//		break;
+		//					//	}
+		//					case "rmp":
+		//						{
+		//							var str = jsp.ToString();
+		//							AppS.CopyTextToClipboard(str);
+		//							Note.Show(str);
+		//							//foreach(var o in jsp.Value.EnumerateObject())
+		//							//	foreach(var st in o.Value.EnumerateArray())
+		//							//		TileData.UpdateTile(st.GetAsString());
+		//							break;
+		//						}
+
+		//					//case "gstempty":
+		//					//	{
+		//					//		var jso = jsp.Value;
+		//					//		var water = jso.GetAsInt("water") == 1;
+		//					//		var res = jso.GetAsString("res").Split('^', StringSplitOptions.RemoveEmptyEntries);
+		//					//		var cid = jso.GetAsInt("cid");
+
+		//					//		var food = float.Parse(res[3]);
+		//					//		var wood = float.Parse(res[0]);
+		//					//		var stone = float.Parse(res[1]);
+		//					//		var iron = float.Parse(res[2]);
+		//					//		var sum = wood + stone + iron + food;
+		//					//		(var x, var y) = cid.CidToWorld();
+		//					//		float woodCount = 10, stoneCount = 10, ironCount = 10, plainsCount = 2;
+		//					//		TileData.instance.ResourceGain(x, y + 1, false, ref woodCount, ref stoneCount, ref ironCount, ref plainsCount);
+		//					//		TileData.instance.ResourceGain(x - 1, y, false, ref woodCount, ref stoneCount, ref ironCount, ref plainsCount);
+		//					//		TileData.instance.ResourceGain(x, y - 1, false, ref woodCount, ref stoneCount, ref ironCount, ref plainsCount);
+		//					//		TileData.instance.ResourceGain(x + 1, y, false, ref woodCount, ref stoneCount, ref ironCount, ref plainsCount);
+		//					//		TileData.instance.ResourceGain(x + 1, y + 1, true, ref woodCount, ref stoneCount, ref ironCount, ref plainsCount);
+		//					//		TileData.instance.ResourceGain(x - 1, y + 1, true, ref woodCount, ref stoneCount, ref ironCount, ref plainsCount);
+		//					//		TileData.instance.ResourceGain(x - 1, y - 1, true, ref woodCount, ref stoneCount, ref ironCount, ref plainsCount);
+		//					//		TileData.instance.ResourceGain(x + 1, y - 1, true, ref woodCount, ref stoneCount, ref ironCount, ref plainsCount);
+		//					//		//if (!AppS.IsKeyPressedShift())
+		//					//		//{
+		//					//		//    woodCount = woodCount.Min(30);
+		//					//		//    stoneCount = stoneCount.Min(30);
+		//					//		//    ironCount = ironCount.Min(30);
+		//					//		//}
+
+		//					//		var totalRes = woodCount + stoneCount + ironCount + plainsCount;
+		//					//		var iWood = ((int)(woodCount * 80.0 / totalRes)).Min(30);
+		//					//		var iStone = ((int)(stoneCount * 80.0 / totalRes)).Min(30);
+		//					//		var iIron = ((int)(ironCount * 80.0 / totalRes)).Min(30);
+		//					//		var maxDelta = (iWood - wood).Abs().Max((iStone - stone).Abs()).Max((iIron - iIron).Abs()).Max((food - plainsCount).Abs());
+		//					//		var predicted = iWood + iStone + iIron + plainsCount;
+		//					//		if(iWood - wood >= 1.0f)
+		//					//		{
+		//					//			Note.Show($"{predicted} predicted, {sum} actual, {iWood}:{wood} {iStone}:{stone} {iIron}:{iron} {plainsCount}:{food}");
+		//					//			SpotTab.TouchSpot(cid, VirtualKeyModifiers.None, false, true);
+		//					//		}
+		//					//		//  var nodes = (nodeCount+30)/(nodeCount+30+2+ plainsCount)*80 + 2+ plainsCount;
+		//					//		break;
+		//					//	}
+		//					//case "cityclick":
+		//					//	{
+		//					//		var jso = jsp.Value;
+		//					//		var cid = jso.GetAsInt("cid");
+		//					//		{
+		//					//			var pid = Player.NameToId(jso.GetAsString("player"));
+		//					//			var city = Spot.GetOrAdd(cid);
+		//					//			var name = jso.GetString("name");
+		//					//			city.pid = pid; // todo: this shoule be an int playerId
+		//					//			city.type = jso.GetAsByte("type");
+		//					//			city.remarks = jso.GetAsString("notes");                //Assert(city.pid > 0);
+		//					//			city.UpdateTags();
+		//					//			city.stats.points = (ushort)jso.GetAsInt("score");
+		//					//			//   city.allianceId = jso.GetString("alliance"); // todo:  this should be an into alliance id
+		//					//			//       city.lastAccessed = DateTimeOffset.UtcNow;
+		//					//			// city.isCastle = jso.GetAsInt("castle") == 1;
+		//					//			var blessed = city.pid > 0 ? jso.GetAsInt("bless") > 0 : false;
+		//					//			if(blessed != city.isBlessed)
+		//					//			{
+		//					//				city.isBlessed = blessed;
+		//					//				city.OnPropertyChanged(nameof(City.icon));
+		//					//			}
+		//					//			city.isOnWater |= jso.GetAsInt("water") != 0;  // Use Or in case the data is imcomplete or missing, in which case we get it from world data, if that is not incomplete or missing ;)
+		//					//			city.isTemple = jso.GetAsInt("plvl") != 0;
+
+		//					//			//if(City.focus != cid)
+		//					//			// cid.BringCidIntoWorldView(true,false);
+		//					//			if(city._cityName != name)
+		//					//			{
+		//					//				city._cityName = name;
+		//					//				if(cid == Spot.focus)
+		//					//					AppS.DispatchOnUIThreadLow(() => ShellPage.instance.focus.Content = city.nameAndRemarks);
+		//					//			}
+		//					//			if(Spot.focus != cid)
+		//					//				city.SetFocus(true);
+		//					//			//
+		//					//		}
+
+		//					//		break;
+
+		//					//	}
 
 
-							//		break;
+		//					case "ext":
+		//						{
+		//							Assert(false);
+		//							break;
+		//						}
 
-							//	}
-							case "OGA":
-								{
-									Log("OGA" + eValue.ToString());
-									break;
-								}
-							case "OGR":
-								{
-									//  Log(e.Value);
-									break;
-								}
-							//case "snd":
-							//	{
-							//		UpdateSenatorInfo();
-							//		break;
-							//	}
-							case "OGT":
-								{
-									// Log(e.Value);
-									break;
-								}
+
+		//					//case "citydata":
+		//					//	{
+		//					//		try
+		//					//		{
+		//					//			var jse = jsp.Value;
+		//					//			// var priorCid = cid;
+		//					//			var cid = jse.GetInt("cid");
+		//					//			//if (!ShellPage.IsWorldView())
+		//					//			// AGame.viewCW = cid.CidToWorldV();
+		//					//			var isFromTs = jse.TryGetProperty("ts", out _);
+		//					//			//Note.L("citydata=" + cid.CidToString());
+		//					//			var city = GetOrAddCity(cid);
+		//					//			city.LoadCityData(jse);
+
+		//					//			// If it does not include TS it is from a call to chcity
+		//					//			// Otherwise is is from a change in TS
+
+		//					//			if(!isFromTs)
+		//					//			{
+		//					//				//		if (cid != City.build)
+		//					//				//		   city.SetBuild(false);
+		//					//			}
+		//					//			if(isFromTs && cid == DungeonView.openCity && DungeonView.IsVisible())
+		//					//				//   if (jse.TryGetProperty("ts", out _))
+		//					//				//  {
+		//					//				ScanDungeons.Post(cid, city.commandSlots == 0, false);  // if command slots is 0, something was not send correctly
+		//					//			NavStack.Push(cid);
+		//					//			if(waitingOnCityData.Length > 0)
+		//					//			{
+		//					//				var allDone = true;
+		//					//				foreach(var i in waitingOnCityData)
+		//					//				{
+		//					//					if(i.cid == cid)
+		//					//						i.Done();
+		//					//					allDone &= i.isDone;
+		//					//				}
+		//					//				if(allDone)
+		//					//					waitingOnCityData = Array.Empty<WaitOnCityDataData>();
+		//					//			}
+		//					//		}
+		//					//		catch(Exception ex)
+		//					//		{
+		//					//			LogEx(ex);
+		//					//		}
+		//					//		finally
+		//					//		{
+
+		//					//		}
+
+
+		//					//		break;
+
+		//					//	}
+		//					case "OGA":
+		//						{
+		//							Log("OGA" + eValue.ToString());
+		//							break;
+		//						}
+		//					case "OGR":
+		//						{
+		//							//  Log(e.Value);
+		//							break;
+		//						}
+		//					//case "snd":
+		//					//	{
+		//					//		UpdateSenatorInfo();
+		//					//		break;
+		//					//	}
+		//					case "OGT":
+		//						{
+		//							// Log(e.Value);
+		//							break;
+		//						}
 							
-							//case "gPlA":
-							//	{
-							//		Player.Ctor(jsp.Value);
-							//		//await 
-							//		//while(!ppdtInitialized || !Alliance.diplomacyFetched)
-							//		// await Task.Delay(500).ConfigureAwait(false);
-							//		////if (Player.isAvatarOrTest)
-							//		////{
-							//		//// AppS.DispatchOnUIThreadLow(() =>
-							//		//// {
-							//		//// // create a timer for precense updates
-							//		//// presenceTimer = new DispatcherTimer();
-							//		////  presenceTimer.Interval = TimeSpan.FromSeconds(16);
-							//		////  presenceTimer.Tick += PresenceTimer_Tick; ;
-							//		////  presenceTimer.Start();
-							//		//// // Seed it off
+		//					//case "gPlA":
+		//					//	{
+		//					//		Player.Ctor(jsp.Value);
+		//					//		//await 
+		//					//		//while(!ppdtInitialized || !Alliance.diplomacyFetched)
+		//					//		// await Task.Delay(500).ConfigureAwait(false);
+		//					//		////if (Player.isAvatarOrTest)
+		//					//		////{
+		//					//		//// AppS.DispatchOnUIThreadLow(() =>
+		//					//		//// {
+		//					//		//// // create a timer for precense updates
+		//					//		//// presenceTimer = new DispatcherTimer();
+		//					//		////  presenceTimer.Interval = TimeSpan.FromSeconds(16);
+		//					//		////  presenceTimer.Tick += PresenceTimer_Tick; ;
+		//					//		////  presenceTimer.Start();
+		//					//		//// // Seed it off
 
-							//		////});
-							//		//// PresenceTimer_Tick(null, null); // seed it off, but only after our token has time to have been set
-							//		////}
-							//		break;
-							//	}
-							// city lists
-							//case "ppdt":
-							//	{
-							//		var jse = jsp.Value;
-							//		UpdatePPDT(jse, jse.TryGetProperty("pid", out var _pid) ? _pid.GetAsInt() : Player.myId);
-							//		break;
-							//	}
-							case "chat":
-								{
-									//var jsv = jsp.Value.Clone();
-									//AppS.DispatchOnUIThreadLow(() => ChatTab.ProcessIncomingChat(jsv));
+		//					//		////});
+		//					//		//// PresenceTimer_Tick(null, null); // seed it off, but only after our token has time to have been set
+		//					//		////}
+		//					//		break;
+		//					//	}
+		//					// city lists
+		//					//case "ppdt":
+		//					//	{
+		//					//		var jse = jsp.Value;
+		//					//		UpdatePPDT(jse, jse.TryGetProperty("pid", out var _pid) ? _pid.GetAsInt() : Player.myId);
+		//					//		break;
+		//					//	}
+		//					case "chat":
+		//						{
+		//							//var jsv = jsp.Value.Clone();
+		//							//AppS.DispatchOnUIThreadLow(() => ChatTab.ProcessIncomingChat(jsv));
 
-									break;
-								}
-							case "chatin":
-								var s = jsp.Value.GetString();
-								AppS.DispatchOnUIThreadLow(() => ChatTab.PasteToChatInput(s));
-								break;
-							case "copyclip":
-								{
-									AppS.CopyTextToClipboard(jsp.Value.GetAsString());
-									break;
-								}
-							case "cmd":
-								{
-									var str = jsp.Value.GetAsString();
-									OpenAttackSender(str);
-									break;
-								}
-							case "setglobals":
-								{
-									Assert(false);
-									//var jso = jsp.Value;
-									//var raidSecret = jso.GetString("secret");
-									//var pid = jso.GetInt("pid");
+		//							break;
+		//						}
+		//					case "chatin":
+		//						var s = jsp.Value.GetString();
+		//						AppS.DispatchOnUIThreadLow(() => ChatTab.PasteToChatInput(s));
+		//						break;
+		//					case "copyclip":
+		//						{
+		//							AppS.CopyTextToClipboard(jsp.Value.GetAsString());
+		//							break;
+		//						}
+		//					case "cmd":
+		//						{
+		//							var str = jsp.Value.GetAsString();
+		//							OpenAttackSender(str);
+		//							break;
+		//						}
+		//					case "setglobals":
+		//						{
+		//							Assert(false);
+		//							//var jso = jsp.Value;
+		//							//var raidSecret = jso.GetString("secret");
+		//							//var pid = jso.GetInt("pid");
 
-									//pendingCookies = null;
-									//var pn = jso.GetString("pn");
-									//var ppdt = jso.GetProperty("ppdt");
-									//var token = jso.GetString("token");
-									//var s = jso.GetString("s");
-									//var cid = jso.GetAsInt("cid");
-									//AddPlayer(false, true, pid, pn, token, raidSecret, s, ppdt.ToString());
+		//							//pendingCookies = null;
+		//							//var pn = jso.GetString("pn");
+		//							//var ppdt = jso.GetProperty("ppdt");
+		//							//var token = jso.GetString("token");
+		//							//var s = jso.GetString("s");
+		//							//var cid = jso.GetAsInt("cid");
+		//							//AddPlayer(false, true, pid, pn, token, raidSecret, s, ppdt.ToString());
 
-									//var city = City.GetOrAdd(cid);
-									//// If they are visiting somene elses city we don't want to be directed there
-									//// so we go to the default city
-									//UpdatePPDT(ppdt, pid,updateBuildCity:(city.pid != pid) ); 
+		//							//var city = City.GetOrAdd(cid);
+		//							//// If they are visiting somene elses city we don't want to be directed there
+		//							//// so we go to the default city
+		//							//UpdatePPDT(ppdt, pid,updateBuildCity:(city.pid != pid) ); 
 
-									//if (city.pid == pid) // we want ot visit a specific city
-									//{
-									//CitySwitch(cid,true);
-									//}
+		//							//if (city.pid == pid) // we want ot visit a specific city
+		//							//{
+		//							//CitySwitch(cid,true);
+		//							//}
 
-									break;
-								}
-							case "restoreglobals":
-								{
-									Assert(false);
-									//Note.Show("Cookies failed, maybe they need to log in again to refresh cookies?");
-									//// only need to restore cookies
-									//CookieDB.Apply(jsVars.cookies);
-									//pendingCookies = null;
+		//							break;
+		//						}
+		//					case "restoreglobals":
+		//						{
+		//							Assert(false);
+		//							//Note.Show("Cookies failed, maybe they need to log in again to refresh cookies?");
+		//							//// only need to restore cookies
+		//							//CookieDB.Apply(jsVars.cookies);
+		//							//pendingCookies = null;
 
-									//AppS.DispatchOnUIThreadLow(() => ShellPage.instance.friendListBox.SelectedItem = Player.activePlayerName);
+		//							//AppS.DispatchOnUIThreadLow(() => ShellPage.instance.friendListBox.SelectedItem = Player.activePlayerName);
 
-									break;
-								}
-							case "c":
-								{
+		//							break;
+		//						}
+		//					case "c":
+		//						{
 
-									var jso = jsp.Value;
-									var popupCount = jso.GetAsInt("p");
-									//     Note.L("cid=" + cid.CidToString());
-									if(ppdtInitialized && jso.TryGetProperty("v", out var v))
-									{
-										var vm = (ViewMode)v.GetAsInt();
-										switch(vm)
-										{
-											case ViewMode.city:
-												View.viewZoom = View.cityZoomDefault;
-												break;
-											case ViewMode.region:
-												View.viewZoom = View.cameraZoomRegionDefault;
-												break;
-											case ViewMode.world:
-												View.viewZoom = View.cameraZoomWorldDefault;
+		//							var jso = jsp.Value;
+		//							var popupCount = jso.GetAsInt("p");
+		//							//     Note.L("cid=" + cid.CidToString());
+		//							if(ppdtInitialized && jso.TryGetProperty("v", out var v))
+		//							{
+		//								var vm = (ViewMode)v.GetAsInt();
+		//								switch(vm)
+		//								{
+		//									case ViewMode.city:
+		//										View.viewZoom = View.cityZoomDefault;
+		//										break;
+		//									case ViewMode.region:
+		//										View.viewZoom = View.cameraZoomRegionDefault;
+		//										break;
+		//									case ViewMode.world:
+		//										View.viewZoom = View.cameraZoomWorldDefault;
 
-												break;
-										}
-										Spot.build.BringIntoWorldView(false);
-										View.AutoSwitchViewMode();
-									}
+		//										break;
+		//								}
+		//								Spot.build.BringIntoWorldView(false);
+		//								View.AutoSwitchViewMode();
+		//							}
 
-									//   ShellPage.SetViewMode((ViewMode)jso.GetInt("v"));
-									if(jso.TryGetProperty("pop", out var pop))
-									{
-										var str = pop.ToString();
+		//							//   ShellPage.SetViewMode((ViewMode)jso.GetInt("v"));
+		//							if(jso.TryGetProperty("pop", out var pop))
+		//							{
+		//								var str = pop.ToString();
 
-										var popup = JsonSerializer.Deserialize<Models.JSPopupNode[]>(str, JSON.jsonSerializerOptions);
-										Log(popup.Length.ToString());
-										// AppS.DispatchOnUIThreadLow(() => Models.JSPopupNode.Show(popup));
-										Models.JSPopupNode.Show(popup);
+		//								var popup = JsonSerializer.Deserialize<Models.JSPopupNode[]>(str, JSON.jsonSerializerOptions);
+		//								Log(popup.Length.ToString());
+		//								// AppS.DispatchOnUIThreadLow(() => Models.JSPopupNode.Show(popup));
+		//								Models.JSPopupNode.Show(popup);
 
-									}
-									//  ShellPage.NotifyCotgPopup(popupCount);
-									//                                ShellPage.SetCanvasVisibility(noPopup);
-									if(ppdtInitialized && jso.TryGetProperty("c", out var _cid))
-									{
-										// this should be rare, sometimes the JS city is out of sync with the registered city
-										// Assert(false);
-										var cid = _cid.GetAsInt();
-										if(cid != Spot.build)
-											CitySwitch(cid, true, false, false, false, false);
-									}
-									break;
-								}
+		//							}
+		//							//  ShellPage.NotifyCotgPopup(popupCount);
+		//							//                                ShellPage.SetCanvasVisibility(noPopup);
+		//							if(ppdtInitialized && jso.TryGetProperty("c", out var _cid))
+		//							{
+		//								// this should be rare, sometimes the JS city is out of sync with the registered city
+		//								// Assert(false);
+		//								var cid = _cid.GetAsInt();
+		//								if(cid != Spot.build)
+		//									CitySwitch(cid, true, false, false, false, false);
+		//							}
+		//							break;
+		//						}
 
-								//case "stable":
-								//    {
-								//        var jse = jsp.Value;
-								//        int counter = 0;
-								//        StringBuilder sb = new StringBuilder();
-								//        foreach (var i in jse.EnumerateArray())
-								//        {
-								//            sb.Append('"');
+		//						//case "stable":
+		//						//    {
+		//						//        var jse = jsp.Value;
+		//						//        int counter = 0;
+		//						//        StringBuilder sb = new StringBuilder();
+		//						//        foreach (var i in jse.EnumerateArray())
+		//						//        {
+		//						//            sb.Append('"');
 
-								//            sb.Append(HttpUtility.JavaScriptStringEncode(i.GetString()));
-								//            sb.Append("\" /* " + counter++ + " */,"); 
+		//						//            sb.Append(HttpUtility.JavaScriptStringEncode(i.GetString()));
+		//						//            sb.Append("\" /* " + counter++ + " */,"); 
 
-								//        }
-								//        var s = sb.ToString();
-								//        Log(s);
-								//        break;
+		//						//        }
+		//						//        var s = sb.ToString();
+		//						//        Log(s);
+		//						//        break;
 
-								//    }
-								//    break;
-						}
+		//						//    }
+		//						//    break;
+		//				}
 
-					//if(gotCreds)
-					//	CnVClient.InitializeGame();
-				}
-				//}
-
-
-				// }
-				//var cookie = httpClient.DefaultRequestHeaders.Cookie;
-				//cookie.Clear();
-				//foreach (var c in jsVars.cookie.Split(";"))
-				//{
-				//    cookie.ParseAdd(c);
-				//}
+		//			//if(gotCreds)
+		//			//	CnVClient.InitializeGame();
+		//		}
+		//		//}
 
 
+		//		// }
+		//		//var cookie = httpClient.DefaultRequestHeaders.Cookie;
+		//		//cookie.Clear();
+		//		//foreach (var c in jsVars.cookie.Split(";"))
+		//		//{
+		//		//    cookie.ParseAdd(c);
+		//		//}
 
 
 
 
-				catch(Exception ex)
-				{
 
-					LogEx(ex);
-				}
-			});
-		}
+
+		//		catch(Exception ex)
+		//		{
+
+		//			LogEx(ex);
+		//		}
+		//	});
+		//}
 
 
 

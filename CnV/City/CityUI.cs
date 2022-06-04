@@ -633,7 +633,9 @@ public partial class City
 		SetFocus(cid, scrollIntoView, select, bringIntoWorldView, lazyMove);
 	}
 
-	public static async void ProcessCoordClick(int cid, bool lazyMove, VirtualKeyModifiers mod, bool scrollIntoUI = false)
+	public static async 
+	Task
+ProcessCoordClick(int cid, bool lazyMove, VirtualKeyModifiers mod, bool scrollIntoUI = false)
 	{
 		mod.UpdateKeyModifiers();
 
@@ -683,8 +685,13 @@ public partial class City
 			}
 			else
 			{
-				await CnVClient.CitySwitch(cid, lazyMove, false, scrollIntoUI); // keep current view, switch to city
+				if( Player.IsSubOrMe(cid.CidToPid() ) || (await AppS.DoYesNoBox("Sub", $"Switch to sub {cid.AsCity().player.name}?" )==1) ) {
+					await CnVClient.CitySwitch(cid, lazyMove, false, scrollIntoUI); // keep current view, switch to city
 																			   //	View.SetViewMode(ShellPage.viewMode.GetNextUnowned());// toggle between city/region view
+				}
+				else {
+					CityUI.ShowCity(cid, lazyMove, false, scrollIntoUI);
+				}
 			}
 			NavStack.Push(cid);
 

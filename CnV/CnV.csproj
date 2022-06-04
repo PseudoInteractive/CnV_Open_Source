@@ -10,7 +10,6 @@
 		<Platforms>x64</Platforms>
 		<MonoGamePlatform>WindowsStoreApp</MonoGamePlatform>
 		<RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
-		<PublishProfile>Properties\PublishProfiles\win10-$(Platform).pubxml</PublishProfile>
 		<UseWinUI>True</UseWinUI>
 		<EnableDefaultCompileItems>false</EnableDefaultCompileItems>
 		<EnableDefaultPageItems>false</EnableDefaultPageItems>
@@ -65,7 +64,7 @@
 		<PackageReference Include="CommunityToolkit.WinUI.UI.Controls.Layout" Version="7.1.2" />
 		<PackageReference Include="CommunityToolkit.WinUI.UI.Controls.Markdown" Version="7.1.2" />
 		<PackageReference Include="DirectXTexNet" Version="1.0.3" />
-		<PackageReference Include="DSharpPlus" Version="4.3.0-nightly-01139" />
+		<PackageReference Include="DSharpPlus" Version="4.2.0" />
 		<PackageReference Include="Enums.NET" Version="4.0.0" />
 		<PackageReference Include="Grpc.Core" Version="2.46.3" />
 		<PackageReference Include="Grpc.Net.Client" Version="2.46.0" />
@@ -75,7 +74,7 @@
 		<PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.5.0" />
 		<PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.5.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0-preview.4.22229.4" />
-		<PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.5" />
+		<PackageReference Include="Microsoft.Extensions.ObjectPool" Version="7.0.0-preview.4.22251.1" />
 		<PackageReference Include="Microsoft.Extensions.Primitives" Version="7.0.0-preview.4.22229.4" />
 		<PackageReference Include="Microsoft.Graphics.Win2D" Version="1.0.3.1" />
 		<PackageReference Include="Microsoft.Identity.Client" Version="4.44.0">
@@ -102,11 +101,9 @@
 		<PackageReference Include="SharpGen.Runtime.COM" Version="2.0.0-beta.10" />
 		<PackageReference Include="Syncfusion.Scheduler.WinUI" Version="20.1.0.58" />
 		<PackageReference Include="System.Collections.Immutable" Version="7.0.0-preview.4.22229.4" />
-		<PackageReference Include="System.ComponentModel.Annotations" Version="6.0.0-preview.4.21253.7" />
 		<PackageReference Include="System.Memory.Data" Version="7.0.0-preview.4.22229.4" />
 		<PackageReference Include="System.Net.Http.Json" Version="7.0.0-preview.4.22229.4" />
 		<PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="7.0.0-preview.2.22152.2" />
-		<PackageReference Include="System.Runtime.Experimental" Version="6.0.2" />
 		<PackageReference Include="System.Text.Json" Version="7.0.0-preview.4.22229.4" />
 		<PackageReference Include="System.Threading.Channels" Version="7.0.0-preview.4.22229.4" />
 		<PackageReference Include="ZString" Version="2.4.4" />

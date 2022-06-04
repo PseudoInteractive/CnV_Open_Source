@@ -197,7 +197,7 @@ namespace CnV.Views
 					var d = Cavern.Get(r.targetCid);
 					//	Assert(d.valid);
 
-					var maxLoot = d.loot*r.splits;
+					var maxLoot = d.GetLoot(r.splits,r.troops.carry);
 					var loot = carry.Min((maxLoot));
 					var res = new Resources(Troops.cavernLootRatios[(int)d.resId]*loot);
 					var gold = (int)((loot * d.goldPercent)/100);

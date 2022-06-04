@@ -246,7 +246,7 @@ namespace CnV.Views
 		// private IdentityService IdentityService => Singleton<IdentityService>.Instance;
 
 		// private UserDataService UserDataService => Singleton<UserDataService>.Instance;
-		public ObservableCollection<string> inAppNotes = new();
+		public NotifyList<string> inAppNotes = new();
 		//		public static InAppNotification inAppNote => instance.InAppNote;
 		public string noteText = string.Empty;
 

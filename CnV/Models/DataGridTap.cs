@@ -124,7 +124,6 @@ namespace CnV;
 									//case nameof(i.aPlyr): CnVServer.ShowPlayer(i.aPlyr);break;
 									//case nameof(i.dPlyr): CnVServer.ShowPlayer(i.dPlyr); break;
 
-									break;
 
 							}
 						}

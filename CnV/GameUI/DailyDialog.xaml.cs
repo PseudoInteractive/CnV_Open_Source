@@ -33,23 +33,35 @@ namespace CnV
 			//if(target is not null)
 			//	Target=target;
 		}
-		public static async void ShowInstance(params Artifact[] artifact)
+		public static async Task ShowInstance(params Artifact[] artifact)
 		{
 			var rv = instance ?? new DailyDialog();
+			Assert(rv.artifacts.IsNullOrEmpty());
 			rv.artifacts.Clear();
 		//	rv.HeroContent.Focus(FocusState.Programmatic);
 		//	rv.count.Value = artifact.owned. Max(1);
 			rv.OnPropertyChanged();
-			rv.Show(false);
+			var t = rv.Show(false);
 
 			foreach(var a in artifact)
 			{
 				if(a is not null)
 				{
+					var _a = a;
 					await Task.Delay(500);
-					rv.artifacts.Add(a);
+					rv.artifacts.Add(_a);
 				}
 			}
+			await t;
+			// claim last ones
+			while( rv.artifacts.Any() ) {
+				var art = rv.artifacts.First();
+				rv.artifacts.RemoveAt(0);
+				ClaimArtifact(art);
+				AppS.MessageBox($"Auto Claimed: {art.name}",hero: art.imageUrl);
+				await Task.Delay(1000);
+			}
+
 			
 		}
 
@@ -64,57 +76,64 @@ namespace CnV
 				AppS.QueueOnUIThread(() => PropertyChanged?.Invoke(this,new(member)));
 		}
 
-		private void ItemClick(object sender,ItemClickEventArgs e)
-		{
-			if (Settings.wantUISounds)
-			{	
+		private void ItemClick(object sender,ItemClickEventArgs e) {
+			if(Settings.wantUISounds) {
 				ElementSoundPlayer.Play(ElementSoundKind.Invoke);
 			}
 
 			var art = e.ClickedItem as Artifact;
 			artifacts.Remove(art);
-			SocketClient.DeferSendStart();
-			try
-			{
-				new CnVEventPurchaseArtifacts((ushort)art.id,(ushort)1,Player.active.id,free:true).EnqueueAsap();
-
-				// use Zirconia immediately
-				if(art.type == Artifact.ArtifactType.zirconia || art.type == Artifact.ArtifactType.karma)
-				{
-					(new CnVEventUseArtifacts(City.build) { artifactId = (ushort)art.id,count = 1,aux=0 }).EnqueueAsap();
-				}
-				
-			}
-			catch(Exception ex)
-			{
-				LogEx(ex);
-			}
-			finally
-			{
-				SocketClient.DeferSendEnd();
-			}
-			if(artifacts.Count == 0)
-			{
+			
+			ClaimArtifact(art);
+			if(artifacts.Count == 0) {
 				Hide(true);
 				AppS.QueueIdleTask(DailyRewardTask,5000);
 			}
 
 		}
-		internal static void DailyRewardTask()
-		{
-			var nextClaim = Player.active.nextDailyClaim;
-			// wait for next
-			var dt = nextClaim - Sim.simTime;
-			if(dt > 0 )
-			{
-				AppS.QueueIdleTask(DailyRewardTask, ((dt+60)*1000 /IServerTime.timeScale).RoundToInt() );
-				return;
+
+		private static void ClaimArtifact(Artifact art) {
+			try {
+				SocketClient.DeferSendStart();
+				new CnVEventPurchaseArtifacts((ushort)art.id,(ushort)1,Player.active.id,free: true).EnqueueAsap();
+
+				// use Zirconia immediately
+				if(art.type == Artifact.ArtifactType.zirconia || art.type == Artifact.ArtifactType.karma) {
+					(new CnVEventUseArtifacts(City.build) { artifactId = (ushort)art.id,count = 1,aux=0 }).EnqueueAsap();
+				}
 
 			}
-			AppS.QueueOnUIThread( () =>
+			catch(Exception ex) {
+				LogEx(ex);
+			}
+			finally {
+				SocketClient.DeferSendEnd();
+			}
+		}
+
+		internal static void DailyRewardTask()
+		{
+			var nextClaim = Player.nextDailyClaim;
+			// wait for next
+			{
+				var dt = nextClaim - Sim.simTime;
+				if(dt > 0) {
+					AppS.QueueIdleTask(DailyRewardTask,((dt+60)*1000 /IServerTime.timeScale).RoundToInt());
+					return;
+
+				}
+			}
+			{
+				var interval = TimeSpanS.FromHours(12);
+				// Hack:
+				Player.nextDailyClaim = new(Sim.simTime.seconds.TruncateToMultipleOf((uint)interval.seconds) + (uint)interval.seconds);
+			}
+			AppS.QueueOnUIThread( async () =>
 			{
 				var rnd = new XXRand(Sim.simTime.seconds);
-				ShowInstance(Artifact.GetArtifactDrop(-1,ref rnd),Artifact.GetArtifactDrop(-1,ref rnd),Artifact.GetForPlayerRank(Artifact.ArtifactType.zirconia));
+				await ShowInstance(Artifact.GetArtifactDrop(-1,ref rnd),Artifact.GetArtifactDrop(-1,ref rnd),Artifact.GetForPlayerRank(Artifact.ArtifactType.zirconia));
+				DailyRewardTask();
+
 			}
 			);
 		}

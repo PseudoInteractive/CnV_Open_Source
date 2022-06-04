@@ -1316,6 +1316,12 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 
 			flyout.AddItem("Return All",Symbol.Delete,() =>
 			{
+				foreach(var i in army.sourceCity.outgoing) {
+					if(!i.canReturn) {
+						AppS.MessageBox("Too late to return outgoing attack");
+						return;
+					}
+				}
 				new CnVEventReturnTroops(army.sourceC,CnVEventReturnTroops.outgoingAll).EnqueueAsap();
 			});
 			flyout.AddItem("Return Raids",Symbol.Refresh,() =>

@@ -65,11 +65,16 @@ namespace CnV
 		{
 			Show(s,priority,useInfoBar,timeout,false);
 		}
-	//	static Priority currentPriority;
-	//	static DateTime nextInAppNote = new DateTime(0);
-	//static MarkdownTextBlock markDownText;
+		//	static Priority currentPriority;
+		//	static DateTime nextInAppNote = new DateTime(0);
+		//static MarkdownTextBlock markDownText;
+		static int lastAddedNote;
+		static void UpdateNoteUI() {
+			ShellPage.instance.inAppNotes.OnAdded(lastAddedNote);
+			lastAddedNote = ShellPage.instance.inAppNotes.Count;
+		}
 	//	static CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-		internal static async void Show(string s, Debug.Priority priority=Debug.Priority.medium, bool useInfoBar = false, int timeout = 5000, bool showDebugOutput=true, bool showNote=true)
+		internal static void Show(string s, Debug.Priority priority=Debug.Priority.medium, bool useInfoBar = false, int timeout = 5000, bool showDebugOutput=true, bool showNote=true)
 		{
 			try
 			{
@@ -152,10 +157,13 @@ namespace CnV
 								//}
 								//var textNull = ShellPage.instance.noteText.Length == 0;
 								// update on screen
-								AppS.QueueOnUIThreadIdle( () =>
-								{
-									ShellPage.instance.inAppNotes.Add( Sim.serverTime.ToString("HH':'mm':'ss") + "\t" + s );
-								});
+								ShellPage.instance.inAppNotes.Add( $"{Sim.simTime.Format(new() { wantDate=Sim.isWarmup })}  {s}");
+								AppS.QueueOnUIThreadIdle(UpdateNoteUI);
+								//ShellPage.instance.inAppNotes.CollectionChanged();
+								//AppS.QueueOnUIThreadIdle( () =>
+								//{
+								//	ShellPage.instance.inAppNotes.Add(str);
+								//});
 								//if(noteDelay < 30 )
 								//{
 								//	await Task.Delay(noteDelay*1000).ConfigureAwait(false);

@@ -92,7 +92,7 @@ namespace CnV
 				var s = t.step;
 				Assert(t.canClaim);
 				var ev = new CnVEventResearch(Player.active.id,s.id);
-				if(ev.IsClaimed(true)) {
+				if(ev.IsClaimed(Player.active,true)) {
 					return;
 				}
 				ev.EnqueueAsap();

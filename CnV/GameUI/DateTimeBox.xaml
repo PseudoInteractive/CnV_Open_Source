@@ -5,7 +5,7 @@
     xmlns:cnv="using:CnV"
 	xmlns:sfe="using:Syncfusion.UI.Xaml.Editors"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	Loaded="Loaded"
+	Loaded="OnLoaded"
   >
 
     <Grid>

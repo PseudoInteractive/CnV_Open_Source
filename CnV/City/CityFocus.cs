@@ -36,19 +36,19 @@ public static partial class CityUI
 	}
 
 	
-	public static  async void SelectInWorldView(this City me, bool lazyMove)
-	{
-		var cid = me.cid;
-		if(!me.isBuild)
-		{
-			if(!await CnVClient.CitySwitch(cid, lazyMove)) // keep current view, switch to city 
-				return;
-		}
-		if(!View.IsWorldView())
-			View.SetViewMode(ViewMode.world); // toggle between city/region view
+	//public static  async void SelectInWorldView(this City me, bool lazyMove)
+	//{
+	//	var cid = me.cid;
+	//	if(!me.isBuild)
+	//	{
+	//		if(!await CnVClient.CitySwitch(cid, lazyMove)) // keep current view, switch to city 
+	//			return;
+	//	}
+	//	if(!View.IsWorldView())
+	//		View.SetViewMode(ViewMode.world); // toggle between city/region view
 
-		NavStack.Push(cid);
+	//	NavStack.Push(cid);
 
-	}
+	//}
 }
 

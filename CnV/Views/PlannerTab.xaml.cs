@@ -550,7 +550,7 @@ namespace CnV.Views
 			var bestId = 0;
 			var bestId1 = 0;
 			BuildingId bestBid = 0;
-			var baseStats = City.ComputeBuildingStats(city,bds,true);
+			var baseStats = City.ComputeBuildingStats(city,bds);
 			var initialProd = GetScore(baseStats);
 			var bestProd = (remove ? -1f : initialProd + 0.25f); ;
 			foreach(var i in city.buildingSpotsExcludingShore ) {
@@ -577,7 +577,7 @@ namespace CnV.Views
 						bds[cc1] = bdi;
 						
 
-						var score = GetScore(City.ComputeBuildingStats(city,bds,true)) + rnd.NextSingle().Lerp(-0.25f,0.25f);
+						var score = GetScore(City.ComputeBuildingStats(city,bds)) + rnd.NextSingle().Lerp(-0.25f,0.25f);
 						if(score > bestProd) {
 							bestId = i;
 							bestId1 = cc1;
@@ -602,7 +602,7 @@ namespace CnV.Views
 						}
 
 						bds[i] = bdNew;
-						var score = GetScore(City.ComputeBuildingStats(city,bds,true)) + rnd.NextSingle().Lerp(-0.25f,0.25f);
+						var score = GetScore(City.ComputeBuildingStats(city,bds)) + rnd.NextSingle().Lerp(-0.25f,0.25f);
 						//restore
 						bds[i] = bdi;
 						if(score > bestProd) {
@@ -636,7 +636,7 @@ namespace CnV.Views
 					bds[bestId] = new(_bid,remove? (byte)0 : (byte)10);
 				}
 				city.LayoutChanged();
-				Note.Show($"{(add ? "Added ": remove? "Removed " :  replace ?"Replaced " : "Moved " )}{(bid1!=0?BuildingDef.FromId(bid1):string.Empty) } {BuildingDef.FromId(bestBid) }, production {initialProd:N0}=>{bestProd:N0}\nChange: { (City.ComputeBuildingStats(city,bds,true).productionPerSec-baseStats.productionPerSec).ratePerHour }");
+				Note.Show($"{(add ? "Added ": remove? "Removed " :  replace ?"Replaced " : "Moved " )}{(bid1!=0?BuildingDef.FromId(bid1):string.Empty) } {BuildingDef.FromId(bestBid) }, production {initialProd:N0}=>{bestProd:N0}\nChange: { (City.ComputeBuildingStats(city,bds).productionPerSec-baseStats.productionPerSec).ratePerHour }");
 			}
 			else {
 				Note.Show("Could not find a good buildnig to add");

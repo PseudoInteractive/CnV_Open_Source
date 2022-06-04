@@ -115,7 +115,7 @@ namespace CnV
 				AppS.DispatchOnUIThread(() => PropertyChanged?.Invoke(this,new(member)));
 		}
 		bool isLoaded;
-		private void Loaded(object sender,RoutedEventArgs e) {
+		private void OnLoaded(object sender,RoutedEventArgs e) {
 			if(isLoaded)
 				return;
 			isLoaded = true;
