@@ -202,7 +202,7 @@ namespace CnV.Views
 					var res = new Resources(Troops.cavernLootRatios[(int)d.resId]*loot);
 					var gold = (int)((loot * d.goldPercent)/100);
 					var dt = r.journeyTime * 2;
-					var multiplier = ISmallTime.secondsPerHour / (double)dt;
+					var multiplier = ServerTime.secondsPerHour / (double)dt;
 					raidIncome += new ResourcesAndGold( res*multiplier, (gold*multiplier).RoundToInt()) ;
 	//				foreach (var r in cr[12].EnumerateArray())
 	//				{

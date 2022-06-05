@@ -118,7 +118,7 @@ namespace CnV
 			{
 				var dt = nextClaim - Sim.simTime;
 				if(dt > 0) {
-					AppS.QueueIdleTask(DailyRewardTask,((dt+60)*1000 /ServerTime.timeScale).RoundToInt());
+					AppS.QueueIdleTask(DailyRewardTask,((dt+60)*1000 /Sim.timeScale).RoundToInt());
 					return;
 
 				}

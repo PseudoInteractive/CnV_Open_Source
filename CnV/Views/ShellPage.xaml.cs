@@ -76,13 +76,13 @@ namespace CnV.Views
 
 		internal float timeScale {
 			get {
-				return ServerTime.timeScale;
+				return Sim.timeScale;
 			}
 			set {
-				if(value.IsEqualTo(ServerTime.timeScale))
+				if(value.IsEqualTo(Sim.timeScale))
 					return;
 				if(Sim.isInitialized)
-					ServerTime.SetTimeScale(value.Clamp(minTimeScale,maxTimeScale));
+					Sim.SetTimeScale(value.Clamp(minTimeScale,maxTimeScale));
 				OnPropertyChanged();
 			}
 		}
@@ -103,7 +103,7 @@ namespace CnV.Views
 
 				var v = SliderToTimeScale(e.NewValue);
 				if(Sim.isInitialized)
-					ServerTime.SetTimeScale((float)v);
+					Sim.SetTimeScale((float)v);
 
 			}
 
@@ -113,7 +113,7 @@ namespace CnV.Views
 
 
 
-				var v = ServerTime.timeScale;
+				var v = Sim.timeScale;
 				//if(!timeScaleNumberBox.Value.IsEqualTo(v,1.0f/8.0f))
 				//{
 				// timeScaleNumberBox.Value = v;
@@ -153,7 +153,7 @@ namespace CnV.Views
 		//}
 		//float timeScaleSlider
 		//{
-		//	get => MathF.Log2(ServerTime.timeScale) + 2.0f;
+		//	get => MathF.Log2(Sim.timeScale) + 2.0f;
 		//	set
 		//	{
 		//		var v = SliderToTimeScale(value);
@@ -1621,7 +1621,7 @@ namespace CnV.Views
 
 			//if(!AppS.isSinglePlayer) {
 			//	if(AppS.isTest) {
-			//		(new SocketSimControlArgs() { timeScale = ServerTime.timeScale,deltaServerTickOffset=dt }).SendToServer();
+			//		(new SocketSimControlArgs() { timeScale = Sim.timeScale,deltaServerTickOffset=dt }).SendToServer();
 			//		return;
 			//	}
 			//}
@@ -1633,11 +1633,11 @@ namespace CnV.Views
 			//	AppS.MessageBox("Only works in single player mode");
 			//	return;
 			//}
-			if(ServerTime.timeScale == 0) {
-				ServerTime.SetTimeScale(1.0f);
+			if(Sim.timeScale == 0) {
+				Sim.SetTimeScale(1.0f);
 			}
 			else {
-				ServerTime.SetTimeScale(0.0f);
+				Sim.SetTimeScale(0.0f);
 			}
 		}
 

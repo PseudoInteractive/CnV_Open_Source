@@ -294,7 +294,7 @@ namespace CnVDiscord
 
 						content = content.Replace(mention,mentionGame);
 					}
-					var chat = new ChatEntry(name,content,ServerTime.UtcToServerDateTime(message.Timestamp),tab.defaultPostType);
+					var chat = new ChatEntry(name,content,Sim.UtcToServerDateTime(message.Timestamp),tab.defaultPostType);
 					//Note.Show(chat.ToString());
 					//				AppS.DispatchOnUIThread(() => ChatTab.Post(message.ChannelId,chat,isNew,notify));
 					tab.Post(chat,isNew,deferNotify);

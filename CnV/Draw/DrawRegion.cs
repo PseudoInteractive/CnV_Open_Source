@@ -188,7 +188,7 @@ internal partial class GameClient
 		underMouse = null;
 		bestUnderMouseScore = 0.125f;
 		++drawCounter;
-		simT = ServerTime.NowToServerSeconds(); ;
+		simT = Sim.NowToServerSeconds(); ;
 #if DEBUG
 		if(gameTime.IsRunningSlowly)
 		{

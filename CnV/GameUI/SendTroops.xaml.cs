@@ -81,7 +81,7 @@ namespace CnV
 
 			}
 		}
-		internal int armyType { get => (int)type; set => type=(ArmyType)(value); }
+		internal int armyType { get => (int)type - Army.armyTypeAttackStart; set => type=(ArmyType)(value+Army.armyTypeAttackStart); }
 
 		internal readonly int[] splitsItems = Enumerable.Range(1,16).ToArray();
 
