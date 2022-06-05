@@ -1262,11 +1262,11 @@ namespace CnV
 					// attempt to abandom first city
 					static bool Inner() {
 						using var __lock = Sim.eventQLock.EnterSafe;
-						var lastDay = Sim.simTime - ServerTime.secondsPerDay;
-						var recent = Sim.retired.Count(ev => ev.T >= lastDay && ev is CnVEventNewCity newCity && newCity.playerId == Player.activeId );
+						var lastDay = Sim.simTime - ServerTime.secondsPerDay/2;
+						var recent = Sim.retired.Count(ev => ev.T >= lastDay && ev is CnVEventAbandon newCity && newCity.playerId == Player.activeId && newCity.isReset );
 						if(recent > 2 )
 						{
-							AppS.MessageBox("Too many resets","Must wait");
+							AppS.MessageBox("Too many resets","Must wait some");
 							return false;
 						}
 						return true;
@@ -1277,7 +1277,7 @@ namespace CnV
 							return;
 				//	}
 				}
-				new CnVEventAbandon(city.c).EnqueueAsap();
+				new CnVEventAbandon(city.c, Player.activeId, p.cities.Length==1).EnqueueAsap();
 
 				}
 
