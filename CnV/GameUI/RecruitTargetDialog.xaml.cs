@@ -90,6 +90,7 @@ namespace CnV
 				var c = troopItems[i].count.Clamp(0,(int)TroopTypeCount.countMax);
 				ttc += new TroopTypeCount( (TType)i,(uint)c );
 			}
+			ttc.AssertSorted();
 			new CnVEventCityTroopTargets(city.c,ttc).EnqueueAsap();
 			Done();
 		}

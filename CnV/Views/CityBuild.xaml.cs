@@ -812,7 +812,7 @@ namespace CnV
 		}
 		public static void SetLastQuickBuildActionSpot(BuildC c)
 		{
-		//	lastQuickBuildActionSpotValidUntil = SmallTime.now+3;
+		//	lastQuickBuildActionSpotValidUntil = ServerTime.now+3;
 		//	lastQuickBuildActionBSpot = c;
 			ClearBuildToolTip(true);
 		}

@@ -1443,7 +1443,7 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 		public BitmapImage action { get; set; }
 	//	public string sourceCoords=> army.sourceCity.nameAndRemarksAndPlayer;
 	//	public string targetCoords=> army.targetCity.nameAndRemarksAndPlayer;
-		public string info =>  $"{(trade.isReturning ? trade.returnTime.Format(): trade.time.Format())} { (!isIncoming ? trade.targetCity : trade.sourceCity) }";
+		public string info =>  $"{(trade.isReturning ? trade.returnTime.Format(): trade.time.Format())} {(isIncoming?"in":"out")} { (!isIncoming ? trade.targetCity : trade.sourceCity) }";
 
 		
 		internal void InfoClick(object sender,RoutedEventArgs e)

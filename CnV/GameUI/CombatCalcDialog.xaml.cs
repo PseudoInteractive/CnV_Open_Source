@@ -87,7 +87,7 @@ namespace CnV
 				false));
 			b.defenders = new[] { new ArmyResult(new TroopTypeCounts(defenders.Where(i => i.count > 0).Select(i => new TroopTypeCount(i.type,i.count)))) };
 
-			var rv = CombatCalc.Go(b,defenders.Select(a => (ushort)a.towerSlots).ToArray(),
+			var rv = CombatCalc.Go(b,City.GetBuild().postSlots,
 			wallLevel:(byte)wallLevel,(uint)City.GetBuild().cid + Sim.simTime.seconds*1111u, nightProtectionAttenuator:1.0f - nightProtection*0.01f);
 			for(var  i = ttZero;i<Troops.ttCount;++i)
 			{

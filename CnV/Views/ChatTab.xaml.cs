@@ -607,7 +607,7 @@ namespace CnV.Views
 			};
 			if(msg.TryGetProperty("c",out var c))
 			{
-				ch.time = IServerTime.UtcToServerTime( c.GetString().ParseDateTime() );
+				ch.time = ServerTime.UtcToServerTime( c.GetString().ParseDateTime() );
 			}
 			else
 			{

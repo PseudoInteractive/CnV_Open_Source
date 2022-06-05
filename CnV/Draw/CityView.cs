@@ -174,7 +174,7 @@ namespace CnV
 				cityDrawAlpha =  iAlpha;
 				//const float zBase = 0f;
 				// selected
-				double simTime = simT;// IServerTime.NowToServerSeconds(); // includes fractional
+				double simTime = simT;// ServerTime.NowToServerSeconds(); // includes fractional
 				// Walls and background
 				var cityWallSpan = new Vector2(0.5f*(23.0f/21.0f),0.5f*(23.0f/21.0f) * cityYAspectRatio);
 				var cityWallOrigin = new Vector2(buildCityOrigin.X+(2.0f/64f)*cityTileGainX,buildCityOrigin.Y+0.375f*cityTileGainY );

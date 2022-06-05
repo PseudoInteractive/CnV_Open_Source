@@ -86,7 +86,7 @@
 		<PackageReference Include="MessagePack" Version="2.4.14-alpha" />
 		<PackageReference Include="Microsoft.Windows.CsWinRT" Version="1.6.4" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.197" />
-		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.3" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.0" />
 		<PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
 		<PackageReference Include="PlayFabAllSDK" Version="1.108.220118" />
 		<PackageReference Include="Syncfusion.Chart.WinUI" Version="20.1.0.58" />

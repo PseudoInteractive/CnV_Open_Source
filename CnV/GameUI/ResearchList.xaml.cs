@@ -105,6 +105,7 @@ namespace CnV
 				foreach(var i in questGroups)
 					i.OnPropertyChangedImmediate();
 				PropertyChanged?.Invoke(this,new(String.Empty));
+				t.OnPropertyChanged();
 				ShellPage.WorkEnd();
 			}
 			catch(Exception _ex) {

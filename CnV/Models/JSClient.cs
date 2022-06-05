@@ -1,1 +1,1 @@
-﻿global using CnVServer = CnV.Sim;
+﻿

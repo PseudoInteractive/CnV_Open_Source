@@ -76,13 +76,13 @@ namespace CnV.Views
 
 		internal float timeScale {
 			get {
-				return IServerTime.timeScale;
+				return ServerTime.timeScale;
 			}
 			set {
-				if(value.IsEqualTo(IServerTime.timeScale))
+				if(value.IsEqualTo(ServerTime.timeScale))
 					return;
 				if(Sim.isInitialized)
-					IServerTime.SetTimeScale(value.Clamp(minTimeScale,maxTimeScale));
+					ServerTime.SetTimeScale(value.Clamp(minTimeScale,maxTimeScale));
 				OnPropertyChanged();
 			}
 		}
@@ -103,7 +103,7 @@ namespace CnV.Views
 
 				var v = SliderToTimeScale(e.NewValue);
 				if(Sim.isInitialized)
-					IServerTime.SetTimeScale((float)v);
+					ServerTime.SetTimeScale((float)v);
 
 			}
 
@@ -113,7 +113,7 @@ namespace CnV.Views
 
 
 
-				var v = IServerTime.timeScale;
+				var v = ServerTime.timeScale;
 				//if(!timeScaleNumberBox.Value.IsEqualTo(v,1.0f/8.0f))
 				//{
 				// timeScaleNumberBox.Value = v;
@@ -148,17 +148,17 @@ namespace CnV.Views
 		//	{
 
 		//		if(Sim.isInitialized)
-		//			IServerTime.SetTimeScale((float)e.NewValue);
+		//			ServerTime.SetTimeScale((float)e.NewValue);
 		//	}
 		//}
 		//float timeScaleSlider
 		//{
-		//	get => MathF.Log2(IServerTime.timeScale) + 2.0f;
+		//	get => MathF.Log2(ServerTime.timeScale) + 2.0f;
 		//	set
 		//	{
 		//		var v = SliderToTimeScale(value);
 		//		Log(v);;
-		//		IServerTime.SetTimeScale(v);
+		//		ServerTime.SetTimeScale(v);
 		//		OnPropertyChanged("timeScale");
 		//	}
 
@@ -1621,7 +1621,7 @@ namespace CnV.Views
 
 			//if(!AppS.isSinglePlayer) {
 			//	if(AppS.isTest) {
-			//		(new SocketSimControlArgs() { timeScale = IServerTime.timeScale,deltaServerTickOffset=dt }).SendToServer();
+			//		(new SocketSimControlArgs() { timeScale = ServerTime.timeScale,deltaServerTickOffset=dt }).SendToServer();
 			//		return;
 			//	}
 			//}
@@ -1633,11 +1633,11 @@ namespace CnV.Views
 			//	AppS.MessageBox("Only works in single player mode");
 			//	return;
 			//}
-			if(IServerTime.timeScale == 0) {
-				IServerTime.SetTimeScale(1.0f);
+			if(ServerTime.timeScale == 0) {
+				ServerTime.SetTimeScale(1.0f);
 			}
 			else {
-				IServerTime.SetTimeScale(0.0f);
+				ServerTime.SetTimeScale(0.0f);
 			}
 		}
 

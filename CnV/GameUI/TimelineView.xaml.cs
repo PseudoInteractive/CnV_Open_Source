@@ -155,7 +155,7 @@ namespace CnV
 
 					if(e is CnVEventReturnTroops rt) {
 						foreach(var ret in rt.returned) {
-							var bad = appointments.FindIndex(a => a.Id is CnVEventSendTroops st && st.troops == ret);
+							var bad = appointments.FindIndex(a => a.Id is CnVEventSendTroops st && st.army == ret);
 							if(bad != -1) {
 								appointments.RemoveAt(bad);
 							}

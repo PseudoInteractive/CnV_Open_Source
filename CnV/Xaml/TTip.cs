@@ -16,7 +16,7 @@ namespace CnV
 		[Key(1)]
 		public ServerTime nextReady;
 
-		public TTipPersist(string id,IServerTime nextReady)
+		public TTipPersist(string id,ServerTime nextReady)
 		{
 			this.id=id;
 			this.nextReady=nextReady;
@@ -91,7 +91,7 @@ namespace CnV
 				tip.tip = this;
 				tip.Closed +=(TeachingTip sender,TeachingTipClosedEventArgs args) =>
 					{
-					 ImmutableInterlocked.AddOrUpdate(ref persist.V,id,new TTipPersist(id,ServerTime.infinity),(k,prior) => prior with { nextReady = SmallTime.infinity } );
+					 ImmutableInterlocked.AddOrUpdate(ref persist.V,id,new TTipPersist(id,ServerTime.infinity),(k,prior) => prior with { nextReady = ServerTime.infinity } );
 					tcs.SetResult(true);
 					};
 				}

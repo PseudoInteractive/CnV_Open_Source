@@ -118,16 +118,12 @@ namespace CnV
 			{
 				var dt = nextClaim - Sim.simTime;
 				if(dt > 0) {
-					AppS.QueueIdleTask(DailyRewardTask,((dt+60)*1000 /IServerTime.timeScale).RoundToInt());
+					AppS.QueueIdleTask(DailyRewardTask,((dt+60)*1000 /ServerTime.timeScale).RoundToInt());
 					return;
 
 				}
 			}
-			{
-				var interval = TimeSpanS.FromHours(12);
-				// Hack:
-				Player.nextDailyClaim = new(Sim.simTime.seconds.TruncateToMultipleOf((uint)interval.seconds) + (uint)interval.seconds);
-			}
+			
 			AppS.QueueOnUIThread( async () =>
 			{
 				var rnd = new XXRand(Sim.simTime.seconds);

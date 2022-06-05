@@ -322,7 +322,7 @@ namespace CnV
 		}
 		public static BuildingId quickBuildId;
 		//		public static BuildC lastQuickBuildActionBSpot = BuildC.Nan;
-		//	public static SmallTime lastQuickBuildActionSpotValidUntil;
+		//	public static ServerTime lastQuickBuildActionSpotValidUntil;
 		//	public static BuildC lastBuildToolTipSpot = BuildC.Nan;
 		public enum CityBuildAction
 		{
