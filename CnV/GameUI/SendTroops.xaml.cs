@@ -81,7 +81,12 @@ namespace CnV
 
 			}
 		}
-		internal int armyType { get => (int)type - Army.armyTypeAttackStart; set => type=(ArmyType)(value+Army.armyTypeAttackStart); }
+		internal int armyType { get => isAttack ? (int)type - Army.armyTypeAttackStart : 0; set {
+				if(isAttack) 
+					type=(ArmyType)(value+Army.armyTypeAttackStart);
+			}
+
+		}
 
 		internal readonly int[] splitsItems = Enumerable.Range(1,16).ToArray();
 
@@ -135,7 +140,7 @@ namespace CnV
 		bool isCavernRaid => type==ArmyType.raid && target.isDungeon;
 		bool isDefense => type==ArmyType.defense && !isSettle;
 		int splits => isCavernRaid ? splitsCombo.SelectedIndex+1 : 1;
-
+		internal bool isAttack => type.IsAttack();// is (>=Army.attackFirst and <= Army.attackLast);
 		public static Task<bool> ShowInstance(City city = null,City target = null,bool isSettle = false,bool viaWater = false,ArmyType type = ArmyType.nop,Army? prior = null,TroopTypeCounts? troops = null,ServerTime arrival = default, bool ? useHorns=null, bool? waitReturn=null) {
 			try {
 				if(city == target && prior is null) {
@@ -148,7 +153,7 @@ namespace CnV
 
 				var rv = instance ?? new SendTroops();
 				rv.prior = prior;
-
+				rv.armyTypeCombo.Visibility = Visibility.Collapsed;
 				if((type == ArmyType.defense && !isSettle)||((prior is not null&&prior.isDefense))) {
 					if(useHorns is not null)
 						rv.useHorns = useHorns.Value;
@@ -160,7 +165,7 @@ namespace CnV
 					rv.useHornsCheckbox.Visibility = Visibility.Collapsed;
 
 				}
-				var isAttack = type is (>=Army.attackFirst and <= Army.attackLast);
+				var isAttack = type.IsAttack();// is (>=Army.attackFirst and <= Army.attackLast);
 				if((type == ArmyType.defense||isAttack) && !isSettle) {
 				
 					if(waitReturn is not null)
@@ -191,7 +196,7 @@ namespace CnV
 					rv.buttoGo.Content = "Return";
 					rv.buttoGo.IsEnabled = prior.sourceCity.outgoing.Contains(prior);
 					//	rv.isReturn = wantReturn;
-					rv.armyTypeCombo.Visibility = Visibility.Collapsed;
+				
 					
 				}
 				else {
@@ -227,8 +232,8 @@ namespace CnV
 	//				else if(depart.isNotZero)
 	//					rv.arrivalUI.SetDateTime(depart + rv.travelTimeWithHorms);
 
-
-					rv.armyTypeCombo.Visibility = isAttack ? Visibility.Visible : Visibility.Collapsed;
+					if(isAttack)
+						rv.armyTypeCombo.Visibility = Visibility.Visible;
 
 
 					rv.buttoGo.Content = "Send";

@@ -751,7 +751,7 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 		//}
 
 		static bool commandsDirty;
-
+	
 		internal static void InvalidateCommands()
 		{
 			commandsDirty =true;
@@ -761,14 +761,16 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 
 		internal static void Invalidate()
 		{
-			if(Sim.isPastWarmup && instance != null )
+			if(Sim.isPastWarmup && instance != null) {
+				nextTextUpdateTick=0;
 				AppS.QueueOnUIThread(BuildCityChanged);
-//				instance?.buildCityChangeDebounce.Go();
-		
-			
-		}
+			}
+				//				instance?.buildCityChangeDebounce.Go();
 
-		private (int buildingCount, int towerCount, int townHallLevel, Dictionary<BuildingId,int> counts) GetBuildingCounts(City build)
+
+			}
+
+			private (int buildingCount, int towerCount, int townHallLevel, Dictionary<BuildingId,int> counts) GetBuildingCounts(City build)
 		{
 			var buildingCounts = new Dictionary<BuildingId,int>();
 			int buildingCount = 0;

@@ -10,7 +10,7 @@
         "dependencies": {
           "Microsoft.Windows.CsWinRT": "1.6.4",
           "Microsoft.Windows.SDK.BuildTools": "10.0.22000.197",
-          "Microsoft.WindowsAppSDK": "1.0.3",
+          "Microsoft.WindowsAppSDK": "1.1.0",
           "SharpDX": "4.2.0",
           "SharpDX.DXGI": "4.2.0",
           "SharpDX.Direct3D11": "4.2.0",
@@ -56,42 +56,54 @@
         }
       },
       "Microsoft.Windows.SDK.BuildTools/10.0.22000.197": {},
-      "Microsoft.WindowsAppSDK/1.0.3": {
+      "Microsoft.WindowsAppSDK/1.1.0": {
         "dependencies": {
           "Microsoft.Windows.SDK.BuildTools": "10.0.22000.197"
         },
         "runtime": {
           "lib/net5.0-windows10.0.18362.0/Microsoft.InteractiveExperiences.Projection.dll": {
             "assemblyVersion": "10.0.0.0",
-            "fileVersion": "10.0.22467.1020"
+            "fileVersion": "10.0.22621.1000"
           },
           "lib/net5.0-windows10.0.18362.0/Microsoft.WinUI.dll": {
             "assemblyVersion": "3.0.0.0",
-            "fileVersion": "3.0.0.2204"
+            "fileVersion": "3.0.0.2206"
           },
           "lib/net5.0-windows10.0.18362.0/Microsoft.Windows.AppLifecycle.Projection.dll": {
-            "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.0.0.0"
+            "assemblyVersion": "1.1.0.0",
+            "fileVersion": "1.1.0.0"
+          },
+          "lib/net5.0-windows10.0.18362.0/Microsoft.Windows.AppNotifications.Projection.dll": {
+            "assemblyVersion": "1.1.0.0",
+            "fileVersion": "1.1.0.0"
           },
           "lib/net5.0-windows10.0.18362.0/Microsoft.Windows.ApplicationModel.DynamicDependency.Projection.dll": {
-            "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.0.0.0"
+            "assemblyVersion": "1.1.0.0",
+            "fileVersion": "1.1.0.0"
           },
           "lib/net5.0-windows10.0.18362.0/Microsoft.Windows.ApplicationModel.Resources.Projection.dll": {
-            "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.0.0.0"
+            "assemblyVersion": "1.1.0.0",
+            "fileVersion": "1.1.0.0"
           },
           "lib/net5.0-windows10.0.18362.0/Microsoft.Windows.ApplicationModel.WindowsAppRuntime.Projection.dll": {
-            "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.0.0.0"
+            "assemblyVersion": "1.1.0.0",
+            "fileVersion": "1.1.0.0"
+          },
+          "lib/net5.0-windows10.0.18362.0/Microsoft.Windows.PushNotifications.Projection.dll": {
+            "assemblyVersion": "1.1.0.0",
+            "fileVersion": "1.1.0.0"
           },
           "lib/net5.0-windows10.0.18362.0/Microsoft.Windows.System.Power.Projection.dll": {
-            "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.0.0.0"
+            "assemblyVersion": "1.1.0.0",
+            "fileVersion": "1.1.0.0"
+          },
+          "lib/net5.0-windows10.0.18362.0/Microsoft.Windows.System.Projection.dll": {
+            "assemblyVersion": "1.1.0.0",
+            "fileVersion": "1.1.0.0"
           },
           "lib/net5.0-windows10.0.18362.0/Microsoft.WindowsAppRuntime.Bootstrap.Net.dll": {
-            "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.0.0.0"
+            "assemblyVersion": "1.1.0.0",
+            "fileVersion": "1.1.0.0"
           }
         },
         "runtimeTargets": {
@@ -925,12 +937,12 @@
       "path": "microsoft.windows.sdk.buildtools/10.0.22000.197",
       "hashPath": "microsoft.windows.sdk.buildtools.10.0.22000.197.nupkg.sha512"
     },
-    "Microsoft.WindowsAppSDK/1.0.3": {
+    "Microsoft.WindowsAppSDK/1.1.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-lz0MF9OjrUaPZ11GOi1lu/GaoQrWVVojb2uZ4sly7FdkYtGeNZcKNVlhHU7fng9HQkprOLJgn4v2oAwaexV4Sw==",
-      "path": "microsoft.windowsappsdk/1.0.3",
-      "hashPath": "microsoft.windowsappsdk.1.0.3.nupkg.sha512"
+      "sha512": "sha512-yc3j78WEFqmARLE0USyq0xdW2IEMNsToXAMF47vJ7zfMlCqzfrKsivKrcnIUHDrsJJkruR5lwZZ35JwVKh3AHQ==",
+      "path": "microsoft.windowsappsdk/1.1.0",
+      "hashPath": "microsoft.windowsappsdk.1.1.0.nupkg.sha512"
     },
     "NETStandard.Library/1.6.1": {
       "type": "package",
