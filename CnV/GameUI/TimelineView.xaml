@@ -42,7 +42,6 @@
 			<CheckBox Content="Quests" IsChecked="{x:Bind ShowQuests,Mode=TwoWay}" />
 			<CheckBox Content="Agenda" x:Name="showAgenda" />
 		</StackPanel>
-		<ScrollViewer Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
 		<sfs:SfScheduler x:Name="schedule" Grid.Row="1" 
 						 AllowedViewTypes="TimelineDay,TimelineWeek,Day,Month,Week"
 						AllowViewNavigation="true"
@@ -116,6 +115,5 @@
 
 
 		</sfs:SfScheduler>
-		</ScrollViewer>
 	</Grid>
 </view:UserTab>
