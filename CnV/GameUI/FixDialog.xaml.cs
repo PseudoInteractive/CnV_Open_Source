@@ -22,14 +22,14 @@ namespace CnV
 {
 	public sealed partial class FixDialog:DialogG,INotifyPropertyChanged
 	{
-		protected override string title => "Recruit"; 
-		internal static FixDialog? instance;
+		protected override string title => $"Fix for {city.FormatName(true,true,true)}"; 
+	//	internal static FixDialog? instance;
 		internal City city;
 		internal CnVEventFix fix = new();
 		public FixDialog()
 		{
 			this.InitializeComponent();
-			instance = this;
+		//	instance = this;
 			
 		}
 
@@ -37,7 +37,7 @@ namespace CnV
 
 		public static async void ShowInstance(City city)
 		{
-			var rv = instance ?? new FixDialog();
+			var rv = new FixDialog();
 			rv.city = city;
 			
 
@@ -52,11 +52,7 @@ namespace CnV
 			if (this.PropertyChanged is not null) 
 				AppS.QueueOnUIThread(() => PropertyChanged?.Invoke(this,new(member)));
 		}
-		public static void Changed(string? member = null)
-		{
-			if(instance is not null)
-				instance.OnPropertyChanged(member);
-		}
+		
 
 		private void PostEvent(object sender,RoutedEventArgs e) {
 			// Clone

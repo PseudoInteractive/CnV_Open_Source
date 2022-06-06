@@ -23,7 +23,7 @@ public static partial class CityUI
 
 	}
 
-	public static async void ShowCity(int cityId,bool lazyMove,bool select = true,bool scrollToInUI = true)
+	public static  void ShowCity(int cityId,bool lazyMove,bool select = true,bool scrollToInUI = true)
 	{
 		try
 		{
@@ -31,11 +31,7 @@ public static partial class CityUI
 
 			// if (City.IsMine(cityId))
 			// don't change build
-			if(cityId != City.build)
-			{
-				ShellPage.SetViewModeRegion();
-
-			}
+			
 			{
 				CityUI.SetFocus(cityId,scrollToInUI,select,true,lazyMove);
 			}
@@ -43,7 +39,7 @@ public static partial class CityUI
 			// if (CnVServer.IsWorldView())
 			//	cityId.BringCidIntoWorldView(lazyMove, false);
 
-			Sim.FetchCity(cityId);
+			//Sim.FetchCity(cityId);
 			//             if( City.IsMine(cityId)  )
 			//                 Raiding.UpdateTSHome();
 

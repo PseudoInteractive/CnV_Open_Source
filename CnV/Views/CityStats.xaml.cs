@@ -594,7 +594,7 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 								var storage = store[r];
 								rr.here = res.Format();
 								rr.storage =  storage.Format(); 
-								rr.hereBrush = AppS.Brush( (res >= storage ?
+								rr.hereBrush = AppS.Brush( (res >= storage && !city.canRefine ?
 									Colors.Red : res >= storage*3/4 ?
 									Colors.Orange : res == 0 ?
 									Colors.LightGray : Colors.LightBlue));

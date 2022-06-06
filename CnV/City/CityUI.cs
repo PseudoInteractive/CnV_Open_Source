@@ -634,8 +634,7 @@ public partial class City
 	}
 
 	public static async 
-	Task
-ProcessCoordClick(int cid, bool lazyMove, VirtualKeyModifiers mod, bool scrollIntoUI = false)
+	Task ProcessCoordClick(int cid, bool lazyMove, VirtualKeyModifiers mod, bool scrollIntoUI = false)
 	{
 		mod.UpdateKeyModifiers();
 
@@ -674,14 +673,14 @@ ProcessCoordClick(int cid, bool lazyMove, VirtualKeyModifiers mod, bool scrollIn
 			{
 				if( cid==focus)
 					View.SetViewMode(View.viewMode.GetNext());// toggle between city/region view
-				if(scrollIntoUI)
+			//	if(scrollIntoUI)
 				{
-					Spot.SetFocus(cid, scrollIntoUI, true, true, lazyMove);
+					CityUI.ShowCity(cid, lazyMove, true, scrollIntoUI);
 				}
-				else
-				{
-					cid.BringCidIntoWorldView(lazyMove);
-				}
+			//	else
+			//	{
+			//		cid.BringCidIntoWorldView(lazyMove);
+			//	}
 			}
 			else
 			{
@@ -690,7 +689,7 @@ ProcessCoordClick(int cid, bool lazyMove, VirtualKeyModifiers mod, bool scrollIn
 																			   //	View.SetViewMode(ShellPage.viewMode.GetNextUnowned());// toggle between city/region view
 				}
 				else {
-					CityUI.ShowCity(cid, lazyMove, false, scrollIntoUI);
+					CityUI.ShowCity(cid, lazyMove, true, scrollIntoUI);
 				}
 			}
 			NavStack.Push(cid);
@@ -698,7 +697,7 @@ ProcessCoordClick(int cid, bool lazyMove, VirtualKeyModifiers mod, bool scrollIn
 		}
 		else
 		{
-			CityUI.ShowCity(cid, lazyMove, false, scrollIntoUI);
+			CityUI.ShowCity(cid, lazyMove, true, scrollIntoUI);
 			NavStack.Push(cid);
 		}
 		//Spot.GetOrAdd(cid).SelectMe(false,mod);

@@ -110,7 +110,7 @@ namespace CnV
 
 
 		
-		protected void FilterNans(NumberBox sender,NumberBoxValueChangedEventArgs args)
+		protected void FilterNaNs(NumberBox sender,NumberBoxValueChangedEventArgs args)
 		{
 			App.FilterNans(sender,args);
 		}

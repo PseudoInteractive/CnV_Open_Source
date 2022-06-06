@@ -24,13 +24,13 @@
 			<RowDefinition Height="auto"/>
 		</Grid.RowDefinitions>
 		<NumberBox  Grid.Row="0" Margin="8,2" Description="{x:Bind _Desc(0)}" Style="{StaticResource BaseNumberBox}"
-						   SmallChange="1000"  Value="{x:Bind RssWood, Mode=TwoWay}" />
+						   SmallChange="1000"  Value="{x:Bind RssWood, Mode=TwoWay}" ValueChanged="{x:Bind cnv:App.FilterNans}" />
 		<NumberBox  Grid.Row="1" Margin="8,2" Description="{x:Bind _Desc(1)}" Style="{StaticResource BaseNumberBox}"
-						   SmallChange="1000"  Value="{x:Bind RssStone, Mode=TwoWay}" />
+						   SmallChange="1000"  Value="{x:Bind RssStone, Mode=TwoWay}" ValueChanged="{x:Bind cnv:App.FilterNans}" />
 		<NumberBox  Grid.Row="2" Margin="8,2" Description="{x:Bind _Desc(2)}" Style="{StaticResource BaseNumberBox}"
-						   SmallChange="1000"  Value="{x:Bind RssIron, Mode=TwoWay}" />
+						   SmallChange="1000"  Value="{x:Bind RssIron, Mode=TwoWay}" ValueChanged="{x:Bind cnv:App.FilterNans}" />
 		<NumberBox  Grid.Row="3" Margin="8,2" Description="{x:Bind _Desc(3)}" Style="{StaticResource BaseNumberBox}"
-						   SmallChange="1000"  Value="{x:Bind RssFood, Mode=TwoWay}" />
+						   SmallChange="1000"  Value="{x:Bind RssFood, Mode=TwoWay}" ValueChanged="{x:Bind cnv:App.FilterNans}" />
 
 
 

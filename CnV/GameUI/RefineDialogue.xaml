@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
+	
 	xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
 	>
 
@@ -21,32 +22,32 @@
 				<RowDefinition Height="auto"/>
 			</Grid.RowDefinitions>
 			<TextBlock Grid.Row="0" Text="Existing Refines:"  />
-			<TextBlock Grid.Row="1" Text="{x:Bind cnv:Player.active.refinesAndGold.ToString(), Mode=OneWay}" />
+			<TextBlock Grid.Row="1" Text="{x:Bind existingRefines, Mode=OneWay}" />
 		</Grid>
 		<tk:WrapPanel Orientation="Vertical" Grid.Row="1">
 			<StackPanel Orientation="Horizontal">
 				<NumberBox Value="{x:Bind items[0].count, Mode=TwoWay}" Style="{StaticResource NumberBoxMediumPositive}"  ValueChanged="FilterPositive" />
 				<cnv:WoodText 
-					  Text="{x:Bind items[0].resS, Mode=OneWay}" 		 />
+					  Text="{x:Bind items[0].resS, Mode=OneWay}" Width="160"		 />
 				<Button Style="{StaticResource ButtonSmall}" Content="Refine" Click="WoodClick" />
 			</StackPanel>
 
 			<StackPanel Orientation="Horizontal">
 				<NumberBox Value="{x:Bind items[1].count, Mode=TwoWay}" Style="{StaticResource NumberBoxMediumPositive}"  ValueChanged="FilterPositive" />
 				<cnv:StoneText 
-					  Text="{x:Bind items[1].resS, Mode=OneWay}" 		 />
+					  Text="{x:Bind items[1].resS, Mode=OneWay}" Width="160"		 />
 				<Button Style="{StaticResource ButtonSmall}" Content="Refine" Click="StoneClick" />
 			</StackPanel>
 			<StackPanel Orientation="Horizontal">
 				<NumberBox Value="{x:Bind items[2].count, Mode=TwoWay}" Style="{StaticResource NumberBoxMediumPositive}"  ValueChanged="FilterPositive" />
 				<cnv:IronText 
-					  Text="{x:Bind items[2].resS, Mode=OneWay}" 		 />
+					  Text="{x:Bind items[2].resS, Mode=OneWay}" 	Width="160"	 />
 				<Button Style="{StaticResource ButtonSmall}" Content="Refine" Click="IronClick" />
 			</StackPanel>
 			<StackPanel Orientation="Horizontal">
 				<NumberBox Value="{x:Bind items[3].count, Mode=TwoWay}" Style="{StaticResource NumberBoxMediumPositive}"  ValueChanged="FilterPositive" />
 				<cnv:FoodText 
-					  Text="{x:Bind items[3].resS, Mode=OneWay}" 		 />
+					  Text="{x:Bind items[3].resS, Mode=OneWay}" 	Width="160"	 />
 				<Button Style="{StaticResource ButtonSmall}" Content="Refine" Click="FoodClick" />
 			</StackPanel>
 

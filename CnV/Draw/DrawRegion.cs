@@ -24,7 +24,7 @@ internal partial class GameClient
 	private TextFormat tipTextFormatRight = new TextFormat(TextFormat.HorizontalAlignment.right);
 	private TextFormat nameTextFormat = new TextFormat(TextFormat.HorizontalAlignment.center,TextFormat.VerticalAlignment.center);
 	const byte textBackgroundOpacity = 192;
-
+	static Color diffuseTint = new(0.75f,0.75f,.75f,1.0f);
 	//	public static Material worldBackground;
 	//public static Effect imageEffect;
 	public static Effect avaEffect;
@@ -483,7 +483,7 @@ internal partial class GameClient
 					var a3 = new Vector3(c_.X,c_.Y,c_.Z*Settings.lightA).RGBFromHSL();
 					var s3 = new Vector3(c_.X,c_.Y*0.5f,c_.Z.Lerp(0.25f,0.75f)*Settings.lightS).RGBFromHSL();
 
-
+					diffuseTint = HSLToRGB.ToRGBA(c_.X,c_.Y,0.75f,0.75f);
 					//var d3 = t.CatmullRomLoop(new Vector3(0.75f,0.5f,1.125f),
 					//							new Vector3(0.5f,0.5f,1.5f),
 					//							new Vector3(1.0f,1.0f,1.0f),
@@ -867,7 +867,7 @@ internal partial class GameClient
 							var y = c.y+0.125f;
 							var _c0 = new Vector2(c.x - dimX,y - dimY);
 							var _c1 = new Vector2(c.x + dimX,y + dimY);
-							draw.AddQuad(Layer.blessedOverlay + 4,sprite,_c0,_c1,new Color(255,255,255,192),zCities);
+							draw.AddQuad(Layer.blessedOverlay + 4,sprite,_c0,_c1,diffuseTint with { A=192 },zCities);
 
 						}
 					}

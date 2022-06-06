@@ -20,16 +20,16 @@
 			<cnv:TroopsControl troops="{x:Bind fix.attackKills, Mode=TwoWay}" label="AtkKills" city="{x:Bind city}" />
 			<cnv:TroopsControl troops="{x:Bind fix.defenseKills, Mode=TwoWay}" label="DefKills" city="{x:Bind city}" />
 			<cnv:TroopsControl troops="{x:Bind fix.supportKills, Mode=TwoWay}" label="SupKills" city="{x:Bind city}" />
-			<NumberBox Value="{x:Bind fix.cavernLootD,  Mode=TwoWay}" Header="cavernLoot" />
-			<NumberBox Value="{x:Bind fix.npcKills,  Mode=TwoWay}" Header="npcKills" />
-			<NumberBox Value="{x:Bind fix.gold,  Mode=TwoWay}" Header="gold" />
-			<NumberBox Value="{x:Bind fix.karma,  Mode=TwoWay}" Header="karma" />
-			<NumberBox Value="{x:Bind fix.zirconia,  Mode=TwoWay}" Header="zirconia" />
-			<NumberBox Value="{x:Bind fix.caps,  Mode=TwoWay}" Header="caps" />
-			<NumberBox Value="{x:Bind fix.buildingDamage,  Mode=TwoWay}" Header="buildingDamage" />
-			<NumberBox Value="{x:Bind fix.palaceDamage,  Mode=TwoWay}" Header="palaceDamage" />
-			<NumberBox Value="{x:Bind fix.palaceDonationsD,  Mode=TwoWay}" Header="palaceDonations" />
-			<NumberBox Value="{x:Bind fix.plundered,  Mode=TwoWay}" Header="Plundered" />
+			<NumberBox Value="{x:Bind fix.cavernLootD,  Mode=TwoWay}" Header="cavernLoot" ValueChanged="FilterNaNs" />
+			<NumberBox Value="{x:Bind fix.npcKills,  Mode=TwoWay}" Header="npcKills"  ValueChanged="FilterNaNs"/>
+			<NumberBox Value="{x:Bind fix.gold,  Mode=TwoWay}" Header="gold"  ValueChanged="FilterNaNs" />
+			<NumberBox Value="{x:Bind fix.karma,  Mode=TwoWay}" Header="karma"  ValueChanged="FilterNaNs"/>
+			<NumberBox Value="{x:Bind fix.zirconia,  Mode=TwoWay}" Header="zirconia"  ValueChanged="FilterNaNs"/>
+			<NumberBox Value="{x:Bind fix.caps,  Mode=TwoWay}" Header="caps"  ValueChanged="FilterNaNs" />
+			<NumberBox Value="{x:Bind fix.buildingDamage,  Mode=TwoWay}" Header="buildingDamage"  ValueChanged="FilterNaNs" />
+			<NumberBox Value="{x:Bind fix.palaceDamage,  Mode=TwoWay}" Header="palaceDamage"  ValueChanged="FilterNaNs" />
+			<NumberBox Value="{x:Bind fix.palaceDonationsD,  Mode=TwoWay}" Header="palaceDonations"  ValueChanged="FilterNaNs" />
+			<NumberBox Value="{x:Bind fix.plundered,  Mode=TwoWay}" Header="Plundered"  ValueChanged="FilterNaNs" />
 			<Button Content="Post" Click="PostEvent" />
 
 		</StackPanel>
