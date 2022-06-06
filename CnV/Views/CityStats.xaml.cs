@@ -177,6 +177,13 @@ namespace CnV
 
 
 		}
+		internal string buildQueueTip { get {
+				var q = city.buildQueue;
+				var t = q.Aggregate( TimeSpanS.zero, (t,a) => a.TimeRequired(city)+t );
+				return $"Items: {q.Length}\nTime: {t.Format()}\nComplete: {Sim.simTime+t}";
+
+			}
+		}
 		public string recruitTooltip { get {
 				string rv = "Recruit Queue, click to recruit.";
 				if(city.stats.rsInf>0)
