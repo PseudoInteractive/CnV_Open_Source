@@ -685,7 +685,7 @@ public partial class City
 			else
 			{
 				if( Player.IsSubOrMe(cid.CidToPid() ) || (await AppS.DoYesNoBox("Sub", $"Switch to sub {cid.AsCity().player.name}?" )==1) ) {
-					await CnVClient.CitySwitch(cid, lazyMove, false, scrollIntoUI); // keep current view, switch to city
+					await CnVClient.CitySwitch(cid, false, false, scrollIntoUI); // keep current view, switch to city
 																			   //	View.SetViewMode(ShellPage.viewMode.GetNextUnowned());// toggle between city/region view
 				}
 				else {

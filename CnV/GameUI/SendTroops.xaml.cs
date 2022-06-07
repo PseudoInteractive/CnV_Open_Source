@@ -141,14 +141,26 @@ namespace CnV
 		bool isDefense => type==ArmyType.defense && !isSettle;
 		int splits => isCavernRaid ? splitsCombo.SelectedIndex+1 : 1;
 		internal bool isAttack => type.IsAttack();// is (>=Army.attackFirst and <= Army.attackLast);
-		public static Task<bool> ShowInstance(City city = null,City target = null,bool isSettle = false,bool viaWater = false,ArmyType type = ArmyType.nop,Army? prior = null,TroopTypeCounts? troops = null,ServerTime arrival = default, bool ? useHorns=null, bool? waitReturn=null) {
+		public static async Task<bool> ShowInstance(City city = null,City target = null,bool isSettle = false,bool viaWater = false,ArmyType type = ArmyType.nop,Army? prior = null,TroopTypeCounts? troops = null,ServerTime arrival = default, bool ? useHorns=null, bool? waitReturn=null) {
 			try {
 				if(city == target && prior is null) {
 					AppS.MessageBox("Cannot send to self");
-					return Task.FromResult(false);
+					return (false);
 				}
 				if(isSettle) {
 					Assert(type == ArmyType.defense);
+				}
+				var isAttack = type.IsAttack();// is (>=Army.attackFirst and <= Army.attackLast);
+				if(prior != null) {
+					target = prior.targetCity;
+				}
+				else {
+					if(isAttack && city.IsAlly(target) ) {
+						if(await AppS.DoYesNoBox("Attack ally", "Are you sure that you want to send an attack at an ally?") != 1) {
+
+							return false;
+						}
+					}
 				}
 
 				var rv = instance ?? new SendTroops();
@@ -165,7 +177,6 @@ namespace CnV
 					rv.useHornsCheckbox.Visibility = Visibility.Collapsed;
 
 				}
-				var isAttack = type.IsAttack();// is (>=Army.attackFirst and <= Army.attackLast);
 				if((type == ArmyType.defense||isAttack) && !isSettle) {
 				
 					if(waitReturn is not null)
@@ -179,12 +190,13 @@ namespace CnV
 					rv.waitReturnCheckbox.Visibility = Visibility.Collapsed;
 				}
 				//rv._departure = depart;
+				rv.notSameAlliance.IsChecked=true;
+				rv.notSameAlliance.Visibility = Visibility.Collapsed;
 			
 
 				if(prior is not null) {
 					rv.arrivalUI.Visibility = Visibility.Visible; // reset
 					rv.city =prior.sourceCity;
-
 					rv.target = prior.targetCity;
 					rv.isSettle = prior.isSettle;
 					rv.viaWater = prior.isViaWater;
@@ -229,12 +241,13 @@ namespace CnV
 					}
 					else if(arrival.isNotZero)
 						rv.arrivalUI.SetDateTime(arrival);
-	//				else if(depart.isNotZero)
-	//					rv.arrivalUI.SetDateTime(depart + rv.travelTimeWithHorms);
+					//				else if(depart.isNotZero)
+					//					rv.arrivalUI.SetDateTime(depart + rv.travelTimeWithHorms);
 
-					if(isAttack)
+					if(isAttack) {
 						rv.armyTypeCombo.Visibility = Visibility.Visible;
-
+						rv.notSameAlliance.Visibility = Visibility.Visible;
+					}
 
 					rv.buttoGo.Content = "Send";
 					rv.buttoGo.IsEnabled=true;
@@ -252,11 +265,11 @@ namespace CnV
 				}
 				rv.raidPanel.Visibility = rv.isCavernRaid ? Visibility.Visible : Visibility.Collapsed;
 				rv.OnPropertyChanged();
-				return rv.Show(false);
+				return await rv.Show(false);
 			}
 			catch(Exception _ex) {
 				LogEx(_ex);
-				return Task.FromResult(false);
+				return false;
 			}
 
 		}
@@ -509,9 +522,10 @@ namespace CnV
 
 				var splits = this.splits;
 
-				var flags = (byte)(isCavernRaid ? ((repeatCheckBox.IsChecked.Value ? Army.flagRepeating : Army.flagNone)
-									)
-									| Army.FlagSplits(splits) : Army.flagNone);
+				var flags = (byte)(isCavernRaid ? repeatCheckBox.IsChecked.Value.Switch(Army.flagNone,Army.flagRepeating)| Army.FlagSplits(splits) :
+												Army.flagNone);
+				if(notSameAlliance.IsChecked.Value)
+					flags|= Army.flagNotSameAlliance;
 				//var arrival = this.arrivalUI.dateTime;
 				//if(arrival == default)
 				//	arrival = departure + travelTimeWithHorms;

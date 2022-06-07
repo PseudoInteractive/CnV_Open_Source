@@ -25,6 +25,7 @@
 			<Button Style="{StaticResource ButtonMedium}" Content="Zero" Click="ClearClick" Margin="8,2"  />
 			<ComboBox SelectedIndex="{x:Bind armyType, Mode=TwoWay}" ItemsSource="{x:Bind cnv:Army.attackTypeStrings}" x:Name="armyTypeCombo" Visibility="Collapsed"/>
 			<ToggleSwitch IsOn="{x:Bind ViaWater, Mode=TwoWay}" OnContent="Water" OffContent="Land" />
+			<CheckBox x:Name="notSameAlliance" Content="Cancel if ally"  Visibility="Collapsed" Margin="4,2" ToolTipService.ToolTip="If set, attack will be cancelled if the target is allied at the time of arrival" />
 			<CheckBox x:Name="useHornsCheckbox" Content="Horns" IsChecked="{x:Bind UseHorns, Mode=TwoWay}"  Margin="4,2" ToolTipService.ToolTip="If set, horns will be used to speed up defense arrival as needed" />
 			<CheckBox x:Name="waitReturnCheckbox" Content="Wait Return" IsChecked="{x:Bind WaitReturn, Mode=TwoWay}"  Margin="4,2" ToolTipService.ToolTip="If set, departure will be occur once sufficient troops return"  />
 			<!--<TextBox   VerticalAlignment="Center" Text="{x:Bind arrival,Mode=TwoWay,Converter={StaticResource SmallTimeConverter}}"

@@ -878,7 +878,7 @@ namespace CnV.Views
                         var cid = m.Groups[0].Value.FromCoordinate();
 
                         var spot = City.GetOrAdd(cid);
-					if(Alliance.GetDiplomacy( spot.player) == Diplomacy.allied)
+					if(Alliance.GetPlayerDiplomacyWith( spot.player) == Diplomacy.allied)
 					{
 						Note.Show($"You are not supposed to attack your friend {Player.IdToName(spot.pid)}");
 						continue;
