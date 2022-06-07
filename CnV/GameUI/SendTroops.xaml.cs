@@ -294,7 +294,11 @@ namespace CnV
 						AppS.MessageBox($"City is under siege");
 					return (false, 0);
 				}
-
+				if(city.isOutOfFood ) {
+					if(verbose)
+						AppS.MessageBox($"Troops will not leave without food");
+					return (false, 0);
+				}
 				if(transport == ArmyTransport.carts && city.cartsHome < 250) {
 					if(verbose) AppS.MessageBox($"Need 250 carts.  Have {city.cartsHome} home of {city.carts} ");
 					return (false, 0);

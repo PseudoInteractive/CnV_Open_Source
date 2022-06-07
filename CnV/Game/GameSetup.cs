@@ -33,6 +33,12 @@ namespace CnV
 
 		public static async Task InitializeGame()
 	{
+			//var p0 = ServerTime.GetNightProtection(new ServerTime(2022,3,1,21,30,0));
+			//var p = ServerTime.GetNightProtection(new ServerTime(2022,3,1,22,30,0));
+			//var p1 = ServerTime.GetNightProtection(new ServerTime(2022,3,1,23,30,0));
+			//var p2 = ServerTime.GetNightProtection(new ServerTime(2022,3,1,0,30,0));
+			//var p3 = ServerTime.GetNightProtection(new ServerTime(2022,3,1,8,0,0));
+			//var p4 = ServerTime.GetNightProtection(new ServerTime(2022,3,1,11,0,0));
 			//	var selector = new RandomSelector<int>();
 			//selector.Add(1.0f,0);
 			//selector.Add(0.75f,1);
@@ -50,7 +56,7 @@ namespace CnV
 
 		//					   CnVChatClient.instance = new();
 		//					   CnVChatClient.instance.Initialize();
-		try
+		try 
 		{
 				
 				// Todo:  Persist this
