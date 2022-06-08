@@ -20,6 +20,7 @@
 						   Margin="4">
 					<Button Content="ShareString..." ToolTipService.ToolTip="Open the sharestring dialog where you can chose or set your intitial layout" Style="{StaticResource ButtonMedium}" Click="ShareStringClick" />
 					<Button Content="Use Buildings" ToolTipService.ToolTip="Set the current plan from the existing buildings, useful when fixing up a capture" Style="{StaticResource ButtonMedium}" Click="UseBuildingsClick" />
+					<Button Content="Clear" ToolTipService.ToolTip="Reset layout" Style="{StaticResource ButtonMedium}" Click="ClearClick" />
 					<Button Content="Flip Horizontal" ToolTipService.ToolTip="Flip buildings horizontally, used to position corner buildings where there are fewer resources" Style="{StaticResource ButtonMedium}" Click="FlipHClick" />
 					<Button Content="Flip Vertical" ToolTipService.ToolTip="Flip buildings vertically, used to position corner buildings to where there are fewer resources" Style="{StaticResource ButtonMedium}" Click="FlipVClick" />
 					<Button Content="Rotate Center" ToolTipService.ToolTip="Rotates buildings in the center" Style="{StaticResource ButtonMedium}" Click="RotateCenterClick" />

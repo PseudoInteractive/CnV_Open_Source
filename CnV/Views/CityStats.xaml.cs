@@ -1074,6 +1074,10 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 
 				}
 		}
+
+		private void DismissClick(object sender,RoutedEventArgs e) {
+			DismissDialog.ShowInstance(city);
+		}
 	}
 	public class BuildingCountAndBrush:INotifyPropertyChanged
 	{

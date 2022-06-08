@@ -654,5 +654,13 @@ namespace CnV.Views
 		private void SwapBuilding(object sender,RoutedEventArgs e) {
 			ModifyBuildings(isSwap: true);
 		}
+
+		private async void ClearClick(object sender,RoutedEventArgs e) {
+			if(await AppS.DoYesNoBox("Clear Layout","Reset layout to empty?") != 1)
+				return;
+			var city = City.GetBuild();
+			city.layout = City.emptyLayout;
+			city.LayoutChanged();
+		}
 	}
 }
