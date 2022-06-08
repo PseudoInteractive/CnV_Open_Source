@@ -1163,7 +1163,7 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 			{
 				CityUI.Show( Artifact.ArtifactType.medallion, sender);
 			});
-			if(op.isRes && op.isDemo)
+			if(op.isDemo && op.isRes )
 			{
 			flyout.AddItem("Powder..",Symbol.Favorite,() =>
 			{
