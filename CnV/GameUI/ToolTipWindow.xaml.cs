@@ -32,8 +32,12 @@ namespace CnV
 		//const int width = 64+28;
 		public static void TipChanged()
 		{
+			if(AppS.isShuttingDown)
+				return;
 			AppS.QueueOnUIThread( () =>
 			{
+			if(AppS.isShuttingDown)
+				return;
 				if(tooltip == null)
 				{
 					tooltip = new ToolTip();

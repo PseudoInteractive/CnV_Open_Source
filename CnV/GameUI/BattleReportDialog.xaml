@@ -25,6 +25,7 @@
 			<RowDefinition Height="auto"/>
 			<RowDefinition Height="auto"/>
 			<RowDefinition Height="auto"/>
+			<RowDefinition Height="auto"/>
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="*"/>
@@ -44,23 +45,26 @@
 		<TextBlock  Grid.Row="2"  Grid.Column="1" Text="{x:Bind attackType}"  Margin="8"  Style="{StaticResource TextBlockLarge}"/>
 		<TextBlock  Grid.Row="2"   Text="{x:Bind wallInfo}"  Margin="8"  Style="{StaticResource TextBlockLarge}" />
 
-		<TextBlock Grid.Row="3" Grid.Column="1" Text="{x:Bind b.aTroopsAndTS}" Margin="8,4" Style="{StaticResource TextBlockLarge}"/>
-		<TextBlock Grid.Row="3"  Text="{x:Bind b.dTroopsAndTS}" Margin="8,4"  Style="{StaticResource TextBlockLarge}"/>
+		<TextBlock Grid.Row="3"					Text="{x:Bind b.defenseModifiers}"  Style="{StaticResource TextBlockMedium}"/>
+		<TextBlock Grid.Row="3" Grid.Column="1" Text="{x:Bind b.attackModifiers}"  Style="{StaticResource TextBlockMedium}"/>
+
+		<TextBlock Grid.Row="4" Grid.Column="1" Text="{x:Bind b.aTroopsAndTS}" Margin="8,4" Style="{StaticResource TextBlockLarge}"/>
+		<TextBlock Grid.Row="4"  Text="{x:Bind b.dTroopsAndTS}" Margin="8,4"  Style="{StaticResource TextBlockLarge}"/>
 
 
-		<TextBlock  Grid.Row="4" Grid.ColumnSpan="2"  Text="ꁊ Kills"  Margin="8" HorizontalAlignment="Left" Style="{StaticResource TextBlockLarge}" />
+		<TextBlock  Grid.Row="5" Grid.ColumnSpan="2"  Text="ꁊ Kills"  Margin="8" HorizontalAlignment="Left" Style="{StaticResource TextBlockLarge}" />
 
 
-		<TextBlock Grid.Row="5" Grid.Column="1"  Text="{x:Bind b.aTroopsKilled}" Margin="8,4"  Style="{StaticResource TextBlockLarge}" />
-		<TextBlock Grid.Row="5" Text="{x:Bind b.dTroopsKilled}" Margin="8,4"  Style="{StaticResource TextBlockLarge}"/>
+		<TextBlock Grid.Row="6" Grid.Column="1"  Text="{x:Bind b.aTroopsKilled}" Margin="8,4"  Style="{StaticResource TextBlockLarge}" />
+		<TextBlock Grid.Row="6" Text="{x:Bind b.dTroopsKilled}" Margin="8,4"  Style="{StaticResource TextBlockLarge}"/>
 
-		<TextBlock Grid.Row="6" Grid.Column="1"  Text="{x:Bind b.plunderS}" Visibility="{x:Bind b.plunderVisibility}" Margin="8,4"  Style="{StaticResource TextBlockMedium}" TextWrapping="Wrap"  />
+		<TextBlock Grid.Row="7" Grid.Column="1"  Text="{x:Bind b.plunderS}" Visibility="{x:Bind b.plunderVisibility}" Margin="8,4"  Style="{StaticResource TextBlockMedium}" TextWrapping="Wrap"  />
 
 
-		<TextBlock Grid.Row="7" Grid.Column="1"  Text="{x:Bind b.attacker.refinesS}" Margin="8,4"  Style="{StaticResource TextBlockMedium}" TextWrapping="Wrap" />
-			<TextBlock Grid.Row="7" Text="{x:Bind b.defenderRefinesS}" Margin="8,4"  Style="{StaticResource TextBlockMedium}" TextWrapping="Wrap"/>
+		<TextBlock Grid.Row="8" Grid.Column="1"  Text="{x:Bind b.attacker.refinesS}" Margin="8,4"  Style="{StaticResource TextBlockMedium}" TextWrapping="Wrap" />
+			<TextBlock Grid.Row="8" Text="{x:Bind b.defenderRefinesS}" Margin="8,4"  Style="{StaticResource TextBlockMedium}" TextWrapping="Wrap"/>
 
-		<StackPanel Visibility="{x:Bind b.scoutVisibility}"  Grid.Row="8" Grid.ColumnSpan="2" >
+		<StackPanel Visibility="{x:Bind b.scoutVisibility}"  Grid.Row="9" Grid.ColumnSpan="2" >
 			<TextBlock Text="Scouted buildings:"  />
 			<GridView ItemsSource="{x:Bind b.scoutBuildings}">
 				<GridView.ItemTemplate>
@@ -73,7 +77,7 @@
 			
 
 		</StackPanel>
-			<StackPanel Visibility="{x:Bind b.buildingDamageVisibility}"  Grid.Row="9" Grid.ColumnSpan="2" >
+			<StackPanel Visibility="{x:Bind b.buildingDamageVisibility}"  Grid.Row="10" Grid.ColumnSpan="2" >
 				<TextBlock Text="Building Damage:"  />
 				<GridView ItemsSource="{x:Bind b.buildingDamage}">
 					<GridView.ItemTemplate>

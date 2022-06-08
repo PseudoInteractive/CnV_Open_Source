@@ -479,14 +479,24 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 
 		// invalidate the cache
 		private static City lastDisplayed;
-		static void  ClearLastDisplayed()
+		static bool  SetLastDisplayed(City toDisplay)
 		{
+			if(lastDisplayed == toDisplay)
+				return false;
 			if(lastDisplayed is not null)
 			{
 				lastDisplayed.PropertyChanged -= City_PropertyChanged;
 				lastDisplayed=null;
 			}
+			if(toDisplay is not null)
+			{
+				lastDisplayed = toDisplay; 
+				toDisplay.PropertyChanged += City_PropertyChanged;
+			
+			}
+			return true;
 		}
+		static void ClearLastDisplayed() => SetLastDisplayed(null);
 		public static void CityBuildingsChange(City _city)
 		{
 			if(_city == lastDisplayed)
@@ -530,14 +540,11 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 					try
 					{
 						var city = City.GetBuild();
-						var hasBeenDisplayed = lastDisplayed == city;
-						if(!hasBeenDisplayed)
+						var cityChanged = SetLastDisplayed(city);
+						if(cityChanged)
 						{
-							lastDisplayed = city;
-							city.PropertyChanged+=City_PropertyChanged;
 							Changed();
 						}
-						var bdd = !hasBeenDisplayed ? GetBuildingCounts(city) : default;
 						var t = Sim.simTime;
 						var tick64 = Tick.MS;
 						var wantTextUpdate = false;
@@ -630,8 +637,10 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 							PlayerStats.instance.karma.Text = Player.active.sampleMana.Format();
 						}
 
-						if(!hasBeenDisplayed)
+						if(cityChanged)
 						{
+							var bdd = GetBuildingCounts(city);
+
 							var txt = (expBuildings.Header as DependencyObject).Child<TextBlock>(1);
 							txt.UpdateLazy($"Buildings: [{bdd.buildingCount}/{bdd.townHallLevel*10}]");
 							var hasHammerTime = city.hammerTime > 0;

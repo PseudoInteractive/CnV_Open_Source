@@ -28,13 +28,14 @@ Loaded="DataGridLoaded"
                         AutoGenerateColumns="False"
                         
                         
-					    FontSize="{StaticResource MediumFontSize}"
+					    FontSize="{StaticResource TinyFontSize}"
                          
                         RowHeight="{StaticResource ShortGridRowHeight}"
                         ItemsSource="{x:Bind reports, Mode=OneWay}"
                         SelectionMode="Single"
                         SelectionUnit="Row"
 				FrozenColumnCount="2"
+			FontStretch="Condensed"
 					   >
 			
             <sf:SfDataGrid.Columns>
@@ -141,23 +142,19 @@ Loaded="DataGridLoaded"
                                        HeaderText="defAli"
                                                 MappingName="targetAllianceName"
                                         />
-				
-            </sf:SfDataGrid.Columns>
-            <!--<sf:SfDataGrid.AggregateDescriptors>
-                <telerikCore:PropertyAggregateDescriptor MappingName="SE"
-                                                         Function="Count" />
-                <telerikCore:PropertyAggregateDescriptor MappingName="Sen"
-                                                         Function="Count" />
-                <telerikCore:PropertyAggregateDescriptor MappingName="atsKill"
-                                                         Function="Sum" />
-                <telerikCore:PropertyAggregateDescriptor MappingName="dtsKill"
-                                                         Function="Sum" />
-                <telerikCore:PropertyAggregateDescriptor MappingName="aTS"
-                                                         Function="Sum" />
-                <telerikCore:PropertyAggregateDescriptor MappingName="dTS"
-                                                         Function="Sum" />
-            </sf:SfDataGrid.AggregateDescriptors>-->
-        </sf:SfDataGrid>
+				<sf:GridTextColumn 
+                                     
+                                       HeaderText="AttacK Mod"
+                                                MappingName="attackModifiers" />
+				<sf:GridTextColumn 
+					
+                                       HeaderText="Defense Mod"
+                                                MappingName="defenseModifiers"
+                                        />
+
+			</sf:SfDataGrid.Columns>
+			
+		</sf:SfDataGrid>
       
     </Grid>
 </local:UserTab>

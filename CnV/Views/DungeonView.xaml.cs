@@ -299,7 +299,7 @@ namespace CnV.Views
 					++counter;
 				}
 			}
-			Raiding.UpdateTS(true, true);
+			UpdateRaidPlans.Go();
 		}
 
 		private void RaidCarrySelChanged(Microsoft.UI.Xaml.Controls.NumberBox sender,Microsoft.UI.Xaml.Controls.NumberBoxValueChangedEventArgs args)
