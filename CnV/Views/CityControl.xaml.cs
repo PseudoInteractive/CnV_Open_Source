@@ -39,20 +39,35 @@ namespace CnV.Views
 			if(PropertyChanged is not null) ((IANotifyPropertyChanged)this).IOnPropertyChanged(member);
 		}
 		public event PropertyChangedEventHandler PropertyChanged;
+		internal ObservableCollection<City> citySelections = new();
 		#endregion
-		public City _city;
+		public City _city = City.invalid;
+		// Sets city silently
+		public void SetCityI(City value) {
+			_city = value;
+			if(_city is not null && !citySelections.Contains(_city))
+				citySelections.Add(_city);
+		}
+		public void SetCity(City value) {
+			if(_city != value) {
+				city = value; // call with add
+				CallPropertyChanged(nameof(this.city));
+			}
+		}
 		public City city
 		{
 			get => _city;
 			set {
-				if(_city != value)
+				if(!object.ReferenceEquals(_city, value) )
 				{
-					_city= value;
-					OnPropertyChanged(nameof(city));
+					SetCityI(_city = value); 
+					cityChanged?.Invoke(this,_city);
+
+				//	OnPropertyChanged(nameof(this.city));
 				}
 			}
 		}
-		public int cid => _city is not  null ? _city.cid : 0;
+		public int cid => city is City c ? c.cid : 0;
 		public BitmapImage icon => city?.icon;
 		public string name
 		{
@@ -73,7 +88,9 @@ namespace CnV.Views
   new PropertyMetadata(null)
 );
 
-		
+		public bool allowNone { get; set; } = true;		
+		public bool allowOtherPlayers { get; set; } = false;		
+		public bool allowOtherAlliances { get; set; } = false;		
 
 		public string Label
 		{
@@ -153,23 +170,31 @@ namespace CnV.Views
 				var text = args.Text.ToLower();
 
 				Log($"Summitted {text}");
-				//var coords = text.FromCoordinate();
-				//if(coords != 0) {
-				//	var city = City.Get(coords);
-				//	sender.Text = city.nameAndRemarks;
-				//	sender.SelectedItem = city;
-				//	args.Handled = true;
-				//	return;
+				var coords = text.FromCoordinate();
+				if(coords > 0) {
 
-				//}
+					var city = City.Get(coords);
+					Log($"Coords {city}");
+					//				sender.SelectedItem()
+					//	if(!sender.Items.Contains(city))
+					//		sender.Items.Add(city);
+					//	sender.SelectedItem = city;
+					SetCity(city);
+					args.Handled = true;
+					return;
 
-				var items = sender.ItemsSource as IEnumerable<City>;
+				}
+
+				var items = citySelections;// sender.Items;// e as IEnumerable<City>;
 				Assert(items is not null);
 				foreach(var it in items)
 				{
 					// its good
 					if(it.nameAndRemarks.ToLower() == text)
 					{
+						Log($"== {it}");
+						SetCity(it);
+						args.Handled = true;
 						return;
 					}
 				}
@@ -179,8 +204,10 @@ namespace CnV.Views
 				{
 					if(it.nameAndRemarks.ToLower().StartsWith(text))
 					{
-						sender.Text = it.nameAndRemarks;
-						sender.SelectedItem = it;
+						Log($"starts {it}");
+
+						SetCity(it);
+
 						args.Handled = true;
 						return;
 					}
@@ -188,12 +215,12 @@ namespace CnV.Views
 				// try contains
 				foreach(var it in items)
 				{
+
 					if(it.nameAndRemarks.ToLower().Contains(text))
 					{
 						Log($"Contains {it}");
+						SetCity(it);
 
-						sender.Text         = it.nameAndRemarks;
-						sender.SelectedItem = it;
 						args.Handled = true;
 						return;
 					}
@@ -296,21 +323,21 @@ namespace CnV.Views
 		//	}
 		
 		//}
+		internal event EventHandler<City> cityChanged;
+		//private void SelectionChanged(object sender,SelectionChangedEventArgs e)
+		//{
+		//	try
+		//	{
+		//		//	var box = sender as ComboBox;
+		//		//	this.city = box.SelectedItem as City;
+		//		//		OnPropertyChanged(nameof(this.city));
+		//	}
+		//	catch(Exception _ex)
+		//	{
+		//		LogEx(_ex);
 
-		private void SelectionChanged(object sender,SelectionChangedEventArgs e)
-		{
-			try
-			{
-				var box = sender as ComboBox;
-				this.city = box.SelectedItem as City;
-				OnPropertyChanged(nameof(this.city));
-			}
-			catch(Exception _ex)
-			{
-				LogEx(_ex);
-
-			}
-		}
+		//	}
+		//}
 
 		private void CityIconTapped(object sender,TappedRoutedEventArgs e)
 		{
@@ -332,6 +359,30 @@ namespace CnV.Views
 
 			}
 		
+		}
+
+		private void CityControlLoaded(object sender,RoutedEventArgs e) {
+		//	citySelections.Clear();
+			var l = City.gridCitySource.ToArray();
+			if(_city is not null && !l.Contains(_city))
+				l = l.Prepend(_city).ToArray();
+			if(allowNone && _city != City.invalid )
+				l = l.Prepend(City.invalid).ToArray();
+
+			l.SyncList(citySelections);
+		}
+
+		private void ComboRightTapped(object sender,RightTappedRoutedEventArgs e) {
+			var flyout = new MenuFlyout();
+			var sel = City.GetSelectedForContextMenu(City.focus);
+			foreach(var i in sel) {
+				var c = i.AsCity();
+				flyout.AddItem(c.nameAndRemarks,() => SetCity(c));
+			}
+			flyout.SetXamlRoot(cityBox);
+
+		//   flyout.XamlRoot = uie.XamlRoot;
+			flyout.ShowAt(cityBox);
 		}
 
 		//private void AutoSuggestBox_CharacterReceived(UIElement sender,CharacterReceivedRoutedEventArgs args)

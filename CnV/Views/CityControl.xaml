@@ -7,8 +7,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    d:DesignHeight="300"
-    d:DesignWidth="400">
+	Loaded="CityControlLoaded"
+	
+    >
 
 	<Grid >
 		<Grid.ColumnDefinitions>
@@ -17,7 +18,7 @@
 			<ColumnDefinition Width="Auto" />
 		</Grid.ColumnDefinitions>
 
-		<TextBlock Text="{x:Bind Label, Mode=OneWay}" Style="{StaticResource TextBlockMedium}" MaxWidth="{x:Bind LabelWidth}" Width="{x:Bind LabelWidth}" />
+		<TextBlock Text="{x:Bind Label, Mode=OneWay}" Style="{StaticResource TextBlockSmall}" MaxWidth="{x:Bind LabelWidth}" Width="{x:Bind LabelWidth}" VerticalAlignment="Center" RightTapped="ComboRightTapped"  />
 
 
 
@@ -25,18 +26,18 @@
 					               HorizontalAlignment="Stretch"
 					                IsEditable="True"
 					   IsTextSearchEnabled="True"
-					   ItemsSource="{x:Bind cnv:City.gridCitySourceWithNone, Mode=OneWay}"
+					RightTapped="RightTappedX"
 					                TextSubmitted="TextSubmitted"			
-							SelectionChanged="SelectionChanged"
+				  ItemsSource="{x:Bind citySelections, Mode=OneWay}"
 					    SelectedItem="{x:Bind city, Mode=TwoWay}"       
 					                Margin="0"
+					 
 					   
-					   RightTapped="RightTappedX"
 					   >
 		<ComboBox.ItemTemplate>
 			<DataTemplate  x:DataType="cnv:City">
 				<StackPanel Orientation="Horizontal" >
-					<Image Source="{x:Bind icon}"  Stretch="None"  VerticalAlignment="Center" IsTapEnabled="True" Tapped="CityIconTapped"/>
+						<Image Source="{x:Bind icon}"  Stretch="None"  VerticalAlignment="Center" IsTapEnabled="True" Tapped="CityIconTapped" />
 					<TextBlock Text="{x:Bind nameAndRemarks}" VerticalAlignment="Center" />
 				</StackPanel>
 			</DataTemplate>

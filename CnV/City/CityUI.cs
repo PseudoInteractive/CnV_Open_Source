@@ -701,7 +701,7 @@ public partial class City
 			NavStack.Push(cid);
 		}
 		//Spot.GetOrAdd(cid).SelectMe(false,mod);
-		SpotTab.TouchSpot(cid, mod, true);
+		SpotTab.TouchSpot(cid, mod, false);
 
 
 	}

@@ -34,8 +34,11 @@
 		</Grid>
 	</DataTemplate>
 	<converterTK:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
-	
+
+
 	<!--"Expander"-->
+	<x:Double x:Key="ControlContentThemeFontSize">12</x:Double>
+	<x:Double x:Key="ContentControlFontSize">12</x:Double>
 	<SolidColorBrush x:Key="ExpanderBrushContent" Color="{StaticResource SystemAccentColorDark3}" />
 	<SolidColorBrush x:Key="ExpanderBrushHeader" Color="{StaticResource SystemAccentColorDark3}" />
 	<SolidColorBrush x:Key="ExpanderBrushContentAlt">#B200</SolidColorBrush>
@@ -95,14 +98,17 @@
 	<SolidColorBrush x:Key="HyperLinkBrush" Color="#FF7060FF" />
 
 
-	<Style TargetType="ComboBox"  >
+	<Style TargetType="ComboBox" BasedOn="{StaticResource DefaultComboBoxStyle}" >
 		<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
 		<Setter Property="FontStretch" Value="Condensed" />
 		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 	</Style>
+	<Style TargetType="MenuFlyoutItem" BasedOn="{StaticResource DefaultMenuFlyoutItemStyle}" >
+		<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
+		<Setter Property="FontStretch" Value="Condensed" />
+	</Style>
 
-
-		<Style TargetType="HyperlinkButton" BasedOn="{StaticResource BaseControlStyle}" >
+	<Style TargetType="HyperlinkButton" BasedOn="{StaticResource BaseControlStyle}" >
 				<Setter Property="Foreground" Value="{StaticResource HyperLinkBrush}" />
 				<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
 				<Setter Property="FontStretch" Value="Condensed" />

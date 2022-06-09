@@ -84,7 +84,7 @@ namespace CnV.Views
 
 		public void InitTradeSettings(City city, int _sourceHub, int _targetHub,ResourceFilter reqFilter,ResourceFilter targetFilter) 
 		{
-			var curSettings = city.GetMOForRead(); ;
+			var curSettings = city.GetMOForRead();
 			this.reqFilter = reqFilter;
 			this.sendFilter = targetFilter;
 			reqHub.city = _sourceHub == 0? null : City.Get(_sourceHub);

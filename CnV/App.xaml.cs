@@ -648,8 +648,9 @@ namespace CnV
 				{
 					//	var window = Window.Current;
 					window.VisibilityChanged += Window_VisibilityChanged;
-					//window.Closed            += Window_Closed;
+				
 					AppS.appWindow.Closing+=AppWindow_Closing;
+					AppS.appWindow.Destroying+=AppWindow_Destroying; ;
 					//		window.WantClose+=Window_Closing;
 					//window.Activated+=Window_Activated;
 				}
@@ -813,7 +814,11 @@ namespace CnV
 			}
 		}
 
-		
+		private static void AppWindow_Destroying(AppWindow sender,object args) {
+			Log("Destroying");
+		}
+
+
 #if DEBUG
 		private void DebugSettings_BindingFailed1(object sender,BindingFailedEventArgs e)
 		{
@@ -831,7 +836,7 @@ namespace CnV
 		}
 #endif
 
-		private async static void AppWindow_Closing(AppWindow sender,AppWindowClosingEventArgs args)
+		internal async static void AppWindow_Closing(AppWindow sender,AppWindowClosingEventArgs args)
 		{
 			try
 			{
@@ -845,7 +850,8 @@ namespace CnV
 					Microsoft.Xna.Framework.GamePlatform.isExiting=true;
 					
 					window.VisibilityChanged -= Window_VisibilityChanged;
-					args.Cancel = true;
+					if(args is not null)
+						args.Cancel = true;
 					// Cancel sim thread
 					Sim.simCancelTokenSource.Cancel();
 					SocketClient.ShutDown();

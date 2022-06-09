@@ -9,7 +9,7 @@ public sealed partial class TradeSettingsDialog:DialogG, INotifyPropertyChanged 
 
 	}
 
-	internal async void WoodSource_PropertyChanged(object? sender,PropertyChangedEventArgs m) {
+	internal async void WoodSource_PropertyChanged(object?sender,City city) {
 
 //		if(m.PropertyName==nameof(woodSource.city)) 
 			{
@@ -21,14 +21,14 @@ public sealed partial class TradeSettingsDialog:DialogG, INotifyPropertyChanged 
 				if(rv == -1)
 					return;
 
-				stoneSource.city = woodSource.city;
-				ironSource.city = woodSource.city;
-				foodSource.city = woodSource.city;
+				stoneSource.SetCity(city);
+				ironSource.SetCity( city);
+				foodSource.SetCity( city);
 				if(rv == 0) {
-					woodDest.city = woodSource.city;
-					stoneDest.city = woodSource.city;
-					ironDest.city = woodSource.city;
-					foodDest.city = woodSource.city;
+					woodDest.SetCity( city);
+					stoneDest.SetCity( city);
+					ironDest.SetCity( city );
+					foodDest.SetCity( city );
 
 				}
 				OnPropertyChanged();
@@ -48,20 +48,20 @@ public sealed partial class TradeSettingsDialog:DialogG, INotifyPropertyChanged 
 
 		var city = this.city;
 		var mo = city.GetMOForRead();
-		woodSource.city =mo.requestCities[0].AsCity();
-		stoneSource.city =mo.requestCities[1].AsCity();
-		ironSource.city =mo.requestCities[2].AsCity();
-		foodSource.city =mo.requestCities[3].AsCity();
+		woodSource.SetCityI(mo.requestCities[0].AsCity());
+		stoneSource.SetCityI(mo.requestCities[1].AsCity());
+		ironSource.SetCityI(mo.requestCities[2].AsCity());
+		foodSource.SetCityI(mo.requestCities[3].AsCity());
 
 		woodReq.Value = ToNumberBoxValue(mo.resRequest[0]);
 		stoneReq.Value = ToNumberBoxValue(mo.resRequest[1]);
 		ironReq.Value = ToNumberBoxValue(mo.resRequest[2]);
 		foodReq.Value = ToNumberBoxValue(mo.resRequest[3]);
 
-		woodDest.city =mo.sendCities[0].AsCity();
-		stoneDest.city =mo.sendCities[1].AsCity();
-		ironDest.city =mo.sendCities[2].AsCity();
-		foodDest.city =mo.sendCities[3].AsCity();
+		woodDest.SetCityI(mo.sendCities[0].AsCity());
+		stoneDest.SetCityI(mo.sendCities[1].AsCity());
+		ironDest.SetCityI(mo.sendCities[2].AsCity());
+		foodDest.SetCityI(mo.sendCities[3].AsCity());
 
 		woodSend.Value = ToNumberBoxValue(mo.resSend[0]);
 		stoneSend.Value =ToNumberBoxValue( mo.resSend[1]);
@@ -87,16 +87,16 @@ public sealed partial class TradeSettingsDialog:DialogG, INotifyPropertyChanged 
 	{
 		var rv = instance ?? new TradeSettingsDialog();
 		// once in case of exception
-		rv.woodSource.PropertyChanged-=rv.WoodSource_PropertyChanged;
+		rv.woodSource.cityChanged-=rv.WoodSource_PropertyChanged;
 		if(!rv.Hide(false))
 		{
 			rv.UpdateItems();
 
 			var t = rv.Show(false);
 			await Task.Delay(2000);
-			rv.woodSource.PropertyChanged+=rv.WoodSource_PropertyChanged;
+			rv.woodSource.cityChanged+=rv.WoodSource_PropertyChanged;
 			await t;
-			rv.woodSource.PropertyChanged-=rv.WoodSource_PropertyChanged;
+			rv.woodSource.cityChanged-=rv.WoodSource_PropertyChanged;
 		}
 
 	}
