@@ -65,7 +65,7 @@ namespace CnV
 		public static Player player => Player.active;
 		public string zirconiaS => player.zirconia.Format();
 		public string karmaRegenS => $"+{player.karmaRegenRate*ServerTime.secondsPerHour:N1} karma/h";
-		public string goldS => player.SampleGold().Format();
+		public string goldProductionS => $"+{player.goldPerHour:N0} gold/h";
 		public string RefineS(int id) => player.data.refines[id].Format();
 		//internal static void GoldChanged()	=> Changed(nameof(goldS));
 		//internal static void ManaChanged()	=> Changed(nameof(manaS));

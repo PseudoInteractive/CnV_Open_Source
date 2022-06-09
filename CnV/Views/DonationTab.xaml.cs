@@ -21,7 +21,7 @@ public sealed partial class DonationTab : UserTab
 	public static float woodStoneRatio = -1;
 	private static bool viaWater;
 	//public string[] priorityNames = { "Do Not Send","NA", "Low", "Medium", "High"  };
-	NotifyCollection<City> donationGridSource = new();
+	ObservableCollection<City> donationGridSource = new();
 
 	public static bool ViaWater { get => viaWater; set {
 		if(viaWater == value) return;
@@ -39,15 +39,21 @@ public sealed partial class DonationTab : UserTab
 	//	CityUI.cityListChanged += CityListChanged;
 	}
 
-	private static void CityListChanged(IEnumerable<City> l)
+	private static void DoRefresh()
 	{
 
 		if (DonationTab.IsVisible())
 		{
-			
-				instance.donationGridSource.Set(l.Where((city) => (ViaWater?city.shipsHome > Settings.tradeSendReserveShips:
-				city.cartsHome > Settings.tradeSendReserveCarts) )
-					.OrderBy(a => a.cont).ThenByDescending(a => (!ViaWater ? a.cartsHome * 1000 : a.shipsHome*10_000).Min(a.sampleResources.sum)));
+			AppS.QueueOnUIThread(() => {
+				var l = City.gridCitySource.Where((city) => (ViaWater ? city.shipsHome > Settings.tradeSendReserveShips :
+				city.cartsHome > Settings.tradeSendReserveCarts))
+					.OrderBy(a => a.cont).ThenByDescending(a => (!ViaWater ? a.cartsHome * 1000 : a.shipsHome*10_000).Min(a.sampleResources.sum)).ToArray();
+
+				if(l.SyncList(instance.donationGridSource)) {
+					instance.donationGrid.ResetAutoColumns();
+
+				}
+			});
 
 			
 		}
@@ -83,7 +89,7 @@ public sealed partial class DonationTab : UserTab
 			//////	city.sorcTower = detail.Sorc_tower == "Y";
 			//}
 
-			CityListChanged(City.gridCitySource);
+			DoRefresh();
 
 
 			//CityList.NotifyChange(true);
@@ -141,6 +147,8 @@ private void OnLoaded(object sender,RoutedEventArgs e)
 	base.SetupDataGrid(donationTargetsGrid);
 	base.SetupDataGrid(marketTargetsGrid);
 }
+
+	
 }
 
 

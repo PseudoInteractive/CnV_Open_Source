@@ -60,6 +60,20 @@ public static partial class ADataGrid
 			}
 		}
 	}
+	internal static void ResetAutoColumns(this xDataGrid grid) {
+		
+		Task.Delay(1000).ContinueWith((_) =>
+			AppS.QueueOnUIThreadIdle(() => {
+			if(grid.ItemsSource is null)
+				return;
+			if(!grid.IsLoaded)
+				return;
+				grid.ColumnSizer.ResetAutoCalculationforAllColumns();
+				grid.ColumnSizer.Refresh();
+
+			})
+			);
+		}
 
 	public static ChangeContextDisposable ChangeContext(this xDataGrid grid) => new ChangeContextDisposable(grid);
 
@@ -324,12 +338,16 @@ public static partial class ADataGrid
 			foreach(var c in 			grid.Columns ) {
 				c.ShowHeaderToolTip=true;
 				c.ShowToolTip=true;
-				
-			//	c.CellStyle = App.instance.Resources["SfTextCell"] as Style;
+
+				//	c.CellStyle = App.instance.Resources["SfTextCell"] as Style;
 				//c.
+				
 			}
+			if(tab is not null)
+				grid.DetailsViewExpanded += tab.DetailsViewUpdateColumnWidths;
+
+			grid.ResetAutoColumns();
 			
-			grid.ColumnSizer.ResetAutoCalculationforAllColumns();
 		//	grid.ColumnSizer.Refresh();
 			return _lock0;
 

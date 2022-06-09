@@ -34,7 +34,7 @@
 							IsTextScaleFactorEnabled="False"
 							SelectionUnit="Row"
 							
-							FontSize="{StaticResource MediumFontSize}"
+							FontSize="{StaticResource SmallFontSize}"
 							RowHeight="{StaticResource MediumGridRowHeight}"
 							Tag="Dungeons"
                               AutoGenerateColumns="False">

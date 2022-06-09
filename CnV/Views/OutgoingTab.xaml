@@ -26,7 +26,7 @@
                         AutoGenerateColumns="False"
 						
 						Loaded="DataGridLoaded"
-                        FontSize="{StaticResource MediumFontSize}"
+                        FontSize="{StaticResource SmallFontSize}"
                         RowHeight="{StaticResource MediumGridRowHeight}"
                         SelectionMode="Single"
 					   AllowSelectionOnPointerPressed="True"
@@ -93,7 +93,7 @@
                                     ItemsSource="{x:Bind targetIncoming, Mode=OneWay}"
 									
                                     Grid.Row="2"
-                                    FontSize="{StaticResource MediumFontSize}"
+                                    FontSize="{StaticResource SmallFontSize}"
                                     HorizontalAlignment="Stretch"
                                     RowHeight="{StaticResource MediumGridRowHeight}"
                                     

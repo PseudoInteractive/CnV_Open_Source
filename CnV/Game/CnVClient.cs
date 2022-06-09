@@ -152,12 +152,12 @@ namespace CnV
 					//		GetWorldInfo.Send();
 				}
 
-				if(jse.TryGetProperty("mvb", out var mvb))
-				{
-					Log("MVB: " + mvb.ToString());
-					Player.moveSlots = mvb.ValueKind == JsonValueKind.Number ? mvb.GetAsInt() : mvb.GetAsInt("l");
+				//if(jse.TryGetProperty("mvb", out var mvb))
+				//{
+				//	Log("MVB: " + mvb.ToString());
+				//	Player.moveSlots = mvb.ValueKind == JsonValueKind.Number ? mvb.GetAsInt() : mvb.GetAsInt("l");
 
-				}
+				//}
 
 				//if(jse.TryGetProperty("fa", out var fa))
 				//{
@@ -176,80 +176,80 @@ namespace CnV
 				//if(bonusesUpdated)
 				//	BonusesUpdated();
 
-				var lists = new List<CityList>();
-				if(jse.TryGetProperty("cl", out var cityListNames))
-				{
-					++clChanged;
-					//  var clList = new List<string>();
-					if(cityListNames.ValueKind == JsonValueKind.Object)
-						foreach(var cn in cityListNames.EnumerateObject())
-						{
-							var l = new CityList() { name = cn.Value.GetString(), id = int.Parse(cn.Name) };
-							lists.Add(l);
-						}
-					//  lists.Sort((a, b) => a.name.CompareTo(b.name));
+				//var lists = new List<CityList>();
+				//if(jse.TryGetProperty("cl", out var cityListNames))
+				//{
+				//	++clChanged;
+				//	//  var clList = new List<string>();
+				//	if(cityListNames.ValueKind == JsonValueKind.Object)
+				//		foreach(var cn in cityListNames.EnumerateObject())
+				//		{
+				//			var l = new CityList() { name = cn.Value.GetString(), id = int.Parse(cn.Name) };
+				//			lists.Add(l);
+				//		}
+				//	//  lists.Sort((a, b) => a.name.CompareTo(b.name));
 
 
-					if(jse.TryGetProperty("cln", out var cln))
-						//  ++clChanged;
+				//	if(jse.TryGetProperty("cln", out var cln))
+				//		//  ++clChanged;
 
-						//  var clList = new List<string>();
-						lastCln = GetIntArray(cln).Values.ToArray();
-					if(lastCln != null)
-					{
+				//		//  var clList = new List<string>();
+				//		lastCln = GetIntArray(cln).Values.ToArray();
+				//	if(lastCln != null)
+				//	{
 
-						var prior = lists;
-						lists = new List<CityList>();
-						foreach(var id in lastCln)
-						{
-							var ins = prior.Find((a) => a.id == id);
-							if(ins != null)
-								lists.Add(ins);
+				//		var prior = lists;
+				//		lists = new List<CityList>();
+				//		foreach(var id in lastCln)
+				//		{
+				//			var ins = prior.Find((a) => a.id == id);
+				//			if(ins != null)
+				//				lists.Add(ins);
 
-						}
-					}
-					//  lists.Sort((a, b) => a.name.CompareTo(b.name));
+				//		}
+				//	}
+				//	//  lists.Sort((a, b) => a.name.CompareTo(b.name));
 
-				}
+				//}
 
-				//if(jse.TryGetProperty("r", out var r))
-				//	Player.me.title = r.GetAsByte();
+				////if(jse.TryGetProperty("r", out var r))
+				////	Player.me.title = r.GetAsByte();
 
-				if(jse.TryGetProperty("clc", out var cityListCities))
-				{
-					++clChanged;
-					if(cityListCities.ValueKind == JsonValueKind.Object)
-						foreach(var clc in cityListCities.EnumerateObject())
-						{
-							if(clc.Value.ValueKind == JsonValueKind.Null)
-								continue;
-							var id = int.Parse(clc.Name);
-							var cityList = lists.Find((a) => a.id == id);
-							foreach(var cityId in GetIntArray(clc.Value))
-								cityList.cities.Add(cityId.Value);
+				//if(jse.TryGetProperty("clc", out var cityListCities))
+				//{
+				//	++clChanged;
+				//	if(cityListCities.ValueKind == JsonValueKind.Object)
+				//		foreach(var clc in cityListCities.EnumerateObject())
+				//		{
+				//			if(clc.Value.ValueKind == JsonValueKind.Null)
+				//				continue;
+				//			var id = int.Parse(clc.Name);
+				//			var cityList = lists.Find((a) => a.id == id);
+				//			foreach(var cityId in GetIntArray(clc.Value))
+				//				cityList.cities.Add(cityId.Value);
 
-						}
-				}
+				//		}
+				//}
 
-				if(clChanged >= 2)
-					AppS.DispatchOnUIThreadIdle(() =>
-					{
-						var priorIndex = ShellPage.CityListBox.SelectedIndex;
-						CityList.selections = new CityList[lists.Count + 1];
-						CityList.selections[0] = CityList.allCities;
+				//if(clChanged >= 2)
+				//	AppS.DispatchOnUIThreadIdle(() =>
+				//	{
+				//		var priorIndex = ShellPage.CityListBox.SelectedIndex;
+				//		CityList.selections = new CityList[lists.Count + 1];
+				//		CityList.selections[0] = CityList.allCities;
 
-						for(var i = 0; i < lists.Count; ++i)
-							CityList.selections[i + 1] = lists[i];
-						CityList.all = lists.ToArray();
-						if(Settings.instance!=null)
-						{
-							Settings.instance.hubCityListBox.ItemsSource = null;
-							Settings.instance.hubCityListBox.ItemsSource = CityList.all;
-						}
-						ShellPage.CityListBox.ItemsSource          = CityList.selections;
-						ShellPage.CityListBox.SelectedIndex = priorIndex; // Hopefully this is close enough
-																 //                       Settings.instance.
-					});
+				//		for(var i = 0; i < lists.Count; ++i)
+				//			CityList.selections[i + 1] = lists[i];
+				//		CityList.all = lists.ToArray();
+				//		if(Settings.instance!=null)
+				//		{
+				//			Settings.instance.hubCityListBox.ItemsSource = null;
+				//			Settings.instance.hubCityListBox.ItemsSource = CityList.all;
+				//		}
+				//		ShellPage.CityListBox.ItemsSource          = CityList.selections;
+				//		ShellPage.CityListBox.SelectedIndex = priorIndex; // Hopefully this is close enough
+				//												 //                       Settings.instance.
+				//	});
 			}
 
 			catch(Exception E)

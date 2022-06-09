@@ -99,6 +99,7 @@ namespace CnV.Views
 																							  w.testContinentFilter
 																							&& (instance.includeInternal || !w.isAllyOrNap)).OrderBy(w => w.firstIncoming).ToArray();
 							_targets.SyncList(instance.targets);
+							instance.attackerGrid.ResetAutoColumns();
 							UpdateTargetIncoming(false);
 						}
 						catch(Exception e) {
@@ -141,6 +142,7 @@ namespace CnV.Views
 			{
 
 				if(sel.incoming.Where(a => a.shareInfo).OrderBy(a=>a.arrival).ToArray().SyncList(instance.targetIncoming)) {
+					instance.armyGrid.ResetAutoColumns();
 					if(showHistory) {
 						var tab = HitHistoryTab.instance;
 						tab.SetFilter(sel);

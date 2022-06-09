@@ -40,7 +40,7 @@
                         AutoGenerateColumns="False"
                         
                         
-                        FontSize="{StaticResource MediumFontSize}"
+                        FontSize="{StaticResource SmallFontSize}"
                         RowHeight="{StaticResource MediumGridRowHeight}"
                             
 	
@@ -147,7 +147,7 @@
 						
 
 						
-                                    FontSize="{StaticResource MediumFontSize}"
+                                    FontSize="{StaticResource SmallFontSize}"
                                     HorizontalAlignment="Stretch"
                                     RowHeight="42"
                                     ItemsSource="{x:Bind armiesIncoming, Mode=OneWay}"

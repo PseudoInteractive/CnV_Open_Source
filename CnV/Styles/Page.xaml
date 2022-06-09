@@ -95,13 +95,18 @@
 	<SolidColorBrush x:Key="HyperLinkBrush" Color="#FF7060FF" />
 
 
+	<Style TargetType="ComboBox"  >
+		<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
+		<Setter Property="FontStretch" Value="Condensed" />
+		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+	</Style>
 
 
-			<Style TargetType="HyperlinkButton" BasedOn="{StaticResource BaseControlStyle}" >
+		<Style TargetType="HyperlinkButton" BasedOn="{StaticResource BaseControlStyle}" >
 				<Setter Property="Foreground" Value="{StaticResource HyperLinkBrush}" />
 				<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
 				<Setter Property="FontStretch" Value="Condensed" />
-				<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+				<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 			</Style>
 			
 
@@ -121,7 +126,7 @@
 				<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
 				<Setter Property="FontStretch" Value="Condensed" />
 				<Setter Property="FontWeight" Value="Normal" />
-				<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+				<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 			</Style>
 
 
@@ -145,7 +150,7 @@
 	<!--Toggle Button-->
 			<Style x:Key="ToggleButton" TargetType="ToggleButton" BasedOn="{StaticResource ToggleButtonRevealStyle}" >
 				<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
-				<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+				<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 				<Setter Property="FontWeight" Value="Normal" />
 				<Setter Property="FontStretch" Value="Condensed" />
 				<Setter Property="Margin" Value="1" />
@@ -278,14 +283,14 @@
 
 			<Style TargetType="CheckBox" BasedOn="{StaticResource DefaultCheckBoxStyle}">
 				<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
-				<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+				<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 				<Setter Property="FontStretch" Value="Condensed" />
 			</Style>
 
 			<Style TargetType="RadioButtons" >
 				<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
 		<Setter Property="FontStretch" Value="Condensed" />
-		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 			</Style>
 
 

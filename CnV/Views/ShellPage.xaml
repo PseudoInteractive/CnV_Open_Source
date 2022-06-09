@@ -56,7 +56,7 @@
 			<Canvas x:Name="toolTipHolder" Grid.Column="2" Width="140" IsHitTestVisible="False" IsTabStop="False" Background="{x:Null}" 
 		HorizontalAlignment="Right" x:FieldModifier="public" VerticalAlignment="Stretch" />
 
-			<CommandBar Grid.ColumnSpan="3"   DefaultLabelPosition="Collapsed" IsSticky="True" IsTabStop="True" Margin="0" Padding="0" MinHeight="22"  
+			<CommandBar Grid.ColumnSpan="3"   DefaultLabelPosition="Collapsed" IsSticky="True" IsTabStop="True" Margin="0" Padding="0" MinHeight="20" Height="40"  
 						x:Name="commandBar" x:FieldModifier="public"  >
 		<CommandBar.Content >
 					<cnv:PlayerStats 
@@ -106,22 +106,9 @@
 						<TextBox  x:Name="coords" Margin="4,0,4,0" Width="100" TextAlignment="Center"  Text="000:000" HorizontalAlignment="Center"  x:FieldModifier="public" KeyDown="coords_KeyDown"/>
 					</AppBarElementContainer>
 					<AppBarElementContainer VerticalAlignment="Center" AllowFocusOnInteraction="True" IsTabStop="True">
-				<ComboBox x:Name="windowLayout" SelectedIndex="{x:Bind layout, Mode=TwoWay}"  VerticalAlignment="Center" Margin="4,0,4,0"
+				<ComboBox x:Name="windowLayout"  SelectedIndex="{x:Bind layout, Mode=TwoWay}"  VerticalAlignment="Center" Margin="4,0,4,0"
 						          ToolTipService.ToolTip="Select a view layout"  ItemsSource="{x:Bind layoutOptions}"  />
 					</AppBarElementContainer>
-					<AppBarElementContainer  Visibility="Collapsed">
-						<ComboBox x:Name="cityListBox" x:FieldModifier="public"
-                     IsEditable="True"
-					TextSubmitted="CityListSubmitted"
-                      Width="120"
-                      SelectedValuePath="id"
-                      DisplayMemberPath="name"
-                      ItemsSource="{x:Bind game:CityList.selections, Mode=OneTime}"
-                      VerticalAlignment="Center" ToolTipService.ToolTip="Active City List"
-							  
-                      Margin="4,0,4,0" />
-					</AppBarElementContainer>
-			
 
 					<AppBarButton x:Name="ContinentFilter"  x:FieldModifier="public"
 					              Content="Cont/Tags"
@@ -360,7 +347,7 @@
 					  Grid.Column="2" 
 					  VerticalAlignment="Bottom"
 					  HorizontalAlignment="Left"
-					  FontSize="{StaticResource MediumFontSize}"
+					  FontSize="{StaticResource SmallFontSize}"
 		              
 					  Grid.Row="{x:Bind GridRowIndex(rowFooter,-1)}"
 					  Grid.RowSpan="2" 
@@ -371,7 +358,7 @@
 					  ExpandDirection="Up"
 					  Canvas.ZIndex="35"   >
 				<Expander.Header   >
-					<TextBlock Text="Info" FontSize="{StaticResource MediumFontSize}"  Margin="0" Padding="0"
+					<TextBlock Text="Info" FontSize="{StaticResource SmallFontSize}"  Margin="0" Padding="0"
 		               HorizontalAlignment="Right" />
 				</Expander.Header>
 				<ListView x:Name="InAppNote" x:FieldModifier="public"  Margin="0" Padding="0"

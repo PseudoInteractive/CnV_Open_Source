@@ -93,7 +93,7 @@
 				<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
 				<Setter Property="FontWeight" Value="Normal" />
 				<Setter Property="FontStretch" Value="Condensed" />
-				<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+				<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 			</Style>
 
 			<!--Default-->
@@ -114,7 +114,7 @@
 			<!--NumberBox-->
 
 			<Style x:Key="BaseNumberBox" TargetType="NumberBox" >
-				<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+				<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 				<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
 				<Setter Property="FontWeight" Value="Normal"/>
 				<Setter Property="FontStretch" Value="Condensed" />

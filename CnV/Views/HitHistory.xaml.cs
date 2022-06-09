@@ -42,6 +42,8 @@ namespace CnV.Views
 			//if(OutgoingTab.IsVisible()) {
 			//	OutgoingTab.NotifyOutgoingUpdated();
 			//}
+			historyGrid.ResetAutoColumns();
+
 
 		}
 		public static void CombatNotify() {

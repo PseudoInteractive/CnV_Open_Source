@@ -635,6 +635,7 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 						}
 						if(wantTextUpdate) {
 							PlayerStats.instance.karma.Text = Player.active.sampleMana.Format();
+							PlayerStats.instance.gold.Text = Player.active.gold.Format();
 						}
 
 						if(cityChanged)

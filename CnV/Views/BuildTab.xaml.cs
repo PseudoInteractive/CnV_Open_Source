@@ -281,6 +281,8 @@ namespace CnV.Views
 			{
 				//        cityGrid.ItemsSource = null;
 			}
+			cityGrid.ResetAutoColumns();
+
 			await base.VisibilityChanged(visible,longTerm: longTerm);
 			//	if(visible)
 			//	{

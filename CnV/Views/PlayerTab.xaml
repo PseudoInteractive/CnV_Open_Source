@@ -25,7 +25,7 @@
 							x:FieldModifier="public"
 					   Grid.Row="3"
 							AllowFiltering="True"
-							
+
 							ItemsSource="{x:Bind playerList, Mode=OneWay}"
 							AutoGenerateColumns="False"
 							SelectionMode="Extended"

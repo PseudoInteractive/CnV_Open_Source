@@ -57,7 +57,6 @@
 					<sf:GridTextColumn MappingName="nameAndRemarks"
 										 
 										   HeaderText="Name"
-									   Width="220"
 									   ColumnWidthMode="None"
 										   TextAlignment="Left"
 										    />
@@ -67,7 +66,7 @@
 										    />
 					<sf:GridNumericColumn MappingName="cont"
 												TextAlignment="Center"
-											Width="48"
+											Width="42"
 									/>
 				<sf:GridNumericColumn MappingName="tsTotal"
 												HeaderText="TS"

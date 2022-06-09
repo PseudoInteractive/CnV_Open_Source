@@ -82,12 +82,12 @@
 										    />
 				<sf:GridHyperlinkColumn MappingName="xy"
 				                        TextAlignment="Center"
-				                        Width="64"
+				                        Width="56"
 
 				/>
 				<sf:GridNumericColumn MappingName="cont"
 				                      TextAlignment="Center"
-											Width="48"
+											Width="42"
 												 />
 				
 

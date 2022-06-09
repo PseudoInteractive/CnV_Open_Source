@@ -21,29 +21,15 @@ namespace CnV.Views
 		{
 			var rs = (Alliance.CityFilter)filterCombo.SelectedIndex switch
 			{
-				Alliance.CityFilter.me => BossReport.reports.Where(a => a.playerId == Player.myId),
-				Alliance.CityFilter.subs => BossReport.reports.Where(a => Player.IsSubOrMe(a.playerId)),
-				Alliance.CityFilter.alliance => BossReport.reports.Where(a => Alliance.PidToAlliance(a.playerId) == Alliance.myId),
-				_ => BossReport.reports // todo: filter
+				Alliance.CityFilter.me => BossReport.reports.Where(a => a.playerId == Player.myId).ToArray(),
+				Alliance.CityFilter.subs => BossReport.reports.Where(a => Player.IsSubOrMe(a.playerId)).ToArray(),
+				Alliance.CityFilter.alliance => BossReport.reports.Where(a => Alliance.PidToAlliance(a.playerId) == Alliance.myId).ToArray(),
+				_ => BossReport.reports.ToArray() // todo: filter
 			};
 
-			// removed
-			{
-			__restart:
-				foreach(var r in items)
-				{
-					if(!rs.Contains(r))
-					{
-						items.Remove(r);
-						goto __restart;
-					}
-				}
-			}
-			// added
-			foreach(var r in rs)
-			{
-				if(!items.Contains(r))
-					items.Add(r);
+			if( rs.SyncList( items )) {
+				grid.ResetAutoColumns();
+
 			}
 	
 			

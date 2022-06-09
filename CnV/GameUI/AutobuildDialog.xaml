@@ -5,7 +5,7 @@
     xmlns:cnv="using:CnV"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	Width="600"
+	Width="560"
 	HorizontalContentAlignment="Stretch"
     mc:Ignorable="d">
 
@@ -27,7 +27,7 @@
 						</Grid.ColumnDefinitions>
 						<Image Grid.Column="0" Source="{x:Bind image}" Stretch="None" Width="32" Height="32"  />
 						<CheckBox Grid.Column="1" IsChecked="{x:Bind on,Mode=TwoWay}" MinWidth="30" MaxWidth="30" VerticalAlignment="Center" />
-						<NumberBox Grid.Column="2" Value="{x:Bind level, Mode=TwoWay}"/>
+						<NumberBox Grid.Column="2" Value="{x:Bind level, Mode=TwoWay}" Width="80" />
 
 
 

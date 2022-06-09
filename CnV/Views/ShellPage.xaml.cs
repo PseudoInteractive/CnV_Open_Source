@@ -436,8 +436,8 @@ namespace CnV.Views
 				// testMenu.Items.Add(MenuAction(MainPage.ShowTipRaiding1,"TipRaiding1"));
 				// testMenu.Items.Add(MenuAction(MainPage.ShowTipRaiding2, "TipRaiding2"));
 				// testMenu.Items.Add(MenuAction(MainPage.ShowTipRaiding3, "TipRaiding3"));
-				cityListBox.SelectedIndex    =  0; // reset
-				cityListBox.SelectionChanged += CityListBox_SelectionChanged;
+				//cityListBox.SelectedIndex    =  0; // reset
+				//cityListBox.SelectionChanged += CityListBox_SelectionChanged;
 				//cityBox.SelectionChanged     += CityBox_SelectionChanged;
 
 				//SystemNavigationManager.GetForCurrentView().BackRequested += ShellPage_BackRequested;
@@ -462,7 +462,8 @@ namespace CnV.Views
 				}
 				catch(Exception ex) {
 					LogEx(ex);
-					await AppS.Fatal(ex.ToString()).ConfigureAwait(false);
+					AppS.Fatal(ex.ToString());
+					return;
 				}
 
 
@@ -1175,7 +1176,7 @@ namespace CnV.Views
 			Settings.Show();
 		}
 
-		public static ComboBox CityListBox => instance.cityListBox;
+	//	public static ComboBox CityListBox => instance.cityListBox;
 
 		// private DumbCollection<CityList> cityListSelections => CityList.selections;
 		private void CityListBox_SelectionChanged(object sender,SelectionChangedEventArgs e) {
@@ -1686,23 +1687,23 @@ namespace CnV.Views
 			AppS.QueueOnUIThread(() => {
 				//               Log("CityListChange");
 
-				var selectedCityList = ShellPage.instance.cityListBox.SelectedItem as CityList;
-				City[] l;
-				if(selectedCityList == null || selectedCityList.id == -1) // "all"
-				{
-					l = City.subCities;
-				}
-				else {
-					var cityList = selectedCityList; // CityList.Find(selectedCityList);
-					var filtered = new List<City>();
-					foreach(var cid in cityList.cities) {
-						if(City.TryGet(cid,out var c)) {
-							filtered.Add(c);
-						}
-					}
+				//	var selectedCityList = null;// ShellPage.instance.cityListBox.SelectedItem as CityList;
+				City[] l = City.subCities;
+				//if(selectedCityList == null || selectedCityList.id == -1) // "all"
+				//{
+				//	l = City.subCities;
+				//}
+				//else {
+				//	var cityList = selectedCityList; // CityList.Find(selectedCityList);
+				//	var filtered = new List<City>();
+				//	foreach(var cid in cityList.cities) {
+				//		if(City.TryGet(cid,out var c)) {
+				//			filtered.Add(c);
+				//		}
+				//	}
 
-					l = cityList.cities.Select(cid => cid.AsCity()).ToArray();
-				}
+				//	l = cityList.cities.Select(cid => cid.AsCity()).ToArray();
+				//}
 
 				l = l.Where(a => a.testContinentAndTagFilter)
 					.OrderBy((a) => a,new CityList.CityComparer()).ToArray();

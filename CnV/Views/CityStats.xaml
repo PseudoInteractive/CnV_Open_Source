@@ -15,11 +15,11 @@
 	Background="{x:Null}"
 	Loaded="UserControl_Loaded"
     mc:Ignorable="d">
-	<UserControl.Resources>
+	<!--<UserControl.Resources>
 		<cnv:TTipX  x:Name="TT_Buildings_1"   Subtitle="Your build queue.&#10;Drag items away to cancel&#10;right click items for more options" Target="{x:Bind expBuildQueue}" />
 		<cnv:TTipX  x:Name="TT_Buildings_2"   Subtitle="Building counts for your city.&#10;Click here to set autobuild settings" Target="{x:Bind buildingsHeader}" />
 
-	</UserControl.Resources>
+	</UserControl.Resources>-->
 
 	<ScrollViewer  x:Name="scroll"
 					Background="{x:Null}"  
@@ -37,7 +37,7 @@
 
 
 
-		<StackPanel x:Name="stackPanel"  Margin="1" Padding="1" Background="{x:Null}"   CornerRadius="0" VerticalAlignment="Top" >
+		<StackPanel x:Name="stackPanel"  Margin="0" Padding="0" Background="{x:Null}"   CornerRadius="0" VerticalAlignment="Top" >
 			<ComboBox  x:Name="cityBox" x:FieldModifier="public" 
 					               HorizontalAlignment="Stretch"
 					                IsEditable="True"
@@ -66,7 +66,7 @@
 			<Expander IsExpanded="True" Expanding="Expander_Expanding" Visibility="{x:Bind incomingVisible,Mode=OneWay}"  x:Name="expIncoming" HorizontalAlignment="Stretch" Background="{StaticResource ExpanderBrushContent}"   >
 				<Expander.Header   >
 					<Border Background="Maroon" BorderThickness="0" Padding="3" CornerRadius="{StaticResource baseCR}" >
-						<TextBlock Text ="Incoming" Margin="0"   Style="{StaticResource TextBlockMedium}"  HorizontalAlignment="Right"  />
+						<TextBlock Text ="Incoming" Margin="0"   Style="{StaticResource TextBlockSmall}"  HorizontalAlignment="Right"  />
 					</Border>
 				</Expander.Header>
 				<ListView 
@@ -93,7 +93,7 @@
 			<Expander IsExpanded="True" Background="{StaticResource ExpanderBrushContent}" Expanding="Expander_Expanding" Visibility="{x:Bind palaceVisible,Mode=OneWay}"  x:Name="expPalace"   >
 				<Expander.Header   >
 					<Border  Padding="3" CornerRadius="{StaticResource baseCR}" >
-						<TextBlock Text ="{x:Bind palaceVirtue, Mode=OneWay}" Margin="0"   Style="{StaticResource TextBlockMedium}"  HorizontalAlignment="Right"  />
+						<TextBlock Text ="{x:Bind palaceVirtue, Mode=OneWay}" Margin="0"   Style="{StaticResource TextBlockSmall}"  HorizontalAlignment="Right"  />
 					</Border>
 				</Expander.Header>
 				<StackPanel>
@@ -112,7 +112,7 @@
 				<Expander.Header   >
 					<Border Background="{StaticResource ExpanderBrushHeader}" BorderThickness="0" Padding="3" CornerRadius="{StaticResource baseCR}" >
 
-						<TextBlock Text ="Resources" Margin="0"   Style="{StaticResource TextBlockMedium}"  HorizontalAlignment="Right"  />
+						<TextBlock Text ="Resources" Margin="0"   Style="{StaticResource TextBlockSmall}"  HorizontalAlignment="Right"  />
 					</Border>
 				</Expander.Header>
 
@@ -124,8 +124,8 @@
 							<StackPanel CornerRadius="{StaticResource baseCR}"  Padding="1" MinHeight="60" MinWidth="40"  HorizontalAlignment="Stretch"  
 								Tapped="{x:Bind Tapped}">
 								<TextBlock Text="{x:Bind incoming,Mode=OneWay}" Foreground="{x:Bind incomingBrush,Mode=OneWay}" HorizontalTextAlignment="Right" Style="{StaticResource TextBlockSmall}" Margin="0,0,2,0" />
-								<TextBlock Text="{x:Bind here,Mode=OneWay}" Foreground="{x:Bind hereBrush,Mode=OneWay}" HorizontalTextAlignment="Right" Style="{StaticResource TextBlockMedium}" Margin="0,0,2,0"  />
-								<TextBlock Text="{x:Bind storage,Mode=OneWay}" FontStyle="Italic" Foreground="LightBlue" HorizontalTextAlignment="Right" Style="{StaticResource TextBlockSmall}" Margin="0,0,2,0"  />
+								<TextBlock Text="{x:Bind here,Mode=OneWay}" Foreground="{x:Bind hereBrush,Mode=OneWay}" HorizontalTextAlignment="Right" Style="{StaticResource TextBlockSmall}" Margin="0,0,2,0"  />
+								<TextBlock Text="{x:Bind storage,Mode=OneWay}"  Foreground="DarkGray" HorizontalTextAlignment="Right" Style="{StaticResource TextBlockSmall}" Margin="0,0,2,0"  />
 								<TextBlock Text="{x:Bind production,Mode=OneWay}" Foreground="{x:Bind productionBrush,Mode=OneWay}" HorizontalTextAlignment="Right" Style="{StaticResource TextBlockSmall}" Margin="0,0,2,0" />
 							</StackPanel>
 								<Image  Stretch="None" Source="{x:Bind resIcon}" HorizontalAlignment="Left" VerticalAlignment="Center" />
@@ -198,7 +198,7 @@
 							Tapped="AutobuildTapped"
 							ToolTipService.ToolTip="Click to set autobuild settings"
 							BorderThickness="0" Padding="1" CornerRadius="{StaticResource baseCR}" >
-						<TextBlock Text ="Buildings" Margin="0"  Style="{StaticResource TextBlockMedium}" VerticalAlignment="Center"  HorizontalAlignment="Right"  />
+						<TextBlock Text ="Buildings" Margin="0"  Style="{StaticResource TextBlockSmall}" VerticalAlignment="Center"  HorizontalAlignment="Right"  />
 					</Border>
 				</Expander.Header>
 				<GridView x:Name="buildingCountGrid"  HorizontalAlignment="Stretch" SelectionMode="Extended" 
@@ -240,7 +240,7 @@
 				<Expander.Header>
 					<Button  HorizontalContentAlignment="Right" 
 							ToolTipService.ToolTip="{x:Bind recruitTooltip,Mode=OneWay}"
-								Content="{x:Bind recruitTitle, Mode=OneWay}"  Style="{StaticResource ButtonMedium}" Margin="2,0,2,0" Padding="8,2" HorizontalAlignment="Stretch" >
+								Content="{x:Bind recruitTitle, Mode=OneWay}"  Style="{StaticResource ButtonSmall}" Margin="2,0,2,0" Padding="8,2" HorizontalAlignment="Stretch" >
 						<Button.Flyout>
 							<MenuFlyout>
 								<MenuFlyoutItem Text="Recruit.." Click="EnlistmentClick" />
@@ -284,7 +284,7 @@
 
 			<Expander  IsExpanded="True" Expanding="Expander_Expanding" x:Name="expCommands" Background="{StaticResource ExpanderBrushContent}"  >
 				<Expander.Header>
-					<Button Background="{x:Bind cnv:ImageHelper.GetAsBrush('UI/menues/main_menu/bgr_quickuse_research.png') }"  BorderThickness="0" Padding="0" Margin="2,0,2,0"  Content="{x:Bind commandsTitle, Mode=OneWay}"  HorizontalContentAlignment="Right" HorizontalAlignment="Stretch"
+					<Button Background="{x:Bind cnv:ImageHelper.GetAsBrush('UI/menues/main_menu/bgr_quickuse_research.png') }"  BorderThickness="0" Padding="0" Margin="2,0,2,0"  Content="{x:Bind commandsTitle, Mode=OneWay}"  HorizontalContentAlignment="Right" HorizontalAlignment="Stretch" Style="{StaticResource ButtonSmall}"
 							 >
 						<Button.Flyout>
 							<MenuFlyout>
@@ -318,15 +318,15 @@
 				<Expander.Header   >
 					<Border Background="{x:Bind cnv:ImageHelper.GetAsBrush('UI/menues/main_menu/bgr_quickuse_recruitmentqueue.png') }"  BorderThickness="0" Padding="0" Margin="2,0,2,0"  
 							>
-						<TextBlock x:Name="troopsHeaderText"  Text ="{x:Bind troopsTitle, Mode=OneWay}" Margin="0" TextAlignment="Right" Style="{StaticResource TextBlockMedium}"   />
+						<TextBlock x:Name="troopsHeaderText"  Text ="{x:Bind troopsTitle, Mode=OneWay}" Margin="0" TextAlignment="Right" Style="{StaticResource TextBlockSmall}"   />
 					</Border>
 				</Expander.Header>
 				<StackPanel>
 					<Border   CornerRadius="4" Margin="0" Padding="4"  >
 
 						<StackPanel>
-							<TextBlock Text="Owned" Style="{StaticResource TextBlockMedium}" Margin="4"  Visibility="{x:Bind TroopsHomeVisible,Mode=OneWay}" />
-							<TextBlock Text="{x:Bind TroopsOwnedS, Mode=OneWay}"  Style="{StaticResource TextBlockMedium}"  
+							<TextBlock Text="Owned" Style="{StaticResource TextBlockSmall}" Margin="4"  Visibility="{x:Bind TroopsHomeVisible,Mode=OneWay}" />
+							<TextBlock Text="{x:Bind TroopsOwnedS, Mode=OneWay}"  Style="{StaticResource TextBlockSmall}"  
 									   TextWrapping="Wrap" FontSize="16" MaxLines="8" Margin="8,2,2,2" />
 						</StackPanel>
 					</Border>
@@ -334,8 +334,8 @@
 							  Visibility="{x:Bind TroopsHomeVisible,Mode=OneWay}">
 
 						<StackPanel>
-							<TextBlock Text="Here" Style="{StaticResource TextBlockMedium}" Margin="4" />
-							<TextBlock Text="{x:Bind TroopsHomeS, Mode=OneWay}"  Style="{StaticResource TextBlockMedium}"  
+							<TextBlock Text="Here" Style="{StaticResource TextBlockSmall}" Margin="4" />
+							<TextBlock Text="{x:Bind TroopsHomeS, Mode=OneWay}"  Style="{StaticResource TextBlockSmall}"  
 									   TextWrapping="Wrap" FontSize="16" MaxLines="8" Margin="8,2,2,2" />
 						</StackPanel>
 					</Border>
@@ -343,8 +343,8 @@
 							  Visibility="{x:Bind IncomingReinforcementsVisible,Mode=OneWay}">
 
 						<StackPanel>
-							<TextBlock Text="Incoming or returning" Style="{StaticResource TextBlockMedium}" Margin="4" />
-							<TextBlock Text="{x:Bind IncomingReinforcements, Mode=OneWay}"  Style="{StaticResource TextBlockMedium}"  
+							<TextBlock Text="Incoming or returning" Style="{StaticResource TextBlockSmall}" Margin="4" />
+							<TextBlock Text="{x:Bind IncomingReinforcements, Mode=OneWay}"  Style="{StaticResource TextBlockSmall}"  
 									   TextWrapping="Wrap" FontSize="16" MaxLines="8" Margin="8,2,2,2" />
 							<ListView 
 						  SelectionMode="Single"  
@@ -375,7 +375,7 @@
 
 			<Expander Expanding="Expander_Expanding" x:Name="expTrades" IsExpanded="True" Background="{StaticResource ExpanderBrushContent}" >
 				<Expander.Header>
-					<Button Content="{x:Bind tradesTitle, Mode=OneWay}" Style="{StaticResource ButtonMedium}" Margin="2,0,2,0" Padding="8,2" HorizontalAlignment="Stretch" Click="TradesClick"
+					<Button Content="{x:Bind tradesTitle, Mode=OneWay}" Style="{StaticResource ButtonSmall}" Margin="2,0,2,0" Padding="8,2" HorizontalAlignment="Stretch" Click="TradesClick"
 							ToolTipService.ToolTip="{x:Bind tradesToolTip,Mode=OneWay}"/>
 				</Expander.Header>
 

@@ -11,37 +11,40 @@
     mc:Ignorable="d">
 
     <tk:WrapPanel Orientation="Horizontal" HorizontalSpacing="4" Margin="0" Padding="0" IsTabStop="True" IsTapEnabled="true" >
-		<cnv:ZirconiaText x:Name="zirc" 
-					
-					  Text="{x:Bind zirconiaS, Mode=OneWay}" Width="90"
-					  
+		<StackPanel>
+		<cnv:ZirconiaText x:Name="zirc" FontSize="12" ImageHeight="20" Margin="2,0"
+					  Text="{x:Bind zirconiaS, Mode=OneWay}" Width="70"
 					  
 					 />
-		<cnv:ManaText x:Name="karma"   x:FieldModifier="internal" MaxWidth="90" ToolTipService.ToolTip="{x:Bind karmaRegenS, Mode=OneWay}"		 />
+			<cnv:GoldText x:Name="gold"  x:FieldModifier="internal" FontSize="12" ImageHeight="20" Margin="2,0"  ToolTipService.ToolTip="{x:Bind goldProductionS, Mode=OneWay}"
+					  Width="70"
+					 />
+		</StackPanel>
+		<cnv:ManaText x:Name="karma" FontSize="12"  x:FieldModifier="internal" MaxWidth="80" ToolTipService.ToolTip="{x:Bind karmaRegenS, Mode=OneWay}"		 />
 
 		<Image Source="{x:Bind cnv:ImageHelper.Get('UI/icons_ressource_all.png')}" VerticalAlignment="Center"
-					  Tapped="AllTapped"
+					  Tapped="AllTapped" Height="32"
 					  ContextRequested="ResContextRequest" 
 			   ToolTipService.ToolTip="{x:Bind refinesAndGoldS,Mode=OneWay}"
 					 />
 
-		<Button  VerticalAlignment="Center" Margin="8,0,1,0" Click="QuestsTapped" Padding="1,0"
+		<Button  VerticalAlignment="Center" Margin="8,0,1,0" Click="QuestsTapped" Padding="1,0" Height="32" 
 			   ToolTipService.ToolTip="Quests">
 			<Button.Content>
-				<Image Source="{x:Bind cnv:ImageHelper.Get('UI/icons/quests/icon_quest_3.png',34)}" />
+				<Image Source="{x:Bind cnv:ImageHelper.Get('UI/icons/quests/icon_quest_3.png')}" />
 			</Button.Content>
 		</Button>
 
-		<Button  VerticalAlignment="Center" Margin="8,0,1,0" Click="ResearchTapped" Padding="1,0"
+		<Button  VerticalAlignment="Center" Margin="8,0,1,0" Click="ResearchTapped" Padding="1,0" Height="32" 
 			   ToolTipService.ToolTip="Research">
 			<Button.Content>
-				<Image Source="{x:Bind cnv:ImageHelper.Get('UI/icons/quests/icon_quest_1.png',34)}" />
+				<Image Source="{x:Bind cnv:ImageHelper.Get('UI/icons/quests/icon_quest_1.png')}" />
 			</Button.Content>
 		</Button>
-		<Button  VerticalAlignment="Center" Margin="8,0,1,0" Click="ArtifactsTapped" Padding="1,0"
+		<Button  VerticalAlignment="Center" Margin="8,0,1,0" Click="ArtifactsTapped" Padding="1,0" Height="32" 
 			   ToolTipService.ToolTip="Artifacts">
 			<Button.Content>
-				<Image Source="{x:Bind cnv:ImageHelper.Get('UI/icons/shop_items/shop_items_gold_hourglass.jpg',34)}" />
+				<Image Source="{x:Bind cnv:ImageHelper.Get('UI/icons/shop_items/shop_items_gold_hourglass.jpg')}" />
 			</Button.Content>
 		</Button>
 		

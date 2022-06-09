@@ -142,7 +142,7 @@ public partial class UserTab:UserControl, IANotifyPropertyChanged
 															//			this.Width = 500;
 															//			this.Height = 500;
 															//	ScrollViewer.SetVerticalScrollMode(this, ScrollMode.Auto); //DependencyObjectExtensions.FindDescendant<ScrollViewer>(this).AllowFocusOnInteraction= false;
-		Margin= new(8);
+		//Margin= new(8);
 		//Loaded+=OnLoaded;
 
 	}
@@ -476,7 +476,13 @@ public partial class UserTab:UserControl, IANotifyPropertyChanged
 		}
 	}
 
-
+	internal void DetailsViewUpdateColumnWidths(object sender,GridDetailsViewExpandedEventArgs e) {
+		var send2 = e.OriginalSender;
+		if(sender is xDataGrid grid)
+			grid.ResetAutoColumns();
+		if(send2 != sender && send2 is xDataGrid grid2)
+			grid2.ResetAutoColumns();
+	}
 
 }
 

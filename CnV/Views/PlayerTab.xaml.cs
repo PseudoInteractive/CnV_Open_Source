@@ -82,6 +82,7 @@ public sealed partial class PlayerTab:UserTab
 			{
 				a.OnPropertyChanged();
 			}
+			playerGrid.ResetAutoColumns();
 		}
 		else
 		{

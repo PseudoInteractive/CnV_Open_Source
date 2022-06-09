@@ -66,7 +66,7 @@ namespace CnV.Views
 		{
 
 			var s = City.GetBuild();
-			var t = City.LayoutToShareString( City.LayoutFromBuildings(s.GetLayoutBuildings(),true,s.buildings),s.isOnWater);
+			var t = City.LayoutToShareString( City.LayoutFromBuildings(s.GetLayoutBuildings(),true,s.postQueueBuildings),s.isOnWater);
 			AppS.CopyTextToClipboard(t);
 			Note.Show(t);
 		}

@@ -182,6 +182,7 @@ namespace CnV.Views
 								instance.defenderGrid.ScrollItemIntoView(sel);
 
 							}
+							instance.defenderGrid.ResetAutoColumns();
 							instance.UpdateArmyGrid(true,false);
 						}
 						catch(Exception ex) { LogEx(ex); }
@@ -234,7 +235,7 @@ namespace CnV.Views
 					var visibilityTime = Sim.simTime + sel.scoutRange;
 					var items=  sel.incoming.Where(a => a.isDefense || (a.arrival <= visibilityTime && a.departed) ).OrderBy(a => a.arrival).ToArray();
 					items.SyncList(armiesIncoming);
-
+					armyGrid.ResetAutoColumns();
 					if(updatehistoryTab) {
 						var tab = HitHistoryTab.instance;
 						tab.SetFilter(sel);

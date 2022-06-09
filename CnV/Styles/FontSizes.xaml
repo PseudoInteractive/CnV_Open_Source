@@ -25,7 +25,7 @@
 				<Setter Property="FontFamily" Value="{StaticResource CnvIcons}" />
 				<Setter Property="FontWeight" Value="Normal" />
 				<Setter Property="FontStretch" Value="Condensed" />
-				<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+				<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 				
 			</Style>
 			
@@ -36,7 +36,7 @@
 				<Setter Property="FontFamily" Value="{StaticResource CnvIcons}" />
 				
 				<Setter Property="FontStretch" Value="Condensed" />
-				<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+				<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 				<Setter Property="TextTrimming" Value="CharacterEllipsis" />
 				<Setter Property="TextWrapping" Value="Wrap" />
 			</Style>
@@ -85,7 +85,7 @@
 			<Style x:Key="BaseRichTextBlockStyle" TargetType="RichTextBlock">
 				<Setter Property="FontFamily" Value="{StaticResource CnvIcons}" />
 				<Setter Property="FontWeight" Value="Normal" />
-				<Setter Property="FontSize" Value="{StaticResource MediumFontSize}"  />
+				<Setter Property="FontSize" Value="{StaticResource SmallFontSize}"  />
 				<Setter Property="TextTrimming" Value="None" />
 				<Setter Property="FontStretch" Value="Condensed" />
 				<Setter Property="TextWrapping" Value="Wrap" />

@@ -90,23 +90,31 @@ namespace CnV
 			try {
 				var t = quest;
 				var s = t.step;
-				Assert(t.canClaim);
+				if(!t.canClaim) {
+					Note.Show("Something needs to refresh");
+					return;
+				}
 				var ev = new CnVEventResearch(Player.active.id,s.id);
 				if(ev.IsClaimed(Player.active,true)) {
 					return;
 				}
-				ev.EnqueueAsap();
 				var b = sender as Button;
 				if(b is not null)
-					b.IsEnabled=false;
+					b.Visibility = Visibility.Collapsed;
+
+				ev.EnqueueAsap();
+				
+				
 				ShellPage.WorkStart("Researching");
 
-				await Task.Delay(1500); // wait 1s for event to execut
+				await Task.Delay(2000); // wait 1s for event to execute
 				foreach(var i in questGroups)
 					i.OnPropertyChangedImmediate();
 				PropertyChanged?.Invoke(this,new(String.Empty));
 				t.OnPropertyChanged();
 				ShellPage.WorkEnd();
+				if(b is not null)
+					b.Visibility = Visibility.Visible;
 			}
 			catch(Exception _ex) {
 				LogEx(_ex);
