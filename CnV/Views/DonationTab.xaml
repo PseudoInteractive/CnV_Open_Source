@@ -18,7 +18,6 @@
             <RowDefinition Height="auto"/>
 			<RowDefinition Height="auto" />
             <RowDefinition/>
-            <RowDefinition/>
         </Grid.RowDefinitions>
         <tk:WrapPanel Orientation="Horizontal" Grid.Row="0" >
 
@@ -66,10 +65,8 @@
 		                Grid.Row="2" 
 								 							
 		                AutoGenerateColumns="False"
-		               CellStyle="{StaticResource SfTextCell}"
 					   FontStretch="Condensed"
-					    ItemsSource="{x:Bind donationGridSource}"
-		                RowHeight="{StaticResource MediumGridRowHeight}"
+					    ItemsSource="{x:Bind donationGridSource, Mode=OneWay}"
 		                AlternationCount="2"
 						AllowTriStateSorting="True"
 		                SelectionMode="Single"
@@ -354,19 +351,6 @@
                                         />
 			</sf:SfDataGrid.Columns>
         </sf:SfDataGrid>-->
-        <tk:GridSplitter Grid.Row="3"
-                         ResizeDirection="Rows"
-                                   						 				IsTabStop="True"
-				CursorBehavior="ChangeOnSplitterHover"
-				GripperCursor="SizeNorthSouth"              Height="11"
-                         HorizontalAlignment="Stretch"
-                         VerticalAlignment="Top"
-                         Background="Transparent"
-                    >
-            <tk:GridSplitter.Element>
-                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE76F;"
-                    />
-            </tk:GridSplitter.Element>
-        </tk:GridSplitter>
+       
     </Grid>
 </local:UserTab>

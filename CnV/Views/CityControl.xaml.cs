@@ -44,7 +44,8 @@ namespace CnV.Views
 		public City _city = City.invalid;
 		// Sets city silently
 		public void SetCityI(City value) {
-			_city = value;
+			_city = value; // This gets set first
+			TouchSelections();
 			if(_city is not null && !citySelections.Contains(_city))
 				citySelections.Add(_city);
 		}
@@ -368,11 +369,17 @@ namespace CnV.Views
 		}
 
 		private void CityControlLoaded(object sender,RoutedEventArgs e) {
-		//	citySelections.Clear();
+			//	citySelections.Clear();
+			TouchSelections();
+		}
+
+		private void TouchSelections() {
+			if(citySelections.Count > 0)
+				return;
 			var l = City.gridCitySource.ToArray();
 			if(_city is not null && !l.Contains(_city))
 				l = l.Prepend(_city).ToArray();
-			if(allowNone && _city != City.invalid )
+			if(allowNone && _city != City.invalid)
 				l = l.Prepend(City.invalid).ToArray();
 
 			l.SyncList(citySelections);

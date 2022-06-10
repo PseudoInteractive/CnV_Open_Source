@@ -172,9 +172,9 @@
 								<Grid.ColumnDefinitions>
 									<ColumnDefinition Width="*"/>
 								</Grid.ColumnDefinitions>
-								<Image Source="{x:Bind image}" Width="32" Height="32" HorizontalAlignment="Left" />
-								<TextBlock Text="{x:Bind opText}" Margin="36,0,0,0"  	/>
-								<TextBlock Text="{x:Bind timeText,Mode=OneWay}" HorizontalAlignment="Right" Margin="0,0,4,0" Foreground="{x:Bind timeColor,Mode=OneWay}"	/>
+								<Image Source="{x:Bind image}" Width="32" Height="28" HorizontalAlignment="Left" />
+								<TextBlock Text="{x:Bind opText}" Margin="36,0,0,0" Style="{StaticResource TextBlockSmall}"  VerticalAlignment="Center"	/>
+								<TextBlock Text="{x:Bind timeText,Mode=OneWay}" HorizontalAlignment="Right" Margin="0,0,4,0" Style="{StaticResource TextBlockSmall}" VerticalAlignment="Center" Foreground="{x:Bind timeColor,Mode=OneWay}"	/>
 							</Grid>
 						</DataTemplate>
 
@@ -266,8 +266,8 @@
 									<ColumnDefinition Width="*"/>
 								</Grid.ColumnDefinitions>
 								<Image Source="{x:Bind image}" Width="32" Height="32" HorizontalAlignment="Left" />
-								<TextBlock Text="{x:Bind count,Mode=OneWay}" Margin="36,0,0,0"  	/>
-								<TextBlock Text="{x:Bind timeText,Mode=OneWay}" HorizontalAlignment="Right" Margin="0,0,4,0"	/>
+								<TextBlock Text="{x:Bind count,Mode=OneWay}" Margin="36,0,0,0" VerticalAlignment="Center" Style="{StaticResource TextBlockSmall}"	/>
+								<TextBlock Text="{x:Bind timeText,Mode=OneWay}" HorizontalAlignment="Right"  VerticalAlignment="Center" Margin="0,0,4,0" Style="{StaticResource TextBlockSmall}"	/>
 							</Grid>
 						</DataTemplate>
 

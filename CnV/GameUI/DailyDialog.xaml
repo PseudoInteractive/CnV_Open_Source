@@ -14,7 +14,7 @@
 	<Grid  >
 		<Image Stretch="None" Source="{x:Bind background}" />
 		
-		<ListView ItemsSource="{x:Bind artifacts}" HorizontalAlignment="Center" VerticalAlignment="Bottom"  SelectionMode="None" IsItemClickEnabled="True" ItemClick="ItemClick"  >
+		<ListView ItemsSource="{x:Bind artifacts,Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Bottom"  SelectionMode="None" IsItemClickEnabled="True" ItemClick="ItemClick"  >
 			<ListView.ItemTemplate>
 				<DataTemplate x:DataType="cnv:Artifact" >
 					<Grid  ToolTipService.ToolTip="{x:Bind description, Mode=OneWay}"  Margin="8">

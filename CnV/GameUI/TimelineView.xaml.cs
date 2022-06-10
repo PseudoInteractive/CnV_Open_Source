@@ -368,7 +368,7 @@ namespace CnV
 			var a = e.Appointment;
 			if(a is not null) {
 				var i = a.Id as ITimelineItem;
-				i?.TlClicked();
+				i?.TlClicked(true);
 
 			}
 			//var id = a?.Id;

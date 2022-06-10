@@ -54,7 +54,7 @@ public partial class CityUI
 					SecondaryButtonText = "Skip",
 					CloseButtonText     = "Cancel"
 			};
-
+			settings.OnPropertyChanged();
 			dialog.SetTitle( $"Set Trade settings for {city.nameAndRemarks}" );
 			//	await settings.InitTradeSettings(city,, (city.isHubOrStorage&&!targetExplicit) ? 0 : targetHub.GetValueOrDefault() );
 			var rv = await dialog.ShowAsync2();

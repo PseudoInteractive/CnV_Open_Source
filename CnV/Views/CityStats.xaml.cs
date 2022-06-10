@@ -1322,7 +1322,28 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 			args.Handled    = true;
 			var flyout = new MenuFlyout();
 
-			if(!army.isReturn || army.isRaid)
+			if(army.isRaid) {
+				if(army.isRepeating) {
+					flyout.AddItem("Return immediately",Symbol.Undo,() =>
+					{
+						CnVEventReturnTroops.TryReturn(army,default,false,isResume:false,isSlow:false);
+					});
+					if(!army.isReturn) {
+						flyout.AddItem("Return when raid complete",Symbol.Undo,() => {
+							CnVEventReturnTroops.TryReturn(army,default,false,isResume:false,isSlow:true);
+						});
+					}
+				}
+				else {
+					flyout.AddItem("Resume raiding",Symbol.Redo,() =>
+					{
+						CnVEventReturnTroops.TryReturn(army,default,false,isResume:true,isSlow:false);
+					});
+
+				}
+
+			}
+			else if(!army.isReturn)
 			{
 				flyout.AddItem("Return",Symbol.Undo,() =>
 				{
@@ -1335,9 +1356,9 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 				});
 			}
 			if( army.canUseWings)
-				flyout.AddItem("Speedup",Symbol.Forward,SpeedupDefense);
+				flyout.AddItem("Use Horns",Symbol.Forward,SpeedupDefense);
 			if( army.canUseFanfare)
-				flyout.AddItem("Fanfare..",Symbol.Forward,UseFanfare);
+				flyout.AddItem("Return raids with Quadriga",Symbol.Forward,UseFanfare);
 
 			flyout.AddItem("Return All",Symbol.Delete,() =>
 			{
@@ -1349,14 +1370,22 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 				}
 				new CnVEventReturnTroops(army.sourceC,CnVEventReturnTroops.outgoingAll).EnqueueAsap();
 			});
-			flyout.AddItem("Return Raid immediate",Symbol.Refresh,() =>
-			{
-				new CnVEventReturnTroops(army.sourceC,CnVEventReturnTroops.outgoingRaidsFast).EnqueueAsap();
-			});
-			flyout.AddItem("Return Raid when complete",Symbol.Refresh,() =>
-			{
-				new CnVEventReturnTroops(army.sourceC,CnVEventReturnTroops.outgoingRaidsSlow).EnqueueAsap();
-			});
+			
+			if(army.sourceCity.outgoing.Any(i => i.isRaid && (i.isRepeating || (!i.isReturn))))
+				{
+				flyout.AddItem("Return all raids immediately",Symbol.Refresh,() => {
+					new CnVEventReturnTroops(army.sourceC,CnVEventReturnTroops.outgoingRaidsFast).EnqueueAsap();
+				});
+				flyout.AddItem("Return all raids when complete",Symbol.Refresh,() => {
+					new CnVEventReturnTroops(army.sourceC,CnVEventReturnTroops.outgoingRaidsSlow).EnqueueAsap();
+				});
+			}
+			if(army.sourceCity.outgoing.Any(i => i.isRaid && (!i.isRepeating )))
+				{
+				flyout.AddItem("Resume all raids",Symbol.Play,() => {
+					new CnVEventReturnTroops(army.sourceC,CnVEventReturnTroops.outgoingRaidsResume,default,useWings:false,resume: true,returnSlow:true).EnqueueAsap();
+				});
+			}
 			flyout.ShowContext(sender,args);
 		}
 		private void UseFanfare()
