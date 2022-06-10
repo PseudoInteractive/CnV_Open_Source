@@ -87,19 +87,19 @@ namespace CnV;
 							switch (e.Column.HeaderText)
 							{
 								
-								case nameof(Reinforcement.retUri):
-							{
-								Note.Show($"Returning {i}");
-							//	i.ReturnAsync();
+							//	case nameof(Reinforcement.retUri):
+							//{
+							//	Note.Show($"Returning {i}");
+							////	i.ReturnAsync();
 								
-								//if (r.targetCity.reinforcementsIn is not null)
-								//	r.targetCity.reinforcementsIn.Remove(r, true);
-								//if (r.sourceCity.reinforcementsOut is not null)
-								//	r.sourceCity.reinforcementsOut.Remove(r, true);
-								// Todo: refresh lists
-								break;
+							//	//if (r.targetCity.reinforcementsIn is not null)
+							//	//	r.targetCity.reinforcementsIn.Remove(r, true);
+							//	//if (r.sourceCity.reinforcementsOut is not null)
+							//	//	r.sourceCity.reinforcementsOut.Remove(r, true);
+							//	// Todo: refresh lists
+							//	break;
 
-							}
+							//}
 								case "dXY":
 									Spot.ProcessCoordClick(i.targetCid, false, AppS.keyModifiers, false);
 									break;

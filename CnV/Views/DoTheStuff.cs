@@ -45,7 +45,7 @@ public static class DoTheStuff
 
 			Assert(AppS.uiSema.CurrentCount == 0);
 			Assert(AppS.IsOnUIThread());
-			await GetCity.Post(cid);
+//			await GetCity.Post(cid);
 			if(city.leaveMe)
 			{
 				Note.Show($"Skipping ${city.nameMarkdown}, 'LeaveMe' tag is set");

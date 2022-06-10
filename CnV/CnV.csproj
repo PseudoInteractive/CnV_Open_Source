@@ -20,7 +20,6 @@
 		<AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
 		<!--<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>-->
 		<AppxBundle>Always</AppxBundle>
-		<TieredCompilation>True</TieredCompilation>
 		<AppxBundlePlatforms>x64</AppxBundlePlatforms>
 		<HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
 		<AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
@@ -83,10 +82,10 @@
 		<PackageReference Include="Microsoft.Identity.Client" Version="4.44.0">
 			<TreatAsUsed>true</TreatAsUsed>
 		</PackageReference>
-		<PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="2.21.0" />
 		<PackageReference Include="Azure.Data.Tables" Version="12.6.0" />
 		<PackageReference Include="Azure.Storage.Blobs" Version="12.12.0" />
 		<PackageReference Include="MessagePack" Version="2.4.23-alpha" />
+		<PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="2.21.0" />
 		<PackageReference Include="Microsoft.Windows.CsWinRT" Version="1.6.4" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.197" />
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.0" />
@@ -206,7 +205,6 @@
 		<Compile Include="Game\GameSetup.cs" />
 		<Compile Include="Game\PlayerPresence.cs" />
 		<Compile Include="Game\Supporter.cs" />
-		<Compile Include="Game\WorldUI.cs" />
 		<Compile Include="JSON\Errors.cs" />
 		<Compile Include="JSON\GetIO.cs" />
 		<Compile Include="JSON\gFRep2.cs" />
@@ -304,9 +302,6 @@
 		</Compile>
 		<Compile Include="Views\Fixes.xaml.cs">
 			<DependentUpon>Fixes.xaml</DependentUpon>
-		</Compile>
-		<Compile Include="Views\HeatTab.xaml.cs">
-			<DependentUpon>HeatTab.xaml</DependentUpon>
 		</Compile>
 		<Compile Include="Views\IncomingTab.xaml.cs">
 			<DependentUpon>IncomingTab.xaml</DependentUpon>
@@ -564,17 +559,9 @@
 			<Generator>MSBuild:Compile</Generator>
 			<SubType>Designer</SubType>
 		</Page>
-		<Page Include="Views\FirstRunDialog.xaml">
-			<Generator>MSBuild:Compile</Generator>
-			<SubType>Designer</SubType>
-		</Page>
 		<Page Include="Views\Fixes.xaml">
 			<SubType>Designer</SubType>
 			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Include="Views\HeatTab.xaml">
-			<Generator>MSBuild:Compile</Generator>
-			<SubType>Designer</SubType>
 		</Page>
 		<Page Include="Views\IncomingTab.xaml">
 			<Generator>MSBuild:Compile</Generator>
@@ -697,6 +684,7 @@
 		<None Remove="Views\CityStats.xaml" />
 		<None Remove="Views\DefenderPage.xaml" />
 		<None Remove="Views\DefendTab.xaml" />
+		<None Remove="Views\HeatTab.xaml" />
 		<None Remove="Views\NPCHistory.xaml" />
 		<None Remove="Views\PlayerListBox.xaml" />
 		<None Remove="Views\PlayerStats.xaml" />
@@ -835,9 +823,6 @@
 	<Import Project="..\..\CnVShared\CnVShared.projitems" Label="Shared" />
 	<ItemGroup>
 		<PRIResource Remove="Helpers\**" />
-	</ItemGroup>
-	<ItemGroup>
-	  <EmbeddedResource Remove="Properties\Resources.resx" />
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\..\cnvResource\CnVResource.csproj">

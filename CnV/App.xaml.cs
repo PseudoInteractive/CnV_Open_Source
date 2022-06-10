@@ -614,20 +614,26 @@ namespace CnV
 		private async Task OnLaunchedOrActivated(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
 		{
 
-			try
-			{
-			
-				//if (DeploymentManager.GetStatus().Status != DeploymentStatus.Ok)
-				//{
-				//	// Initialize does a status check, and if the status is not Ok it will attempt to get
-				//	// the WindowsAppRuntime into a good state by deploying packages. Unlike a simple
-				//	// status check, Initialize can sometimes take several seconds to deploy the packages.
-				//	// These should be run on a separate thread so as not to hang your app while the
-				//	// packages deploy. 
-				//	await Task.Run(() => DeploymentManager.Initialize());
-             
-				//}
-            
+			try {
+				try {
+					//Trace($"{DeploymentManager.GetStatus().Status}");
+					if(DeploymentManager.GetStatus().Status != DeploymentStatus.Ok) {
+						//	// Initialize does a status check, and if the status is not Ok it will attempt to get
+						//	// the WindowsAppRuntime into a good state by deploying packages. Unlike a simple
+						//	// status check, Initialize can sometimes take several seconds to deploy the packages.
+						//	// These should be run on a separate thread so as not to hang your app while the
+						// packages deploy. 
+					//	Trace("init start");
+						await Task.Run(() => DeploymentManager.Initialize());
+						Trace("init end");
+
+					}
+
+				}
+				catch(Exception _ex) {
+					LogEx(_ex);
+
+				}
 
 
 
@@ -659,12 +665,12 @@ namespace CnV
 				//typeof(Telerik.UI.Xaml.Controls.RadDataForm).Assembly.GetType("Telerik.UI.Xaml.Controls.TelerikLicense").GetField("messageDisplayed",BindingFlags.NonPublic|BindingFlags.Static).SetValue(null,true,BindingFlags.Static|BindingFlags.NonPublic,null,null);
 
 			//	typeof(Syncfusion.Licensing.SyncfusionLicenseProvider).Assembly.GetType("SyncfusionLicenseProvider").GetMember("ValidateLicense",BindingFlags.Public|BindingFlags.Static)=(null,true,BindingFlags.Static|BindingFlags.Public,null,null);
-
+			Trace("here");
 				Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("NjA1NzY5QDMyMzAyZTMxMmUzMGZSTWpQWEpTL3N6TUVVcUlaTitqTTBoRTltdS9PenVzWGNMVnZkWlM1QVk9;NRAiBiAaIQQuGjN/V0Z+XU9EaFtFVmJLYVB3WmpQdldgdVRMZVVbQX9PIiBoS35RdEVnWXtccHZUQ2VcVUx/;NjA1NzcxQDMyMzAyZTMxMmUzMEE5QXBhZnJQaUpncnlwNEMvS2tkOThkL3lBaVFXZkQ4SXpqWlFsNkdObEk9;NjA1NzcyQDMyMzAyZTMxMmUzMENLK01WZjViM0xXU0svRU1STnFteXNhVm9NcHMydXFjN21Hc0FwcnhOaEE9");
 
 				if(!wasRunning)
 				{
-					
+					Trace("load");
 					await Sim.LoadJsons();
 				}
 				const bool isInteractive = true;

@@ -291,7 +291,7 @@ namespace CnV
 			}
 			for (int i = 0; ; ++i)
 			{
-				await GetCity.Post(cid);
+				//await GetCity.Post(cid);
 				if (City.CanVisit(cid))
 					break;
 				if( i > 5)

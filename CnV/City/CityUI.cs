@@ -110,7 +110,9 @@ public static partial class CityUI
 				}
 
 				var aRaid = AApp.AddSubMenu(flyout, "Raid..");
-				aRaid.AddItem($"Raid ..", () => ScanDungeons.Post(cid, true, false));
+				aRaid.AddItem($"Raid ..", () => DungeonView.ShowDungeonList(City.Get(cid),false));
+	//			return await DungeonView.ShowDungeonList(City.Get(_cid),  autoRaid);
+
 
 				if (count > 1)
 				{
@@ -163,7 +165,7 @@ public static partial class CityUI
 				{
 					aWar.AddItem("Attack",(_,_) => SendTroops.ShowInstance(GetBuild(),City.Get(cid),isSettle: false,viaWater: false,type: ArmyType.assault));
 					var multiString = sel.Count > 1 ? $" _x {sel.Count} selected" : "";
-					aWar.AddItem("Cancel Attacks..", me.CancelAttacks);
+				//	aWar.AddItem("Cancel Attacks..", me.CancelAttacks);
 					var afly = aWar.AddSubMenu("Attack Planner");
 					if (!me.player.isAllyOrNap)
 					{
