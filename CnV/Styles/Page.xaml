@@ -33,6 +33,8 @@
                                         Text="{Binding shortName}"/>
 		</Grid>
 	</DataTemplate>
+	
+
 	<converterTK:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
 
 
@@ -103,11 +105,15 @@
 		<Setter Property="FontStretch" Value="Condensed" />
 		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 	</Style>
+	
 	<Style TargetType="MenuFlyoutItem" BasedOn="{StaticResource DefaultMenuFlyoutItemStyle}" >
 		<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
 		<Setter Property="FontStretch" Value="Condensed" />
 	</Style>
 
+
+
+	
 	<Style TargetType="HyperlinkButton" BasedOn="{StaticResource BaseControlStyle}" >
 				<Setter Property="Foreground" Value="{StaticResource HyperLinkBrush}" />
 				<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>

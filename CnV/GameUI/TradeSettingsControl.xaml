@@ -1,0 +1,145 @@
+﻿<UserControl
+    x:Class="CnV.TradeSettingsControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cnv="using:CnV"
+    xmlns:view="using:CnV.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	Width="800"
+	HorizontalContentAlignment="Stretch"
+    mc:Ignorable="d">
+	<ScrollViewer>
+		<Grid HorizontalAlignment="Stretch" Margin="8,4" >
+
+			<Grid.RowDefinitions>
+				<RowDefinition Height="auto" />
+				<RowDefinition Height="auto"/>
+				<RowDefinition Height="auto"/>
+			</Grid.RowDefinitions>
+			<StackPanel BorderThickness="1" Margin="0,4" BorderBrush="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}" ToolTipService.ToolTip="Resources that this city requests from its hub" >
+				<TextBlock Style="{StaticResource TextBlockLarge}" Margin="4" Text="Wanted Resources and Source Hub" />
+
+				<Grid  >
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="*" />
+						<ColumnDefinition Width="*" />
+						<ColumnDefinition Width="*" />
+						<ColumnDefinition Width="*" />
+					</Grid.ColumnDefinitions>
+
+					<NumberBox Grid.Column="0"  x:Name="woodReq" Margin="8,2" x:FieldModifier="internal" Description="&#xA040; Want"  ValueChanged="{x:Bind cnv:App.FilterPositive}" Style="{StaticResource NumberBoxMediumPositive}"
+					   SmallChange="10000" />
+					<NumberBox Grid.Column="1"  x:Name="stoneReq" Margin="8,2" x:FieldModifier="internal" Description="&#xA041; Want"  ValueChanged="{x:Bind cnv:App.FilterPositive}" Style="{StaticResource NumberBoxMediumPositive}"
+					   SmallChange="10000"/>
+					<NumberBox Grid.Column="2"  x:Name="ironReq" Margin="8,2" x:FieldModifier="internal" Description="&#xA042; Want"  ValueChanged="{x:Bind cnv:App.FilterPositive}" Style="{StaticResource NumberBoxMediumPositive}"
+					   SmallChange="10000" />
+					<NumberBox Grid.Column="3"  x:Name="foodReq" Margin="8,2" x:FieldModifier="internal" Description="&#xA043; Want"  ValueChanged="{x:Bind cnv:App.FilterPositive}" Style="{StaticResource NumberBoxMediumPositive}"
+					   SmallChange="10000" />
+				</Grid >
+				<Grid  >
+					<Grid.RowDefinitions>
+						<RowDefinition Height="auto" />
+						<RowDefinition Height="auto"/>
+					</Grid.RowDefinitions>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="*" />
+						<ColumnDefinition Width="*" />
+					</Grid.ColumnDefinitions>
+					<view:CityControl Label="Wood Source" Grid.Column="0" x:Name="woodSource" LabelWidth="110" Margin="8,2" cityChanged="WoodSource_PropertyChanged" x:FieldModifier="internal" />
+					<view:CityControl Label="Stone Source" Grid.Column="1" x:Name="stoneSource" LabelWidth="110" Margin="8,2" x:FieldModifier="internal" />
+					<view:CityControl Label="Iron Source" Grid.Column="0" Grid.Row="1"  x:Name="ironSource" LabelWidth="110" Margin="8,2" x:FieldModifier="internal" />
+					<view:CityControl Label="Food Source" Grid.Column="1" Grid.Row="1" x:Name="foodSource" LabelWidth="110" Margin="8,2" x:FieldModifier="internal" />
+				</Grid >
+
+			</StackPanel>
+			<StackPanel Grid.Row="1" BorderThickness="1" Margin="0,4" BorderBrush="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}" ToolTipService.ToolTip="When resources go above the Max values, excess is sent to the destination hub" >
+				<TextBlock Style="{StaticResource TextBlockLarge}" Text="Max Resources and Destination" Margin="4" />
+
+				<Grid ToolTipService.ToolTip="If resources go above these amounts, they will be shiped out. These values are usually close to the storage capactiy of the city" >
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="*" />
+						<ColumnDefinition Width="*" />
+						<ColumnDefinition Width="*" />
+						<ColumnDefinition Width="*" />
+					</Grid.ColumnDefinitions>
+
+					<NumberBox Grid.Column="0"  x:Name="woodSend" Margin="8,2"  Description="&#xA040; Max" ValueChanged="{x:Bind cnv:App.FilterPositive}" Style="{StaticResource NumberBoxMediumPositive}"
+					   SmallChange="10000" x:FieldModifier="internal" />
+					<NumberBox Grid.Column="1"  x:Name="stoneSend" Margin="8,2" Description="&#xA041; Max" ValueChanged="{x:Bind cnv:App.FilterPositive}" Style="{StaticResource NumberBoxMediumPositive}"
+					   SmallChange="10000" x:FieldModifier="internal" />
+					<NumberBox Grid.Column="2"  x:Name="ironSend" Margin="8,2" Description="&#xA042; Max" ValueChanged="{x:Bind cnv:App.FilterPositive}" Style="{StaticResource NumberBoxMediumPositive}"
+					   SmallChange="10000" x:FieldModifier="internal" />
+					<NumberBox Grid.Column="3"  x:Name="foodSend" Margin="8,2" Description="&#xA043; Max" ValueChanged="{x:Bind cnv:App.FilterPositive}" Style="{StaticResource NumberBoxMediumPositive}"
+						   
+					   SmallChange="10000" x:FieldModifier="internal" />
+				</Grid >
+				<Grid ToolTipService.ToolTip="Resources will be sent to these cities on overflow.  These are usually hubs or storage cities" >
+					<Grid.RowDefinitions>
+						<RowDefinition Height="auto" />
+						<RowDefinition Height="auto"/>
+					</Grid.RowDefinitions>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="*" />
+						<ColumnDefinition Width="*" />
+					</Grid.ColumnDefinitions>
+					<view:CityControl Label="Wood Dest" Grid.Column="0" x:Name="woodDest" LabelWidth="110" Margin="8,2" cityChanged="WoodDest_PropertyChanged" x:FieldModifier="internal" />
+					<view:CityControl Label="Stone Dest" Grid.Column="1" x:Name="stoneDest" LabelWidth="110" Margin="8,2" x:FieldModifier="internal" />
+					<view:CityControl Label="Iron Dest" Grid.Column="0" Grid.Row="1"  x:Name="ironDest" LabelWidth="110" Margin="8,2" x:FieldModifier="internal" />
+					<view:CityControl Label="Food Dest" Grid.Column="1" Grid.Row="1" x:Name="foodDest" LabelWidth="110" Margin="8,2" x:FieldModifier="internal" />
+				</Grid >
+				<Grid  >
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="*" />
+						<ColumnDefinition Width="*" />
+						<ColumnDefinition Width="*" />
+					</Grid.ColumnDefinitions>
+
+					<NumberBox Grid.Column="0"  x:Name="cartReserve" Margin="8,2"  Description="&#xA04D; % Reserved"
+						   ToolTipService.ToolTip="This % carts will not be used to transport overflow to the destination city.  They will be reserved for trade requests from other cities" 
+					   SmallChange="5" Style="{StaticResource NumberBoxMediumPositive}"  ValueChanged="{x:Bind cnv:App.FilterPositive}"  />
+					<NumberBox Grid.Column="1"  x:Name="shipReserve" Margin="8,2" Description="&#xA04E; % Reserved"
+						   ToolTipService.ToolTip="This % ships will not be used to transport overflow to the destination city.  They will be reserved for trade requests from other cities" 
+					   SmallChange="5" Style="{StaticResource NumberBoxMediumPositive}"  ValueChanged="{x:Bind cnv:App.FilterPositive}"  />
+
+					<CheckBox Grid.Column="2" x:Name="protectResources"  Content="Protect resources" ToolTipService.ToolTip="If set, city attempts to keep the resources specified in 'Max Resources' on hand, when resources fall below the 'Max Resqources' values, trades will not be sent out due to requsts from other cities" />
+
+				</Grid >
+			</StackPanel>
+
+			<Grid HorizontalAlignment="Stretch" Grid.Row="2" BorderThickness="1" Margin="0,4"
+				  BorderBrush="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"
+				  ToolTipService.ToolTip="Cities can request resources from the Trade Market, other players with extra resources can fulfill these request for gold" >
+				<Grid.RowDefinitions>
+					<RowDefinition />
+					<RowDefinition />
+					<RowDefinition/>
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="*"/>
+				</Grid.ColumnDefinitions>
+				<TextBlock Style="{StaticResource TextBlockLarge}" Text="Market Trade Requests" Margin="4" Grid.ColumnSpan="4" />
+				<NumberBox Grid.Column="0" Grid.Row="1" x:Name="woodOrder" Margin="8,2" Description="&#xA040; Market order"  ValueChanged="{x:Bind cnv:App.FilterPositive}" Style="{StaticResource NumberBoxMediumPositive}"
+					   SmallChange="10000" />
+				<NumberBox Grid.Column="1" Grid.Row="1"  x:Name="stoneOrder" Margin="8,2" Description="&#xA041; Market order"  ValueChanged="{x:Bind cnv:App.FilterPositive}" Style="{StaticResource NumberBoxMediumPositive}"
+					   SmallChange="10000" />
+				<NumberBox Grid.Column="2" Grid.Row="1"  x:Name="ironOrder" Margin="8,2" Description="&#xA042; Market order"  ValueChanged="{x:Bind cnv:App.FilterPositive}" Style="{StaticResource NumberBoxMediumPositive}"
+					   SmallChange="10000" />
+				<NumberBox Grid.Column="3" Grid.Row="1"  x:Name="foodOrder"  Margin="8,2" Description="&#xA043; Market order"  ValueChanged="{x:Bind cnv:App.FilterPositive}"  Style="{StaticResource NumberBoxMediumPositive}"
+					   SmallChange="10000" />
+				<NumberBox Grid.Column="0" Grid.Row="2" x:Name="payRate" Margin="8,2" Header="Gold offered per unit" ToolTipService.ToolTip="Amount of gold to pay per resource, 2 would mean you will pay 2000 gold for 1000 iron"
+					   SmallChange="0.125" Style="{StaticResource NumberBoxMediumPositive}"  ValueChanged="{x:Bind cnv:App.FilterPositive}" />
+				<NumberBox Grid.Column="1" Grid.Row="2" x:Name="maxTravel" Margin="8,2" Header="Max Travel (hours)"  ToolTipService.ToolTip="Max resource transit time for request"
+					   SmallChange="0.125" Style="{StaticResource NumberBoxMediumPositive}"  ValueChanged="{x:Bind cnv:App.FilterPositive}"  />
+
+				<CheckBox Grid.Column="2"  Grid.Row="2" x:Name="limitRequestsToAlliance"  Content="Limit requests to alliance" ToolTipService.ToolTip="If set, offers to buy resources for gold will only be available to alliance members, otherwise they will be public offers" />
+			</Grid>
+
+			
+
+		</Grid>
+	</ScrollViewer>
+</UserControl>

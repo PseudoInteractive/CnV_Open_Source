@@ -119,7 +119,7 @@ namespace CnV
 						enhancementsList.ItemsSource = Artifact.all.Where(a => a.level == sel && (a.column == 2)).ToArray();
 							break;
 					case 2:
-						specialList.ItemsSource = Artifact.all.Where(a => a.level == sel && a.column == 3).ToArray();
+						specialList.ItemsSource = Artifact.all.Where(a => a.level == sel && a.column == 3).Append(Artifact.GetUniversal(Artifact.ArtifactType.magical_fanfare) ).ToArray();
 						break;
 					case 3:
 						overviewList.ItemsSource = Artifact.all.Where(a => a.owned > 0).ToArray();

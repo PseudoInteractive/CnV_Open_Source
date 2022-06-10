@@ -101,6 +101,7 @@ namespace CnV
 
 		private void SendTroops_PropertyChanged(object? sender,PropertyChangedEventArgs e) {
 			UpdateTravelTime();
+			OnPropertyChanged();
 
 		}
 
@@ -448,6 +449,12 @@ namespace CnV
 		//		}
 		//	}
 		//}
+		internal string AttackStrength() {
+			return $"Attack Strength:\n{troops.AttackStrength(city.player,target.isDungeonOrBoss ? Cavern.Get(target.c).combatWeakness : CombatCategory.invalid):N0}";
+		}
+		internal string RaidCarry() {
+			return $"Carry: {troops.carry/(float)Cavern.Get(target.c).GetLoot((uint)splits,troops.carry):P}";
+		}
 
 		private void HomeClick(object sender,RoutedEventArgs e) {
 			var t = prior?.troops?? city.troopsHome;
@@ -600,7 +607,7 @@ namespace CnV
 			set {
 				if(_count != value && value >=0) {
 					_count = value;
-					OnPropertyChanged(nameof(count));
+					OnPropertyChanged();
 				}
 			}
 		}

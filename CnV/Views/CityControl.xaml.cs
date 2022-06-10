@@ -48,19 +48,25 @@ namespace CnV.Views
 			if(_city is not null && !citySelections.Contains(_city))
 				citySelections.Add(_city);
 		}
-		public void SetCity(City value) {
+		public void SetCity(City value, bool triggerCityChanged=true) {
 			if(_city != value) {
-				city = value; // call with add
-				CallPropertyChanged(nameof(this.city));
+				SetCityI(value);
+			CallPropertyChanged(nameof(this.city));
+
+			if(triggerCityChanged)
+				cityChanged?.Invoke(this,_city);
+				
 			}
 		}
-		public City city
+
+		// Not for internal use
+		protected City city
 		{
 			get => _city;
 			set {
 				if(!object.ReferenceEquals(_city, value) )
 				{
-					SetCityI(_city = value); 
+					SetCityI( value); 
 					cityChanged?.Invoke(this,_city);
 
 				//	OnPropertyChanged(nameof(this.city));
@@ -179,7 +185,7 @@ namespace CnV.Views
 					//	if(!sender.Items.Contains(city))
 					//		sender.Items.Add(city);
 					//	sender.SelectedItem = city;
-					SetCity(city);
+					SetCity(city,true);
 					args.Handled = true;
 					return;
 

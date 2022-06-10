@@ -10,7 +10,7 @@ namespace CnV;
 using static CnV.CitySettings;
 public partial class CityUI
 {
-	public static async Task SetTradeSettings(int _cid, int? sourceHub = null, ResourceFilter reqFilter = default, int? targetHub = null, ResourceFilter targetFilter = default, bool autoFind = false)
+	public static async Task SetTradeSettings(int _cid, int? sourceHub = null,  int? targetHub = null,  bool autoFind = false)
 	{
 		//	var targetExplicit = targetHub.HasValue;
 		foreach(var __cid in Spot.GetSelectedForContextMenu(_cid, false, onlyMine: true))
@@ -26,12 +26,25 @@ public partial class CityUI
 			if(cid == sourceHub || cid == targetHub)
 				continue;
 
-			var _sourceHub = sourceHub is not null ? sourceHub.Value :  city.requestHubIfAllEqual;
-			var _targetHub = targetHub is not null ? targetHub.Value : city.sendHubIfAllEqual;
 
-
-			var settings = new ResSettings();
-			settings.InitTradeSettings(city, _sourceHub, _targetHub, reqFilter, targetFilter);
+			var settings = new TradeSettingsControl();
+			settings.city = city; //  InitTradeSettings(city, _sourceHub, _targetHub, reqFilter, targetFilter);
+			settings.InitializeFromCity();
+			if(sourceHub is not null ) {
+				var h = sourceHub.Value.AsCity();
+				settings.woodSource.SetCity(h,false);
+				settings.stoneSource.SetCity(h,false);
+				settings.ironSource.SetCity(h,false);
+				settings.foodSource.SetCity(h,false);
+			}
+			if(targetHub is not null && !city.isHubOrStorage ) {
+				var h = targetHub.Value.AsCity();
+				settings.woodDest.SetCity(h,false);
+				settings.stoneDest.SetCity(h,false);
+				settings.ironDest.SetCity(h,false);
+				settings.foodDest.SetCity(h,false);
+			}
+			
 		//	await AUtil.AwaitChangesComplete();
 
 			var dialog = new ContentDialog()
@@ -42,19 +55,12 @@ public partial class CityUI
 					CloseButtonText     = "Cancel"
 			};
 
-			dialog.Title = $"Set Trade settings for {city.nameAndRemarks}";
+			dialog.SetTitle( $"Set Trade settings for {city.nameAndRemarks}" );
 			//	await settings.InitTradeSettings(city,, (city.isHubOrStorage&&!targetExplicit) ? 0 : targetHub.GetValueOrDefault() );
 			var rv = await dialog.ShowAsync2();
 			if(rv == ContentDialogResult.Primary)
 			{
-				reqFilter    = settings.reqFilter;
-				targetFilter = settings.sendFilter;
-				// does this change threads?
-				City.Get(cid).SetTradeSettings( reqHub: settings.ReqHub, settings.SendHub, req: settings.req, max: settings.max,
-									cartReserve: settings.cartReserve,
-									shipReserve: settings.shipReserve,
-									reqFilter: settings.reqFilter,
-									sendFilter: settings.sendFilter);
+				settings.Apply();
 			}
 			else if(rv == ContentDialogResult.None)
 			{
@@ -64,14 +70,19 @@ public partial class CityUI
 	}
 	public static  void SetTargetHub(int cid, int targetHub)
 	{
-		SetTradeSettings(cid, sourceHub: null, targetHub: targetHub, targetFilter: ResourceFilter._true);
+		SetTradeSettings(cid, sourceHub: null, targetHub: targetHub);
 
 	}
 	public static  void SetSourceHub(int cid, int targetHub)
 	{
-		SetTradeSettings(cid, sourceHub: targetHub, targetHub: targetHub, reqFilter: ResourceFilter._true);
+		SetTradeSettings(cid, sourceHub: targetHub, targetHub: targetHub);
 
 	}
+	public static Task SetClosestHub(int cid)
+	{
+		return SetTradeSettings(cid, autoFind: true );
+	}
+
 	public static async Task<int> FindBestHubWithChoice(int cid, string title, bool? offContinent = null, bool? isHubOrStorage = null)
 	{
 		var city = cid.AsCity();
@@ -81,10 +92,7 @@ public partial class CityUI
 		return CitySettings.FindBestHub(cid,
 											offContinent.GetValueOrDefault());
 	}
-	public static Task SetClosestHub(int cid)
-	{
-		return SetTradeSettings(cid, autoFind: true, reqFilter: ResourceFilter._true, targetFilter: (City.Get(cid).isHubOrStorage ? ResourceFilter._null : ResourceFilter._true));
-	}
+
 
 }
 

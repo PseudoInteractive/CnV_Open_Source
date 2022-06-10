@@ -146,12 +146,12 @@ namespace CnV
 
 
 
-					if(!(e.tlInclude && e.TlTimeRange().Overlaps(_timeRange)))
+					if(!(e.TlTimeRange().Overlaps(_timeRange) &&  e.TlInclude(playerFilter,alliance) ))
 						continue;
 					
 				
-					if(!IsRelevant(e.TlReferences()))
-						continue;
+					//if(!ITimelineItem.IsRelevant(playerFilter, alliance,e.TlReferences()))
+					//	continue;
 
 					if(e is CnVEventReturnTroops rt) {
 						foreach(var ret in rt.returned) {
@@ -187,7 +187,7 @@ namespace CnV
 				foreach(var b in BattleReport.all) {
 					if(!(_timeRange.Overlaps(b.arrival) ))
 						continue;
-					if(!IsRelevant((b.attackerPid, b.defenderPid)))
+					if(!ITimelineItem.IsRelevant(playerFilter,alliance,(b.attackerPid, b.defenderPid)))
 						continue;
 
 					var a = b.attackArmy;
@@ -242,10 +242,7 @@ namespace CnV
 				// players.SyncList(resources,(a,b) => a == b.Id,PlayerToResource);
 				// Must be part of player list we are filtering for
 			// And must have intel on at least one participant
-			bool IsRelevant( (ushort p0, ushort p1) ps) {
-				return alliance== 0 ? playerFilter.ContainsAny(ps)&(Player.IsSubOrMe(ps.p0)|Player.IsSubOrMe(ps.p1) ): (playerFilter.ContainsAny(ps) && 
-						(ps.p0 ==Player.activeId|ps.p1 ==Player.activeId| Player.Get(ps.p0).allianceId==alliance |Player.Get(ps.p1).allianceId==alliance));
-			}
+			
 
 			}
 			catch(Exception ex) {

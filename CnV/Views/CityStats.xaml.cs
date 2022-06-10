@@ -1336,6 +1336,8 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 			}
 			if( army.canUseWings)
 				flyout.AddItem("Speedup",Symbol.Forward,SpeedupDefense);
+			if( army.canUseFanfare)
+				flyout.AddItem("Fanfare..",Symbol.Forward,UseFanfare);
 
 			flyout.AddItem("Return All",Symbol.Delete,() =>
 			{
@@ -1347,11 +1349,73 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 				}
 				new CnVEventReturnTroops(army.sourceC,CnVEventReturnTroops.outgoingAll).EnqueueAsap();
 			});
-			flyout.AddItem("Return Raids",Symbol.Refresh,() =>
+			flyout.AddItem("Return Raid immediate",Symbol.Refresh,() =>
 			{
 				new CnVEventReturnTroops(army.sourceC,CnVEventReturnTroops.outgoingRaidsFast).EnqueueAsap();
 			});
+			flyout.AddItem("Return Raid when complete",Symbol.Refresh,() =>
+			{
+				new CnVEventReturnTroops(army.sourceC,CnVEventReturnTroops.outgoingRaidsSlow).EnqueueAsap();
+			});
 			flyout.ShowContext(sender,args);
+		}
+		private void UseFanfare()
+		{
+			try
+			{
+				var art = Artifact.GetUniversal(Artifact.ArtifactType.magical_fanfare);
+				if(art is null)
+				{
+					Assert(false);
+					return;
+				}
+				var artifact = art.id;
+
+
+				var city = army.sourceCity;
+				var id = city.outgoing.IndexOf(army);
+				Assert(id != -1);
+				if(id >= 0)
+				{
+					var toUse = 1;
+					var needed = toUse- Player.active.ArtifactCount(artifact);
+					if(!Artifact.Get(artifact).IsOkayToUse(toUse))
+						return;
+					
+					// do we need to return first
+					Assert(army.isRaid);
+					// return troops first
+					
+					 {
+						SocketClient.DeferSendStart();
+
+						try {
+							if(needed > 0) {
+								new CnVEventPurchaseArtifacts((ushort)artifact,(ushort)needed,Player.active.id).EnqueueAsap();
+							}
+							// If the army has not returned, we do a return with wings and pay later with a dummy call to useArtifacts
+							// If it has started returning, we use the artifact
+							
+
+							
+							(new CnVEventUseArtifacts(city.c) { artifactId = (ushort)artifact,count = (ushort)toUse,aux=id }).EnqueueAsap();
+
+						}
+						catch(Exception _ex) {
+							LogEx(_ex);
+
+						}
+						finally {
+							SocketClient.DeferSendEnd();
+						}
+					}
+				}
+			}
+			catch(Exception _ex)
+			{
+				LogEx(_ex);
+
+			}
 		}
 
 		private void SpeedupDefense()
@@ -1380,18 +1444,22 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 					// do we need to return first
 					Assert(army.isDefense);
 					// return troops first
-					if(army.arrived) {
-						CnVEventReturnTroops.TryReturn(army,default,true);
-					}
-					else {
+					
+					{
 						SocketClient.DeferSendStart();
 
 						try {
 							if(needed > 0) {
 								new CnVEventPurchaseArtifacts((ushort)artifact,(ushort)needed,Player.active.id).EnqueueAsap();
 							}
+							// If the army has not returned, we do a return with wings and pay later with a dummy call to useArtifacts
+							// If it has started returning, we use the artifact
+							if(army.arrived) {
+									CnVEventReturnTroops.TryReturn(army,default,true);
+							}
 
-							(new CnVEventUseArtifacts(city.c) { artifactId = (ushort)artifact,count = (ushort)toUse,aux=id }).EnqueueAsap();
+							if(!AppS.isTest)
+								(new CnVEventUseArtifacts(city.c) { artifactId = (ushort)artifact,count = (ushort)toUse,aux=id, flags = army.arrived ? CnVEventUseArtifacts.Flags.noEffect : 0 }).EnqueueAsap();
 
 						}
 						catch(Exception _ex) {

@@ -617,16 +617,16 @@ namespace CnV
 			try
 			{
 			
-				if (DeploymentManager.GetStatus().Status != DeploymentStatus.Ok)
-				{
-					// Initialize does a status check, and if the status is not Ok it will attempt to get
-					// the WindowsAppRuntime into a good state by deploying packages. Unlike a simple
-					// status check, Initialize can sometimes take several seconds to deploy the packages.
-					// These should be run on a separate thread so as not to hang your app while the
-					// packages deploy. 
-					await Task.Run(() => DeploymentManager.Initialize());
+				//if (DeploymentManager.GetStatus().Status != DeploymentStatus.Ok)
+				//{
+				//	// Initialize does a status check, and if the status is not Ok it will attempt to get
+				//	// the WindowsAppRuntime into a good state by deploying packages. Unlike a simple
+				//	// status check, Initialize can sometimes take several seconds to deploy the packages.
+				//	// These should be run on a separate thread so as not to hang your app while the
+				//	// packages deploy. 
+				//	await Task.Run(() => DeploymentManager.Initialize());
              
-				}
+				//}
             
 
 

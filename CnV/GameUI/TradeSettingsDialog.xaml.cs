@@ -9,96 +9,18 @@ public sealed partial class TradeSettingsDialog:DialogG, INotifyPropertyChanged 
 
 	}
 
-	internal async void WoodSource_PropertyChanged(object?sender,City city) {
-
-//		if(m.PropertyName==nameof(woodSource.city)) 
-			{
-
-		//	woodSource.PropertyChanged-=WoodSource_PropertyChanged;
-			//if(woodSource.city != null)
-			{
-				var rv = await AppS.DoYesNoBox("Sources","Set hub for all res?","Yes","Yes and set targets","No");
-				if(rv == -1)
-					return;
-
-				stoneSource.SetCity(city);
-				ironSource.SetCity( city);
-				foodSource.SetCity( city);
-				if(rv == 0) {
-					woodDest.SetCity( city);
-					stoneDest.SetCity( city);
-					ironDest.SetCity( city );
-					foodDest.SetCity( city );
-
-				}
-				OnPropertyChanged();
-			}
-		}
-
-	}
-
-	internal City city => City.GetBuild();
 
 	protected override string title => "Trade Settings";
 
-	static double ToNumberBoxValue(int val) => val;
 
-	public void UpdateItems()
-	{
-
-		var city = this.city;
-		var mo = city.GetMOForRead();
-		woodSource.SetCityI(mo.requestCities[0].AsCity());
-		stoneSource.SetCityI(mo.requestCities[1].AsCity());
-		ironSource.SetCityI(mo.requestCities[2].AsCity());
-		foodSource.SetCityI(mo.requestCities[3].AsCity());
-
-		woodReq.Value = ToNumberBoxValue(mo.resRequest[0]);
-		stoneReq.Value = ToNumberBoxValue(mo.resRequest[1]);
-		ironReq.Value = ToNumberBoxValue(mo.resRequest[2]);
-		foodReq.Value = ToNumberBoxValue(mo.resRequest[3]);
-
-		woodDest.SetCityI(mo.sendCities[0].AsCity());
-		stoneDest.SetCityI(mo.sendCities[1].AsCity());
-		ironDest.SetCityI(mo.sendCities[2].AsCity());
-		foodDest.SetCityI(mo.sendCities[3].AsCity());
-
-		woodSend.Value = ToNumberBoxValue(mo.resSend[0]);
-		stoneSend.Value =ToNumberBoxValue( mo.resSend[1]);
-		ironSend.Value = ToNumberBoxValue(mo.resSend[2]);
-		foodSend.Value =ToNumberBoxValue( mo.resSend[3]);
-		protectResources.IsChecked = mo.protectResources;
-		cartReserve.Value = mo.cartReserve;
-		shipReserve.Value = mo.shipReserve;
-
-		woodRequest.Value = ToNumberBoxValue(city.requestedResources.wood);
-		stoneRequest.Value = ToNumberBoxValue(city.requestedResources.stone);
-		ironRequest.Value = ToNumberBoxValue(city.requestedResources.iron);
-		foodRequest.Value = ToNumberBoxValue(city.requestedResources.food);
-		maxTravel.Value = city.requestedResourceMaxTravel.TotalHours;
-		payRate.Value = city.resourcePaymentRate;
-		limitRequestsToAlliance.IsChecked = city.limitRequestsToAlliance;
-
-		OnPropertyChanged();
-
-
-	}
 	public static async void ShowInstance()
 	{
 		var rv = instance ?? new TradeSettingsDialog();
 		// once in case of exception
-		rv.woodSource.cityChanged-=rv.WoodSource_PropertyChanged;
-		if(!rv.Hide(false))
-		{
-			rv.UpdateItems();
-
-			var t = rv.Show(false);
-			await Task.Delay(2000);
-			rv.woodSource.cityChanged+=rv.WoodSource_PropertyChanged;
-			await t;
-			rv.woodSource.cityChanged-=rv.WoodSource_PropertyChanged;
-		}
-
+		rv.settings.city = City.GetBuild();
+		rv.settings.InitializeFromCity();
+		rv.settings.OnPropertyChanged();
+		await rv.Show(true);
 	}
 	public event PropertyChangedEventHandler? PropertyChanged;
 	public void OnPropertyChanged(string? member = null)
@@ -110,49 +32,7 @@ public sealed partial class TradeSettingsDialog:DialogG, INotifyPropertyChanged 
 	
 	private void DoneClick(object sender,Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
-		var city = this.city;
-		
-		var mo = city.cloneMO; ;
-		var priorHash = mo.tradeHashCode;
-		mo.protectResources = protectResources.IsChecked.GetValueOrDefault();
-		mo.cartReserve = cartReserve.Value.RoundToInt().Clamp(0,100).AsByte();
-		mo.shipReserve = shipReserve.Value.RoundToInt().Clamp(0,100).AsByte();
-		mo.sendCities=new(woodDest.cid,stoneDest.cid,ironDest.cid,foodDest.cid);
-		mo.requestCities=new(woodSource.cid,stoneSource.cid,ironSource.cid,foodSource.cid);
-		mo.resSend = new(
-			woodSend.IntValue(),
-			stoneSend.IntValue(),
-			ironSend.IntValue(),
-			foodSend.IntValue());
-		mo.resRequest= new(
-		woodReq.IntValue(),
-		stoneReq.IntValue(),
-		ironReq.IntValue(),
-		foodReq.IntValue());
-		mo.RemoveTradesTo(city.cid);
-		var newHash = mo.tradeHashCode;
-		Note.Show($"Trade settings changed: {newHash != priorHash}");
-		if(newHash != priorHash)
-		{
-			new CnVEventCityTradeSettings(city.c,mo).EnqueueAsap();
-		}
-		var reqHash0 = HashCode.Combine(city.requestedResources,city.requestedResourceMaxTravel,city.resourcePaymentRate,city.limitRequestsToAlliance);
-		var _resourcePaymentRate=  payRate.FloatValue();
-		var _requestsOnlyForAlliance = limitRequestsToAlliance.IsChecked.GetValueOrDefault();
-		var _requestedResourceMaxTravel = TimeSpanS.FromHours(maxTravel.Value);
-		var _requestedResources = new Resources(
-			woodRequest.IntValue(),stoneRequest.IntValue(),ironRequest.IntValue(),foodRequest.IntValue()
-			);
-		var goldCost = CnVEventCityTradeRequest.GoldRequiredForRequest(city,_requestedResources,_resourcePaymentRate);
-		if(goldCost > 0 && goldCost >= Player.active.gold) {
-			AppS.MessageBox($"Not enough gold for request, need {goldCost - Player.active.gold} more gold");
-		}
-		else {
-
-			var reqHash1 = HashCode.Combine(_requestedResources,_requestedResourceMaxTravel,_resourcePaymentRate,_requestsOnlyForAlliance);
-			if(reqHash0 != reqHash1) {
-				new CnVEventCityTradeRequest(city.c,_requestedResources,_resourcePaymentRate,_requestedResourceMaxTravel,_requestsOnlyForAlliance).EnqueueAsap();
-			}
+		if( settings.Apply() ) { 
 			Done();
 		}
 

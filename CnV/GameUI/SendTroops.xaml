@@ -33,13 +33,15 @@
 
 		
 			<StackPanel Orientation="Horizontal" Padding="0" x:Name="raidPanel" >
-				<TextBlock Text="Splits" Margin="12,2,0,2" VerticalAlignment="Center" />
-				<ComboBox x:Name="splitsCombo" ItemsSource="{x:Bind splitsItems}" SelectedIndex="0" Margin="12,2" VerticalAlignment="Center" />
-				<CheckBox x:Name="repeatCheckBox" Content="Repeat" IsChecked="True" Margin="8,2" />
+				<TextBlock Text="Splits" Margin="6,2,0,2" VerticalAlignment="Center" />
+				<ComboBox x:Name="splitsCombo" ItemsSource="{x:Bind splitsItems}" SelectedIndex="0" Margin="6,2" VerticalAlignment="Center" />
+				<CheckBox x:Name="repeatCheckBox" Content="Repeat" IsChecked="True" Margin="6,2" />
+				<TextBlock Text="{x:Bind RaidCarry(), Mode=OneWay}" Margin="6,2,0,2" VerticalAlignment="Center" />
 			</StackPanel>
 			<cnv:DateTimeBox Label="arrival" x:Name="arrivalUI" ToolTipService.ToolTip="Clear both boxes to send immediately" />
 			
 			<NumberBox Description="Min TS" Value="{x:Bind city.minTS,Mode=OneWay}" IsEnabled="false" />
+			<TextBlock x:Name="attackStrength"  Text="{x:Bind AttackStrength(),Mode=OneWay}" TextWrapping="Wrap" />
 		</tk:WrapPanel>
 
 		<GridView x:Name="troopList"  Grid.Row="0" VerticalAlignment="Stretch"  ItemsSource="{x:Bind troopItems,Mode=OneWay}" >

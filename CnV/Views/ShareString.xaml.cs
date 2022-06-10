@@ -219,9 +219,9 @@ namespace CnV.Views
 				   // bladeView.bl
 
 				   SetFromSS(city.shareString,false,false);
-				   res.sendFilter = ResourceFilter._true;
-				   res.reqFilter = ResourceFilter._true;
 				   SetCheckboxesFromTags(city.tags);
+				   res.city = city;
+				   res.InitializeFromCity();
 				   //Bindings.Update();
 				   OnPropertyChanged();
 
@@ -294,18 +294,19 @@ namespace CnV.Views
 
 							   if(setTrade)
 							   {
-								   var reqFilter = res.reqFilter;
-								   var sendFilter = (!city.isHubOrStorage) ? res.sendFilter : ResourceFilter._null;
+								  // var reqFilter = res.reqFilter;
+								  // var sendFilter = (!city.isHubOrStorage) ? res.sendFilter : ResourceFilter._null;
 								   //			await CitySettings.SetTradeResourcesSettings(city.cid,req,max);
-								   city.SetTradeSettings(
-										   reqHub: (setTrade ? res.reqHub.city switch { City a => a.cid, _ => 0 } : null),
-										   targetHub: (setTrade ? res.sendHub.city switch { null => 0, var a => a.cid } : null),
-											cartReserve: setTrade ? res.cartReserve : null,
-										   shipReserve: setTrade ? res.shipReserve : null,
-											req: (setTrade ? res.req : ResourcesNullable._null),
-											max: (setTrade ? res.max : ResourcesNullable._null),
-										   reqFilter: (setTrade ? reqFilter : ResourceFilter._null),
-										   sendFilter: (setTrade ? sendFilter : ResourceFilter._null));
+								   res.Apply();
+								   //city.SetTradeSettings(
+										 //  reqHub: (setTrade ? res.reqHub.city switch { City a => a.cid, _ => 0 } : null),
+										 //  targetHub: (setTrade ? res.sendHub.city switch { null => 0, var a => a.cid } : null),
+											//cartReserve: setTrade ? res.cartReserve : null,
+										 //  shipReserve: setTrade ? res.shipReserve : null,
+											//req: (setTrade ? res.req : ResourcesNullable._null),
+											//max: (setTrade ? res.max : ResourcesNullable._null),
+										 //  reqFilter: (setTrade ? reqFilter : ResourceFilter._null),
+										 //  sendFilter: (setTrade ? sendFilter : ResourceFilter._null));
 
 							   }
 
@@ -369,14 +370,14 @@ namespace CnV.Views
 				   desc = description.Text,path = path.Text };
 			   if(Settings.embedTradeInShareStrings)
 			   {
-				   meta.reqWood = res.req.wood;
-				   meta.reqStone = res.req.stone;
-				   meta.reqIron = res.req.iron;
-				   meta.reqFood = res.req.food;
-				   meta.maxWood = res.max.wood;
-				   meta.maxStone = res.max.stone;
-				   meta.maxIron = res.max.iron;
-				   meta.maxFood = res.max.food;
+				   meta.reqWood = res.woodReq.IntValue();
+				   meta.reqStone = res.stoneReq.IntValue();
+				   meta.reqIron = res.ironReq.IntValue();
+				   meta.reqFood = res.foodReq.IntValue();
+				   meta.maxWood = res.woodReq.IntValue();
+				   meta.maxStone = res.stoneReq.IntValue();
+				   meta.maxIron = res.ironReq.IntValue();
+				   meta.maxFood = res.foodReq.IntValue();
 			   }
 			   return meta;
 		   });
@@ -424,10 +425,10 @@ namespace CnV.Views
 			}
 
 		}
-		static void SetValue(ref int? v,int? source)
+		static void SetValue(ref NumberBox ? v,int? source)
 		{
 			if(source.HasValue)
-				v = source.Value;
+				v.Value = source.Value;
 		}
 
 		public void SetFromSS(string shareString,bool setRes,bool setTags)
@@ -455,15 +456,15 @@ namespace CnV.Views
 			if(setRes)
 			{
 
-				SetValue(ref res.req.wood,meta.reqWood);
-				SetValue(ref res.req.stone,meta.reqStone);
-				SetValue(ref res.req.iron,meta.reqIron);
-				SetValue(ref res.req.food,meta.reqFood);
+				SetValue(ref res.woodReq,meta.reqWood);
+				SetValue(ref res.stoneReq,meta.reqStone);
+				SetValue(ref res.ironReq,meta.reqIron);
+				SetValue(ref res.foodReq,meta.reqFood);
 
-				SetValue(ref res.max.wood,meta.maxWood);
-				SetValue(ref res.max.stone,meta.maxStone);
-				SetValue(ref res.max.iron,meta.maxIron);
-				SetValue(ref res.max.food,meta.maxFood);
+				SetValue(ref res.woodSend,meta.maxWood);
+				SetValue(ref res.stoneSend,meta.maxStone);
+				SetValue(ref res.ironSend,meta.maxIron);
+				SetValue(ref res.foodSend,meta.maxFood);
 				res.OnPropertyChanged();
 			}
 			if(setTags)
@@ -629,24 +630,36 @@ namespace CnV.Views
 				var city = City.Get(cid);
 			//	await TradeOverview.UpdateTradeStuffIfNeeded().ConfigureAwait(false);
 				var tags = await TagsFromCheckboxes();
-				var isHubOrStorage = tags.HasFlag(Tags.Hub) | tags.HasFlag(Tags.Storage);
+				var isHubOrStorage = tags.HasFlag(Tags.Hub) | tags.HasFlag(Tags.Storage) | city.isHubOrStorage;
 
 				var bestReqHub =  city.AnyHub(true);
 				var bestSendHub =  city.AnyHub(false);
 				var hasAnyHubs = (bestReqHub!=0)||(bestSendHub!=0);
 				if(!hasAnyHubs)
 				{
-					bestReqHub =   await CityUI.FindBestHubWithChoice(cid,"Find Request Hub",null,isHubOrStorage).ConfigureAwait(false);
-					if( !isHubOrStorage)
+					bestReqHub =   await CityUI.FindBestHubWithChoice(cid,"Find Request Hub",null,isHubOrStorage);
+					{
+						var h = bestReqHub.AsCity();
+						res.woodSource.SetCity(h,false);
+						res.stoneSource.SetCity(h,false);
+						res.ironSource.SetCity(h,false);
+						res.foodSource.SetCity(h,false);
+					}
+					if(!isHubOrStorage) {
 						bestSendHub =   CitySettings.FindBestHub(cid,false);
+						var h = bestSendHub.AsCity();
+						res.woodDest.SetCity(h,false);
+						res.stoneDest.SetCity(h,false);
+						res.ironDest.SetCity(h,false);
+						res.foodDest.SetCity(h,false);
+					}		
+					res.OnPropertyChanged();
 				}
 				else
 				{
 
 				}
 
-				res.InitTradeSettings(city,bestReqHub,bestSendHub,ResourceFilter._true,isHubOrStorage ? ResourceFilter._null : ResourceFilter._true);
-				OnPropertyChanged();
 			}
 		}
 		private async void toggleTrade_Toggled(object sender,RoutedEventArgs e)

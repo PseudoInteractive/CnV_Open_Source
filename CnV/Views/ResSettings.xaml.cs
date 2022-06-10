@@ -50,8 +50,8 @@ namespace CnV.Views
 		public int? cartReserve; // todo
 		public int? shipReserve;
 
-		public int? ReqHub => reqHub.city?.cid;
-		public int? SendHub => sendHub.city?.cid;
+		public int? ReqHub => reqHub._city?.cid;
+		public int? SendHub => sendHub._city?.cid;
 
 		//public TradeSettings _TradeSettingsSel;
 		//public static TradeSettings[] tradeSettingsItemsSource;
@@ -87,8 +87,8 @@ namespace CnV.Views
 			var curSettings = city.GetMOForRead();
 			this.reqFilter = reqFilter;
 			this.sendFilter = targetFilter;
-			reqHub.city = _sourceHub == 0? null : City.Get(_sourceHub);
-			sendHub.city = _targetHub==0?null:City.Get(_targetHub);
+			reqHub.SetCity( _sourceHub == 0? null : City.Get(_sourceHub),false);
+			sendHub.SetCity( _targetHub==0?null:City.Get(_targetHub), false);
 			cartReserve = curSettings.cartReserve;
 			shipReserve = curSettings.shipReserve;
 			if (curSettings.resRequest.isNonZero)

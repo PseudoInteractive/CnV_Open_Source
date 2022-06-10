@@ -170,8 +170,8 @@
 					</StackPanel>
 				</ScrollViewer>
 			</tk:BladeItem>
-			<tk:BladeItem x:Name="TradeBlade" Header="Trade Settings" IsOpen="False"  Width="700" >
-				<views:ResSettings x:Name="res" />
+			<tk:BladeItem x:Name="TradeBlade" Header="Trade Settings" IsOpen="False"  Width="800" >
+				<cnv:TradeSettingsControl x:Name="res" />
 			</tk:BladeItem>
 			<tk:BladeItem x:Name="TagsBlade" Header="Tags" IsOpen="False">
 				<StackPanel>
