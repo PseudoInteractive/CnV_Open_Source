@@ -69,6 +69,10 @@
 		</StackPanel>
 
 		<TextBlock Grid.Row="1" Grid.Column="1"  Text="{x:Bind winRatioS,Mode=OneWay}" Style="{StaticResource TextBlockMedium}" HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Center"  />
-		<Button Grid.Row="1" Grid.Column="1" Content="Calc" Click="CalcClick" HorizontalAlignment="Right" Margin="0,0,12,0" />
+		<StackPanel Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2"  HorizontalAlignment="Stretch">
+			<Button  Content="City=>Def" Click="CityToDef"  Margin="0,0,12,0" />
+			<Button  Content="City=>Off" Click="CityToOff"  Margin="0,0,12,0" />
+			<Button  Content="Calc" Click="CalcClick"  Margin="0,0,12,0" />
+			</StackPanel>
 	</Grid>
 </cnv:DialogG>

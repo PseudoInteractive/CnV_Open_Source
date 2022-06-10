@@ -28,6 +28,7 @@ namespace CnV
 		internal CombatTroopItem [] attackers;
 		internal CombatTroopItem [] defenders;
 		internal float winRatio;
+		internal override bool closeOnCitySwitch => false;
 		internal string winRatioS => $"Attack Ratio: {winRatio}";
 		internal int wallLevel;
 		internal float nightProtection;
@@ -83,11 +84,11 @@ namespace CnV
 		private void CalcClick(object sender,RoutedEventArgs e)
 		{
 			var b = new BattleReport();
-			b.attacker = new ArmyResult(new Army(null,default,default,default,default,default,(ArmyType)attackType,new(attackers.Where(i => i.count > 0).Select(i => new TroopTypeCount(i.type,i.count))),
+			b.attacker = new ArmyResult(new Army(null,Sim.simTime + ServerTime.secondsPerHour,Sim.simTime,default,default,default,(ArmyType)attackType,new(attackers.Where(i => i.count > 0).Select(i => new TroopTypeCount(i.type,i.count))),
 				false));
 			b.defenders = new[] { new ArmyResult(new TroopTypeCounts(defenders.Where(i => i.count > 0).Select(i => new TroopTypeCount(i.type,i.count)))) };
 			b.nightProtection = nightProtection *0.01f;
-			var rv = CombatCalc.Go(b,City.GetBuild().postSlots,
+			var rv = CombatCalc.Go(b,defenders.Select(a => (ushort)a.towerSlots).ToArray(),
 
 			wallLevel:(byte)wallLevel,(uint)City.GetBuild().cid + Sim.simTime.seconds*1111u);
 			for(var  i = ttZero;i<Troops.ttCount;++i)
@@ -99,6 +100,17 @@ namespace CnV
 			}
 			winRatio = rv;
 			OnPropertyChanged();
+		}
+
+		private void CityToDef(object sender,RoutedEventArgs e) {
+			var c = City.GetBuild();
+			defenders = c.troopsOwned.Select(a=> new CombatTroopItem(){city =c,type=a.t, count=a.c }).ToArray();
+		}
+
+		private void CityToOff(object sender,RoutedEventArgs e) {
+					var c = City.GetBuild();
+			attackers = c.troopsOwned.Select(a=> new CombatTroopItem(){city =c,type=a.t, count=a.c }).ToArray();
+	
 		}
 	}
 	internal class CombatTroopItem:INotifyPropertyChanged
