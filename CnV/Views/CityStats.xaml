@@ -245,7 +245,7 @@
 							<MenuFlyout>
 								<MenuFlyoutItem Text="Recruit.." Click="EnlistmentClick" />
 								<MenuFlyoutItem Text="Auto Recruit.." Click="RecruitTargetsClick" />
-								<MenuFlyoutItem Text="Amulet.." Click="AmuletClick" />
+								<MenuFlyoutItem Text="Distraint.." Click="AmuletClick" />
 								<MenuFlyoutItem Text="Dismiss.." Click="DismissClick" />
 							</MenuFlyout>
 						</Button.Flyout>

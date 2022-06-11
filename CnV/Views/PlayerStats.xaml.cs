@@ -96,27 +96,27 @@ namespace CnV
 			{
 				RefineDialogue.ShowInstance();
 			});
-			flyout.AddItem("Toolkit..",Symbol.OutlineStar,() =>
+			flyout.AddItem("Crate..",Symbol.OutlineStar,() =>
 			{
 				CityUI.Show(Artifact.ArtifactType.toolkit,sender);
 			});
-			flyout.AddItem("Chest..",Symbol.OutlineStar,() =>
+			flyout.AddItem("Pan..",Symbol.OutlineStar,() =>
 			{
 				CityUI.Show(Artifact.ArtifactType.chest,sender);
 			});
-			flyout.AddItem("Saw..",Symbol.OutlineStar,() =>
+			flyout.AddItem("Handsaw..",Symbol.OutlineStar,() =>
 			{
 				CityUI.Show(Artifact.ArtifactType.saw,sender);
 			});
-			flyout.AddItem("Chisel..",Symbol.OutlineStar,() =>
+			flyout.AddItem("Adze..",Symbol.OutlineStar,() =>
 			{
 				CityUI.Show(Artifact.ArtifactType.chisel,sender);
 			});
-			flyout.AddItem("Crucible..",Symbol.OutlineStar,() =>
+			flyout.AddItem("Cabochon..",Symbol.OutlineStar,() =>
 			{
 				CityUI.Show(Artifact.ArtifactType.crucible,sender);
 			}); 
-			flyout.AddItem("Hoe..",Symbol.OutlineStar,() =>
+			flyout.AddItem("Maqlu..",Symbol.OutlineStar,() =>
 			{
 				CityUI.Show(Artifact.ArtifactType.Hoe,sender);
 			});

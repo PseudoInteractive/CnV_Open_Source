@@ -46,6 +46,8 @@
 		<Grid.RowDefinitions>
 			<RowDefinition Height="auto"/>
 			<RowDefinition Height="auto"/>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="auto"/>
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="*"/>
@@ -68,8 +70,8 @@
                                         SmallChange="1" LargeChange="10000" Description="Night Protection" />
 		</StackPanel>
 
-		<TextBlock Grid.Row="1" Grid.Column="1"  Text="{x:Bind winRatioS,Mode=OneWay}" Style="{StaticResource TextBlockMedium}" HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Center"  />
-		<StackPanel Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2"  HorizontalAlignment="Stretch">
+		<TextBlock Grid.Row="2" Grid.Column="1"  Text="{x:Bind winRatioS,Mode=OneWay}" Style="{StaticResource TextBlockMedium}" HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Center"  />
+		<StackPanel Orientation="Horizontal" Grid.Row="3" Grid.ColumnSpan="2"  HorizontalAlignment="Stretch">
 			<Button  Content="City=>Def" Click="CityToDef"  Margin="0,0,12,0" />
 			<Button  Content="City=>Off" Click="CityToOff"  Margin="0,0,12,0" />
 			<Button  Content="Calc" Click="CalcClick"  Margin="0,0,12,0" />

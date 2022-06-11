@@ -104,13 +104,38 @@ namespace CnV
 
 		private void CityToDef(object sender,RoutedEventArgs e) {
 			var c = City.GetBuild();
-			defenders = c.troopsOwned.Select(a=> new CombatTroopItem(){city =c,type=a.t, count=a.c }).ToArray();
+			for(int i = 0;i<Troops.ttCount;++i)
+			{
+				defenders[i].count =0;
+				
+			}
+			foreach(var tt in c.troopsOwned) {
+				defenders[tt.t].count = tt.c;
+			}
+			var towers = c.postSlots;
+			for(int i = 0;i<Troops.ttCount;++i) {
+				defenders[i].towerSlots = towers[i];
+				defenders[i].OnPropertyChanged();
+			}
+			wallLevel = c.wallLevel;
+
+			OnPropertyChanged();
 		}
 
 		private void CityToOff(object sender,RoutedEventArgs e) {
 					var c = City.GetBuild();
-			attackers = c.troopsOwned.Select(a=> new CombatTroopItem(){city =c,type=a.t, count=a.c }).ToArray();
-	
+			for(int i = 0;i<Troops.ttCount;++i)
+			{
+				attackers[i].count =0;
+				
+			}
+			foreach(var tt in c.troopsOwned) {
+				attackers[tt.t].count = tt.c;
+			}
+			for(int i = 0;i<Troops.ttCount;++i) {
+				attackers[i].OnPropertyChanged();
+			}
+			OnPropertyChanged();
 		}
 	}
 	internal class CombatTroopItem:INotifyPropertyChanged

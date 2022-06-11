@@ -102,7 +102,7 @@ using static GameClient;
 							removeMe = i;
 						}
 					}
-					// Hack:  Just remove one per frame, we'll get the rest next time,
+					// Just remove one per frame, we'll get the rest next time,
 					if(removeMe != -1)
 						viewHovers.RemoveAt(removeMe);
 

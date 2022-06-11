@@ -29,6 +29,7 @@ using Windows.ApplicationModel.DataTransfer;
 using static CnV.CityStats;
 using EnumsNET;
 using static CnV.BuildQueueItem;
+using static CnV.CnVEventUseArtifacts;
 
 namespace CnV
 {
@@ -980,7 +981,7 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 			args.Handled    = true;
 			var flyout = new MenuFlyout();
 			
-			flyout.AddItem("Amulet..",Symbol.OutlineStar,() =>
+			flyout.AddItem("Distraint..",Symbol.OutlineStar,() =>
 			{
 				CityUI.Show( Artifact.ArtifactType.amulet, sender);
 			});
@@ -1160,7 +1161,7 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 			flyout.AddItem("Remove Invalid..",Symbol.Bullets,instance.RemoveInvalidBuildQueueItems);
 
 			}
-			flyout.AddItem("Medallion..",Symbol.OutlineStar,() =>
+			flyout.AddItem("Worker..",Symbol.OutlineStar,() =>
 			{
 				CityUI.Show( Artifact.ArtifactType.medallion, sender);
 			});
@@ -1487,8 +1488,8 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 									CnVEventReturnTroops.TryReturn(army,default,true);
 							}
 
-							if(!AppS.isTest)
-								(new CnVEventUseArtifacts(city.c) { artifactId = (ushort)artifact,count = (ushort)toUse,aux=id, flags = army.arrived ? CnVEventUseArtifacts.Flags.noEffect : 0 }).EnqueueAsap();
+							
+								(new CnVEventUseArtifacts(city.c) { artifactId = (ushort)artifact,count = (ushort)toUse,aux=id, flags = army.arrived.Switch(Flags.none,Flags.noEffect) | AppS.isTest.Switch(Flags.none,Flags.dontRemoveArtifacts|Flags.dontRemoveKarma) }).EnqueueAsap();
 
 						}
 						catch(Exception _ex) {

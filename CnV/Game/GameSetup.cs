@@ -147,44 +147,69 @@ namespace CnV
 				ShellPage.WorkEnd();
 
 				if(Player.me.allianceId == 0) {
-					const AllianceId allianceOffset = 4;
-					const AllianceId allianceCount = 2;
+					const AllianceId aCQ = 4;
+					const AllianceId aUN = 7;
+					const AllianceId aPX = 8;
+					
 					AllianceId allianceId;
 					AllianceTitle title;
 					switch(Player.me.pid ) {
-						case 1049:  // Workaholic
-							allianceId = allianceOffset+1;
-							title = AllianceTitle.leader;
-							break;
-						case 1054:  // popov
-							allianceId = allianceOffset+1;
-							title = AllianceTitle.officer;
-							break;
+						//case 1049:  // Workaholic
+						//	allianceId = allianceOffset+1;
+						//	title = AllianceTitle.leader;
+						//	break;
+						//case 1054:  // popov
+						//	allianceId = allianceOffset+1;
+						//	title = AllianceTitle.officer;
+						//	break;
 						case 1056:  // Vindu
-							allianceId = allianceOffset;
+							allianceId = aCQ;
 							title = AllianceTitle.secondLeader;
 							break;
 						case 1034: // coolasice
-							allianceId = allianceOffset;
+							allianceId = aCQ;
 							title = AllianceTitle.leader;
 							break;
-						case 1006: // tlgger
-							allianceId = allianceOffset;
+						case 1051: // MonkeySuit
+							allianceId = aCQ;
 							title = AllianceTitle.officer;
 							break;
-						case 1012: // tingwing
-							allianceId = allianceOffset+1;
+						case 1008: // juan
+							allianceId = aPX;
+							title = AllianceTitle.leader;
+							break;
+						case 1053: // facetrolled
+							allianceId = aPX;
 							title = AllianceTitle.secondLeader;
 							break;
+						//case 1006: // tlgger
+						//	allianceId = allianceOffset;
+						//	title = AllianceTitle.officer;
+						//	break;
+						case 1012: // tingwing
+							allianceId = aPX;
+							title = AllianceTitle.secondLeader;
+							break;
+						case 1024: // avatar
+							allianceId = aUN;
+							title = AllianceTitle.secondLeader;
+							break;
+						case 1058: // OhDave
+							allianceId = aUN;
+							title = AllianceTitle.leader;
+							break;
 						default: {
-								var a0 = Alliance.all[allianceOffset];
-								var a1 = Alliance.all[allianceOffset+1];
-								if(a0.playerCount < a1.playerCount) 
+								var a0 = Alliance.all[aCQ];
+								var a1 = Alliance.all[aUN];
+								var a2 = Alliance.all[aPX];
+								if(a0.playerCount < a1.playerCount.Min(a2.playerCount) ) 
 									allianceId = a0.id;
-									else
-										allianceId = a1.id;
-									title = AllianceTitle.member;
-									break;
+								else if(a1.playerCount <= a2.playerCount ) 
+									allianceId=a1.id;
+								else
+									allianceId = a2.id;
+								title = AllianceTitle.member;
+								break;
 
 
 							}
