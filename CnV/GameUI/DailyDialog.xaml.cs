@@ -57,7 +57,7 @@ namespace CnV
 			while( rv.artifacts.Any() ) {
 				var art = rv.artifacts.First();
 				rv.artifacts.RemoveAt(0);
-				ClaimArtifact(art);
+				rv.ClaimArtifact(art);
 				AppS.MessageBox($"Auto Claimed: {art.name}",hero: art.imageUrl);
 				await Task.Delay(1000);
 			}
@@ -87,12 +87,12 @@ namespace CnV
 			ClaimArtifact(art);
 			if(artifacts.Count == 0) {
 				Hide(true);
-				AppS.QueueIdleTask(DailyRewardTask,5000);
+				
 			}
 
 		}
 
-		private static void ClaimArtifact(Artifact art) {
+		private  void ClaimArtifact(Artifact art) {
 			try {
 				SocketClient.DeferSendStart();
 				new CnVEventPurchaseArtifacts((ushort)art.id,(ushort)1,Player.active.id,free: true).EnqueueAsap();
@@ -108,6 +108,10 @@ namespace CnV
 			}
 			finally {
 				SocketClient.DeferSendEnd();
+			}
+			if(artifacts.Count == 0) {
+				
+				AppS.QueueIdleTask(DailyRewardTask,60*1000);
 			}
 		}
 
@@ -128,7 +132,7 @@ namespace CnV
 			{
 				var rnd = new XXRand(Sim.simTime.seconds);
 				await ShowInstance(Artifact.GetArtifactDrop(-1,ref rnd),Artifact.GetArtifactDrop(-1,ref rnd),Artifact.GetForPlayerRank(Artifact.ArtifactType.zirconia));
-				DailyRewardTask();
+			//	DailyRewardTask();
 
 			}
 			);

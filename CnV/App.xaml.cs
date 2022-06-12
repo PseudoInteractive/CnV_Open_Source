@@ -625,7 +625,7 @@ namespace CnV
 						// packages deploy. 
 					//	Trace("init start");
 						await Task.Run(() => DeploymentManager.Initialize());
-						Trace("init end");
+						//Trace("init end");
 
 					}
 
@@ -665,12 +665,12 @@ namespace CnV
 				//typeof(Telerik.UI.Xaml.Controls.RadDataForm).Assembly.GetType("Telerik.UI.Xaml.Controls.TelerikLicense").GetField("messageDisplayed",BindingFlags.NonPublic|BindingFlags.Static).SetValue(null,true,BindingFlags.Static|BindingFlags.NonPublic,null,null);
 
 			//	typeof(Syncfusion.Licensing.SyncfusionLicenseProvider).Assembly.GetType("SyncfusionLicenseProvider").GetMember("ValidateLicense",BindingFlags.Public|BindingFlags.Static)=(null,true,BindingFlags.Static|BindingFlags.Public,null,null);
-			Trace("here");
+			Log("here");
 				Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("NjA1NzY5QDMyMzAyZTMxMmUzMGZSTWpQWEpTL3N6TUVVcUlaTitqTTBoRTltdS9PenVzWGNMVnZkWlM1QVk9;NRAiBiAaIQQuGjN/V0Z+XU9EaFtFVmJLYVB3WmpQdldgdVRMZVVbQX9PIiBoS35RdEVnWXtccHZUQ2VcVUx/;NjA1NzcxQDMyMzAyZTMxMmUzMEE5QXBhZnJQaUpncnlwNEMvS2tkOThkL3lBaVFXZkQ4SXpqWlFsNkdObEk9;NjA1NzcyQDMyMzAyZTMxMmUzMENLK01WZjViM0xXU0svRU1STnFteXNhVm9NcHMydXFjN21Hc0FwcnhOaEE9");
 
 				if(!wasRunning)
 				{
-					Trace("load");
+					Log("load");
 					await Sim.LoadJsons();
 				}
 				const bool isInteractive = true;

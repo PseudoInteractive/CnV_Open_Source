@@ -23,8 +23,8 @@
 		<AppxBundlePlatforms>x64</AppxBundlePlatforms>
 		<HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
 		<AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
-		<WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
-		<ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
+		<WindowsAppSDKSelfContained>false</WindowsAppSDKSelfContained>
+		<ErrorOnDuplicatePublishOutputFiles>true</ErrorOnDuplicatePublishOutputFiles>
 		<Configurations>Debug;Release;SinglePlayer</Configurations>
 	</PropertyGroup>
   <ItemGroup>
@@ -830,9 +830,9 @@
 	    <CopyLocalSatelliteAssemblies></CopyLocalSatelliteAssemblies>
 	  </ProjectReference>
 	</ItemGroup>
-	<Target Name="_RemoveFrameworkReferences" BeforeTargets="_ConvertItems;_CalculateInputsForGenerateCurrentProjectAppxManifest">
+	<!--<Target Name="_RemoveFrameworkReferences" BeforeTargets="_ConvertItems;_CalculateInputsForGenerateCurrentProjectAppxManifest">
 		<ItemGroup>
 			<FrameworkSdkReference Remove="@(FrameworkSdkReference)" Condition="$([System.String]::Copy('%(FrameworkSdkReference.SDKName)').StartsWith('Microsoft.WindowsAppRuntime.'))" />
 		</ItemGroup>
-	</Target>
+	</Target>-->
 </Project>
