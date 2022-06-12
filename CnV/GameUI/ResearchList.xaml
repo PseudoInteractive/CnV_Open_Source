@@ -31,7 +31,7 @@
 			<TextBlock Text="{x:Bind quest.d, Mode=OneWay}" />
 
 			<TextBlock Grid.Row="1" Text="{x:Bind quest.step.benefit,Mode=OneWay}" Style="{StaticResource TextBlockMedium}" TextWrapping="Wrap" />
-			<TextBlock Grid.Row="2" Text="{x:Bind quest.step.required.FormatCost(),Mode=OneWay}" Style="{StaticResource BaseTextBlockStyleWrap}" />
+			<TextBlock Grid.Row="2" Text="{x:Bind quest.step.FormatCost(),Mode=OneWay}" Style="{StaticResource BaseTextBlockStyleWrap}" />
 
 
 			<Grid Grid.Row="4" >

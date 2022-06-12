@@ -121,12 +121,12 @@
 						  OffContent="Once" />
 
 			<NumberBox 
-								  Header="Max Triari Ratio"
+								  Header="Max Pikemen Ratio"
 								  Margin="6,2,6,2"
 								  Value="{x:Bind cnv:Settings.raidMaxTriariRatio,Mode=TwoWay}"
 								  ValueChanged="SomethingChanged"
 				Style="{StaticResource NumberBoxRightAlignPositive}"
-							ToolTipService.ToolTip="Sometimes you have many triari at home (maybe a training tower hit level 10).  Sending them to raid without others to protect the is not always the best idea.  This limits the ratio of triari to other troops when sending raids" />
+							ToolTipService.ToolTip="Sometimes you have many Pikemen at home (maybe a training tower hit level 10).  Sending them to raid without others to protect the is not always the best idea.  This limits the ratio of triari to other troops when sending raids" />
 			<NumberBox 
 								  Header="Reserve Commands"
 								  Margin="6,2,6,2"

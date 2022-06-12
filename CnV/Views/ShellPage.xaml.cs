@@ -534,10 +534,10 @@ namespace CnV.Views
 					await CnVSignin.SignOut();
 
 				}
-				if(Program.appAlreadyRunning) {
-					var a = await AppS.DoYesNoBox(title:"Conquest and Virtue already running",text:"Please close all game windows, of if you see none, restart computer",
-								yes: "Close",
-								no: "Ignore"							
+				if(AppS.appAlreadyRunning) {
+					var a = await AppS.DoYesNoBox(title:"Conquest and Virtue is already running",text:"Please close all game windows, of if you see none, restart computer",
+								yes: "Exit",
+								no: "Closed Others"							
 
 								);
 								if(a != 0) {

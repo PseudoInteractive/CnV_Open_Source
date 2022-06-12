@@ -35,9 +35,9 @@
 				<tk:WrapPanel Orientation="Horizontal" HorizontalSpacing="8"
 						   Margin="4">
 					<TextBox x:Name="rsInf" Header="Recruit Inf"  Style="{StaticResource RightAlignBox}"  />
-					<TextBox x:Name="rtVanq" Header="Vanq" Style="{StaticResource RightAlignBox}"  />
+					<TextBox x:Name="rtVanq" Header="Warrior" Style="{StaticResource RightAlignBox}"  />
 					<TextBox x:Name="rtRanger" Header="Ranger" Style="{StaticResource RightAlignBox}"  />
-					<TextBox x:Name="rtTriari" Header="Triari"  Style="{StaticResource RightAlignBox}"  />
+					<TextBox x:Name="rtTriari" Header="Pikemen"  Style="{StaticResource RightAlignBox}"  />
 				</tk:WrapPanel>
 			</Border>
 			<Border Style="{StaticResource BorderReveal}">

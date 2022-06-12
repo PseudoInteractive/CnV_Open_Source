@@ -1336,6 +1336,13 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 					}
 				}
 				else {
+					if(!army.isReturn) {
+					flyout.AddItem("Return immediately",Symbol.Undo,() =>
+					{
+						CnVEventReturnTroops.TryReturn(army,default,false,isResume:false,isSlow:false);
+					});
+
+					}
 					flyout.AddItem("Resume raiding",Symbol.Redo,() =>
 					{
 						CnVEventReturnTroops.TryReturn(army,default,false,isResume:true,isSlow:false);

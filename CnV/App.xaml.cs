@@ -483,12 +483,41 @@ namespace CnV
 					
 					IntPtr hWnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
 					WindowId myWndId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
-					AppS.appWindow= AppWindow.GetFromWindowId(myWndId);
-					
-					InitAppCenter(args.Arguments);
 
-					AppS.appWindow.Title = $"Conquest and Virtue Alpha sign in to Discord (version {AppS.currentVersion})";
-					AppS.appWindow.SetIcon("assets\\cnv.ico");
+					AppS.appWindow= AppWindow.GetFromWindowId(myWndId);
+					try {
+
+						AppInstance keyInstance = AppInstance.FindOrRegisterForKey("cnv");
+                    
+
+                        // If we successfully registered the file name, we must be the
+                        // only instance running that was activated for this file.
+                        if (keyInstance.IsCurrent)
+                        {
+                            // Report successful file name key registration.
+                        
+
+                            // Hook up the Activated event, to allow for this instance of the app
+                            // getting reactivated as a result of multi-instance redirection.
+                         //   keyInstance.Activated += OnActivated;
+                        }
+                        else
+                        {
+							AppS.appAlreadyRunning=true;
+    //                        isRedirect = true;
+     //                       RedirectActivationTo(args, keyInstance);
+                        }
+
+
+
+						InitAppCenter(args.Arguments);
+
+						AppS.appWindow.Title = $"Conquest and Virtue Alpha sign in to Discord (version {AppS.currentVersion})";
+						AppS.appWindow.SetIcon("assets\\cnv.ico");
+					}
+					catch (Exception ex) {
+						Log(ex);
+					}
 					//				
 					//				window.SetTitleBar
 					//ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
@@ -614,17 +643,18 @@ namespace CnV
 		private async Task OnLaunchedOrActivated(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
 		{
 
-			try {
+			
 				try {
+				var status = DeploymentManager.GetStatus();
 					//Trace($"{DeploymentManager.GetStatus().Status}");
-					if(DeploymentManager.GetStatus().Status != DeploymentStatus.Ok) {
+					if(status.Status != DeploymentStatus.Ok) {
 						//	// Initialize does a status check, and if the status is not Ok it will attempt to get
 						//	// the WindowsAppRuntime into a good state by deploying packages. Unlike a simple
 						//	// status check, Initialize can sometimes take several seconds to deploy the packages.
 						//	// These should be run on a separate thread so as not to hang your app while the
 						// packages deploy. 
 					//	Trace("init start");
-						await Task.Run(() => DeploymentManager.Initialize());
+						await Task.Run(() => DeploymentManager.Initialize(new DeploymentInitializeOptions() { ForceDeployment=true}));
 						//Trace("init end");
 
 					}
@@ -635,7 +665,7 @@ namespace CnV
 
 				}
 
-
+			try {
 
 #if DEBUG
 				//				this.DebugSettings.FailFastOnErrors = false;

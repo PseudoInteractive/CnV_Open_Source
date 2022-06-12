@@ -25,7 +25,7 @@ namespace CnV
 #if DISABLE_XAML_GENERATED_MAIN
 	public static class Program
 	{
-		public static bool appAlreadyRunning;
+		
 
 		[global::System.Runtime.InteropServices.DllImport("Microsoft.ui.xaml.dll")]
 		private static extern void XamlCheckProcessRequirements();

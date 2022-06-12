@@ -17,6 +17,7 @@
 		<AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
 		<GenerateAppInstallerFile>False</GenerateAppInstallerFile>
 		<TieredCompilation>True</TieredCompilation>
+		<PublishProfile>Properties\PublishProfiles\win10-$(Platform).pubxml</PublishProfile>
 		<AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
 		<!--<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>-->
 		<AppxBundle>Always</AppxBundle>
@@ -656,6 +657,7 @@
 		<None Remove="GameUI\QuestList.xaml" />
 		<None Remove="GameUI\RecruitDialog.xaml" />
 		<None Remove="GameUI\RecruitTargetDialog.xaml" />
+		<None Remove="Strings\en-us\Resources.resw" />
 		<None Remove="GameUI\RefineDialogue.xaml" />
 		<None Remove="GameUI\ResearchList.xaml" />
 		<None Remove="GameUI\ResearchPurchase.xaml" />
@@ -745,7 +747,7 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
 		<Optimize>False</Optimize>
 		<WarningLevel>4</WarningLevel>
-		<DefineConstants>$(DefineConstants);CNV;CNVCLIENT;APPCENTER;DISABLE_XAML_GENERATED_MAIN</DefineConstants>
+		<DefineConstants>$(DefineConstants);CNV;CNVCLIENT;APPCENTER</DefineConstants>
 		<Deterministic>True</Deterministic>
 		<FileAlignment>4096</FileAlignment>
 		<CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
@@ -760,7 +762,7 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='SinglePlayer|x64'">
 		<Optimize>False</Optimize>
 		<WarningLevel>4</WarningLevel>
-    <DefineConstants>$(DefineConstants);CNV;CNVCLIENT;APPCENTER;DISABLE_XAML_GENERATED_MAIN;DEBUG</DefineConstants>
+    <DefineConstants>$(DefineConstants);CNV;CNVCLIENT;APPCENTER;DEBUG</DefineConstants>
 		<Deterministic>True</Deterministic>
 		<FileAlignment>4096</FileAlignment>
 		<CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
@@ -775,7 +777,7 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
 		<Optimize>True</Optimize>
 		<WarningLevel>4</WarningLevel>
-		<DefineConstants>$(DefineConstants);CNV;CNVCLIENT;APPCENTER;DISABLE_XAML_GENERATED_MAIN</DefineConstants>
+		<DefineConstants>$(DefineConstants);CNV;CNVCLIENT;APPCENTER</DefineConstants>
 		<Deterministic>True</Deterministic>
 		<FileAlignment>4096</FileAlignment>
 		<LayoutDir />

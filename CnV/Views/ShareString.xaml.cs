@@ -55,8 +55,8 @@ namespace CnV.Views
 		public event PropertyChangedEventHandler PropertyChanged;
 		#endregion
 
-		protected override string title => City.GetOrAdd(cid).nameAndRemarks;
-
+		protected override string title => city.nameAndRemarks;
+		private City city => City.Get(cid);
 		public static bool loadedLayouts;
 		static public ShareString instance;
 		private bool tradeStale;
@@ -246,7 +246,7 @@ namespace CnV.Views
 						   {
 							   if(setTags)
 							   {
-								   await SetCityTags(cid);
+								   await SetCityTags();
 								   wantInfoUpdate=true;
 								   //await CitySettings.SetCitySettings(City.build, setRecruit: true);
 								   if(Settings.setRecruit)
@@ -407,7 +407,7 @@ namespace CnV.Views
 
 		private async void UseBuildingsClick(object sender,RoutedEventArgs e)
 		{
-			var s = City.GetBuild();
+			var s =city;
 			shareString.Text=City.LayoutToShareString(await City.LayoutFromBuildings(s.postQueueBuildings),s.isOnWater);
 		}
 		public void SetCheckboxesFromTags(Tags tags)
@@ -505,9 +505,12 @@ namespace CnV.Views
 				{
 					if(i.shareStringWithJson != null)
 					{
-						TagsBlade.IsOpen=true;
+						
 						var setTags = (await AppS.DoYesNoBox("Tags from ShareString","Set tags?") == 1);
 						var setRes = (await AppS.DoYesNoBox("Trade Settings from ShareString","Set Trade Settings?") == 1);
+						if(setTags) {
+							TagsBlade.IsOpen=true;
+						}
 						if(setRes)
 						{
 							await SetupTradeDefaults();
@@ -516,7 +519,8 @@ namespace CnV.Views
 						SetFromSS(i.shareStringWithJson,setTags: setTags,setRes: setRes);
 
 						NameBlade.IsOpen=true;
-						AutobuildBlade.IsOpen=true;
+						if(!city.autobuild)
+							AutobuildBlade.IsOpen=true;
 					}
 					else
 					{
@@ -594,10 +598,10 @@ namespace CnV.Views
 		   });
 		}
 
-		public async Task SetCityTags(int cid)
+		public async Task SetCityTags()
 		{
-			City city = City.GetOrAddCity(cid);
 			var tags = await TagsFromCheckboxes();
+			City city = this.city;
 			city.info.tags = tags;
 			//city.remarks = TagHelper.ApplyTags(tags,city.remarks);
 			//		Post.Send("includes/sNte.php", $"a={HttpUtility.UrlEncode(tags, Encoding.UTF8)}&b=&cid={cid}");
@@ -627,7 +631,7 @@ namespace CnV.Views
 			if(tradeStale)
 			{
 				tradeStale=false;
-				var city = City.Get(cid);
+				var city = this.city;
 			//	await TradeOverview.UpdateTradeStuffIfNeeded().ConfigureAwait(false);
 				var tags = await TagsFromCheckboxes();
 				var isHubOrStorage = tags.HasFlag(Tags.Hub) | tags.HasFlag(Tags.Storage) | city.isHubOrStorage;
@@ -675,7 +679,7 @@ namespace CnV.Views
 		{
 			var item = sender as MenuFlyoutItem;
 
-			var city = City.Get(cid);
+			var city = this.city;
 			string name0 = $"{city.cont:00} 1";
 			string name1 = ""; // default
 			var format = (int a) => a.ToString("D3");
@@ -754,7 +758,7 @@ namespace CnV.Views
 			// Pull name settings from City
 			if(toggleName.IsOn)
 			{
-				var city = City.Get(cid);
+				var city = this.city;
 				var tags = await TagsFromCheckboxes();
 				
 				bool isNew = TagHelper.IsNewOrCaptured(city)||city._cityName.IsNullOrEmpty();

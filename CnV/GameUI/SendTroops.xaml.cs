@@ -408,7 +408,7 @@ namespace CnV
 				}
 			
 
-			if(city.freeCommandSlots+1 < splits) {
+			if(city.freeCommandSlots < splits) {
 				if(verbose) AppS.MessageBox($"Out of command slots");
 				return (false, 0);
 			}
