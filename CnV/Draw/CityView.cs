@@ -525,7 +525,7 @@ namespace CnV
 							else {
 								if(currentBid != 0 && !IsBidRes(currentBid) && (currentBid != Building.bidCabin) ) {
 									// wrong building
-									DrawHoverMarker(bspot,Color.Maroon,0.5f);
+									DrawHoverMarker(bspot,Color.MidnightBlue,0.5f);
 								}
 
 							}

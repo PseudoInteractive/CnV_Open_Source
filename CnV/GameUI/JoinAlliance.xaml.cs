@@ -85,16 +85,19 @@ namespace CnV
 
 		//}
 
-		internal static  async Task Go(Player p,AllianceId sel,AllianceTitle title)
+		internal static  async Task Go(Player p,AllianceId allianceId,AllianceTitle title, bool confirm)
 		{
-		
+			if(confirm) {
+				if(await AppS.DoYesNoBox(title: allianceId == 0 ? "Leave Alliance" : $"Join {Alliance.Get(allianceId)}","Are you sure?") != 1)
+					return;
+			}
 			
-			var entity = new PlayerEntity(p.pid,p.id,World.id) { allianceId =sel,allianceTitle=(AllianceTitleAzure)title };
-			var t0= PlayerEntity.table.UpsertAsync(entity);
+			var entity = new PlayerEntity(p.pid,p.id,World.id) { allianceId =allianceId,allianceTitle=(AllianceTitleAzure)title };
+			await PlayerEntity.table.UpsertAsync(entity);
 			// Do we need a delay in here?
+			await AppS.WaitWithProgress(2000,"Join Alliance");
 
-			new CnVEventAlliance(p.id,sel,title).EnqueueAsap();
-			await t0;
+			new CnVEventAlliance(allianceId,p.id,title).EnqueueAsap();
 			await Task.Delay(1000);
 			await CnVChatClient.Reconnect();
 		}
@@ -103,15 +106,15 @@ namespace CnV
 		{
 			var i = e.ClickedItem as CnVEventAllianceInvite;
 			Hide(true);
-			Go(Player.active,i.allianceId,i.title);
+			Go(Player.active,i.allianceId,i.title,true);
 
 
 		}
 
-		private void LeaveAlliance(object sender,RoutedEventArgs e)
+		internal void LeaveAlliance(object sender,RoutedEventArgs e)
 		{
 			Hide(true);
-			Go(Player.active,0,0);
+			Go(Player.active,0,0,true);
 		}
 	}
 }

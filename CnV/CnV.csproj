@@ -118,7 +118,6 @@
 		<Compile Include="Draw\DrawX.cs" />
 		<Compile Include="Draw\StatsView.cs" />
 		<Compile Include="Draw\ViewStep.cs" />
-		<Compile Include="GameUI\AllianceDialog.xaml.cs" />
 		<Compile Include="GameUI\ArtifactDialogue.xaml.cs" />
 		<Compile Include="GameUI\Artifacts.xaml.cs" />
 		<Compile Include="GameUI\AutobuildDialog.xaml.cs" />
@@ -360,9 +359,6 @@
 		</Compile>
 	</ItemGroup>
 	<ItemGroup>
-		<Page Include="GameUI\AllianceDialog.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
 		<Page Include="GameUI\ArtifactDialogue.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
@@ -637,7 +633,6 @@
 	</ItemGroup>
 	<ItemGroup>
 		<None Remove="cnvCover.png" />
-		<None Remove="GameUI\AllianceDialog.xaml" />
 		<None Remove="GameUI\ArtifactDialogue.xaml" />
 		<None Remove="GameUI\Artifacts.xaml" />
 		<None Remove="GameUI\AutobuildDialog.xaml" />

@@ -157,7 +157,7 @@ namespace CnV
 			OnPropertyChanged();
 		}
 
-		public string recruitTime => city.CanRecruit(type) ? tt1.RecruitTimeRequired(city).Format() : string.Empty;
+		public string recruitTime => city.CanRecruit(type) ? $"{tt1.RecruitTimeRequired(city).Format()} ({tt1.RecruitTimeFractional(city):N2}s)" : string.Empty;
 		public event PropertyChangedEventHandler? PropertyChanged;
 		public void OnPropertyChanged(string? member = null)
 		{

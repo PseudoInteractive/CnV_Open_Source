@@ -83,13 +83,13 @@ namespace CnV.Views
 						  case 0:
 						  case 1: alliances.Add(Alliance.MyId); break;
 						  case 2:
-							  alliances.AddRange(from a in Alliance.all.Select(a=>a.id) where Alliance.GetPlayerDiplomacyWith(a) == Diplomacy.enemy select a);
+							  alliances.AddRange(from a in Alliance.all.Select(a=>a.id) where Alliance.GetPlayerDiplomacyWith(a) == Diplomacy.foe select a);
 							  break;
 						  case 3:
 							  alliances.AddRange(from a in Alliance.all.Select(a=>a.id) where a != 0 && a != Alliance.myId select a);
 							  break;
 						  case 4:
-							  alliances.AddRange(from a in Alliance.all.Select(a=>a.id) where Alliance.GetPlayerDiplomacyWith(a) == Diplomacy.allied select a);
+							  alliances.AddRange(from a in Alliance.all.Select(a=>a.id) where Alliance.GetPlayerDiplomacyWith(a) == Diplomacy.ally select a);
 							  break;
 						  case 5:
 							  alliances.Add(0);

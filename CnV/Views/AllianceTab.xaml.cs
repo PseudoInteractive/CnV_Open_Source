@@ -108,4 +108,41 @@ public sealed partial class AllianceTab:UserTab
 		base.SetupDataGrid(allianceGrid);
 		base.SetupDataGrid(playersGrid);
 	}
+
+	private void CellBeginEdit(object sender,Syncfusion.UI.Xaml.DataGrid.CurrentCellBeginEditEventArgs e) {
+		try {
+
+			var grid = sender as xDataGrid;
+			var row = e.RowColumnIndex.RowIndex;
+			var r = Syncfusion.UI.Xaml.DataGrid.GridIndexResolver.ResolveToRecordIndex(grid,row);
+
+			var rec = r>= 0 ? grid.View.Records[r] : null;
+			var alliance = rec.Data as Alliance;
+
+			if(e.Column.MappingName == nameof(Alliance.diplomacyWithPlayer)) {
+				//			var v = e.Column.
+				var strTitle = "Diplomacy";
+				if(alliance.isMine) {
+					e.Cancel=true;
+					AppS.MessageBox("You are always an ally with youself",title: strTitle);
+
+				}
+				else {
+					if(!(Player.me.allianceTitle>=AllianceTitle.secondLeader || AppS.isTest)) {
+						e.Cancel=true;
+						AppS.MessageBox("Must be second leader or above to set diplomacy",title: strTitle);
+
+					}
+					else {
+						AppS.MessageBox("Not yet implemented:  Diplomacy persistance",title: strTitle);
+
+					}
+				}
+			}
+		}
+		catch(Exception _ex) {
+			LogEx(_ex);
+			e.Cancel=true;
+		}
+	}
 }

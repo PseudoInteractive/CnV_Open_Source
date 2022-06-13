@@ -33,22 +33,30 @@
 							AutoGenerateRelations="False"
 							ShowToolTip="True"
 							FontStretch="Condensed"
-							
-							
+							EditTrigger="OnTap"
+							AllowEditing="True"
+					   CurrentCellBeginEdit="CellBeginEdit"
 							>
 
 
 			<sf:SfDataGrid.Columns >
 				<sf:GridTextColumn MappingName="name"/>
+				<sf:GridComboBoxColumn MappingName="diplomacyWithPlayer" 
+									   HeaderText="Diplomacy"
+									   ItemsSource="{x:Bind cnv:DiplomacyComboBoxSource.source}" Width="130" DisplayMemberPath="n" AllowEditing="True"  SelectedValuePath="d"
+									
+									
+										 
+										    />
 				<sf:GridTextColumn MappingName="abbreviation"/>
-				<sf:GridTextColumn MappingName="invite"/>
-				<sf:GridNumericColumn MappingName="playerCount"/>
-				<sf:GridNumericColumn MappingName="cityFaith"/>
-				<sf:GridNumericColumn MappingName="cityCount"/>
-				<sf:GridNumericColumn MappingName="points"  DisplayNumberFormat="N0" />
-				<sf:GridNumericColumn MappingName="ts"  DisplayNumberFormat="N0" />
-				<sf:GridNumericColumn MappingName="tsOffense"  DisplayNumberFormat="N0" HeaderText="Offense"/>
-				<sf:GridNumericColumn MappingName="tsDefense"  DisplayNumberFormat="N0" HeaderText="Defense"/>
+				<sf:GridTextColumn MappingName="invite" AllowEditing="False" />
+				<sf:GridNumericColumn MappingName="playerCount"  AllowEditing="False"/>
+				<sf:GridNumericColumn MappingName="cityFaith"  AllowEditing="False" />
+				<sf:GridNumericColumn MappingName="cityCount" AllowEditing="False" />
+				<sf:GridNumericColumn MappingName="points"  DisplayNumberFormat="N0"  AllowEditing="False" />
+				<sf:GridNumericColumn MappingName="ts"  DisplayNumberFormat="N0"  AllowEditing="False" />
+				<sf:GridNumericColumn MappingName="tsOffense"  DisplayNumberFormat="N0" HeaderText="Offense"  AllowEditing="False" />
+				<sf:GridNumericColumn MappingName="tsDefense"  DisplayNumberFormat="N0" HeaderText="Defense"  AllowEditing="False" />
 
 			</sf:SfDataGrid.Columns>
 			<sf:SfDataGrid.DetailsViewDefinition>

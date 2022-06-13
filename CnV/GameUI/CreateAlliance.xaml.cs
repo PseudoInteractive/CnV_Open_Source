@@ -53,9 +53,11 @@ namespace CnV
 			var alliance = new Alliance(name,abbreviation,(AllianceId)Alliance.all.Length,0ul);
 			await alliance.Upsert();
 			Hide(true);
+			await AppS.WaitWithProgress(2000,"Create Alliance");
+
 			AppS.MessageBox(title:$"Founded {name}",hero:"UI/menues/newsletter/misc_newsletter_img_alliance.png", lightDismiss:false);
 			await Alliance.UpdateAll();
-			await JoinAlliance.Go(Player.active,alliance.id,AllianceTitle.leader);
+			await JoinAlliance.Go(Player.active,alliance.id,AllianceTitle.leader,false);
 
 		}
 	}

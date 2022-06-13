@@ -38,6 +38,7 @@
 	- A calender and timeline showing recent events
 ## [6/12/22]
 	- Added building overlay markers:
-		- Maroon:  wrong building
+		- Blue:  wrong building
 		- Orange:  extra building
 	- Tapping Space will toggle overlays on and off
+	- Fixed:  In some cases you could use more commands slots than you had free
