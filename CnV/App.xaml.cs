@@ -105,7 +105,7 @@ namespace CnV
 		public static App instance;
 		public static string appLink = "cnv";
 
-		public static void InitAppCenter(string appArgs)
+		public static void InitAppCenter()
 		{
 #if APPCENTER
 			if(AAnalytics.initialized)
@@ -120,17 +120,17 @@ namespace CnV
 #if DEBUG
 			//AppCenter.LogLevel = LogLevel.Verbose;
 #endif
-			AppCenter.Configure("windowsdesktop=0b4c4039-3680-41bf-b7d7-685eb68e21d2");
-			AppCenter.Start(typeof(Analytics)
+//			AppCenter.Configure("windowsdesktop=0b4c4039-3680-41bf-b7d7-685eb68e21d2");
+			AppCenter.Start("0b4c4039-3680-41bf-b7d7-685eb68e21d2",typeof(Analytics)
 					   ,typeof(Crashes));
 			//	AppCenter.LogLevel = System.Diagnostics.Debugger.IsAttached ? Microsoft.AppCenter.LogLevel.Warn : Microsoft.AppCenter.LogLevel.None;
 		
 		
 			AAnalytics.initialized = true;
-			var args = AppInstance.GetCurrent().GetActivatedEventArgs();
-			AAnalytics.Track("Activate",new Dictionary<string,string> { { "kind",args.Kind.ToString() },
+		//	var args = AppInstance.GetCurrent().GetActivatedEventArgs();
+			//AAnalytics.Track("Activate",new Dictionary<string,string> { { "kind",args.Kind.ToString() },
 				
-				{"args" ,appArgs } });
+			//	{"args" ,appArgs } });
 			//await Task.WhenAll(
 //			Analytics.SetEnabledAsync(true);
 	//		Crashes.SetEnabledAsync(true);
@@ -510,7 +510,7 @@ namespace CnV
 
 
 
-						InitAppCenter(args.Arguments);
+					
 
 						AppS.appWindow.Title = $"Conquest and Virtue Alpha sign in to Discord (version {AppS.currentVersion})";
 						AppS.appWindow.SetIcon("assets\\cnv.ico");
@@ -819,7 +819,7 @@ namespace CnV
 				//	CoreApplication.MainView.CoreWindow.Closed+=CoreWindow_Closed;
 				//if(args!=null)
 				//	SystemInformation.TrackAppUse(args);
-				
+
 
 
 #if DEBUG
@@ -840,7 +840,8 @@ namespace CnV
 				//  UpdateTitleBarLayout(coreTitleBar);
 #endif
 
-
+				await Task.Delay(5000);
+				AppS.QueueOnUIThread( InitAppCenter );
 				// Set XAML element as a draggable region.
 				//          Window.Current.SetTitleBar(ShellPage.instance.AppTitleBar);
 			}

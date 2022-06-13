@@ -1053,7 +1053,11 @@ namespace CnV
 				return false;
 			switch(key)
 			{
-				case VirtualKey.Space: CityBuild.Click(cc, true); break;
+				case VirtualKey.Space: {
+						Settings.drawBuildingOverlays ^= true;
+						Note.Show($"Planner overlays: {Settings.drawBuildingOverlays}");
+						break;
+					}
 				case VirtualKey.Enter: CityBuild.Click(cc, false); break;
 				case Windows.System.VirtualKey.Left:
 					if(CityView.hovered.isNotNan)

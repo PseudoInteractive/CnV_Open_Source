@@ -336,11 +336,11 @@ namespace CnV.Views
 						   city.OnPropertyChanged();
 						   if(autobuild && LayoutBlade.IsOpen && city.isLayoutCustom && flags.HasFlag(SetupFlags.suggestAutobuild) )
 							   await DoTheStuff.Go(city,false,false);
-							if(cid == City.build)
-							{
-							   Sim.CityRefresh();
+							//if(cid == City.build)
+							//{
+							//   Sim.CityRefresh();
 
-							}
+							//}
 					   }
 					   return false;
 				   }

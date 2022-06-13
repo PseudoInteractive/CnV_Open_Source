@@ -16,7 +16,7 @@
 	- Planner tab shows resource production that would result from the layout with all level 10 buildings
 	- Status indicators in build queue telling you which items things are blocked and why
 	- Build Queue tooltips show resources required
-## 1.1.98 [4/24/2021]
+## 1.1.98 [4/24/2022]
 ## New: Player and alliance stats plots
 	- Click on certain stats (TS, Points, Raiding) in the player or alliance tabs to see charts plotting stats over time
 	- Double click on a data point (or click on a date at the bottom, which is easier to hit) to view what the world was like at that time
@@ -27,7 +27,7 @@
 	- When you want to exit Historic mode and resume play, press the "Play button" (in the time panel)
 	- Moving forward in time is fast, but moving back in time is slow.
 		- To find events in the past, go back extra far and then pan forward in time until you find what you want.
-## 1.1.98 [4/24/2021]
+## 1.1.98 [4/24/2022]
 	- City Guards have more support (you can recruit them)
 	- Temporarily disabling ministers is supported.  This blocks
 	 - Autobuild
@@ -36,3 +36,8 @@
 	 - Auto enlistment
 ## New Timeline Tab
 	- A calender and timeline showing recent events
+## [6/12/22]
+	- Added building overlay markers:
+		- Maroon:  wrong building
+		- Orange:  extra building
+	- Tapping Space will toggle overlays on and off

@@ -1,5 +1,4 @@
-﻿using CnV.Game;
-
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -105,9 +104,9 @@ namespace CnV
 			return CityPointToWC(new(c.x+delta.x,c.y+delta.y) );
 		}
 
-		public static (Vector2 c0, Vector2 c1) CityPointToQuad(BuildC bc, float additionalXScale = 1.0f,float yScale=1)
+		public static (Vector2 c0, Vector2 c1) CityPointToQuad(BuildC bc,float additionalXScale = 1.0f,float yScale = 1,float yOffset = 0)
 		{
-			var c = CityPointToWC(new(bc.x,bc.y) );
+			var c = CityPointToWC(new(bc.x,bc.y+yOffset) );
 			// There is no aspect ratio scaling for Y
 			var baseScale = (0.5f * cityTileGainX );
 			var dc = new Vector2(baseScale* additionalXScale, baseScale* yScale);
@@ -168,6 +167,7 @@ namespace CnV
 				int iAlpha = (cityAlpha * 255f).RoundToInt();
 				var postBuildings = build.postQueueBuildingsForRender;
 				var buildings = build.buildings;
+				
 				buildCityOrigin = build.cid.CidToWorldV();
 				// draw each building tile
 				var city =build;
@@ -177,7 +177,7 @@ namespace CnV
 				double simTime = simT;// ServerTime.NowToServerSeconds(); // includes fractional
 				// Walls and background
 				var cityWallSpan = new Vector2(0.5f*(23.0f/21.0f),0.5f*(23.0f/21.0f) * cityYAspectRatio);
-				var cityWallOrigin = new Vector2(buildCityOrigin.X+(2.0f/64f)*cityTileGainX,buildCityOrigin.Y+0.375f*cityTileGainY );
+				var cityWallOrigin = new Vector2(buildCityOrigin.X+(2.0f/64f)*cityTileGainX,buildCityOrigin.Y+0.125f*cityTileGainY );
 				var cityWall0 = cityWallOrigin - cityWallSpan;
 				var cityWall1 = cityWallOrigin + cityWallSpan;
 				{
@@ -209,7 +209,8 @@ namespace CnV
 						}
 						else
 						{
-							cur = city.GetLayoutBuilding(bspot);
+							
+							cur = Settings.drawBuildingOverlays ? city.GetLayoutBuilding(bspot) : city.GetLayoutBuildingOrRes(bspot);
 							next = cur;
 							//				overlay = city.postQueueBuildings[id];
 						}
@@ -518,7 +519,15 @@ namespace CnV
 							if(bid==0)
 							{
 								if(currentBid == Building.bidCabin)
-									continue; // leave it, it is fine
+									continue; // don't draw an x on every cabin
+								DrawHoverMarker(bspot,Color.DarkOrange,0.5f);								
+							}
+							else {
+								if(currentBid != 0 && !IsBidRes(currentBid) && (currentBid != Building.bidCabin) ) {
+									// wrong building
+									DrawHoverMarker(bspot,Color.Maroon,0.5f);
+								}
+
 							}
 
 
@@ -726,11 +735,11 @@ namespace CnV
 			var cs = CityPointToQuad(cc, 1.2f);
 			draw.AddQuad(Layer.cityActionIndicator, mat, cs.c0, cs.c1, new Color( cityDrawAlpha, cityDrawAlpha, cityDrawAlpha, cityDrawAlpha / 2).Scale(cScale),depth:zCityOverlay);
 		}
-		public static void DrawHoverMarker(BuildC cc,Color color)
+		public static void DrawHoverMarker(BuildC cc,Color color,float animationOffset = 0f)
 		{
 			Assert(isDrawing);
-			var cs = CityPointToQuad(cc,yScale:0.875f);
-			DrawRectOutlineShadow(Layer.effects,cs.c0,cs.c1,color,animationOffset:animationOffsets[cc]);
+			var cs = CityPointToQuad(cc, yScale:0.675f, yOffset:0.25f);
+			DrawRectOutlineShadow(Layer.effects,cs.c0,cs.c1,color,animationOffset:animationOffsets[cc]+animationOffset,zScale:0.25f,includeTop:false);
 		}
 		
 

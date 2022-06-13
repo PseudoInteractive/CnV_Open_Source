@@ -312,13 +312,13 @@ using static GameClient;
 	
 	public static Color GetShadowColor(this Color c)
 	{
-		return new Color((byte)(c.R * 0 / 4),(byte)(c.G * 0 / 4),(byte)(c.B * 0 / 4),(byte)240);
+		return new Color((byte)(c.R * 0 / 4),(byte)(c.G * 0 / 4),(byte)(c.B * 0 / 4),(byte)255);
 		//            (0.625f).Lerp(c, new Color(128, 0, 0, 0));
 		//            (0.625f).Lerp(c, new Color(128, 0, 0, 0));
 	}
 	public static Color GetShadowColorDark(this Color c)
 	{
-		return new Color((byte)(c.R * 0 / 4),(byte)(c.G * 0 / 4),(byte)(c.B * 0 / 4),(byte)240);
+		return new Color((byte)(c.R * 0 / 4),(byte)(c.G * 0 / 4),(byte)(c.B * 0 / 4),(byte)255);
 		//            (0.625f).Lerp(c, new Color(128, 0, 0, 0));
 		//            (0.625f).Lerp(c, new Color(128, 0, 0, 0));
 	}
