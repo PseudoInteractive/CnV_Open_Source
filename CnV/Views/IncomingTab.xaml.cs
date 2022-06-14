@@ -10,7 +10,13 @@ namespace CnV.Views
 
 	public sealed partial class IncomingTab:UserTab
 	{
-		public int typeFilter { get; set; }
+		internal Alliance.CityFilter filterTo = Alliance.CityFilter.allied;
+		
+		public int _filterTo {
+			get => (int)filterTo;
+			set => filterTo = (Alliance.CityFilter)value;
+		}
+
 		public static Spot lastSelected;
 		public static IncomingTab instance;
 
@@ -121,7 +127,7 @@ namespace CnV.Views
 			int forMe = 0;
 
 			ServerTime nextArrival = ServerTime.infinity;
-			foreach(var c in City.allianceCities) {
+			foreach(var c in City.alliedCities) {
 				foreach(var i in c.incoming) {
 					if(!i.isAttack)
 						continue;
@@ -163,14 +169,17 @@ namespace CnV.Views
 					PlayerStats.instance.UpdateIncomingText();
 					if(IncomingTab.IsVisible()) {
 						try {
-							var typeFilter = instance.typeFilter;
 							var includeInternal = instance.includeInternal;
+							var _targets = instance.filterTo switch {
+								Alliance.CityFilter.me => City.myCities,
+								Alliance.CityFilter.subs => City.subCities,
+								Alliance.CityFilter.allied => City.alliedCities,
+								_ => City.allianceCities,
+							};
 
-							var newItems = City.allianceCities.Where(w => w.testContinentFilter
+							var newItems = _targets.Where(w => w.testContinentFilter
 															&& w.HasIncomingAttacks(includeInternal)
-															&&(typeFilter == 2 ? w.pid == Player.myId
-															: typeFilter == 1 ? Settings.incomingWatch.Contains(w.playerName)|| w.pid == Player.myId
-															: true)).OrderBy(w => w.firstIncoming).ToArray();
+															).OrderBy(w => w.firstIncoming).ToArray();
 							//var sel = defenderGrid.SelectedItems.ToArray();
 							//++SpotTab.silenceSelectionChanges;
 

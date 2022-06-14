@@ -22,11 +22,8 @@
 			<RowDefinition />
 		</Grid.RowDefinitions>
 		<tk:WrapPanel>
-			<RadioButtons SelectedIndex="{x:Bind typeFilter,Mode=TwoWay}" MaxColumns="3" SelectionChanged="filterChanged" >
-				<x:String>Alliance</x:String>
-				<x:String>Watched</x:String>
-				<x:String>Me</x:String>
-			</RadioButtons>
+			<ComboBox Header="To" SelectedIndex="{x:Bind _filterTo,Mode=TwoWay}" SelectionChanged="filterChanged" ItemsSource="{x:Bind cnv:Alliance.cityFilterList}" />
+
 			<ToggleSwitch IsOn="{x:Bind includeInternal,Mode=TwoWay}" Header="Internal" OffContent="Exclude" OnContent="Include" Toggled="filterChanged" />
 			<Button Content="To Sheet" Click="ExportSheetsClick" />
 

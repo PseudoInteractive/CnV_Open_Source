@@ -23,6 +23,7 @@ namespace CnV.Views
 			{
 				Alliance.CityFilter.me => BossReport.reports.Where(a => a.playerId == Player.myId).ToArray(),
 				Alliance.CityFilter.subs => BossReport.reports.Where(a => Player.IsSubOrMe(a.playerId)).ToArray(),
+				Alliance.CityFilter.allied => BossReport.reports.Where(a => Alliance.PidToAlliance(a.playerId).AsAlliance().isAlliedWithPlayer ).ToArray(),
 				Alliance.CityFilter.alliance => BossReport.reports.Where(a => Alliance.PidToAlliance(a.playerId) == Alliance.myId).ToArray(),
 				_ => BossReport.reports.ToArray() // todo: filter
 			};

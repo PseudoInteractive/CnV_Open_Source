@@ -57,7 +57,7 @@ namespace CnV
 
 			AppS.MessageBox(title:$"Founded {name}",hero:"UI/menues/newsletter/misc_newsletter_img_alliance.png", lightDismiss:false);
 			await Alliance.UpdateAll();
-			await JoinAlliance.Go(Player.active,alliance.id,AllianceTitle.leader,false);
+			await Alliance.SetAlliance(Player.active,alliance.id,AllianceTitle.leader,false);
 
 		}
 	}

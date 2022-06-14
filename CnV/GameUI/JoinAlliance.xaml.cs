@@ -34,6 +34,7 @@ namespace CnV
 		internal static void ShowInstance()
 		{
 			var art = instance ?? new JoinAlliance();
+			art.UpdateTables.Visibility = AppS.isTest ? Visibility.Visible : Visibility.Collapsed;
 			var p = Player.active;
 			if(p.alliance.isValid)
 			{
@@ -85,28 +86,13 @@ namespace CnV
 
 		//}
 
-		internal static  async Task Go(Player p,AllianceId allianceId,AllianceTitle title, bool confirm)
-		{
-			if(confirm) {
-				if(await AppS.DoYesNoBox(title: allianceId == 0 ? "Leave Alliance" : $"Join {Alliance.Get(allianceId)}","Are you sure?") != 1)
-					return;
-			}
-			
-			var entity = new PlayerEntity(p.pid,p.id,World.id) { allianceId =allianceId,allianceTitle=(AllianceTitleAzure)title };
-			await PlayerEntity.table.UpsertAsync(entity);
-			// Do we need a delay in here?
-			await AppS.WaitWithProgress(2000,"Join Alliance");
-
-			new CnVEventAlliance(allianceId,p.id,title).EnqueueAsap();
-			await Task.Delay(1000);
-			await CnVChatClient.Reconnect();
-		}
+		
 
 		private void InviteClick(object sender,ItemClickEventArgs e)
 		{
 			var i = e.ClickedItem as CnVEventAllianceInvite;
 			Hide(true);
-			Go(Player.active,i.allianceId,i.title,true);
+			Alliance.SetAlliance(Player.active,i.allianceId,i.title,true);
 
 
 		}
@@ -114,7 +100,16 @@ namespace CnV
 		internal void LeaveAlliance(object sender,RoutedEventArgs e)
 		{
 			Hide(true);
-			Go(Player.active,0,0,true);
+			Alliance.SetAlliance(Player.active,0,0,true);
+		}
+
+		async void UpdateAllPlayerAllianceSettingsInTables(object sender,RoutedEventArgs e) {
+			foreach(var p in Player.all ) {
+				if(p.pid == 0)
+					continue;
+				var entity = new PlayerEntity(p.pid,p.id,World.id) { allianceId =p.allianceId,allianceTitle=(AllianceTitleAzure)p.allianceTitle };
+				await PlayerEntity.table.UpsertAsync(entity);
+			}
 		}
 	}
 }

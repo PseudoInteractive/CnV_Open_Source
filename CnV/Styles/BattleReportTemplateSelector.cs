@@ -21,7 +21,7 @@ namespace CnV.Styles
 
 			var dKill = report.dTsKill;
 			var aKill = report.aTsKill;
-			var swap = report.sourcePlayer.isInPlayerAlliance;
+			var swap = report.sourcePlayer.isAlliedWithPlayer;
 			if(dKill < 1000 && aKill < 1000)
 				return  noKillsStyle;
 			if( (report.attackRatio - 1.0f).Abs() < 0.25f )

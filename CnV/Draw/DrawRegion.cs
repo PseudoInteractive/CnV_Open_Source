@@ -1025,7 +1025,7 @@ internal partial class GameClient
 										continue;
 								}
 								var raidsVisble = Settings.raidVisible != false;
-								var list = City.allianceCities; //defenders ? Spot.defendersI : Spot.defendersO;
+								var list = City.alliedCities; //defenders ? Spot.defendersI : Spot.defendersO;
 								bool noneIsAll = list.Length <= Settings.showAttacksLimit;
 								bool showAll = list.Length <= Settings.showAttacksLimit0 ||(isIncoming ? Settings.incomingAlwaysVisible : Settings.attacksAlwaysVisible);
 								foreach(var city in list)

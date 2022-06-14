@@ -252,7 +252,7 @@ public static partial class CityUI
 		//	AApp.AddItem(flyout, "Claim", (_,_)=> CityUI.DiscordClaim(WorldC.FromCid(cid) ) );
 
 		}
-		if(me.isBlessed && me.isInPlayerAlliance) {
+		if(me.isBlessed && me.isAlliedWithPlayer) {
 			AApp.AddItem(flyout, "Palace Wood Artifact..", (_,_)=> ArtifactDialogue.ShowInstance(Artifact.GetForPlayerRank(Artifact.ArtifactType.Arch),false,me.c) );;
 			AApp.AddItem(flyout, "Palace Stone Artifact..", (_,_)=> ArtifactDialogue.ShowInstance(Artifact.GetForPlayerRank(Artifact.ArtifactType.Pillar),false,me.c) );;
 
@@ -567,7 +567,7 @@ public static partial class CityUI
 		}
 	}
 	public static void ShowIncoming(this City me) {
-		if(me.isInPlayerAlliance) {
+		if(me.isAlliedWithPlayer) {
 
 
 			var tab = IncomingTab.instance;

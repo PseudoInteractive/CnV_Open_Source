@@ -44,3 +44,11 @@
 	- Fixed:  In some cases you could use more command slots than you had free
 	- Fixed:  There were two ways to enter planner mode, one did not work and it has been removed.
 		- To get to planner mode, click on the buildings menu and select "Planner" at the bottom (the Map/Pin icon)
+## [6/14/22]
+	- Diplomacy Settings Update:
+	 - *Ally* setting is now supported, when two alliances are allied: 
+	  1 Alliances can see each others incoming along with troop details
+	  2 Alliances can see each others outgoing along with troop details
+	  3 Market trades marked as Alliance only are available to both alliances
+	  4 Attacks with the _cancel if ally_ flag set will bounce
+	  

@@ -218,8 +218,7 @@ namespace CnV
 
 						
 					}
-					new CnVEventAlliance(allianceId,Player.me.id,title).EnqueueAsap();
-					await Task.Delay(1000).ConfigureAwait(false);
+					await Alliance.SetAlliance(Player.me,allianceId,title,false);
 				}
 
 				//UpdatePPDT();
