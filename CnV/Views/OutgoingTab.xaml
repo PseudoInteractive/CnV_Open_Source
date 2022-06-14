@@ -18,7 +18,7 @@
         </Grid.RowDefinitions>
 		<tk:WrapPanel>
 			<ToggleSwitch Header="Internal" OnContent="Include" OffContent="Excluse" IsOn="{x:Bind includeInternal,Mode=TwoWay}" Toggled="ToggleSwitch_Toggled"/>
-			<ComboBox Header="From" SelectedIndex="{x:Bind filterFrom,Mode=TwoWay}" SelectionChanged="filterFromChanged" ItemsSource="{x:Bind cnv:Alliance.cityFilterList}" />
+			<ComboBox Header="From" SelectedIndex="{x:Bind _filterFrom,Mode=TwoWay}" SelectionChanged="filterFromChanged" ItemsSource="{x:Bind cnv:Alliance.cityFilterList}" />
 
 		</tk:WrapPanel>
         <sf:SfDataGrid Grid.Row="1" x:Name="attackerGrid"

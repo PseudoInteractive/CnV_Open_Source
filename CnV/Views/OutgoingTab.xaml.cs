@@ -13,13 +13,11 @@ namespace CnV.Views
 	public sealed partial class OutgoingTab : UserTab
     {
 		bool includeInternal=true;
-		int filterFrom = filterFromAllied;
-		const int filterFromMe = 0;
-		const int filterFromSubs = 1;
-		const int filterFromAllied = 2;
-		const int filterFromAlliance = 3;
-		const int filterFromAll = 4;
-
+		Alliance.CityFilter filterFrom = Alliance.CityFilter.allied;
+		internal int _filterFrom {
+			get => (int)filterFrom;
+			set => filterFrom = (Alliance.CityFilter)value;
+		}
 
 		public static OutgoingTab instance;
         //        public static Report showingRowDetails;
@@ -90,11 +88,10 @@ namespace CnV.Views
 
 						try {
 							var _targets = (instance.filterFrom switch {
-								filterFromMe => City.myCities,
-								filterFromSubs => City.subCities,
-								filterFromAllied => City.alliedCities,
-								_ => City.allianceCities
-
+								Alliance.CityFilter.me => City.myCities,
+								Alliance.CityFilter.subs => City.subCities,
+								Alliance.CityFilter.alliance => City.allianceCities,
+								_ => City.alliedCities,
 							}).SelectMany(c => c.outgoing.Where(a => a.isOutgoingAttack).Select(a => a.targetCity)).Distinct().
 							Where(w =>
 																							  w.testContinentFilter

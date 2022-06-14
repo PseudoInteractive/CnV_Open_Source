@@ -151,7 +151,7 @@ namespace CnV
 			if(build == null)
 				return;
 
-			var buildOp = currentBuildOp.unpack;
+			var buildOp = isPlanner ? new(BuildOp.nop,0,0,false,default,BuildC.Nan,BuildC.Nan) : currentBuildOp.unpack;
 			
 			//if(build.buildQueue.Any())
 			//{
@@ -570,27 +570,25 @@ namespace CnV
 							break;
 					}
 				}
-				if(buildOp.isNotNop)
-				{
-					var spot = buildOp.c;
-					var dT = ((simTime -currentBuildStartTime)*1.5f).SaturateToFloat().SCurve();
-					var fade = ((dT*255).RoundToInt());
+				if(!isPlanner) {
+					if(buildOp.isNotNop) {
+						var spot = buildOp.c;
+						var dT = ((simTime -currentBuildStartTime)*1.5f).SaturateToFloat().SCurve();
+						var fade = ((dT*255).RoundToInt());
 
-					DrawBuilding(bidConstruction,fade,zBase: zCities,layer: spot.LayerConstruction(),buildC: spot,lerpC:(-0.375f,0.5f,0.625f,1.5f) ); //  bspot,lerpC0: 0.25f,lerpC1: 0.75f,wantShadow: true);
-				}
-				if(lastBuiltOp.isNotNop )
-				{
-					var spot = lastBuiltOp.bspot;
-					var dT = ((animationT -lastBuildCompleteTime)*0.5f).SaturateToFloat().SCurve();
-					if(dT >= 1.0f)
-					{
-						// over
+						DrawBuilding(bidConstruction,fade,zBase: zCities,layer: spot.LayerConstruction(),buildC: spot,lerpC: (-0.375f, 0.5f, 0.625f, 1.5f)); //  bspot,lerpC0: 0.25f,lerpC1: 0.75f,wantShadow: true);
 					}
-					else
-					{
-						{
-							var fade = (((1-dT)*255).RoundToInt());
-							DrawBuilding(bidConstruction,fade,zBase: zCities,layer: spot.LayerConstruction(),buildC: spot,lerpC: (-0.375f, 0.5f, 0.625f, 1.5f)); //  bspot,lerpC0: 0.25f,lerpC1: 0.75f,wantShadow: true);
+					if(lastBuiltOp.isNotNop) {
+						var spot = lastBuiltOp.bspot;
+						var dT = ((animationT -lastBuildCompleteTime)*0.5f).SaturateToFloat().SCurve();
+						if(dT >= 1.0f) {
+							// over
+						}
+						else {
+							{
+								var fade = (((1-dT)*255).RoundToInt());
+								DrawBuilding(bidConstruction,fade,zBase: zCities,layer: spot.LayerConstruction(),buildC: spot,lerpC: (-0.375f, 0.5f, 0.625f, 1.5f)); //  bspot,lerpC0: 0.25f,lerpC1: 0.75f,wantShadow: true);
+							}
 						}
 					}
 				}

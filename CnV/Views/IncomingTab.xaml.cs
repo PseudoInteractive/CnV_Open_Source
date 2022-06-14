@@ -173,8 +173,8 @@ namespace CnV.Views
 							var _targets = instance.filterTo switch {
 								Alliance.CityFilter.me => City.myCities,
 								Alliance.CityFilter.subs => City.subCities,
-								Alliance.CityFilter.allied => City.alliedCities,
-								_ => City.allianceCities,
+								Alliance.CityFilter.alliance => City.allianceCities,
+								_ => City.alliedCities,
 							};
 
 							var newItems = _targets.Where(w => w.testContinentFilter

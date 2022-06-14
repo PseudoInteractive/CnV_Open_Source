@@ -136,7 +136,7 @@ public static partial class CityUI
 				aSetup.AddItem("Setup...",    (_, _) => CityUI.SetupClick(cid,SetupFlags.suggestAutobuild | SetupFlags.layout));
 				aSetup.AddItem("Settings...",    (_, _) => CityUI.SetupClick(cid,SetupFlags.none));
 				aSetup.AddItem("Name...",    (_, _) => CityUI.SetupClick(cid,SetupFlags.name));
-				aSetup.AddItem("Find Hub",    (_, _) => CityUI.SetClosestHub(cid));
+				
 				aSetup.AddItem("Set Recruit", (_, _) => CitySettings.SetRecruitFromTag(cid));
 				//aSetup.AddItem("Change...",   (_, _) => ShareString.Show(cid, default));
 				aSetup.AddItem("Move Stuff",  (_, _) => me.MoveStuffLocked());
@@ -211,8 +211,10 @@ public static partial class CityUI
 			}
 			//if (cid != City.build)
 			{
-				aSetup.AddItem("Set target hub", (_, _) => CityUI.SetTargetHub(City.build, cid));
-				aSetup.AddItem("Set source hub", (_, _) => CityUI.SetSourceHub(City.build, cid));
+				aSetup.AddItem("Find Closest Hub",    (_, _) => CityUI.SetClosestHub(cid));
+				aSetup.AddItem("Set As Hub", (_, _) => SetTradeSettings(City.build, sourceHub: cid, targetHub: cid));
+				aSetup.AddItem("Set as Target hub", (_, _) => SetTradeSettings(City.build, sourceHub: null, targetHub: cid));
+				aSetup.AddItem("Set as Source hub", (_, _) => SetTradeSettings(City.build, sourceHub: cid, targetHub: null));
 				//if(Player.myName == "Avatar")
 				//    AApp.AddItem(flyout, "Set target hub I", (_, _) => CitySettings.SetOtherHubSettings(City.build, cid));
 			}

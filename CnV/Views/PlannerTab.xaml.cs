@@ -420,84 +420,143 @@ namespace CnV.Views
 			{
 			}
 			//buildingCache.Return(layoutB);
-		//	layoutB=city.GetLayoutBuildings();
-			
+			//	layoutB=city.GetLayoutBuildings();
+
+			bool CanBeEasilyMoved(BuildingId bid) => bid is (bidCastle or bidMarketplace);
+
 			Note.Show("Flipped layout to reduce overlaps");
 
-			for (int x = span0; x <= span1; ++x)
-			{
-				for (int y = span0; y <= span1; ++y)
-				{
+			for(int x = span0;x <= span1;++x) {
+				for(int y = span0;y <= span1;++y) {
 					var bdId = XYToId((x, y));
-					var bd =city.GetLayoutBuilding(bdId);
+					var bd = city.GetLayoutBuilding(bdId);
 					// correct building is here, leave it
-					if (bds[bdId].id == bd.id)
+					if(bds[bdId].id == bd.id)
 						continue;
 
 					var bdBid = bd.bid;
-					if (bdBid == bidCastle || IsResHelper(bdBid) || (bdBid == bidSorcTower && allowed.sorc) || (bdBid == bidAcademy) || (bdBid==bidBarracks)
-						|| (bdBid == bidMarketplace) || (bdBid == bidStorehouse))
-					{
-						bool foundOne = false;
-						// is there a building that we can re-use?
-						//for (int id = 0; id < City.citySpotCount; ++id)
-						//{
-						//	var b = bds[id];
-						//	if (b.bid == bdBid && b.id != bdc[id].id)
-						//	{
-						//		foundOne = true;
-						//		if (id != bdId)
-						//		{
-						//			Note.Show($"Found existing {bd.def.Bn}, moving");
-						//			AUtil.Swap(ref bdc[bdId], ref bdc[id]);
-						//		}
-						//	}
-						//}
+					if(bdBid == bidHideaway) {
+						// handle these at end
+						int bestCount = 0;
+						BuildC bestC = bdId;
 
-						//if ( bds[bdId].isRes)
-						{
-							var score = GetScore(city, bds, (x,y), bd.bid, bc.sorcTowers,bc.academies);
+						foreach(BuildC c1 in city.buildingSpotsExcludingShore) {
+							if(city.layout[c1] != 0 || bds[c1].isRes)
+								continue;
+							var forestCount = 0;
+							foreach(var delta in Octant.deltas) {
+								var cc1 = c1 + delta;
+								if(!cc1.isInCity)
+									continue;
+								if((bds[cc1].bid == bidForest) && city.layout[cc1] == 0)
+									++forestCount;
+							}
+							if(forestCount > bestCount) {
+								bestCount = forestCount;
+								bestC = c1;
+							}
+						}
+					}
+					else {
+						if(bdBid == bidCastle || IsResHelper(bdBid) || (bdBid == bidSorcTower && allowed.sorc) || (bdBid == bidAcademy) || (bdBid==bidBarracks)
+							|| (bdBid == bidMarketplace) || (bdBid == bidStorehouse)) {
+							bool foundOne = false;
+							// is there a building that we can re-use?
+							//for (int id = 0; id < City.citySpotCount; ++id)
+							//{
+							//	var b = bds[id];
+							//	if (b.bid == bdBid && b.id != bdc[id].id)
+							//	{
+							//		foundOne = true;
+							//		if (id != bdId)
+							//		{
+							//			Note.Show($"Found existing {bd.def.Bn}, moving");
+							//			AUtil.Swap(ref bdc[bdId], ref bdc[id]);
+							//		}
+							//	}
+							//}
 
-							// move to a non res spot
-							for (int r = 1;r< citySpan; ++r)
+							//if ( bds[bdId].isRes)
 							{
-								for (int x0 = span0.Max(x - r); x0 <= span1.Min(x + r); ++x0)
-								{
-									for (int y0 = span0.Max(y - r); y0 <= span1.Min(y + r); ++y0)
-									{
-										// only edge
-										if (!((x0 == x - r) || (x0 == x + r) || (y0 == y - r) || (y0 == y + r)))
-											continue;
-										var id1 = XYToId((x0, y0));
-										if (city.GetLayoutBuilding(id1).isBuilding)
-											continue;
-										if (!city.IsBuildingSpotExcludingShore(id1))
-										{
-											continue;
-										}
+								var score = GetScore(city,bds,(x, y),bd.bid,bc.sorcTowers,bc.academies);
 
-										var score1 = GetScore(city,bds,(x0, y0), bd.bid, bc.sorcTowers,bc.academies);
-										if(score1 > score)
-										{
+								// move to a non res spot
+								for(int r = 1;r< citySpan;++r) {
+									for(int x0 = span0.Max(x - r);x0 <= span1.Min(x + r);++x0) {
+										for(int y0 = span0.Max(y - r);y0 <= span1.Min(y + r);++y0) {
+											// only edge
+											if(!((x0 == x - r) || (x0 == x + r) || (y0 == y - r) || (y0 == y + r)))
+												continue;
+											var id1 = XYToId((x0, y0));
+											if(city.GetLayoutBuilding(id1).isBuilding)
+												continue;
+											if(!city.IsBuildingSpotExcludingShore(id1)) {
+												continue;
+											}
 
-											Note.Show($"Moving {bd.def.Bn} from a res node to an empty spot");
-											AUtil.Swap(ref city.layout[bdId], ref city.layout[id1]);
-											foundOne = true;
-											break;
+											var score1 = GetScore(city,bds,(x0, y0),bd.bid,bc.sorcTowers,bc.academies);
+											if(score1 > score) {
+
+												Note.Show($"Moving {bd.def.Bn} from a res node to an empty spot");
+												AUtil.Swap(ref city.layout[bdId],ref city.layout[id1]);
+												foundOne = true;
+												break;
+											}
+											if(foundOne)
+												break;
 										}
-										if (foundOne)
+										if(foundOne)
 											break;
 									}
-									if (foundOne)
+									if(foundOne)
 										break;
 								}
-								if (foundOne)
-									break;
 							}
 						}
 					}
 				}
+				
 			}
+			// second pass, hideaways
+			foreach(BuildC c0 in city.buildingSpotsExcludingShore) {
+			
+					var bdBid = city.layout[c0];
+					// correct building is here, leave it
+					if(bds[c0].id ==bdBid)
+						continue;
+
+					int CountForests(BuildC c1) {
+						int forestCount = 0;
+						foreach(var delta in Octant.deltas) {
+								var cc1 = c1 + delta;
+								if(!cc1.isInCity)
+									continue;
+								if((bds[cc1].bid == bidForest) && city.layout[cc1] == 0)
+									++forestCount;
+							}
+						return forestCount;
+					}
+
+					// If hideway is swapped forward it might be visited twice, but it should have the same result
+					if(bdBid == bidHideaway) {
+						// handle these at end
+						int bestCount = CountForests(c0);
+						BuildC bestC = c0;
+
+						foreach(BuildC c1 in city.buildingSpotsExcludingShore) {
+							if(city.layout[c1] != 0 || bds[c1].isRes)
+								continue;
+							var forestCount = CountForests(c1);
+							if(forestCount > bestCount) {
+								bestCount = forestCount;
+								bestC = c1;
+							}
+						}
+						AUtil.Swap(ref city.layout[c0],ref city.layout[bestC]);
+												
+					}
+				}
+			
 			Note.Show($"Moved buildings to reduce overlaps, final layout match score: {CountResOverlaps(city, bds, ref allowed) }");
 			//city.TouchLayoutForWrite();
 			//City.buildingCache.Return(layoutB);

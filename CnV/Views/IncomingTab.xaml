@@ -22,9 +22,9 @@
 			<RowDefinition />
 		</Grid.RowDefinitions>
 		<tk:WrapPanel>
-			<ComboBox Header="To" SelectedIndex="{x:Bind _filterTo,Mode=TwoWay}" SelectionChanged="filterChanged" ItemsSource="{x:Bind cnv:Alliance.cityFilterList}" />
 
 			<ToggleSwitch IsOn="{x:Bind includeInternal,Mode=TwoWay}" Header="Internal" OffContent="Exclude" OnContent="Include" Toggled="filterChanged" />
+			<ComboBox Header="To" SelectedIndex="{x:Bind _filterTo,Mode=TwoWay}" SelectionChanged="filterChanged" ItemsSource="{x:Bind cnv:Alliance.cityFilterList}" />
 			<Button Content="To Sheet" Click="ExportSheetsClick" />
 
 		</tk:WrapPanel>
