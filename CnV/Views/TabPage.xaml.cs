@@ -68,6 +68,9 @@ namespace CnV.Views
 				Content = me
 			};
 			Tabs.TabItems.Add(vi );
+
+			me.Opened();
+
 			if(selectMe)
 				this.Tabs.SelectedItem= vi;
 		}
@@ -499,7 +502,7 @@ namespace CnV.Views
 			var menu = new MenuFlyout();
 			foreach(var tab in UserTab.userTabs)
 			{
-				if(!tab.isOpen)
+				if(!(tab.isOpen|| (tab is PlannerTab)) )
 					menu.Items.Add(AddTabMenuItem(tab));
 			}
 

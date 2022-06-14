@@ -38,7 +38,9 @@
 	- A calender and timeline showing recent events
 ## [6/12/22]
 	- Added building overlay markers:
-		- Blue:  wrong building
+		- Red:  wrong building
 		- Orange:  extra building
 	- Tapping Space will toggle overlays on and off
-	- Fixed:  In some cases you could use more commands slots than you had free
+	- Fixed:  In some cases you could use more command slots than you had free
+	- Fixed:  There were two ways to enter planner mode, one did not work and it has been removed.
+		- To get to planner mode, click on the buildings menu and select "Planner" at the bottom (the Map/Pin icon)

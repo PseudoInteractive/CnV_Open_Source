@@ -117,7 +117,7 @@ namespace CnV
 			if(lerpC == default)
 				lerpC  = (0, 0, 1, 1);
 
-			var c = CityPointToWC(bc,new(lerpC.x0,lerpC.y0) );
+			var c = CityPointToWC(bc,(lerpC.x0,lerpC.y0) );
 			// There is no aspect ratio scaling for Y
 			var baseScale = (0.5f * cityTileGainX );
 			var xScale = bt.main.xScale * (lerpC.x1-lerpC.x0);
@@ -460,7 +460,8 @@ namespace CnV
 									}
 								}
 
-							DrawBuilding(bid,iAlpha: alpha.UNormToByte(),zBase: 0,layer: bspot.LayerBuilding(),buildC: bspot,fontScale: cityFontScale,fontAlpha: fontAlpha.UNormToByte(),buildingLevel: bl,wantDemo:wantDemoImage);
+							DrawBuilding(bid,iAlpha: alpha.UNormToByte(),zBase: 0,layer: bspot.LayerBuilding(),buildC: bspot,fontScale: cityFontScale,fontAlpha: fontAlpha.UNormToByte(),buildingLevel: bl,
+								wantDemo:wantDemoImage, lerpC: IsBidTower(bid) ? (0f,-0.25f,1f,0.75f) : (0f,0f,1f,1f)  );
 							if(selectedBuildingIds.Contains(bid))
 							{
 								//var t = ((animationT - selectedBuildingIdsChangeTime)*2).Saturate().Wave()*2.0f;
@@ -523,9 +524,10 @@ namespace CnV
 								DrawHoverMarker(bspot,Color.DarkOrange,0.5f);								
 							}
 							else {
-								if(currentBid != 0 && !IsBidRes(currentBid) && (currentBid != Building.bidCabin) ) {
+								if(currentBid != 0 && !IsBidRes(currentBid) && (currentBid != Building.bidCabin)
+									 && !IsBidRes(bid) &&(bid != Building.bidCabin) ) {
 									// wrong building
-									DrawHoverMarker(bspot,Color.MidnightBlue,0.5f);
+									DrawHoverMarker(bspot,Color.DarkRed,0.5f);
 								}
 
 							}
@@ -691,7 +693,7 @@ namespace CnV
 					if(wantShadow)
 					{
 						// this should be the overlay
-						draw.AddQuad(layer-1,materials.M(iconId).shadow,_cs.c0,_cs.c1,new Vector2(0,0),new Vector2(1,1),new((byte)0,(byte)0,(byte)0,iAlpha.ScaleAndRound(0.75f).AsByte()),depth:0f); // shader does the z transform
+						draw.AddQuad(layer-1,materials.M(iconId).shadow,_cs.c0,_cs.c1,new Vector2(0,0),new Vector2(1,1),new((byte)0,(byte)0,(byte)0,iAlpha.ScaleAndRound(0.875f).AsByte()),depth:0f); // shader does the z transform
 
 					}
 				}
@@ -739,7 +741,7 @@ namespace CnV
 		{
 			Assert(isDrawing);
 			var cs = CityPointToQuad(cc, yScale:0.675f, yOffset:0.25f);
-			DrawRectOutlineShadow(Layer.effects,cs.c0,cs.c1,color,animationOffset:animationOffsets[cc]+animationOffset,zScale:0.25f,includeTop:false);
+			DrawRectOutlineShadow(Layer.effects,cs.c0,cs.c1,color,animationOffset:animationOffsets[cc]+animationOffset,zScale:0.25f,includeTop:false,thickness:1.25f);
 		}
 		
 

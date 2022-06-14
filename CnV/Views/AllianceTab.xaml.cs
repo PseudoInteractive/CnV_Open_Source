@@ -134,7 +134,7 @@ public sealed partial class AllianceTab:UserTab
 
 					}
 					else {
-						AppS.MessageBox("Not yet implemented:  Diplomacy persistance",title: strTitle);
+						Note.Show("Not yet implemented:  Diplomacy persistance");
 
 					}
 				}
@@ -143,6 +143,39 @@ public sealed partial class AllianceTab:UserTab
 		catch(Exception _ex) {
 			LogEx(_ex);
 			e.Cancel=true;
+		}
+	}
+	private void CellEndEdit(object sender,Syncfusion.UI.Xaml.DataGrid.CurrentCellEndEditEventArgs e) {
+		try {
+
+				//Note.Show($"EditChanged" );
+
+		}
+		catch(Exception _ex) {
+			LogEx(_ex);
+		}
+		}
+
+	private  async void CellDropdownChanged(object sender,Syncfusion.UI.Xaml.Grids.CurrentCellDropDownSelectionChangedEventArgs e) {
+		try {
+
+			var sel = e.SelectedItem as DiplomacyComboBoxSource;
+			//Note.Show("DropdownChanged" + sel.n);
+			var grid = sender as xDataGrid;
+			var r = Syncfusion.UI.Xaml.DataGrid.GridIndexResolver.ResolveToRecordIndex(grid,e.RowColumnIndex.RowIndex);
+			var rec = grid.View.Records[r];
+			if(sel is not null )
+			{
+				var otherAlliance = rec.Data as Alliance;
+				var my = Alliance.my;
+				var newDiplomacy = sel.d;
+				if( await AppS.DoYesNoBox("Set Diplomacy",$"Set status with {Alliance.IdToName(otherAlliance.id)} to {newDiplomacy.EnumTitle()}?") == 1)
+					new CnVEventAlliance(my.id,default,default,otherAlliance.id,newDiplomacy).EnqueueAsap();
+			
+			}
+		}
+		catch(Exception _ex) {
+			LogEx(_ex);
 		}
 	}
 }

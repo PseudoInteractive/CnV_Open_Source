@@ -307,7 +307,7 @@ namespace CnV.Views
 			UpdateRaidPlans.Go();
 		}
 
-		
+		const float maxDistance = 32.0f;
 		public static async Task<bool> ShowDungeonList(City city,  bool autoRaid)
 		{
 			var rv = new List<Dungeon>();
@@ -316,9 +316,13 @@ namespace CnV.Views
 			foreach(var dung in Cavern.caverns)
 			{
 				var type = dung.tileType;
+				
 				if(Settings.raidOffDungeons || (type == idealType) || type == World.TileType.typeWater)
 				{
 					var d = new Dungeon(city,Cavern.Get(dung.c));
+					var dist = d.distance;
+					if(dist > maxDistance)
+						continue;
 					var r = Raiding.ComputeIdealReps(d, city);
 					d.isValid = r.isValid;
 					d.carry   = r.averageCarry;

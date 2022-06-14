@@ -36,6 +36,8 @@
 							EditTrigger="OnTap"
 							AllowEditing="True"
 					   CurrentCellBeginEdit="CellBeginEdit"
+					   CurrentCellEndEdit="CellEndEdit"
+					 CurrentCellDropDownSelectionChanged="CellDropdownChanged"
 							>
 
 

@@ -275,6 +275,12 @@ public partial class UserTab:UserControl, IANotifyPropertyChanged
 			return;
 		TabPage.Close(this);
 	}
+	// Callback
+	public virtual void Opened()	
+		{
+		Assert(isOpen==true);
+	}
+
 	public void ShowOrAdd(bool selectMe = true,bool onlyIfClosed = false,TabPage page = null)
 
 	{

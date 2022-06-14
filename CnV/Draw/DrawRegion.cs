@@ -2072,8 +2072,8 @@ internal partial class GameClient
 
 		float t = thickness.ScreenToWorld();
 		var expand = _expand.ScreenToWorld();
-		const float waveGain = 0.375f;
-		z = z * (0.25f+ ((animationT-animationOffset)*(1.0/3)).Wave() * waveGain);
+		const float waveGain = 0.5f;
+		z = z * (0.125f+ ((animationT-animationOffset)*(1.0/3)).Wave() * waveGain);
 		c0 = new(c0.X - expand,c0.Y - expand);
 		c1 = new(c1.X + expand,c1.Y + expand);
 
