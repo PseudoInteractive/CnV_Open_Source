@@ -84,6 +84,7 @@ namespace CnV.Draw
 		/// <returns></returns>
 		public Microsoft.Xna.SpriteVertices CreateBatchItem(int layer, Material material)
 		{
+			Assert(material.effect.technique is not null);
 			var list = CreateBatchItemList(layer, material);
 			var rv = SpriteBatchItemList.Alloc();
 			list.sprites.Add(rv);
@@ -202,7 +203,12 @@ namespace CnV.Draw
 								lastEffectPass =pass;
 								if(pass != null)
 								{
-									pass._effect.CurrentTechnique = pass.technique;
+									Assert(pass.technique is not null);
+									if(pass.technique is not null) {
+										pass._effect.CurrentTechnique = pass.technique;
+
+										
+									}
 									pass.Apply();
 								}
 								//for(int i1 = 0;i1<4;++i1)

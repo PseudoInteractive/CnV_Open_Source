@@ -527,6 +527,17 @@ internal partial class GameClient
 				var planetGains = new XVector3(bulgeGain,-gain1,!AppS.IsKeyPressedShift() ? 0.0f : gain1*bulgeInputSpan2.Sqrt());
 				//planetGainsParamater.SetValue(planetGains);
 
+				// Update constant buffer
+				Assert(avaEffect.ConstantBuffers.Length == 1);
+				{
+					var cb = avaEffect.ConstantBuffers[0];
+					cb.Update(avaEffect.Parameters);
+					var device = GameClient.instance.GraphicsDevice;
+					device.SetConstantBuffer(ShaderStage.Pixel, 0, cb);
+					device.SetConstantBuffer(ShaderStage.Vertex, 0, cb);
+					device.SetConstantBuffer(ShaderStage.Geometry, 0, cb);
+
+				}
 			}
 			//world space coords
 			//  var srcP0 = new System.Numerics.Vector2((viewW.X + 0.5f) * bSizeGain2 - projectionC.X * bSizeGain2 * pixelScaleInverse,
@@ -2250,7 +2261,7 @@ internal partial class GameClient
 							{
 								pre.BackBufferFormat =  GetBackBufferFormat();
 								pre.MultiSampleCount = 0;
-								pre.DepthStencilFormat = DepthFormat.Depth24Stencil8;
+								pre.DepthStencilFormat = DepthFormat.Depth16;
 								pre.BackBufferWidth = (int)(clientSpan.X*dipToNative*resolutionScale);// - ShellPage.cachedXOffset,
 								pre.BackBufferHeight = (int)(clientSpan.Y*dipToNative*resolutionScale); // - ShellPage.cachedTopOffset,
 							};

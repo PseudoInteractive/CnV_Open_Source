@@ -9,8 +9,8 @@
       "MonoGame.Framework/1.0.0": {
         "dependencies": {
           "Microsoft.Windows.CsWinRT": "1.6.4",
-          "Microsoft.Windows.SDK.BuildTools": "10.0.22000.197",
-          "Microsoft.WindowsAppSDK": "1.1.0",
+          "Microsoft.Windows.SDK.BuildTools": "10.0.22621.1",
+          "Microsoft.WindowsAppSDK": "1.1.1",
           "SharpDX": "4.2.0",
           "SharpDX.DXGI": "4.2.0",
           "SharpDX.Direct3D11": "4.2.0",
@@ -55,15 +55,15 @@
           }
         }
       },
-      "Microsoft.Windows.SDK.BuildTools/10.0.22000.197": {},
-      "Microsoft.WindowsAppSDK/1.1.0": {
+      "Microsoft.Windows.SDK.BuildTools/10.0.22621.1": {},
+      "Microsoft.WindowsAppSDK/1.1.1": {
         "dependencies": {
-          "Microsoft.Windows.SDK.BuildTools": "10.0.22000.197"
+          "Microsoft.Windows.SDK.BuildTools": "10.0.22621.1"
         },
         "runtime": {
           "lib/net5.0-windows10.0.18362.0/Microsoft.InteractiveExperiences.Projection.dll": {
             "assemblyVersion": "10.0.0.0",
-            "fileVersion": "10.0.22621.1000"
+            "fileVersion": "10.0.22621.1002"
           },
           "lib/net5.0-windows10.0.18362.0/Microsoft.WinUI.dll": {
             "assemblyVersion": "3.0.0.0",
@@ -930,19 +930,19 @@
       "path": "microsoft.windows.cswinrt/1.6.4",
       "hashPath": "microsoft.windows.cswinrt.1.6.4.nupkg.sha512"
     },
-    "Microsoft.Windows.SDK.BuildTools/10.0.22000.197": {
+    "Microsoft.Windows.SDK.BuildTools/10.0.22621.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-Yzovh74wAbTrVSAtaMuPXoJ2WTLG6LlFtDoqc9LF25G8XYU/pFTw5td4InYg1r62hgB664arPoYn47ecbud7VQ==",
-      "path": "microsoft.windows.sdk.buildtools/10.0.22000.197",
-      "hashPath": "microsoft.windows.sdk.buildtools.10.0.22000.197.nupkg.sha512"
+      "sha512": "sha512-Sp1DkYvg7yxuhamwxv+qFC66KC3paKQpwK8Q1J6XuAh6nzXIInmsDcpJ3szr0XGud4ysXojqwTfGdW01gvZ/0g==",
+      "path": "microsoft.windows.sdk.buildtools/10.0.22621.1",
+      "hashPath": "microsoft.windows.sdk.buildtools.10.0.22621.1.nupkg.sha512"
     },
-    "Microsoft.WindowsAppSDK/1.1.0": {
+    "Microsoft.WindowsAppSDK/1.1.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-yc3j78WEFqmARLE0USyq0xdW2IEMNsToXAMF47vJ7zfMlCqzfrKsivKrcnIUHDrsJJkruR5lwZZ35JwVKh3AHQ==",
-      "path": "microsoft.windowsappsdk/1.1.0",
-      "hashPath": "microsoft.windowsappsdk.1.1.0.nupkg.sha512"
+      "sha512": "sha512-ZkdwAqYT1Ob8fHsACMsOhsIcBJd7dUUbs36M0EX3xb5HmX46AXBkkSxtIHLHUNBT3V1ZsZYLL16GCvHvqqVOgw==",
+      "path": "microsoft.windowsappsdk/1.1.1",
+      "hashPath": "microsoft.windowsappsdk.1.1.1.nupkg.sha512"
     },
     "NETStandard.Library/1.6.1": {
       "type": "package",

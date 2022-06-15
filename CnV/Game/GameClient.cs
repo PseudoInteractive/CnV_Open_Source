@@ -111,7 +111,7 @@ namespace CnV
 			//	PreferHalfPixelOffset=false,
 				//	PreferredBackBufferFormat   = SurfaceFormat.Rgba1010102,
 					PreferMultiSampling         = false,
-					PreferredDepthStencilFormat = DepthFormat.Depth24Stencil8,
+					PreferredDepthStencilFormat = DepthFormat.Depth16,
 				
 
 					GraphicsProfile =  GraphicsProfile.HiDef
@@ -341,7 +341,7 @@ namespace CnV
 					int width = meta.Width ;
 					Assert((width&3) == 0);
 					var mips = meta.MipLevels;
-					var rv = new Texture2D(instance.GraphicsDevice,RoundUpTo4(meta.Width),RoundUpTo4(meta.Height),mips,format,arraySize);
+					var rv = new Texture2D(instance.GraphicsDevice,RoundUpTo4(meta.Width),RoundUpTo4(meta.Height),mips>1,format,arraySize);
 					var bpp = TexHelper.Instance.BitsPerPixel(meta.Format);
 
 					for(int arraySlice = 0;arraySlice<arraySize;++arraySlice)
@@ -380,7 +380,7 @@ namespace CnV
 					{
 				//		Log("not multiple of 4");
 					}
-					var rv = new Texture2D(instance.GraphicsDevice,RoundUpTo4(meta.Width),RoundUpTo4(meta.Height),mips,format,meta.ArraySize);
+					var rv = new Texture2D(instance.GraphicsDevice,RoundUpTo4(meta.Width),RoundUpTo4(meta.Height),mips>1,format,meta.ArraySize);
 
 
 					for(int arraySlice = 0;arraySlice<meta.ArraySize;++arraySlice)

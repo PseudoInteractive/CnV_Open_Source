@@ -451,7 +451,7 @@ namespace CnV.Views
 				return false;
 			}
 			if(CityBuild.menuOpen) {
-				Assert(false);
+				//Assert(false);
 				return false ;
 			}
 			// don't process if chat has focus
