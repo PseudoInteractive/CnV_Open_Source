@@ -28,13 +28,13 @@
 						<ColumnDefinition Width="*" />
 					</Grid.ColumnDefinitions>
 
-					<NumberBox Grid.Column="0"  x:Name="woodReq" Margin="8,2" x:FieldModifier="internal" Description="&#xA040; Want"  ValueChanged="{x:Bind cnv:App.FilterPositive}" Style="{StaticResource NumberBoxMediumPositive}"
+					<NumberBox Grid.Column="0"  x:Name="woodReq" Margin="8,2" x:FieldModifier="internal" Description="&#xA040; Want"  ValueChanged="{x:Bind cnv:App.FilterNans}" Style="{StaticResource NumberBoxMedium}"
 					   SmallChange="10000" />
-					<NumberBox Grid.Column="1"  x:Name="stoneReq" Margin="8,2" x:FieldModifier="internal" Description="&#xA041; Want"  ValueChanged="{x:Bind cnv:App.FilterPositive}" Style="{StaticResource NumberBoxMediumPositive}"
+					<NumberBox Grid.Column="1"  x:Name="stoneReq" Margin="8,2" x:FieldModifier="internal" Description="&#xA041; Want"  ValueChanged="{x:Bind cnv:App.FilterNans}" Style="{StaticResource NumberBoxMedium}"
 					   SmallChange="10000"/>
-					<NumberBox Grid.Column="2"  x:Name="ironReq" Margin="8,2" x:FieldModifier="internal" Description="&#xA042; Want"  ValueChanged="{x:Bind cnv:App.FilterPositive}" Style="{StaticResource NumberBoxMediumPositive}"
+					<NumberBox Grid.Column="2"  x:Name="ironReq" Margin="8,2" x:FieldModifier="internal" Description="&#xA042; Want"  ValueChanged="{x:Bind cnv:App.FilterNans}" Style="{StaticResource NumberBoxMedium}"
 					   SmallChange="10000" />
-					<NumberBox Grid.Column="3"  x:Name="foodReq" Margin="8,2" x:FieldModifier="internal" Description="&#xA043; Want"  ValueChanged="{x:Bind cnv:App.FilterPositive}" Style="{StaticResource NumberBoxMediumPositive}"
+					<NumberBox Grid.Column="3"  x:Name="foodReq" Margin="8,2" x:FieldModifier="internal" Description="&#xA043; Want"  ValueChanged="{x:Bind cnv:App.FilterNans}" Style="{StaticResource NumberBoxMedium}"
 					   SmallChange="10000" />
 				</Grid >
 				<Grid  >
@@ -64,13 +64,13 @@
 						<ColumnDefinition Width="*" />
 					</Grid.ColumnDefinitions>
 
-					<NumberBox Grid.Column="0"  x:Name="woodSend" Margin="8,2"  Description="&#xA040; Max" ValueChanged="{x:Bind cnv:App.FilterPositive}" Style="{StaticResource NumberBoxMediumPositive}"
+					<NumberBox Grid.Column="0"  x:Name="woodSend" Margin="8,2"  Description="&#xA040; Max" ValueChanged="{x:Bind cnv:App.FilterNans}" Style="{StaticResource NumberBoxMedium}"
 					   SmallChange="10000" x:FieldModifier="internal" />
-					<NumberBox Grid.Column="1"  x:Name="stoneSend" Margin="8,2" Description="&#xA041; Max" ValueChanged="{x:Bind cnv:App.FilterPositive}" Style="{StaticResource NumberBoxMediumPositive}"
+					<NumberBox Grid.Column="1"  x:Name="stoneSend" Margin="8,2" Description="&#xA041; Max" ValueChanged="{x:Bind cnv:App.FilterNans}" Style="{StaticResource NumberBoxMedium}"
 					   SmallChange="10000" x:FieldModifier="internal" />
-					<NumberBox Grid.Column="2"  x:Name="ironSend" Margin="8,2" Description="&#xA042; Max" ValueChanged="{x:Bind cnv:App.FilterPositive}" Style="{StaticResource NumberBoxMediumPositive}"
+					<NumberBox Grid.Column="2"  x:Name="ironSend" Margin="8,2" Description="&#xA042; Max" ValueChanged="{x:Bind cnv:App.FilterNans}" Style="{StaticResource NumberBoxMedium}"
 					   SmallChange="10000" x:FieldModifier="internal" />
-					<NumberBox Grid.Column="3"  x:Name="foodSend" Margin="8,2" Description="&#xA043; Max" ValueChanged="{x:Bind cnv:App.FilterPositive}" Style="{StaticResource NumberBoxMediumPositive}"
+					<NumberBox Grid.Column="3"  x:Name="foodSend" Margin="8,2" Description="&#xA043; Max" ValueChanged="{x:Bind cnv:App.FilterNans}" Style="{StaticResource NumberBoxMedium}"
 						   
 					   SmallChange="10000" x:FieldModifier="internal" />
 				</Grid >
