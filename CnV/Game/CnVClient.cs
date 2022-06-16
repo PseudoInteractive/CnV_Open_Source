@@ -89,8 +89,8 @@ namespace CnV
 					WorldViewSettings.enemyAlliance.isOn = wo.GetAsInt("4") == 1;
 					WorldViewSettings.enemyAlliance.color = wo.GetColor("20");
 
-					WorldViewSettings.otherPlayers.isOn = wo.GetAsInt("15") == 1;
-					WorldViewSettings.otherPlayers.color = wo.GetColor("28");
+					WorldViewSettings.otherAlliance.isOn = wo.GetAsInt("15") == 1;
+					WorldViewSettings.otherAlliance.color = wo.GetColor("28");
 
 					WorldViewSettings.lawless.isOn = wo.GetAsInt("5") == 1;
 					WorldViewSettings.lawless.color = wo.GetColor("21");

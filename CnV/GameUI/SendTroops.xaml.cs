@@ -341,13 +341,19 @@ namespace CnV
 						if(verbose) AppS.MessageBox($"Source and target must be on water");
 						return (false, 0);
 					}
-					// check galley space
-					var galleys = troops.GetCount(ttGalley);
-					var tsLand = (int)troops.Where(t => !t.isNaval).Sum(tt => tt.ts);
-					var neededGalleys = tsLand.DivideRoundUp(tsCarryPerGalley);
-					if(neededGalleys > galleys) {
-						if(verbose) AppS.MessageBox($"Need at least {neededGalleys} to transport troops");
-						return (false, 0);
+					if(transport is ArmyTransport.water) {
+						Assert(!isSettle);
+						// check galley space
+						var galleys = troops.GetCount(ttGalley);
+						var tsLand = (int)troops.Where(t => !t.isNaval).Sum(tt => tt.ts);
+						var neededGalleys = tsLand.DivideRoundUp(tsCarryPerGalley);
+						if(neededGalleys > galleys) {
+							if(verbose) AppS.MessageBox($"Need at least {neededGalleys} galleys to transport troops");
+							return (false, 0);
+						}
+					}
+					else {
+						Assert(isSettle);
 					}
 				}
 			}
@@ -398,7 +404,7 @@ namespace CnV
 				if(arrivalTime == default && !waitReturn && (prior==null) ) {
 					// check for enough troops
 					if(!city.troopsHome.IsSuperSetOf(troops)) {
-						AppS.MessageBox($"Not enough troops. Here:\n{city.troopsHome.Format()}");
+						AppS.MessageBox($"Not enough to send {troops}\n({city.troopsHome.Format()} here)");
 						return (false, 0);
 					}
 				}
