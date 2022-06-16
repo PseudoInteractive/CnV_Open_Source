@@ -11,10 +11,11 @@ namespace CnV
 {
 	public class Mesh
 	{
-		public int triangleCount;
+		public int primitiveCount;
 		public int baseVertex;
-		public VertexBuffer vb;
 		public IndexBuffer ib;
+		public VertexBuffer vb;
+		public VertexBuffer vb2; // optional extra
 	};
 	public class SpriteBatchItemList
 	{

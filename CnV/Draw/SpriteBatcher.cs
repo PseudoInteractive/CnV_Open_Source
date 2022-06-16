@@ -241,9 +241,15 @@ namespace CnV.Draw
 							}
 							foreach (var mesh in list.meshes)
 							{
-								_device.SetIndexBuffer(mesh.ib);
-								_device.SetVertexBuffer(mesh.vb);
-								_device.DrawIndexedPrimitives(PrimitiveType.TriangleList,mesh.baseVertex,0, mesh.triangleCount);
+								if(mesh.ib is not null)
+									_device.SetIndexBuffer(mesh.ib);
+								Assert(mesh.vb is not null);
+								if(mesh.vb2 is not null)
+									_device.SetVertexBuffers( new(mesh.vb), new(mesh.vb2) );
+								else
+									_device.SetVertexBuffer(mesh.vb);
+								
+								_device.DrawPrimitives(PrimitiveType.PointList,mesh.baseVertex, mesh.primitiveCount);
 							}
 
 							list.Release();

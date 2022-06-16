@@ -889,6 +889,11 @@ namespace CnV
 					window.VisibilityChanged -= Window_VisibilityChanged;
 					if(args is not null)
 						args.Cancel = true;
+
+					if(City.GetBuild().SaveLayout()) {
+						Thread.Sleep(500);
+					}
+
 					// Cancel sim thread
 					Sim.simCancelTokenSource.Cancel();
 					SocketClient.ShutDown();

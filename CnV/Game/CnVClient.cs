@@ -95,8 +95,7 @@ namespace CnV
 					WorldViewSettings.lawless.isOn = wo.GetAsInt("5") == 1;
 					WorldViewSettings.lawless.color = wo.GetColor("21");
 
-					WorldViewSettings.friends.isOn = wo.GetAsInt("6") == 1;
-					WorldViewSettings.friends.color = wo.GetColor("22");
+					
 
 					WorldViewSettings.citiesWithoutCastles = wo.GetAsInt("7") == 1;
 					WorldViewSettings.citiesWithoutWater = wo.GetAsInt("8") == 1;

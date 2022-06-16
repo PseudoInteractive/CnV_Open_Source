@@ -671,134 +671,134 @@ internal partial class GameClient
 			{
 
 				//Assert(City.build != 0);
-				if(false)
-				{
-					var td = TileData.instance;
+			//	if(false)
+			//	{
+			//		var td = TileData.instance;
 
 					// 0 == land
 					// 1 == shadows
 					// 2 == features
 					//foreach(var layer in td.layers)
-					if(false)
-					{
-						var layer = TileLayer.bonus;
-						var isBonus = Object.ReferenceEquals(layer,TileLayer.bonus);
-						//if(!wantDetails && !isBonus)
-						//	continue;
-						//if(debugLayer != -1)
-						//{
-						//	if((int)layer.id!= debugLayer)
-						//		continue;
+				//	if(false)
+				//	{
+				//		var layer = TileLayer.bonus;
+				//		var isBonus = Object.ReferenceEquals(layer,TileLayer.bonus);
+				//		//if(!wantDetails && !isBonus)
+				//		//	continue;
+				//		//if(debugLayer != -1)
+				//		//{
+				//		//	if((int)layer.id!= debugLayer)
+				//		//		continue;
 
-						//}
+				//		//}
 
-						var layerDat = layer.data;
+				//		var layerDat = layer.data;
 
-						for(var cy = cy0;cy < cy1;++cy)
-						{
-							for(var cx = cx0;cx < cx1;++cx)
-							{
-								var ccid = cx + cy * World.span;
-								var imageId = layerDat[ccid];
-								if(imageId == 0)
-									continue;
-
-
-
-
-								//   var layerData = TileData.packedLayers[ccid];
-								//  while (layerData != 0)
-								{
-									//    var imageId = ((uint)layerData & 0xffffu);
-									//     layerData >>= 16;
-									var tileId = TileLayer.TilesetId(imageId);
-									var off = TileLayer.ImageId(imageId);
-									var tile = td.tilesets[(int)tileId];
-									Assert(off < td.tilesets[(int)tileId].tilecount);
-									if(tile.material == null)
-										continue;
-
-
-									var wc = new System.Numerics.Vector2(cx,cy);
-									//ar cc = wc.WorldToCamera();
-									var shift = new System.Numerics.Vector2((isBonus ? imageId== TileData.tilePortalOpen ? bonusLayerScale*2f : bonusLayerScale : 1f) * 0.5f);
-									var cc0 = wc - shift;
-									var cc1 = wc + shift;
-									var sy = off / tile.columns;
-									var sx = off - sy * tile.columns;
-									var uv0 = new System.Numerics.Vector2((float)(sx / tile.scaleUToX),(float)(sy /tile.scaleVToY));
-									var uv1 = new System.Numerics.Vector2((float)((sx + 1) / tile.scaleUToX),(float)((sy + 1) / tile.scaleVToY));
-									Assert(uv0.X.IsInRange(0,1));
-									Assert(uv0.Y.IsInRange(0,1));
-									Assert(uv1.X.IsInRange(0,1));
-									Assert(uv1.Y.IsInRange(0,1));
-									if(debugLayer != -1)
-									{
-										DrawTextBox($"{(sx, sy)}",cc0,nameTextFormat,Color.White,255);
-									}
-
-									for(int isShadow = layer.wantShadow&&wantShadow ? 2 : 1;--isShadow >= 0;)
-									{
-										if(isShadow == 1 && !tile.wantShadow)
-										{
-											continue;
-										}
-										var _tint = (isShadow == 1) ? tintShadow : !tile.isBase ? World.GetTint(ccid) : tint;
-										if(!isBonus && isShadow == 0 && !tile.isBase)
-											_tint.A = intAlpha; ;
-										if(wantCity && (cx, cy).WorldToCid() == City.build)
-										{
-											if(cityAlphaI >= 255)
-												continue;
-											_tint.A = (byte)((_tint.A * (256 - cityAlphaI)) / 256);
-										}
-
-										var dz = tile.z * parallaxGain; // shadows draw at terrain level 
-
-
-										if(tile.canHover)
-										{
-											if(TryGetViewHover((cx, cy).WorldToCid(),out var hz))
-											{
-												dz += hz * viewHoverZGain;
-											}
-										}
-										//if(!AppS.IsKeyPressedShift())
-										//	continue;
-
-										//if(isShadow == 1)
-										//{
-
-										//	// shift shadow
-										//	//	cc = (cc - cameraLightC) * (1 + dz*2) + cameraLightC;
-										//	//		cc = (cc - cameraLightC)*
-										////	dz = 0;
-										//}
-
-
-										draw.AddQuad((isShadow == 1) ? Layer.tileShadow : (tile.isBase ? Layer.tileBase : Layer.tiles) + ((int)layer.id+1),
-											(isShadow == 1 ? tile.shadowMaterial : tile.material),cc0,cc1,
-											uv0,
-											uv1,_tint,
-											depth: dz);
-										//(cc0, cc1).RectDepth(dz));
+				//		for(var cy = cy0;cy < cy1;++cy)
+				//		{
+				//			for(var cx = cx0;cx < cx1;++cx)
+				//			{
+				//				var ccid = cx + cy * World.span;
+				//				var imageId = layerDat[ccid];
+				//				if(imageId == 0)
+				//					continue;
 
 
 
 
-									}
-								}
-							}
+				//				//   var layerData = TileData.packedLayers[ccid];
+				//				//  while (layerData != 0)
+				//				{
+				//					//    var imageId = ((uint)layerData & 0xffffu);
+				//					//     layerData >>= 16;
+				//					var tileId = TileLayer.TilesetId(imageId);
+				//					var off = TileLayer.ImageId(imageId);
+				//					var tile = td.tilesets[(int)tileId];
+				//					Assert(off < td.tilesets[(int)tileId].tilecount);
+				//					if(tile.material == null)
+				//						continue;
 
-						}
 
-					}
-					//
-					//   if (attacksVisible)
-					//       ds.FillRectangle(new Rect(new Point(), clientSpan.ToSize()), desaturateBrush);
+				//					var wc = new System.Numerics.Vector2(cx,cy);
+				//					//ar cc = wc.WorldToCamera();
+				//					var shift = new System.Numerics.Vector2((isBonus ? imageId== TileData.tilePortalOpen ? bonusLayerScale*2f : bonusLayerScale : 1f) * 0.5f);
+				//					var cc0 = wc - shift;
+				//					var cc1 = wc + shift;
+				//					var sy = off / tile.columns;
+				//					var sx = off - sy * tile.columns;
+				//					var uv0 = new System.Numerics.Vector2((float)(sx / tile.scaleUToX),(float)(sy /tile.scaleVToY));
+				//					var uv1 = new System.Numerics.Vector2((float)((sx + 1) / tile.scaleUToX),(float)((sy + 1) / tile.scaleVToY));
+				//					Assert(uv0.X.IsInRange(0,1));
+				//					Assert(uv0.Y.IsInRange(0,1));
+				//					Assert(uv1.X.IsInRange(0,1));
+				//					Assert(uv1.Y.IsInRange(0,1));
+				//					if(debugLayer != -1)
+				//					{
+				//						DrawTextBox($"{(sx, sy)}",cc0,nameTextFormat,Color.White,255);
+				//					}
+
+				//					for(int isShadow = layer.wantShadow&&wantShadow ? 2 : 1;--isShadow >= 0;)
+				//					{
+				//						if(isShadow == 1 && !tile.wantShadow)
+				//						{
+				//							continue;
+				//						}
+				//						var _tint = (isShadow == 1) ? tintShadow : !tile.isBase ? World.GetTint(ccid) : tint;
+				//						if(!isBonus && isShadow == 0 && !tile.isBase)
+				//							_tint.A = intAlpha; ;
+				//						if(wantCity && (cx, cy).WorldToCid() == City.build)
+				//						{
+				//							if(cityAlphaI >= 255)
+				//								continue;
+				//							_tint.A = (byte)((_tint.A * (256 - cityAlphaI)) / 256);
+				//						}
+
+				//						var dz = tile.z * parallaxGain; // shadows draw at terrain level 
 
 
-				}
+				//						if(tile.canHover)
+				//						{
+				//							if(TryGetViewHover((cx, cy).WorldToCid(),out var hz))
+				//							{
+				//								dz += hz * viewHoverZGain;
+				//							}
+				//						}
+				//						//if(!AppS.IsKeyPressedShift())
+				//						//	continue;
+
+				//						//if(isShadow == 1)
+				//						//{
+
+				//						//	// shift shadow
+				//						//	//	cc = (cc - cameraLightC) * (1 + dz*2) + cameraLightC;
+				//						//	//		cc = (cc - cameraLightC)*
+				//						////	dz = 0;
+				//						//}
+
+
+				//						draw.AddQuad((isShadow == 1) ? Layer.tileShadow : (tile.isBase ? Layer.tileBase : Layer.tiles) + ((int)layer.id+1),
+				//							(isShadow == 1 ? tile.shadowMaterial : tile.material),cc0,cc1,
+				//							uv0,
+				//							uv1,_tint,
+				//							depth: dz);
+				//						//(cc0, cc1).RectDepth(dz));
+
+
+
+
+				//					}
+				//				}
+				//			}
+
+				//		}
+
+				//	}
+				//	//
+				//	//   if (attacksVisible)
+				//	//       ds.FillRectangle(new Rect(new Point(), clientSpan.ToSize()), desaturateBrush);
+
+
+				//}
 
 
 				// fade out background
