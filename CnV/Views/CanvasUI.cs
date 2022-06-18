@@ -105,7 +105,7 @@ using Game;
 						if(lastCanvasC != cid)
 						{
 
-							Spot.viewHover = default;
+							//Spot.viewHover = default;
 							Player.viewHover = PlayerId.MaxValue;
 							ref string toolTip = ref ToolTips.spotToolTip;
 						toolTip = null;
@@ -113,12 +113,12 @@ using Game;
 							lastCanvasC = cid;
 							var packedId = World.GetWorldId(c);
 							var data = World.GetTile(World.rawPrior1!=null ? World.rawPrior1 : World.tileData,packedId);
-
+							Spot.viewHover = (WorldC)cid;
 							switch(data.type)
 							{
 								case World.TileType.typeCity:
 									{
-										Spot.viewHover = (WorldC)cid;
+										
 										var city = City.GetOrAddCity(cid);
 										
 										if(city != null)
@@ -244,6 +244,7 @@ using Game;
 							//	toolTip = sb.ToString();
 							//}
 							ToolTipWindow.TipChanged();
+						World.UpdateTintData( );
 						}
 					}
 				}

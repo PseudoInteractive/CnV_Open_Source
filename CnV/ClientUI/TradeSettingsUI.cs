@@ -12,6 +12,7 @@ public partial class CityUI
 {
 	public static async Task SetTradeSettings(int _cid, int? sourceHub = null,  int? targetHub = null,  bool autoFind = false)
 	{
+		var explicitTarget = targetHub is not null;
 		//	var targetExplicit = targetHub.HasValue;
 		foreach(var __cid in Spot.GetSelectedForContextMenu(_cid, false, onlyMine: true))
 		{
@@ -37,7 +38,7 @@ public partial class CityUI
 				settings.ironSource.SetCity(h,false);
 				settings.foodSource.SetCity(h,false);
 			}
-			if(targetHub is not null && !city.isHubOrStorage ) {
+			if(targetHub is not null && (explicitTarget||!city.isHubOrStorage) ) {
 				var h = targetHub.Value.AsCity();
 				settings.woodDest.SetCity(h,false);
 				settings.stoneDest.SetCity(h,false);

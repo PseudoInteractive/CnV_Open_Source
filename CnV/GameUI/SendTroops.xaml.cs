@@ -319,6 +319,20 @@ namespace CnV
 
 					}
 				}
+
+				if(type == ArmyType.scout) {
+					if(troops.GetCount(ttScout) < 0) {
+						if(verbose) AppS.MessageBox($"Scouting requires scouts");
+						return (false, 0);
+					}
+					if(troops.Any( t=> t.t is not( ttScout or ttGalley) ))
+					{
+						if(verbose) AppS.MessageBox($"Some of the troops selected cannot tag along with the scouts");
+						return (false, 0);
+					}
+
+				}
+
 				if((type is (ArmyType.siege or ArmyType.assault)) &&(!target.isCastle)) {
 					if(verbose) AppS.MessageBox($"Target must be castle");
 					return (false, 0);

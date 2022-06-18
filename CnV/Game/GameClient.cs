@@ -64,11 +64,13 @@ namespace CnV
 		public static      EffectPass      alphaAddEffect;
 		public static      EffectPass      fontEffect;
 		public static      EffectPass      darkFontEffect;
-		public static      EffectPass      animatedSpriteEffect;
+	//	public static      EffectPass      animatedSpriteEffect;
 		internal static     EffectPass      sdfEffect;
 		internal static     EffectPass      noTextureEffect;
 		internal static     EffectPass      noTextureShadowEffect;
-		internal static     EffectPass      worldSpaceEffect;
+/// <summary>
+/// 		internal static     EffectPass      worldSpaceEffect;
+/// </summary>
 //		public static      EffectParameter planetGainsParamater;
 		public static      EffectParameter worldMatrixParameter;
 		public static EffectParameter viewCWParam;

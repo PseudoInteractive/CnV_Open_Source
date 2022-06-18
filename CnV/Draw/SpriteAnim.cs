@@ -20,7 +20,7 @@ namespace CnV
 		public string asset;
 		public Material material;
 		public string assetPath => $"Art/Anim/{asset}";
-		public void Load() { material =new Material( GameClient.instance.Content.Load<Texture2D>(assetPath),GameClient.animatedSpriteEffect); }
+		public void Load() { } // material =new Material( GameClient.instance.Content.Load<Texture2D>(assetPath),GameClient.animatedSpriteEffect); }
 		
 		public static float ComputeFrameDeltaAsDu(int frameCount)
 		{

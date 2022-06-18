@@ -325,10 +325,10 @@ namespace CnV.Views
 					meta.reqStone = res.stoneReq.IntValue();
 					meta.reqIron = res.ironReq.IntValue();
 					meta.reqFood = res.foodReq.IntValue();
-					meta.maxWood = res.woodReq.IntValue();
-					meta.maxStone = res.stoneReq.IntValue();
-					meta.maxIron = res.ironReq.IntValue();
-					meta.maxFood = res.foodReq.IntValue();
+					meta.maxWood = res.woodSend.IntValue();
+					meta.maxStone = res.stoneSend.IntValue();
+					meta.maxIron = res.ironSend.IntValue();
+					meta.maxFood = res.foodSend.IntValue();
 				}
 				return meta;
 			});

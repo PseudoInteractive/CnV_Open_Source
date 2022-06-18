@@ -57,10 +57,10 @@ static partial class View
 				World.tileEffect =EffectPassOpaque("LitTile", blendReplace,false);
 			//	World.tileWorldEffect =EffectPassOpaque("LitTileWorld", blendReplace,false);
 				World.unlitTileEffect =EffectPassOpaque("UnLitTile",blendReplace,false);
-				animatedSpriteEffect   = EffectPass("SpriteAnim");
+			//	animatedSpriteEffect   = EffectPass("SpriteAnim");
 				sdfEffect              = EffectPass("SDF");
 				noTextureEffect        = EffectPass("NoTexture");
-				worldSpaceEffect       = EffectPass("WorldSpace");
+			//	worldSpaceEffect       = EffectPass("WorldSpace");
 				noTextureShadowEffect = EffectPass("NoTextureShadow");
 		
 				var imageLoad =  TileData.LoadImages(); // start loading here

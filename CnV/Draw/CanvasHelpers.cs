@@ -57,7 +57,33 @@ using static GameClient;
 		return new Color((int)((float)(int)value.R * scale.X),(int)((float)(int)value.G * scale.X),(int)((float)(int)value.B * scale.X),(int)((float)(int)value.A * scale.Y));
 
 	}
+	// b==0 => no boost
+	// b==256 => full boost (half way to white)
+	static byte BoostSmooth(byte a, int b) {
+		Assert(b <= 256);
+		return (byte)((int)a + ( (int)a*256 - a*a )*(b)/(256*256));
+	}
+	// 256 => no attenuation
+	static byte Modulate(byte a, int b) {
+		return  ((a*b+128)/256).Min( (byte)255);
+	}
+	static byte AddSmooth(byte a, byte b) {
+		return (byte)(a + b - a*b/256 );
+	}
 
+	public static Color BoostSmooth(this Color value,int scale )
+	{
+		Assert(scale <= 256);
+		return new Color(BoostSmooth(value.R,scale),BoostSmooth(value.G,scale),BoostSmooth(value.B,scale),value.A);
+
+	}
+	public static Color Modulate(this Color value,int scale )
+	{
+		return new Color(Modulate(value.R,scale),Modulate(value.G,scale),Modulate(value.B,scale),value.A);
+
+	}
+	//a + a*k - a* a*k;
+	// a + b - a*b
 	public static Color AlphaToWhite(this byte alpha) { return new Color(byte.MaxValue,byte.MaxValue,byte.MaxValue,alpha); }
 	public static Color AlphaToBlack(this byte alpha) { return new Color((byte)0,(byte)0,(byte)0,alpha); }
 

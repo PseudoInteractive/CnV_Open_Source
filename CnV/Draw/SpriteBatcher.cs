@@ -82,13 +82,12 @@ namespace CnV.Draw
 		/// if there is none available grow the pool and initialize new items.
 		/// </summary>
 		/// <returns></returns>
-		public Microsoft.Xna.SpriteVertices CreateBatchItem(int layer, Material material)
+		public void AddBatchItem(int layer, Material material,VertexSprite v)
 		{
 			Assert(material.effect.technique is not null);
 			var list = CreateBatchItemList(layer, material);
-			var rv = SpriteBatchItemList.Alloc();
-			list.sprites.Add(rv);
-			return rv;
+	
+			list.sprites.Add(v);
 		}
 		
 		public SpriteBatchItemList CreateBatchItemList(int layer, Material material)
@@ -237,7 +236,7 @@ namespace CnV.Draw
 							{
 								_device.DrawUserSprites(
 										list.sprites,
-										VertexPositionColorTexture.VertexDeclaration);
+										VertexSprite.VertexDeclaration);
 							}
 							foreach (var mesh in list.meshes)
 							{

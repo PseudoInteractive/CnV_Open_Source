@@ -11,6 +11,7 @@ using RectangleF = System.Drawing.RectangleF;
 using static CnV.Debug;
 using System.Collections.Generic;
 using BitmapFont;
+using Microsoft.Xna;
 
 namespace CnV.Draw
 {
@@ -440,41 +441,8 @@ namespace CnV.Draw
 		var list = _batcher.CreateBatchItemList(layer, material);
 		list.meshes.Add(m);
 	}
-	public void AddQuad(int layer, Material texture, Vector2 c0, Vector2 c1, Vector2 uv0, Vector2 uv1, Color color,DepthFunction depthFunction, float depth=0)
-		{
-
-			var item = _batcher.CreateBatchItem(layer,texture);
-
-
 	
-			item.Set(c0.X,
-					 c0.Y,
-					 c1.X,
-					c1.Y,
-					 color,
-					 uv0,
-					 uv1,
-					depth,depthFunction);
-
-		}
-		public void AddQuad(int layer, Material texture, Vector2 c0, Vector2 c1,  Color color, DepthFunction depthFunction, float depth = 0)
-		{
-
-			var item = _batcher.CreateBatchItem(layer, texture);
-
-
-
-
-			item.Set(c0.X,
-					 c0.Y,
-					 c1.X,
-					c1.Y,
-					 color,
-					 new Vector2(),
-					 new Vector2(1,1),
-					depth, depthFunction);
-
-		}
+		
 		//public void AddQuad(int layer, Material texture, Vector2 c0, Vector2 c1, Vector2 uv0, Vector2 uv1, Color color, (float depth00, float depth10,float depth01, float depth11) depth  )
 		//{
 
@@ -494,111 +462,78 @@ namespace CnV.Draw
 		public void AddQuad(int layer, Material texture, Vector2 c0, Vector2 c1, Vector2 uv0, Vector2 uv1, Color color, float depth  )
 		{
 
-			var item = _batcher.CreateBatchItem(layer, texture);
+			 _batcher.AddBatchItem(layer, texture,new VertexSprite(c0,c1,depth,uv0,uv1,color) );
 			
-
-
-			item.Set(c0.X,
-					 c0.Y,
-					 c1.X,
-					c1.Y,
-					 color,
-					 uv0,
-					 uv1,
-					 depth);
-
-		}
-		public void AddQuad(int layer, Material texture, Vector2 c0, Vector2 c1, Vector2 uv0, Vector2 uv1, Color colorTL,Color colorTR, Color colorBL,Color colorBR, float depth  )
-		{
-
-			var item = _batcher.CreateBatchItem(layer, texture);
-
-
-			item.Set(c0.X,
-					 c0.Y,
-					 c1.X,
-					c1.Y,
-					 colorTL,colorTR,colorBL,colorBR,
-					 uv0,
-					 uv1,
-					 depth);
-
 		}
 
 		public void AddQuad(int layer, Material texture, Vector2 c0, Vector2 c1, Color color, float depth=0)
 		{
 
-			var item = _batcher.CreateBatchItem(layer, texture);
+			_batcher.AddBatchItem(layer, texture,new(c0,c1,depth,Vector2.Zero,Vector2.One,color));
 
 
 
-
-			item.Set(c0.X,
-					 c0.Y,
-					 c1.X,
-					c1.Y,
-					 color,
-					 new Vector2(),
-					 new Vector2(1,1),
-					 depth);
 
 		}
 		public void AddQuadWithShadow(int layer,int shadowLayer, Material texture, Vector2 c0, Vector2 c1, Color color,Color shadowColor, float depth)
 		{
 			if(AGame.wantShadow)
-				AddQuad(shadowLayer, texture, c0, c1, shadowColor,depthFunction:AGame.PlanetDepth, View.zShadow);
-			AddQuad(layer, texture, c0, c1, color,depthFunction:AGame.PlanetDepth,depth: depth);
+				AddQuad(shadowLayer, texture, c0, c1, shadowColor, View.zShadow);
+			AddQuad(layer, texture, c0, c1, color,depth: depth);
 
 		}
 		
 		// Thickness is in screen space
-		public unsafe void AddLine(int layer,Material texture, Vector2 c0, Vector2 c1, float thickness, float u0, float u1, Color color,(float v0,float v1) depth)
+		public  void AddLine(int layer,Material texture, Vector2 c0, Vector2 c1, float thickness, float u0, float u1, Color color,(float v0,float v1) depth)
 		{
+			
+				_batcher.AddBatchItem(layer,texture,new(c0,c1,depth.v0,new(u0,0),new(u1,1),color,thickness.ScreenToWorld()));
+			return;
 
-			var item = _batcher.CreateBatchItem(layer, texture);
+			//var item = _batcher.CreateBatchItem(layer, texture);
 
-			var dc0 = c1 - c0;
-			var dc1 = new Vector2(dc0.Y, -dc0.X);
-			dc1 *= (thickness * 0.5f / dc1.Length()).ScreenToWorld();
+			//var dc0 = c1 - c0;
+			//var dc1 = new Vector2(dc0.Y, -dc0.X);
+			//dc1 *= (thickness * 0.5f / dc1.Length()).ScreenToWorld();
 
 
 			
 
-            item.vertexTL=new VertexPositionColorTexture(
-					new Vector3( c0.X - dc1.X,
-					c0.Y - dc1.Y,
-					depth.v0),
-					color,
-					new Microsoft.Xna.Framework.Vector2(u0,
-					0)
+   //         item.vertexTL=new VertexPositionColorTexture(
+			//		new Vector3( c0.X - dc1.X,
+			//		c0.Y - dc1.Y,
+			//		depth.v0),
+			//		color,
+			//		new Microsoft.Xna.Framework.Vector2(u0,
+			//		0)
 					
-				);
-			item.vertexTR = new VertexPositionColorTexture(
-			   new Vector3(c0.X + dc1.X,
-					c0.Y + dc1.Y,
-					depth.v0),
-					color,
-					new Microsoft.Xna.Framework.Vector2(u0,
-					1)
-				);
-			item.vertexBL = new VertexPositionColorTexture(
-				   new Vector3(c1.X - dc1.X,
-					c1.Y - dc1.Y,
-					depth.v1),
-					color,
-					new Microsoft.Xna.Framework.Vector2(u1,
-					0)
+			//	);
+			//item.vertexTR = new VertexPositionColorTexture(
+			//   new Vector3(c0.X + dc1.X,
+			//		c0.Y + dc1.Y,
+			//		depth.v0),
+			//		color,
+			//		new Microsoft.Xna.Framework.Vector2(u0,
+			//		1)
+			//	);
+			//item.vertexBL = new VertexPositionColorTexture(
+			//	   new Vector3(c1.X - dc1.X,
+			//		c1.Y - dc1.Y,
+			//		depth.v1),
+			//		color,
+			//		new Microsoft.Xna.Framework.Vector2(u1,
+			//		0)
 
-				);
-			item.vertexBR = new VertexPositionColorTexture(
-				   new Vector3(c1.X + dc1.X,
-					c1.Y + dc1.Y,
-					depth.v1),
-					color,
-					new Microsoft.Xna.Framework.Vector2(u1,
-					1)
+			//	);
+			//item.vertexBR = new VertexPositionColorTexture(
+			//	   new Vector3(c1.X + dc1.X,
+			//		c1.Y + dc1.Y,
+			//		depth.v1),
+			//		color,
+			//		new Microsoft.Xna.Framework.Vector2(u1,
+			//		1)
 
-				);
+			//	);
 
 			}
 		
@@ -667,7 +602,7 @@ namespace CnV.Draw
         /// <param name="color">A color mask.</param>
 	
 
-		public unsafe void DrawString(BitmapFont.BitmapFont me, string text, Vector2 position, float scale, Color color, int layer, float z, DepthFunction depthFunction, float maxWidth = -1f)
+		public unsafe void DrawString(BitmapFont.BitmapFont me, string text, Vector2 position, float scale, Color color, int layer, float z, float maxWidth = -1f)
 		{
 			//var   isDark      = color.IsDark();
 			var   material    =  GameClient.fontMaterial;
@@ -714,7 +649,6 @@ namespace CnV.Draw
 						p.Y += data.YOffset;
 						
 
-						var item = _batcher.CreateBatchItem(layer, material);
 						Vector2 _texCoordTL, _texCoordBR;
 
 						_texCoordTL.X = data.X * texelWidth;
@@ -723,14 +657,10 @@ namespace CnV.Draw
 						_texCoordBR.Y = (data.Y+data.Height)*texelHeight;
 						var x0 = p.X* scale + position.X;
 						var y0 = p.Y* scale + position.Y;
+						var item = new VertexSprite(new(x0,y0),new(x0+data.Width*scale,y0+data.Height*scale),z,_texCoordTL,_texCoordBR,color);
 
-						item.Set(x0,y0,x0+data.Width*scale,y0+data.Height* scale,
-								
-								 color,
-								 _texCoordTL,
-								 _texCoordBR,
-								 depthBase:z,depth: depthFunction);
-
+						_batcher.AddBatchItem(layer, material,item);
+						
 						drawX += width;
 						previousCharacter = character;
 					}

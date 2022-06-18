@@ -29,10 +29,14 @@ namespace CnV
 	{
 
 
+
 		
 
 		public static async Task InitializeGame()
 	{
+		
+
+
 			//var p0 = ServerTime.GetNightProtection(new ServerTime(2022,3,1,21,30,0));
 			//var p = ServerTime.GetNightProtection(new ServerTime(2022,3,1,22,30,0));
 			//var p1 = ServerTime.GetNightProtection(new ServerTime(2022,3,1,23,30,0));

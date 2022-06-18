@@ -23,7 +23,7 @@ public class TextLayout
 			normalizedSpan.Y = size.Height; // *0.5f;
 		}
 
-		internal void Draw(Vector2 c, float scale, Color color, int layer, float z, DepthFunction depthFunction)
+		internal void Draw(Vector2 c, float scale, Color color, int layer, float z)
 		{
 		// convert screen from pixels to world units
 			
@@ -39,8 +39,8 @@ public class TextLayout
 				c.Y -= span.Y;
 
 
-			draw.DrawString(bfont, text, c, scale, color, layer, z,
-								depthFunction); // (c+span*0.5f).CToDepth() );
+			draw.DrawString(bfont, text, c, scale, color, layer, z
+								); // (c+span*0.5f).CToDepth() );
 		}
 
 		//internal void Draw(Vector2 c, Color color,  int layer = Layer.labelText)
