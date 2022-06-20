@@ -127,6 +127,13 @@ namespace CnV
 			OnPropertyChanged();
 		}
 
-		
+		private void DateChanged(object sender,Syncfusion.UI.Xaml.Editors.SelectedDateTimeChangedEventArgs e) {
+			Note.Show("Date changed");
+
+		}
+
+		private void TimeChanged(object sender,Syncfusion.UI.Xaml.Editors.SelectedDateTimeChangedEventArgs e) {
+			Note.Show("Time changed");
+		}
 	}
 }

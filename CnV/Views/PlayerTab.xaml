@@ -184,7 +184,8 @@
 												TextAlignment="Right"
 												 />
 							
-								<sf:GridNumericColumn MappingName="TsTotal"
+								<sf:GridNumericColumn MappingName="tsTotalIfShared"
+													  HeaderText="TS"
 												TextAlignment="Right"
 												ToolTipService.ToolTip="TS enlisted in city"
 												DisplayNumberFormat="N0"

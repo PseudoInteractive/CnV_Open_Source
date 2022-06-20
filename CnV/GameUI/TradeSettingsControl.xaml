@@ -46,10 +46,10 @@
 						<ColumnDefinition Width="*" />
 						<ColumnDefinition Width="*" />
 					</Grid.ColumnDefinitions>
-					<view:CityControl Label="Wood Source" Grid.Column="0" x:Name="woodSource" LabelWidth="110" Margin="8,2" cityChanged="WoodSource_PropertyChanged" x:FieldModifier="internal" />
-					<view:CityControl Label="Stone Source" Grid.Column="1" x:Name="stoneSource" LabelWidth="110" Margin="8,2" x:FieldModifier="internal" />
-					<view:CityControl Label="Iron Source" Grid.Column="0" Grid.Row="1"  x:Name="ironSource" LabelWidth="110" Margin="8,2" x:FieldModifier="internal" />
-					<view:CityControl Label="Food Source" Grid.Column="1" Grid.Row="1" x:Name="foodSource" LabelWidth="110" Margin="8,2" x:FieldModifier="internal" />
+					<cnv:CityControl Label="Wood Source" Grid.Column="0" x:Name="woodSource" LabelWidth="110" Margin="8,2" cityChanged="WoodSource_PropertyChanged" x:FieldModifier="internal" />
+					<cnv:CityControl Label="Stone Source" Grid.Column="1" x:Name="stoneSource" LabelWidth="110" Margin="8,2" x:FieldModifier="internal" />
+					<cnv:CityControl Label="Iron Source" Grid.Column="0" Grid.Row="1"  x:Name="ironSource" LabelWidth="110" Margin="8,2" x:FieldModifier="internal" />
+					<cnv:CityControl Label="Food Source" Grid.Column="1" Grid.Row="1" x:Name="foodSource" LabelWidth="110" Margin="8,2" x:FieldModifier="internal" />
 				</Grid >
 
 			</StackPanel>
@@ -83,10 +83,10 @@
 						<ColumnDefinition Width="*" />
 						<ColumnDefinition Width="*" />
 					</Grid.ColumnDefinitions>
-					<view:CityControl Label="Wood Dest" Grid.Column="0" x:Name="woodDest" LabelWidth="110" Margin="8,2" cityChanged="WoodDest_PropertyChanged" x:FieldModifier="internal" />
-					<view:CityControl Label="Stone Dest" Grid.Column="1" x:Name="stoneDest" LabelWidth="110" Margin="8,2" x:FieldModifier="internal" />
-					<view:CityControl Label="Iron Dest" Grid.Column="0" Grid.Row="1"  x:Name="ironDest" LabelWidth="110" Margin="8,2" x:FieldModifier="internal" />
-					<view:CityControl Label="Food Dest" Grid.Column="1" Grid.Row="1" x:Name="foodDest" LabelWidth="110" Margin="8,2" x:FieldModifier="internal" />
+					<cnv:CityControl Label="Wood Dest" Grid.Column="0" x:Name="woodDest" LabelWidth="110" Margin="8,2" cityChanged="WoodDest_PropertyChanged" x:FieldModifier="internal" />
+					<cnv:CityControl Label="Stone Dest" Grid.Column="1" x:Name="stoneDest" LabelWidth="110" Margin="8,2" x:FieldModifier="internal" />
+					<cnv:CityControl Label="Iron Dest" Grid.Column="0" Grid.Row="1"  x:Name="ironDest" LabelWidth="110" Margin="8,2" x:FieldModifier="internal" />
+					<cnv:CityControl Label="Food Dest" Grid.Column="1" Grid.Row="1" x:Name="foodDest" LabelWidth="110" Margin="8,2" x:FieldModifier="internal" />
 				</Grid >
 				<Grid  >
 					<Grid.ColumnDefinitions>

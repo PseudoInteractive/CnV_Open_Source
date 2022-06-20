@@ -31,6 +31,43 @@ namespace CnV.Converters
 			return TimeSpan.Zero;
 		}
 	}
+
+	public class CityConverter : IValueConverter
+	{
+		public object Convert(object value,Type targetType,object parameter,string language) {
+			if(value is City city) {
+				if(targetType == typeof(string))
+					return city.ToString();
+				else if(targetType == typeof(SpotId))
+					return city.cid;
+				else if(targetType.IsAssignableFrom(typeof(City)))
+					return city;
+				else
+					throw new NotImplementedException();
+
+			}
+			else if(value is SpotId cid) {
+				if(targetType == typeof(string))
+					return cid.AsCity().ToString();
+				else if(targetType == typeof(SpotId))
+					return cid;
+				else if(targetType.IsAssignableFrom(typeof(City)))
+					return cid.AsCity();
+				else
+					throw new NotImplementedException();
+			}
+			else {
+				throw new NotImplementedException();
+
+			}
+		}
+
+		public object ConvertBack(object value, Type targetType, object parameter, string language)
+		{
+			return Convert( value, targetType, parameter, language );
+		}
+	}
+
 	public class NullableIntToDoubleConverter : IValueConverter
 	{
 		public object Convert(object value, Type targetType, object parameter, string language)

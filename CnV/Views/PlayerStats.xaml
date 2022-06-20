@@ -61,6 +61,8 @@
 				<cnv:IconText x:Name="incoming" Text="2/1" Image="{x:Bind cnv:ImageHelper.Get('region/UI/icon_player_own_support_inc.png')}" MaxWidth="64"  />
 			</Button.Content>
 		</Button>
+		<cnv:CityControl x:Name="focus" Label="ꁊ"  MinWidth="160" Height="32" Margin= "4,2" cityChanged="focus_PropertyChanged" x:FieldModifier="internal"
+						 ToolTipService.ToolTip="Spot or City clicked, enter coordinates view a specific spot" />
 
 	</tk:WrapPanel>
 </UserControl>

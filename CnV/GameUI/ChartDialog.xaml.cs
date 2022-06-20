@@ -125,7 +125,7 @@ namespace CnV
 						ShowTooltip=true,
 						StrokeThickness=5,
 					//	BorderThickness = new(5),
-						
+						ShowTrackballInfo=false,
 						ShowDataLabels=false,
 						TrackballLabelTemplate=sfChart.Resources["trackTemplate"] as DataTemplate,
 						TooltipTemplate= sfChart.Resources["tooltipTemplate0"] as DataTemplate

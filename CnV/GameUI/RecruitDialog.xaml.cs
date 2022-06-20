@@ -94,7 +94,7 @@ namespace CnV
 		{
 			var tt = this.tt;
 			var freeSpace = city.availableTsSpace;
-			if(freeSpace < tt.ts)
+			if(freeSpace < tt.troopSpace)
 			{
 				AppS.MessageBox("Not enough troop space",hero: AppS.heroMissingFunds);
 				return;
@@ -151,7 +151,7 @@ namespace CnV
 				m = m.Min( (city.player.gold / req.gold).ClampToInt() );
 
 			var freeSpace = city.availableTsSpace;
-			m = m.Min(freeSpace / Troops.ttTs[type]);
+			m = m.Min( Troops.ttTroopSpace[type] > 0 ? freeSpace / Troops.ttTroopSpace[type] : Troops.guardFreeSpace/10 );
 			
 			count = m;
 			OnPropertyChanged();

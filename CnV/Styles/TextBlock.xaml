@@ -9,20 +9,16 @@
 		<x:Double x:Key="ContentControlFontSize">14</x:Double>
 		<x:Double x:Key="TextControlThemeMinHeight">22</x:Double>
 		<x:Double x:Key="ListViewItemMinHeight">28</x:Double>
-		
-	
-	<!--  Common texts  -->
-			<!--Text Block-->
 
 
-			<Style TargetType="TextBlock" x:Key="TextBlockCondensed" BasedOn="{StaticResource BaseTextBlockStyle}" >
-				<Setter Property="FontStretch" Value="Condensed"/>
-				<Setter Property="FontWeight" Value="Normal" />
 
-			</Style>
+	<Style TargetType="TextBlock" x:Key="TextBlockCondensed" BasedOn="{StaticResource BaseTextBlockStyle}" >
+		<Setter Property="FontStretch" Value="Condensed"/>
+		<Setter Property="FontWeight" Value="Normal" />
 
+	</Style>
 
-			<Style x:Key="TextBlockSmall" TargetType="TextBlock" BasedOn="{StaticResource TextBlockCondensed}" >
+	<Style x:Key="TextBlockSmall" TargetType="TextBlock" BasedOn="{StaticResource TextBlockCondensed}" >
 				<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 
 			</Style>

@@ -11,55 +11,54 @@
 	Loaded="OnLoaded"
 	Tag="Chart"
     mc:Ignorable="d">
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="auto" />
+				<RowDefinition Height="*" />
+			</Grid.RowDefinitions>
+			<StackPanel Orientation="Horizontal" >
+				<ComboBox SelectedIndex="{x:Bind metric, Mode=TwoWay}" ItemsSource="{x:Bind cnv:ChartDialog.metrics}" x:Name="metricCombo" />
+				<ToggleSwitch  OnContent="Alliances" OffContent="Players" IsOn="{x:Bind byAlliance,Mode=TwoWay}" />
+			</StackPanel>
 
-	<Grid>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="auto" />
-			<RowDefinition Height="*" />
-		</Grid.RowDefinitions>
-		<StackPanel Orientation="Horizontal" >
-			<ComboBox SelectedIndex="{x:Bind metric, Mode=TwoWay}" ItemsSource="{x:Bind cnv:ChartDialog.metrics}" x:Name="metricCombo" />
-			<ToggleSwitch  OnContent="Alliances" OffContent="Players" IsOn="{x:Bind byAlliance,Mode=TwoWay}" />
-		</StackPanel>
-		
-		<sfc:SfCartesianChart x:Name="sfChart" Grid.Row="1" SelectionChanged="sfChart_SelectionChanged"  SelectionChanging="sfChart_SelectionChanging"    >
-			<sfc:SfCartesianChart.Resources>
-				<DataTemplate x:Key="tooltipTemplate0">
-					<Border IsHitTestVisible="False" Background="White" CornerRadius="4" Padding="4" BorderThickness="1" BorderBrush="Purple" >
-						<TextBlock Text="{Binding Item.name}" IsHitTestVisible="false" Foreground="Black"  />
-					</Border>
-				</DataTemplate>
-				<DataTemplate x:Key="trackTemplate">
-					<Border CornerRadius="2" BorderThickness="0" IsHitTestVisible="False" 
+			<sfc:SfCartesianChart x:Name="sfChart" Grid.Row="1" SelectionChanged="sfChart_SelectionChanged"  SelectionChanging="sfChart_SelectionChanging"    >
+				<sfc:SfCartesianChart.Resources>
+					<DataTemplate x:Key="tooltipTemplate0">
+						<Border IsHitTestVisible="False" Background="White" CornerRadius="4" Padding="4" BorderThickness="1" BorderBrush="Purple" >
+							<TextBlock Text="{Binding Item.name}" IsHitTestVisible="false" Foreground="Black"  />
+						</Border>
+					</DataTemplate>
+					<DataTemplate x:Key="trackTemplate">
+						<Border CornerRadius="2" BorderThickness="0" IsHitTestVisible="False" 
                         Background="White" Padding="2">
-						<TextBlock Foreground="Black" Text="{Binding ValueY}" Style="{StaticResource TextBlockSmall}" IsHitTestVisible="False"/>
-					</Border>
-				</DataTemplate>
-			</sfc:SfCartesianChart.Resources>
-			
+							<TextBlock Foreground="Black" Text="{Binding ValueY}" Style="{StaticResource TextBlockSmall}" IsHitTestVisible="False"/>
+						</Border>
+					</DataTemplate>
+				</sfc:SfCartesianChart.Resources>
 
-			<sfc:SfCartesianChart.Legend>
-				<sfc:ChartLegend CheckBoxVisibility="Visible" ToggleSeriesVisibility="True"  />
-			</sfc:SfCartesianChart.Legend>
-			
-			<sfc:SfCartesianChart.PrimaryAxis>
-				<sfc:DateTimeAxis  Interval="1" IntervalType="Days" LabelFormat="MM/dd"    LabelClicked="PrimaryAxisClicked" />
-			</sfc:SfCartesianChart.PrimaryAxis>
 
-			<sfc:SfCartesianChart.SecondaryAxis>
-				<sfc:NumericalAxis    LabelClicked="SecondaryAxisClicked" ShowTrackballInfo="False" />
-			</sfc:SfCartesianChart.SecondaryAxis>
-			<sfc:SfCartesianChart.Behaviors>
-				<sfc:ChartZoomPanBehavior   />
+				<sfc:SfCartesianChart.Legend>
+					<sfc:ChartLegend CheckBoxVisibility="Visible" ToggleSeriesVisibility="True"   />
+				</sfc:SfCartesianChart.Legend>
 
-				<sfc:ChartSelectionBehavior  Type="Point"  />
+				<sfc:SfCartesianChart.PrimaryAxis>
+					<sfc:DateTimeAxis  Interval="1" IntervalType="Days" LabelFormat="MM/dd"  ShowTrackballInfo="True" LabelClicked="PrimaryAxisClicked" />
+				</sfc:SfCartesianChart.PrimaryAxis>
 
-				<!--<sfc:ChartCrosshairBehavior  />-->
-				<!--<sfc:ChartTrackballBehavior  />-->
-			<!--<sfc:ChartTooltipBehavior  ShowDuration="5000"   />-->
+				<sfc:SfCartesianChart.SecondaryAxis>
+					<sfc:NumericalAxis    LabelClicked="SecondaryAxisClicked"  ShowTrackballInfo="True" />
+				</sfc:SfCartesianChart.SecondaryAxis>
+				<sfc:SfCartesianChart.Behaviors>
+					<sfc:ChartZoomPanBehavior   />
 
-			</sfc:SfCartesianChart.Behaviors>
+					<sfc:ChartSelectionBehavior  Type="Point"  />
 
-		</sfc:SfCartesianChart>
-	</Grid>
+					<sfc:ChartCrosshairBehavior  />
+					<!---	<sfc:ChartTrackballBehavior  /> -->
+					<!--<sfc:ChartTooltipBehavior  ShowDuration="5000"   />-->
+
+				</sfc:SfCartesianChart.Behaviors>
+
+			</sfc:SfCartesianChart>
+		</Grid>
 </view:UserTab>

@@ -11,7 +11,7 @@
 	HorizontalAlignment="Stretch"
 	HorizontalContentAlignment="Stretch"
 			 VerticalAlignment="Top"
-	
+	xmlns:tkui="using:CommunityToolkit.WinUI.UI"
 	Background="{x:Null}"
 	Loaded="UserControl_Loaded"
     mc:Ignorable="d">
@@ -37,33 +37,21 @@
 
 
 
-		<StackPanel x:Name="stackPanel"  Margin="0" Padding="0" Background="{x:Null}"   CornerRadius="0" VerticalAlignment="Top" >
-			<ComboBox  x:Name="cityBox" x:FieldModifier="public" 
-					               HorizontalAlignment="Stretch"
-					                IsEditable="True"
-					   IsTextSearchEnabled="True"
-					   ItemsSource="{x:Bind cnv:City.gridCitySource, Mode=OneWay}"
-					                TextSubmitted="CitySubmitted"			
-							SelectionChanged="CityBox_SelectionChanged"
+		<StackPanel x:Name="stackPanel"  Margin="0" Padding="0" Background="{x:Null}"   CornerRadius="0" VerticalAlignment="Top"  >
+			<cnv:CityControl x:Name="cityBox" Label="ꁊ"  HorizontalAlignment="Stretch"  Margin= "0" x:FieldModifier="internal" 
+
+									cityChanged="CityBox_SelectionChanged"
 					                 ToolTipService.ToolTip="Right tap for menu"
-					                Margin="0"
+					               
 					
 					   Background="{StaticResource ExpanderBrushHeader}"
 					   RightTapped="{x:Bind views:ShellPage.BuildHomeRightTapped}"
-					   >
-				<ComboBox.ItemTemplate>
-					<DataTemplate x:Name="SingleLineDataTemplate" x:DataType="cnv:City">
-						<StackPanel Orientation="Horizontal" Height="32" >
-							<Image Source="{x:Bind icon}" Height="32" Width="32" Stretch="Fill" VerticalAlignment="Center" IsTapEnabled="True" Tapped="CityIconTapped"/>
-							<TextBlock Text="{x:Bind nameAndRemarks}" VerticalAlignment="Center" />
-						</StackPanel>
-					</DataTemplate>
-				</ComboBox.ItemTemplate>
-			</ComboBox>
+					  />
 
 			<!--Incoming-->
 			
-			<Expander IsExpanded="True" Expanding="Expander_Expanding" Visibility="{x:Bind incomingVisible,Mode=OneWay}"  x:Name="expIncoming" HorizontalAlignment="Stretch" Background="{StaticResource ExpanderBrushContent}"   >
+			<Expander IsExpanded="True" Expanding="Expander_Expanding" Visibility="{x:Bind incomingVisible,Mode=OneWay}"  x:Name="expIncoming" HorizontalAlignment="Stretch" Background="{StaticResource ExpanderBrushContent}" 
+					  xmlns:tkui="using:CommunityToolkit.WinUI.UI" >
 				<Expander.Header   >
 					<Border Background="Maroon" BorderThickness="0" Padding="3" CornerRadius="{StaticResource baseCR}" >
 						<TextBlock Text ="Incoming" Margin="0"   Style="{StaticResource TextBlockSmall}"  HorizontalAlignment="Right"  />

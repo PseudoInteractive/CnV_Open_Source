@@ -327,6 +327,7 @@ namespace CnV.Views
 					d.isValid = r.isValid;
 					d.carry   = r.averageCarry;
 					d.reps    = (byte)r.reps;
+					d.error = r.errorMessage;
 					if(d.isValid || !autoRaid)
 						rv.Add(d);
 

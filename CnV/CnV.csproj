@@ -327,9 +327,6 @@
 			<DependentUpon>QuickBuild.xaml</DependentUpon>
 		</Compile>
 		<Compile Include="Views\ReinforcementsTab.xaml.cs" />
-		<Compile Include="Views\ResSettings.xaml.cs">
-			<DependentUpon>ResSettings.xaml</DependentUpon>
-		</Compile>
 		<Compile Include="Views\SettingsPage.xaml.cs">
 			<DependentUpon>SettingsPage.xaml</DependentUpon>
 		</Compile>
@@ -592,10 +589,6 @@
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Include="Views\ReinforcementsTab.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Include="Views\ResSettings.xaml">
-			<SubType>Designer</SubType>
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Include="Views\SettingsPage.xaml">

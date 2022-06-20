@@ -57,6 +57,8 @@
 										   TextAlignment="Right" />
 				<sf:GridHyperlinkColumn MappingName="xy"
 				                      />
+				<sf:GridTextColumn MappingName="error" />
+
 			</sf:SfDataGrid.Columns>
 		</sf:SfDataGrid>
 		

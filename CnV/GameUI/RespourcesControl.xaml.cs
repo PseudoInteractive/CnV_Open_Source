@@ -23,6 +23,8 @@ namespace CnV
 			
 		}
 
+		public bool allowNegative { get; set; } = false;
+
 		public static readonly DependencyProperty RssProperty = DependencyProperty.Register(
 		"Rss",
 		typeof(Resources),
@@ -49,27 +51,45 @@ namespace CnV
 
 		public string _Desc(int id) => $"{CnV.Resources.ResGlyph(id)} {Desc}";
 
-		public int RssWood
+		// Only called on UI change
+		private void Set(int resIndex, int v)
 		{
-			get => Rss.wood; 
-			set => Rss = Rss with { wood = value };
+			if(!allowNegative) {
+				if(v < 0)
+					return;
+			}
+			var rss = Rss;
+			if(rss[resIndex]==v)
+				return;
+			rss[resIndex] = v;
+			Rss = rss;
+			changed?.Invoke(this, EventArgs.Empty );
+			
 		}
+
+		public int RssWood {
+			get => Rss.wood;
+			set => Set(0,value);
+		}
+		
 		public int RssStone
 		{
 			get => Rss.stone; 
-			set => Rss = Rss with { stone = value };
+			set => Set(1,value);
 		}
 
 		public int RssIron
 		{
 			get => Rss.iron; 
-			set => Rss = Rss with { iron = value };
+			set => Set(2,value);
 		}
 		public int RssFood
 		{
 			get => Rss.food; 
-			set => Rss = Rss with { food = value };
+			set => Set(3,value);
 		}
+
+		public event EventHandler changed;
 
 
 	}

@@ -2,7 +2,8 @@
     x:Class="CnV.MessageBox"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:CnV"
+    xmlns:cnv="using:CnV"
+	xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 IsTabStop="True"
@@ -24,9 +25,9 @@ IsTabStop="True"
 			   Stretch="None" Margin="4,8,4,8" />
 		<Border Grid.Row="1"  
 				Background="#6000" Visibility="{x:Bind message.Visibility,Mode=OneWay}"
-				BorderBrush="{StaticResource SystemControlHighlightAccentRevealBorderBrush}" BorderThickness="1" Padding="8" Margin="0,0,24,0" HorizontalAlignment="Right" VerticalAlignment="Center"> 
-		
-			<TextBlock x:Name="message"  Style="{StaticResource TextBlockMedium}"  x:FieldModifier="internal" TextWrapping="Wrap" MaxLines="8" />
+				BorderBrush="{StaticResource SystemControlHighlightAccentRevealBorderBrush}" BorderThickness="1" Padding="8" Margin="0,0,24,0" HorizontalAlignment="Right" VerticalAlignment="Center">
+
+			<tk:MarkdownTextBlock LinkClicked="{x:Bind cnv:Note.MarkDownLinkClicked}" x:Name="message"  Style="{StaticResource TextBlockMedium}"  x:FieldModifier="internal" TextWrapping="Wrap"  />
 		</Border>
 		<TextBlock x:Name="footer" Grid.Row="2"  Style="{StaticResource TextBlockMedium}"  x:FieldModifier="internal" TextWrapping="Wrap" MaxLines="8" Margin="8,0,0,0"/>
 		<Button x:Name ="button" IsTabStop="True"  Grid.Row="3" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="2" Style="{StaticResource ButtonMedium}"  x:FieldModifier="internal" />

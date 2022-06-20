@@ -102,9 +102,7 @@
 					<AppBarElementContainer Visibility="Collapsed" x:Name="workContainer" >
 						<TextBlock  x:Name="work" x:FieldModifier="public" Margin="6,0,6,0" VerticalAlignment="Center" Width="255" />
 					</AppBarElementContainer>
-					<AppBarElementContainer VerticalAlignment="Center" >
-						<TextBox  x:Name="coords" Margin="4,0,4,0" Width="100" TextAlignment="Center"  Text="000:000" HorizontalAlignment="Center"  x:FieldModifier="public" KeyDown="coords_KeyDown"/>
-					</AppBarElementContainer>
+					
 					<AppBarElementContainer VerticalAlignment="Center" AllowFocusOnInteraction="True" IsTabStop="True">
 				<ComboBox x:Name="windowLayout"  SelectedIndex="{x:Bind layout, Mode=TwoWay}"  VerticalAlignment="Center" Margin="4,0,4,0"
 						          ToolTipService.ToolTip="Select a view layout"  ItemsSource="{x:Bind layoutOptions}"  />

@@ -151,9 +151,9 @@ namespace CnV
 				ShellPage.WorkEnd();
 
 				if(Player.me.allianceId == 0) {
-					const AllianceId aCQ = 4;
-					const AllianceId aUN = 7;
-					const AllianceId aPX = 8;
+					const AllianceId aCQ = 4; // Chaos Quotient
+					const AllianceId aUN = 7; // Unnamed
+					const AllianceId aPX = 8; // Phoenix
 					
 					AllianceId allianceId;
 					AllianceTitle title;
@@ -206,9 +206,10 @@ namespace CnV
 								var a0 = Alliance.all[aCQ];
 								var a1 = Alliance.all[aUN];
 								var a2 = Alliance.all[aPX];
-								if(a0.playerCount < a1.playerCount.Min(a2.playerCount) ) 
-									allianceId = a0.id;
-								else if(a1.playerCount <= a2.playerCount ) 
+								//if(a0.playerCount < a1.playerCount.Min(a2.playerCount) ) 
+								//	allianceId = a0.id;
+								//else
+								if(a1.playerCount <= a2.playerCount ) 
 									allianceId=a1.id;
 								else
 									allianceId = a2.id;

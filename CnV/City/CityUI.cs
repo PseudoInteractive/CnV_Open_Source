@@ -38,10 +38,10 @@ public static partial class CityUI
 									try
 									{
 										var _build = City.GetBuild();
-										if(!object.ReferenceEquals(_build,CityStats.instance.cityBox.SelectedItem))
+										if(!object.ReferenceEquals(_build,CityStats.instance.cityBox.city))
 										{
 //											var id = City.gridCitySource.IndexOf(_build);
-											CityStats.instance.cityBox.SelectedItem = _build;
+											CityStats.instance.cityBox.SetCity(_build,false);
 										}
 									}
 									catch(Exception _ex)

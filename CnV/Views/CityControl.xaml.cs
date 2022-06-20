@@ -23,7 +23,7 @@ using CnV;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
-namespace CnV.Views
+namespace CnV
 {
 	using Game;
 
@@ -61,10 +61,10 @@ namespace CnV.Views
 		}
 
 		// Not for internal use
-		protected City city
+		public City city
 		{
 			get => _city;
-			set {
+			private set {
 				if(!object.ReferenceEquals(_city, value) )
 				{
 					SetCityI( value); 
@@ -232,6 +232,12 @@ namespace CnV.Views
 						return;
 					}
 				}
+//				SetCity(city,City.none);
+ // None?
+
+				//SetCity(City.invalid,true);
+				args.Handled=true;
+
 			}
 			catch(Exception _ex)
 			{
@@ -387,9 +393,9 @@ namespace CnV.Views
 
 		private void ComboRightTapped(object sender,RightTappedRoutedEventArgs e) {
 			var flyout = new MenuFlyout();
-			var sel = City.GetSelectedForContextMenu(City.focus);
-			foreach(var i in sel) {
-				var c = i.AsCity();
+			var sel = City.GetSelectedForContextMenu(City.focus).AsCities().Concat(SpotTab.SpotMRU.Where(a => a.pinned)).Concat(SpotTab.SpotMRU.Take(8.Min(SpotTab.SpotMRU.Count))).Distinct(); ;
+			
+			foreach(var c in sel) {
 				flyout.AddItem(c.nameAndRemarks,() => SetCity(c));
 			}
 			flyout.SetXamlRoot(cityBox);
@@ -397,6 +403,7 @@ namespace CnV.Views
 		//   flyout.XamlRoot = uie.XamlRoot;
 			flyout.ShowAt(cityBox);
 		}
+
 
 		//private void AutoSuggestBox_CharacterReceived(UIElement sender,CharacterReceivedRoutedEventArgs args)
 		//{

@@ -88,7 +88,8 @@
 	<Thickness x:Key="ExpanderContentDownBorderThickness">0</Thickness>
 	<Thickness x:Key="ExpanderContentUpBorderThickness">0</Thickness>
 
-	<tkui:AttachedDropShadow x:Key="Shadow8" Offset="8" Color="DarkRed" />
+	<tkui:AttachedDropShadow x:Key="CnvShadow" Offset="4,4" Color="#200038"  CornerRadius="3" BlurRadius="4" Opacity="0.875" />
+
 
 
 	<!--<x:Double x:Key="ContentDialogMaxWidth">1024</x:Double>-->
@@ -320,6 +321,7 @@
 	<converter:SmallTimeConverter x:Key="SmallTimeConverter" />
 			<converter:DateTimeConverter x:Key="DateTimeConverter" />
 			<converter:IntConverter x:Key="IntConverter" />
+	<converter:CityConverter x:Key="CityConverter" />
 			<converter:TimeConverter x:Key="TimeConverter" />
 			<converter:FloatConverter x:Key="FloatConverter" />
 			<converter:NullableIntToDoubleConverter x:Key="NullableIntConverter" />

@@ -50,7 +50,8 @@ namespace CnV
 				return;
 			}
 			// Todo: Interlock this
-			var alliance = new Alliance(name,abbreviation,(AllianceId)Alliance.all.Length,0ul);
+			var alliance = new Alliance();
+			alliance.Update(name,abbreviation,(AllianceId)Alliance.all.Length,0ul);
 			await alliance.Upsert();
 			Hide(true);
 			await AppS.WaitWithProgress(2000,"Create Alliance");

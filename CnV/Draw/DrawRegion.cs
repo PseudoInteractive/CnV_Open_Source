@@ -1066,8 +1066,12 @@ internal partial class GameClient
 											if(IsSegmentCulledWC(c0,c1))
 												continue;
 											// not visible yet
-											if(i.arrival > visibilityTime | (isIncoming & !i.departed) )
-												continue;
+											if(isIncoming ) {
+												if(i.arrival > visibilityTime)
+													continue;
+												if(!i.departed)
+													continue;
+											}
 
 											if(!isIncoming && (i.isAttack || i.isDefense) && !i.isReturn && !IsCulledWC(c0))
 											{

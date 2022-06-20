@@ -78,9 +78,12 @@
 			<ToggleButton Content="Water" VerticalAlignment="Center" Margin="12" Click="PropChanged" IsChecked="{x:Bind sendViaWater, Mode=TwoWay}"
                           Width="70" HorizontalAlignment="Center" Style="{ThemeResource ToggleButtonRevealStyle}"
                       ToolTipService.ToolTip="If set troops will be sent via water otherwise by land" />
-			<ToggleButton Content="Offense" IsChecked="{x:Bind views:NearDefenseTab.includeOffense, Mode=TwoWay}" VerticalAlignment="Center" Margin="12"
-                          Width="70" HorizontalAlignment="Center" Style="{ThemeResource ToggleButtonRevealStyle}" Click="PropChanged"
-                      ToolTipService.ToolTip="If on, include offsense" />
+			<DropDownButton x:Name="includeButton"
+									  Content="Include"
+									  FontSize="{StaticResource MediumFontSize}"
+									  Click="IncludeButtonClick"
+									 ToolTipService.ToolTip="Troop types to send"
+									  HorizontalContentAlignment="Center" />
 			<ToggleButton Content="Only home" IsChecked="{x:Bind onlyHome, Mode=TwoWay}" VerticalAlignment="Center" Margin="12"  Click="PropChanged"
                           Width="70" HorizontalAlignment="Center" Style="{ThemeResource ToggleButtonRevealStyle}"
                       ToolTipService.ToolTip="If on, the # to send only counts troops at home" />

@@ -4,6 +4,7 @@
     xmlns:local="using:CnV"
 	xmlns:views="using:CnV.Views"
 	xmlns:cnv="using:CnV"
+	xmlns:tkui="using:CommunityToolkit.WinUI.UI"
 	x:Key="Default"
 	>
 	

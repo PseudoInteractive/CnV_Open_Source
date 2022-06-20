@@ -19,7 +19,6 @@ namespace CnV.Views
 		public static NotifyCollection<City> defendants = new();
 		public static NotifyCollection<Supporter> supporters = new();
 
-		public static bool includeOffense;
 		public float filterTime = 6;
 		public int filterTSTotal = 10000;
 		public int filterTSHome;
@@ -33,8 +32,37 @@ namespace CnV.Views
 																									  //   public ServerTime arriveAt { get; set; } = default;
 		public static SupportByTroopType[] supportByTroopTypeEmpty = Array.Empty<SupportByTroopType>();
 //		public static int[] splitArray = { 1,2,3,4,5 };
-		public static bool Include(TType tt) => includeOffense || ttIsDef[tt];
+		public static bool Include(TType tt) => ttInclude[tt];
+		static bool []ttInclude = Troops.ttCanBeDefense.ArrayClone();
 
+		
+		private void IncludeButtonClick(object sender, RoutedEventArgs e)
+		{
+			var button = sender as Microsoft.UI.Xaml.Controls.DropDownButton;
+			var flyout = new MenuFlyout();
+			for (var i = ttZero; i < ttCount; ++i)
+			{
+				var but = new ToggleMenuFlyoutItem() { IsChecked = ttInclude[i], DataContext = (object)i, Text = ttNames[i] };
+				flyout.Items.Add(but);
+			}
+
+			flyout.SetXamlRoot(button);
+			flyout.Closing += Flyout_Closing;
+			flyout.ShowAt(button);
+		}
+
+		private void Flyout_Closing(Microsoft.UI.Xaml.Controls.Primitives.FlyoutBase sender, Microsoft.UI.Xaml.Controls.Primitives.FlyoutBaseClosingEventArgs args)
+		{
+			var menu = (sender as MenuFlyout);
+			int counter = 0;
+			for (var  i = ttZero; i < ttCount; ++i)
+			{
+					var but = menu.Items[counter] as ToggleMenuFlyoutItem;
+					ttInclude[i] = but.IsChecked;
+					++counter;
+			}
+			refresh.Go();
+		}
 
 		public static void GetSelected(List<int> rv) {
 			var i = instance;
@@ -79,8 +107,8 @@ namespace CnV.Views
 					{
 						foreach(var city in City.gridCitySource) {
 							Assert(city is City);
-							if((includeOffense ? city.tsHome : city.tsDefCityHome) < filterTSHome |
-								 (includeOffense ? city.tsTotal : city.tsDefCityTotal) < filterTSTotal)
+							if( (city.troopsHome.TS(Include) < filterTSHome) &&
+								 (city.troopsOwned.TS(Include) < filterTSTotal))
 								continue;
 							if(viaWater && !city.isOnWater)
 								continue;
@@ -140,7 +168,7 @@ namespace CnV.Views
 								}
 							}
 							else {
-								supporter.tSend += troops.Where(tt => (includeOffense || tt.isDef) && (canTravelViaWater||!tt.isNaval));
+								supporter.tSend += troops.Where(tt => Include(tt.t) && (canTravelViaWater||!tt.isNaval));
 							}
 							supporter.travel = (travelTime);  // penality for targtes that we cannot make it to
 						}
@@ -177,7 +205,7 @@ namespace CnV.Views
 			var rv = new List<Spot>();
 			foreach(var d in defendants) {
 
-				if(city.ComputeTravelTime(d.cid,onlyHome,includeOffense,includeOffense,includeOffense,viaWater,TimeSpanS.FromHours(filterTime),ref dt)) {
+				if(city.ComputeTravelTime(d.cid,onlyHome,Include,viaWater,TimeSpanS.FromHours(filterTime),ref dt)) {
 					rv.Add(d);
 				}
 			}

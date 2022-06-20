@@ -12,8 +12,7 @@ public static partial class CityUI
 {
 	public static void UpdateFocusText()
 	{
-		ShellPage.instance.focus.Content = Spot.GetOrAdd(focus).nameAndRemarks;
-		ShellPage.instance.coords.Text   = focus.ToString();
+		PlayerStats.instance.focus.SetCity(Spot.GetFocus(),false);
 	}
 
 	

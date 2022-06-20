@@ -57,13 +57,7 @@ namespace CnV
 			if(instance is not null)
 				instance.OnPropertyChanged(member);
 		}
-		private void CityBox_SelectionChanged(object sender,SelectionChangedEventArgs e) {
-			var sel = cityBox.SelectedItem as City;
-			if(sel != null && sel.cid != City.build) {
-				City.ProcessCoordClick(sel.cid,false,AppS.keyModifiers);
-			}
-		}
-
+	
 
 		private void CitySubmitted(ComboBox sender,ComboBoxTextSubmittedEventArgs args) {
 			var text = args.Text.ToLower();
@@ -1080,6 +1074,14 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 		private void DismissClick(object sender,RoutedEventArgs e) {
 			DismissDialog.ShowInstance(city);
 		}
+
+		private void CityBox_SelectionChanged(object sender,Spot e) {
+
+			var sel = e;
+			if(sel != null && sel.cid != City.build && e.CanVisit() ) {
+				City.ProcessCoordClick(sel.cid,false,AppS.keyModifiers);
+			}
+		}
 	}
 	public class BuildingCountAndBrush:INotifyPropertyChanged
 	{
@@ -1355,7 +1357,7 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 			{
 				flyout.AddItem("Return",Symbol.Undo,() =>
 				{
-					if(army.isDefense || army.isSieging) {
+					if( (army.isDefense && army.departed) || army.isSieging) {
 						SendTroops.ShowInstance(prior: army);
 					}
 					else {
