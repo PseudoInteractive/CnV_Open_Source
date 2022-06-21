@@ -11,14 +11,15 @@
 	
     >
 
-	<Grid Background="Black" >
+	<Grid Background="Black"  >
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="auto" />
 			<ColumnDefinition Width="6*" />
 			<ColumnDefinition Width="Auto" />
 		</Grid.ColumnDefinitions>
 
-		<TextBlock Text="{x:Bind Label, Mode=OneWay}" Style="{StaticResource TextBlockSmall}"  Width="{x:Bind LabelWidth}" VerticalAlignment="Center" RightTapped="ComboRightTapped" Tapped="CityIconTapped"  />
+		<TextBlock Text="{x:Bind Label, Mode=OneWay}" Style="{StaticResource TextBlockSmall}"  
+				   Width="{x:Bind LabelWidth}" VerticalAlignment="Center"  RightTapped="ComboRightTapped" Tapped="CityIconTapped"  />
 
 
 
@@ -31,7 +32,7 @@
 				  ItemsSource="{x:Bind citySelections, Mode=OneWay}"
 					    SelectedItem="{x:Bind city, Mode=TwoWay}"       
 					                Margin="0"
-					 
+					 ToolTipService.ToolTip="Right click to select a recent spot"
 					   
 					   >
 		<ComboBox.ItemTemplate>
@@ -44,7 +45,7 @@
 			</DataTemplate>
 		</ComboBox.ItemTemplate>
 		</ComboBox>
-		<CheckBox Grid.Column="2" x:Name="onlyMine" Content="Only Mine"
+		<CheckBox Grid.Column="2" x:Name="onlyMineCheckbox" Content="Only Mine"
 				  Visibility="Collapsed"
 				  ToolTipService.ToolTip="if unchecked, includes all cities, to specify someone else's city add the '- [playerName]' to the end, note this may be slow"  IsChecked="True" />
 	</Grid>

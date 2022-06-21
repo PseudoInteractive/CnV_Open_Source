@@ -257,6 +257,8 @@ namespace CnV.Views
 		}
 
 		private void TTSendRightTapped(object sender,RightTappedRoutedEventArgs e) {
+						e.Handled=true;
+
 			var text = sender as FrameworkElement;
 			var stt = text.DataContext as SupportByTroopType;
 			var flyout = new MenuFlyout();

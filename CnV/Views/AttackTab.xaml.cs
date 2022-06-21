@@ -1302,6 +1302,7 @@ namespace CnV.Views
 			}
 			public float GetTravelTimeHours(AttackPlanCity attacker)
 			{
+				Assert(false);
 				Assert(isValid);
 				// Todo: Ram attacks
 				var tt = (attacker.attackType == AttackType.senator) ? ttSenator: attacker.troopType;

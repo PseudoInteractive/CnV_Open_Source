@@ -990,6 +990,7 @@ namespace CnV.Views
 		}
 
 		public void RefreshX(object sender,RightTappedRoutedEventArgs e) {
+			e.Handled=true;
 			RefreshX();
 		}
 

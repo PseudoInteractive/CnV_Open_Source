@@ -152,6 +152,10 @@ namespace CnV.Views
 
         public static void AddToGrid(Spot spot, VirtualKeyModifiers mod, bool updateSelection = true, bool scrollIntoView=true)
         {
+			if(!spot.isValid) {
+				Assert(false);
+				return;
+			}
             // Toggle Selected
             if (disableSelection == 0)
             {

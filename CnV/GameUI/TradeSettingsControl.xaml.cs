@@ -7,7 +7,7 @@ public sealed partial class TradeSettingsControl:UserControl, INotifyPropertyCha
 	}
 
 	internal async void WoodSource_PropertyChanged(object?sender,City city) {
-
+		Assert(city!= null);
 
 				var rv = await AppS.DoYesNoBox("Sources",$"Set source for all res to {city}?","Yes","Yes and set targets","No");
 				if(rv == -1)
@@ -26,6 +26,7 @@ public sealed partial class TradeSettingsControl:UserControl, INotifyPropertyCha
 				OnPropertyChanged();
 	}
 	private async void WoodDest_PropertyChanged(object sender,City city) {
+		Assert(city!= null);
 		var rv = await AppS.DoYesNoBox("Destinations",$"Set destination for all res to {city}?","Yes","No",String.Empty);
 				if(rv != 1)
 					return;

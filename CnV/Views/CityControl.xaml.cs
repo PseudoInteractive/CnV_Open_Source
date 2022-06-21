@@ -43,15 +43,23 @@ namespace CnV
 		#endregion
 		public City _city = City.invalid;
 		// Sets city silently
-		public void SetCityI(City value) {
+		public bool SetCityI(City value) {
+			Assert(value is not null);
+			if(!IsValid(value.cid,true)) {
+				return false;
+			}
 			_city = value; // This gets set first
 			TouchSelections();
 			if(_city is not null && !citySelections.Contains(_city))
 				citySelections.Add(_city);
+			return true;
 		}
 		public void SetCity(City value, bool triggerCityChanged=true) {
 			if(_city != value) {
-				SetCityI(value);
+				{
+					if(!SetCityI(value))
+						return;
+				}
 			CallPropertyChanged(nameof(this.city));
 
 			if(triggerCityChanged)
@@ -59,12 +67,57 @@ namespace CnV
 				
 			}
 		}
+		
+
+		internal bool IsValid( SpotId cid, bool verbose) {
+			if(cid == City.cidNone) {
+				if(!allowNone) {
+					if(verbose)
+						AppS.MessageBox("Cannot set none here");
+					return false;
+				}
+				return true;
+			}
+			var t = World.GetTile( (WorldC)(cid) );
+			if(!t.isCityOrCastle) {
+				if(!allowNonCities) {
+					if(verbose)
+						AppS.MessageBox("Must select city or castle");
+					return false;
+				}
+			}
+			// Assume city
+			else {
+				if(!allowOtherPlayers) {
+					if(t.player!=Player.activeId) {
+						if(verbose)
+							AppS.MessageBox("Cannot set other players");
+						return false;
+					}
+				}
+				if(!allowOtherAlliances) {
+					if(!t.player.AsPlayer().isInPlayerAlliance) {
+
+						if(verbose)
+							AppS.MessageBox("Cannot set players outside of alliance");
+						return false;
+					}
+
+				}
+
+			}
+			return true;
+		}
 
 		// Not for internal use
-		public City city
+		private City city
 		{
-			get => _city;
-			private set {
+			get {
+				Assert(_city != null);
+				return allowNone ? _city : _city.IsValid() ? _city : null;
+			}
+			 set {
+				Assert(value != null);
 				if(!object.ReferenceEquals(_city, value) )
 				{
 					SetCityI( value); 
@@ -97,7 +150,8 @@ namespace CnV
 
 		public bool allowNone { get; set; } = true;		
 		public bool allowOtherPlayers { get; set; } = false;		
-		public bool allowOtherAlliances { get; set; } = false;		
+		public bool allowOtherAlliances { get; set; } = false;	
+		public bool allowNonCities { get; set; } = false;	
 
 		public string Label
 		{
@@ -123,6 +177,8 @@ namespace CnV
 
 		private void TextBlock_Tapped(object sender, TappedRoutedEventArgs e)
 		{
+						e.Handled=true;
+
 			try
 			{
 				var image = sender as FrameworkElement;
@@ -140,6 +196,8 @@ namespace CnV
 
 		private void Image_Tapped(object sender, TappedRoutedEventArgs e)
 		{
+						e.Handled=true;
+
 			try
 			{
 				var image = sender as FrameworkElement;
@@ -157,6 +215,8 @@ namespace CnV
 
 		private void Image_RightTapped(object sender, RightTappedRoutedEventArgs e)
 		{
+						e.Handled=true;
+
 			try
 			{
 				var image = sender as FrameworkElement;
@@ -355,12 +415,16 @@ namespace CnV
 		private void CityIconTapped(object sender,TappedRoutedEventArgs e)
 		{
 			e.Handled=true;
+			if(city.IsInvalid())
+				return;
 			city?.Focus();
 		}
 
 		private void RightTappedX(object sender,RightTappedRoutedEventArgs e)
 		{
-			
+			e.Handled=true;
+			if(city.IsInvalid())
+				return;
 			try
 			{
 				var ui = sender as UIElement;
@@ -382,19 +446,24 @@ namespace CnV
 		private void TouchSelections() {
 			if(citySelections.Count > 0)
 				return;
-			var l = City.gridCitySource.ToArray();
-			if(_city is not null && !l.Contains(_city))
+			var l = City.gridCitySource.Where(a=>IsValid(a.cid,false)).ToArray();
+			if(_city is not null && !l.Contains(_city) && (allowNone|| !_city.IsInvalid()) )
 				l = l.Prepend(_city).ToArray();
-			if(allowNone && _city != City.invalid)
+			if(allowNone && !l.Contains(City.invalid) )
 				l = l.Prepend(City.invalid).ToArray();
 
 			l.SyncList(citySelections);
 		}
 
 		private void ComboRightTapped(object sender,RightTappedRoutedEventArgs e) {
+			e.Handled=true;
 			var flyout = new MenuFlyout();
-			var sel = City.GetSelectedForContextMenu(City.focus).AsCities().Concat(SpotTab.SpotMRU.Where(a => a.pinned)).Concat(SpotTab.SpotMRU.Take(8.Min(SpotTab.SpotMRU.Count))).Distinct(); ;
-			
+			var sel = City.GetSelectedForContextMenu(City.focus).AsCities().Concat(SpotTab.SpotMRU.Where(a => a.pinned)).Concat(SpotTab.SpotMRU.Take(8.Min(SpotTab.SpotMRU.Count))).
+				Where(a=> IsValid(a.cid,false)); ;
+			if(allowNone)
+				sel = sel.Prepend(City.invalid);
+			sel = sel.Distinct();
+
 			foreach(var c in sel) {
 				flyout.AddItem(c.nameAndRemarks,() => SetCity(c));
 			}

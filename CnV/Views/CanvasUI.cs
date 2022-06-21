@@ -141,7 +141,7 @@ using Game;
 								
 									break;
 								case World.TileType.typeMoongate:
-									toolTip = $"Moongate";
+									toolTip = $"Moongate\n{cid.CidToString()}";
 									break;
 							default:
 								if(data.isDungeonOrBoss)

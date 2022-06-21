@@ -27,9 +27,9 @@ IsTabStop="True"
 				Background="#6000" Visibility="{x:Bind message.Visibility,Mode=OneWay}"
 				BorderBrush="{StaticResource SystemControlHighlightAccentRevealBorderBrush}" BorderThickness="1" Padding="8" Margin="0,0,24,0" HorizontalAlignment="Right" VerticalAlignment="Center">
 
-			<tk:MarkdownTextBlock LinkClicked="{x:Bind cnv:Note.MarkDownLinkClicked}" x:Name="message"  Style="{StaticResource TextBlockMedium}"  x:FieldModifier="internal" TextWrapping="Wrap"  />
+			<tk:MarkdownTextBlock LinkClicked="{x:Bind cnv:Note.MarkDownLinkClicked}" x:Name="message"   x:FieldModifier="internal" TextWrapping="Wrap" Background="{x:Null}" />
 		</Border>
-		<TextBlock x:Name="footer" Grid.Row="2"  Style="{StaticResource TextBlockMedium}"  x:FieldModifier="internal" TextWrapping="Wrap" MaxLines="8" Margin="8,0,0,0"/>
+		<tk:MarkdownTextBlock x:Name="footer"  Grid.Row="2"  x:FieldModifier="internal" TextWrapping="Wrap"  Margin="8,0,0,0" LinkClicked="{x:Bind cnv:Note.MarkDownLinkClicked}" Background="{x:Null}" />
 		<Button x:Name ="button" IsTabStop="True"  Grid.Row="3" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="2" Style="{StaticResource ButtonMedium}"  x:FieldModifier="internal" />
 	</Grid>
 </UserControl>

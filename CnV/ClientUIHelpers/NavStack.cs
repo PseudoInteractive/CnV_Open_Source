@@ -34,6 +34,10 @@ namespace CnV
 		}
 		public static void Push(int cid)
 		{
+			if(cid == City.cidNone) {
+				Assert(false);
+				return;
+			}
 			if(navStackOperation > 0)
 				return;
 			var cityView = false;// CnVServer.IsCityView();

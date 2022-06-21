@@ -12,7 +12,7 @@ public static partial class CityUI
 {
 	public static void UpdateFocusText()
 	{
-		PlayerStats.instance.focus.SetCity(Spot.GetFocus(),false);
+		PlayerStats.instance?.focus.SetCity(Spot.GetFocus(),false);
 	}
 
 	
@@ -21,6 +21,10 @@ public static partial class CityUI
 
 	public static void SetFocus(int cid, bool scrollintoView, bool select = true, bool bringIntoView = true, bool lazyMove = true)
 	{
+		if(cid == Spot.cidNone) {
+			Assert(false);
+			return;
+		}
 		var changed = cid != focus;
 		var spot    = Spot.GetOrAdd(cid);
 		if(select)

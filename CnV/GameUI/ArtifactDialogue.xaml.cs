@@ -41,8 +41,8 @@ namespace CnV
 			rv.explicitTarget = explicitTarget;
 			rv.a = artifact;
 			rv.free = free;
-		//	rv.HeroContent.Focus(FocusState.Programmatic);
-			rv.count.Value = artifact.owned. Max(1);
+			//	rv.HeroContent.Focus(FocusState.Programmatic);
+			rv.count.Value = 1;// artifact.owned. Max(1);
 			rv.OnPropertyChanged();
 			rv.Show(false);
 			

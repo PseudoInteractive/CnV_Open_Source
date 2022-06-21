@@ -968,8 +968,10 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 		private void FoodTap(object sender,TappedRoutedEventArgs e)=> CityUI.Show( Artifact.ArtifactType.sickle, sender);
 		private void GoldTap(object sender,TappedRoutedEventArgs e)=> CityUI.Show( Artifact.ArtifactType.chest, sender);
 
-		private void QueueRightTapped(object sender,RightTappedRoutedEventArgs e)=>	CityUI.Show( Artifact.ArtifactType.medallion, sender);
-
+		private void QueueRightTapped(object sender,RightTappedRoutedEventArgs e) {
+			e.Handled=true;
+			CityUI.Show(Artifact.ArtifactType.medallion,sender);
+		}
 		private void EnlistmentContextRequested(UIElement sender,ContextRequestedEventArgs args)
 		{
 			args.Handled    = true;
@@ -1030,8 +1032,8 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 
 		private void AutobuildTapped(object sender,TappedRoutedEventArgs e)
 		{
-			AutobuildDialog.ShowInstance();
 			e.Handled=true;
+			AutobuildDialog.ShowInstance();
 		}
 
 		private void TradesClick(object sender,RoutedEventArgs e)
@@ -1544,9 +1546,12 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 	public class ResourceItem:CNotifyPropertyChanged
 	{
 		internal int r;
-		internal void Tapped(object sender,TappedRoutedEventArgs e) => CityUI.Show(
-			r switch { 0=>Artifact.ArtifactType.axe,1=>Artifact.ArtifactType.hammer,2=>Artifact.ArtifactType.pike,_=>Artifact.ArtifactType.sickle}, 
+		internal void Tapped(object sender,TappedRoutedEventArgs e) {
+			e.Handled= true;
+			CityUI.Show(
+			r switch { 0 => Artifact.ArtifactType.axe, 1 => Artifact.ArtifactType.hammer, 2 => Artifact.ArtifactType.pike, _ => Artifact.ArtifactType.sickle },
 			sender);
+		}
 		internal string incoming;
 		internal Brush incomingBrush;
 

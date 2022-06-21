@@ -7,11 +7,9 @@ using Vector4 = System.Numerics.Vector4;
 using static CnV.View;
 
 //using Windows.UI.Core;
-using static CnV.Troops;
 using XVector3 = Microsoft.Xna.Framework.Vector3;
 using Layer = CnV.Draw.Layer;
 using KeyF = CnV.KeyFrame<float>;
-using Emzi0767;
 
 namespace CnV;
 
@@ -34,17 +32,16 @@ internal partial class GameClient
 	public static Material worldObjects;
 	public static Material worldOwners;
 
-//	public static VertexBuffer tesselatedWorldVB;
-//	public static IndexBuffer tesselatedWorldIB;
+	//	public static VertexBuffer tesselatedWorldVB;
+	//	public static IndexBuffer tesselatedWorldIB;
 	static KeyF[] bulgeKeys = new[] { new KeyF(0.0f,0.0f),new KeyF(0.44f,0.44f),new KeyF(1.5f,0.44f),new KeyF(2.5f,0.0f) };
 
-	private static bool TilesReady()
-	{
+	private static bool TilesReady() {
 		return (TileData.state >= TileData.State.ready);
 	}
 
 	private const int textBoxCullSlop = 80;
-//	static byte clearCounter = 10;
+	//	static byte clearCounter = 10;
 
 	//public static bool tileSetsPending;
 	private static float smallRectSpan => 4f.ScreenToWorld();
@@ -107,8 +104,7 @@ internal partial class GameClient
 	static SamplerState clampSampler = SamplerState.LinearClamp;
 	static SamplerState wrapSampler = SamplerState.LinearWrap;
 
-	static SamplerState normalSampler = new SamplerState()
-	{
+	static SamplerState normalSampler = new SamplerState() {
 		Filter                  = TextureFilter.LinearMipPoint,
 		MipMapLevelOfDetailBias = 0,
 		MaxAnisotropy           = 0,
@@ -127,7 +123,7 @@ internal partial class GameClient
 	const float drawActionLength = 32;
 	const float lineAnimationRate = 0.5f;
 
-	
+
 
 	const float postAttackDisplayTime = 15 * 60; // 11 min
 
@@ -177,8 +173,7 @@ internal partial class GameClient
 	internal static HashSet<int> targetOpponents = new();
 	internal static Dictionary<SpotId,int> cityVisitorCounts = new();
 
-	protected override void Draw(GameTime gameTime)
-	{
+	protected override void Draw(GameTime gameTime) {
 		if(faulted)
 			return;
 		if(!AppS.isForeground)
@@ -190,8 +185,7 @@ internal partial class GameClient
 		++drawCounter;
 		simT = Sim.NowToServerSeconds(); ;
 #if DEBUG
-		if(gameTime.IsRunningSlowly)
-		{
+		if(gameTime.IsRunningSlowly) {
 			if(ToolTips.debugTip is null)
 				ToolTips.debugTip = "Slow";
 			else
@@ -205,16 +199,14 @@ internal partial class GameClient
 		//parallaxZ0 = 1024 * 64.0f / cameraZoomLag;
 		var isFocused = Sim.isInitialized&&AppS.isForeground;
 
-		try
-		{
+		try {
 			var elapsed = timer.Elapsed;
 			var timerT = elapsed.TotalSeconds;
 			var priorTicks = ticksAtDraw;
 			ticksAtDraw = elapsed.Ticks;
 			timeSinceLastFrame = (ticksAtDraw-priorTicks)/(double)TimeSpan.TicksPerSecond;
 
-			if(timeSinceLastFrame > 0.25)
-			{
+			if(timeSinceLastFrame > 0.25) {
 #if DEBUG
 				///		Note.Show($"\nVery Slow {timeSinceLastFrame}");
 #endif
@@ -256,8 +248,8 @@ internal partial class GameClient
 			device.Textures[2] = TileData.cityTileset.material.texture;
 			device.Textures[3] = TileData.cityTileset.material.texture1;
 
-	//		device.Textures[4] = TileData.topLevelTileset.material.texture;
-	//		device.Textures[5] = TileData.topLevelTileset.material.texture1;
+			//		device.Textures[4] = TileData.topLevelTileset.material.texture;
+			//		device.Textures[5] = TileData.topLevelTileset.material.texture1;
 			//				float accentAngle = animT * MathF.PI * 2;
 			var tick = (elapsed.TotalSeconds);
 			var animTLoop = (animationT*(1.0/3.0)).Wave();
@@ -533,9 +525,9 @@ internal partial class GameClient
 					var cb = avaEffect.ConstantBuffers[0];
 					cb.Update(avaEffect.Parameters);
 					var device = GameClient.instance.GraphicsDevice;
-					device.SetConstantBuffer(ShaderStage.Pixel, 0, cb);
-					device.SetConstantBuffer(ShaderStage.Vertex, 0, cb);
-					device.SetConstantBuffer(ShaderStage.Geometry, 0, cb);
+					device.SetConstantBuffer(ShaderStage.Pixel,0,cb);
+					device.SetConstantBuffer(ShaderStage.Vertex,0,cb);
+					device.SetConstantBuffer(ShaderStage.Geometry,0,cb);
 
 				}
 			}
@@ -667,18 +659,17 @@ internal partial class GameClient
 			//			shadowColor = new Color() { A = 128 };
 
 
-			if(hideSceneCounter <= 0)
-			{
+			if(hideSceneCounter <= 0) {
 
 				//Assert(City.build != 0);
-			//	if(false)
-			//	{
-			//		var td = TileData.instance;
+				//	if(false)
+				//	{
+				//		var td = TileData.instance;
 
-					// 0 == land
-					// 1 == shadows
-					// 2 == features
-					//foreach(var layer in td.layers)
+				// 0 == land
+				// 1 == shadows
+				// 2 == features
+				//foreach(var layer in td.layers)
 				//	if(false)
 				//	{
 				//		var layer = TileLayer.bonus;
@@ -809,8 +800,7 @@ internal partial class GameClient
 				//}
 
 				//    ds.Antialiasing = CanvasAntialiasing.Antialiased;
-				if(worldChanges != null && !focusOnCity)
-				{
+				if(worldChanges != null && !focusOnCity) {
 					var t2d = worldChanges.texture2d;
 					//var tOffset = new Vector2(0.0f, 0.0f);
 					//var t2d = worldChanges.texture2d;
@@ -818,24 +808,21 @@ internal partial class GameClient
 					Assert(false);
 					//draw.AddMesh(tesselatedWorld,Layer.tileShadow - 1,worldChanges);
 				}
-				if(false && (worldOwners != null && !focusOnCity))
-				{
+				if(false && (worldOwners != null && !focusOnCity)) {
 					var tOffset = new System.Numerics.Vector2(0.0f,0.0f);
 					var t2d = worldOwners.texture2d;
 					var scale = new System.Numerics.Vector2(t2d.TexelWidth,t2d.TexelHeight);
 					draw.AddQuad(Layer.tiles - 1,worldOwners,
 						new(0,0),new(World.span,World.span),new Color(128,128,128,128),zTerrain);
 				}
-				if(wantCity && City.build != 0)
-				{
+				if(wantCity && City.build != 0) {
 					Assert(cityAlpha > 0.0f);
 					// this could use refactoring
 					CityView.Draw(cityAlpha);
 				}
 				//else
 				{
-					if(TilesReady())
-					{
+					if(TilesReady()) {
 						//	Assert(cityAlpha <= 0);
 						var cc0x = (cx0/100).Clamp(0,World.continentCountX-1);
 						var cc0y = (cy0/100).Clamp(0,World.continentCountY-1);
@@ -845,7 +832,7 @@ internal partial class GameClient
 						//	var c = WorldC.FromCid(viewW).continentClamped;
 						for(int i = cc0x;i<=cc1x;++i)
 							for(int j = cc0y;j<=cc1y;++j)
-								draw.AddMesh(World.renderTileMeshes[i,j],Layer.tileBase, World.renderTileMaterial);
+								draw.AddMesh(World.renderTileMeshes[i,j],Layer.tileBase,World.renderTileMaterial);
 					}
 				}
 
@@ -857,14 +844,12 @@ internal partial class GameClient
 
 
 
-				if(!focusOnCity)
-				{
+				if(!focusOnCity) {
 					//
 					// Draw blessed indicators
 					// Note:  These could be baked into the big mesh, except that we need another layer
 					//
-					foreach(var shrine in Shrine.all)
-					{
+					foreach(var shrine in Shrine.all) {
 						foreach(var l in shrine.maybeLit) {
 							var c = l;
 							if(IsCulledWC(c))
@@ -891,21 +876,21 @@ internal partial class GameClient
 						if(IsCulledWC(c))
 							continue;
 						// Todo: Draw avatar
-							var id = cityVisitorCounts.AddOrUpdate(c,(key) =>0, (key,prior)=>prior+1); 
-							Material sprite = p.GetAvatarMaterial();
-							float sizeGain = Settings.iconScale * 64.0f;
-							var dim = spriteSizeGain;// *1.25f; // square
+						var id = cityVisitorCounts.AddOrUpdate(c,(key) => 0,(key,prior) => prior+1);
+						Material sprite = p.GetAvatarMaterial();
+						float sizeGain = Settings.iconScale * 64.0f;
+						var dim = spriteSizeGain;// *1.25f; // square
 						float x, y;
 						switch(id&3) {
-							case 0:x = c.x-0.25f; y = c.y-0.25f; break;
-							case 1:x = c.x+0.25f; y = c.y-0.25f; break;
-							case 2:x = c.x+0.25f; y = c.y+0.25f; break;
-							default:x = c.x-0.25f; y = c.y+0.25f; break;
-								
-							}
-							var _c0 = new Vector2(x - dim,y - dim);
-							var _c1 = new Vector2(x + dim,y + dim);
-							draw.AddQuad(Layer.avatarOverlay,sprite,_c0,_c1,new Color(255,255,255,255),zCities);
+							case 0: x = c.x-0.25f; y = c.y-0.25f; break;
+							case 1: x = c.x+0.25f; y = c.y-0.25f; break;
+							case 2: x = c.x+0.25f; y = c.y+0.25f; break;
+							default: x = c.x-0.25f; y = c.y+0.25f; break;
+
+						}
+						var _c0 = new Vector2(x - dim,y - dim);
+						var _c1 = new Vector2(x + dim,y + dim);
+						draw.AddQuad(Layer.avatarOverlay,sprite,_c0,_c1,new Color(255,255,255,255),zCities);
 
 					}
 
@@ -914,27 +899,21 @@ internal partial class GameClient
 					var incomingVisible = IncomingTab.IsVisible() || ReinforcementsTab.IsVisible() || NearDefenseTab.IsVisible() || Settings.incomingAlwaysVisible;
 					var outgoingVisible = AttackTab.IsVisible() || OutgoingTab.IsVisible() || Settings.attacksAlwaysVisible;
 					{
-					
-						if(AttackTab.IsVisible())
-						{
+
+						if(AttackTab.IsVisible()) {
 							List<AttackTab.AttackCluster> hovered = new();
-							if(!AttackTab.attackClusters.IsNullOrEmpty())
-							{
-								foreach(var cluster in AttackTab.attackClusters)
-								{
+							if(!AttackTab.attackClusters.IsNullOrEmpty()) {
+								foreach(var cluster in AttackTab.attackClusters) {
 									if(cluster.attacks.Any(a => Spot.IsSelectedOrHovered(a)) |
-													cluster.targets.Any(a => Spot.IsSelectedOrHovered(a)))
-									{
+													cluster.targets.Any(a => Spot.IsSelectedOrHovered(a))) {
 										hovered.Add(cluster);
 									}
 								}
 							}
 
-							if(!AttackTab.attackClusters.IsNullOrEmpty())
-							{
+							if(!AttackTab.attackClusters.IsNullOrEmpty()) {
 								var showAll = (AttackTab.attackClusters.Length < Settings.showAttacksLimit) &&(!hovered.Any());
-								foreach(var cluster in AttackTab.attackClusters)
-								{
+								foreach(var cluster in AttackTab.attackClusters) {
 									var isHover = hovered.Contains(cluster);
 									if(!(showAll || isHover))
 										continue;
@@ -947,10 +926,9 @@ internal partial class GameClient
 									{
 										var real = cluster.real;
 										var c0 = real.CidToWorldV();
-										foreach(var a in cluster.attacks)
-										{
-										//	var t = (tick + a.CidToRandom()).Wave(1.5f / 512.0f + 0.25f,1.75f / 512f + 0.25f);
-											var t = (tick * a.CidToRandom().Lerp(1.0f ,1.25f));
+										foreach(var a in cluster.attacks) {
+											//	var t = (tick + a.CidToRandom()).Wave(1.5f / 512.0f + 0.25f,1.75f / 512f + 0.25f);
+											var t = (tick * a.CidToRandom().Lerp(1.0f,1.25f));
 											var r = t.Ramp();
 											var c1 = a.CidToWorldV();
 											var spot = Spot.GetOrAdd(a);
@@ -974,10 +952,8 @@ internal partial class GameClient
 								}
 							}
 							{
-								foreach(var t in AttackPlan.plan.targets)
-								{
-									var col = t.attackType switch
-									{
+								foreach(var t in AttackPlan.plan.targets) {
+									var col = t.attackType switch {
 										AttackType.senator => CColor(168,0,0,255),
 										AttackType.senatorFake => CColor(128,34,33,212),
 										AttackType.se => CColor(0,0,255,255),
@@ -986,10 +962,8 @@ internal partial class GameClient
 									};
 									DrawRectOutlineShadow(Layer.effects,t.cid,col,(t.attackCluster >= 0) ? t.attackCluster.ToString() : null,1,-2);
 								}
-								foreach(var t in AttackPlan.plan.attacks)
-								{
-									var col = t.attackType switch
-									{
+								foreach(var t in AttackPlan.plan.attacks) {
+									var col = t.attackType switch {
 										AttackType.assault => assaultColor,
 										AttackType.senator => CColor(168,64,0,242),
 										AttackType.senatorFake => CColor(128,48,0,192), // not really used as attack
@@ -1019,19 +993,15 @@ internal partial class GameClient
 							//    //}
 							//}
 						}
-						if((incomingVisible || outgoingVisible))
-						{
+						if((incomingVisible || outgoingVisible)) {
 							var cullSlopSpace = (32 * pixelScale).RoundToInt();
-							for(int iOrO = 0;iOrO < 2;++iOrO)
-							{
+							for(int iOrO = 0;iOrO < 2;++iOrO) {
 								var isIncoming = (iOrO == 0);
-								if(isIncoming)
-								{
+								if(isIncoming) {
 									if(!incomingVisible)
 										continue;
 								}
-								else
-								{
+								else {
 									if(!outgoingVisible)
 										continue;
 								}
@@ -1039,13 +1009,11 @@ internal partial class GameClient
 								var list = City.alliedCities; //defenders ? Spot.defendersI : Spot.defendersO;
 								bool noneIsAll = list.Length <= Settings.showAttacksLimit;
 								bool showAll = list.Length <= Settings.showAttacksLimit0 ||(isIncoming ? Settings.incomingAlwaysVisible : Settings.attacksAlwaysVisible);
-								foreach(var city in list)
-								{
+								foreach(var city in list) {
 									if(!city.testContinentFilter)
 										continue;
 
-									if(isIncoming ? city.incoming.Any() :city.outgoing.Any() )
-									{
+									if(isIncoming ? city.incoming.Any() : city.outgoing.Any()) {
 
 										var cityCid = city.cid;
 										var c1 = cityCid.CidToWorld();
@@ -1053,124 +1021,111 @@ internal partial class GameClient
 											continue;
 										var incAttacks = 0;
 										var incDef = 0;
-		//								var incTs = 0u;
-									//	var hasSettle = false;
+										//								var incTs = 0u;
+										//	var hasSettle = false;
 										var sieged = false;
 										var hasSen = false;
 										var visibilityTime = isIncoming ? Sim.simTime + city.scoutRange : ServerTime.infinity;
-									//	var hasArt = false;
+										//	var hasArt = false;
 										//	var hasAssault = false;
-										foreach(var i in isIncoming ? city.incoming : city.outgoing)
-										{
+										foreach(var i in isIncoming ? city.incoming : city.outgoing) {
 											var c0 = isIncoming ? i.sourceCid.CidToWorld() : i.targetCid.CidToWorld();
 											if(IsSegmentCulledWC(c0,c1))
 												continue;
 											// not visible yet
-											if(isIncoming ) {
+											if(isIncoming) {
 												if(i.arrival > visibilityTime)
 													continue;
 												if(!i.departed)
 													continue;
 											}
 
-											if(!isIncoming && (i.isAttack || i.isDefense) && !i.isReturn && !IsCulledWC(c0))
-											{
+											if(!isIncoming && (i.isAttack || i.isDefense) && !i.isReturn && !IsCulledWC(c0)) {
 												targetOpponents.Add(i.targetCid);
 											}
 
 											Color c;
 											c = Color.Magenta;
-											if(i.isReturn)
-											{
+											if(i.isReturn) {
 												c = returnColor;
 											}
-											else
-											{
-													if(i.isSettle)
-													{
-														if(i.arrived)
-															c = returnColor;  // returning carts
-														else
-															c = Color.White;
+											else {
+												if(i.isSettle) {
+													if(i.arrived)
+														c = returnColor;  // returning carts
+													else
+														c = Color.White;
 													//	hasSettle=true;
-														// outgoing
-														// if(hasSettle)
-														if(!isIncoming)
-														{
-															Material sprite = settleMaterial;
-															float spriteSize = spriteSizeGain;
+													// outgoing
+													// if(hasSettle)
+													if(!isIncoming) {
+														Material sprite = settleMaterial;
+														float spriteSize = spriteSizeGain;
 
-															var mid = c0;
-															var _c0 = new Vector2(mid.x - spriteSize,mid.y - spriteSize);
-															var _c1 = new Vector2(mid.x + spriteSize,mid.y + spriteSize);
-															draw.AddQuadWithShadow(Layer.statusOverlay,Layer.effectShadow,sprite,_c0,_c1,Color.White,shadowColor,zEffects);
-														}
-														else
-														{
-															Assert(false);
-														}
+														var mid = c0;
+														var _c0 = new Vector2(mid.x - spriteSize,mid.y - spriteSize);
+														var _c1 = new Vector2(mid.x + spriteSize,mid.y + spriteSize);
+														draw.AddQuadWithShadow(Layer.statusOverlay,Layer.effectShadow,sprite,_c0,_c1,Color.White,shadowColor,zEffects);
+													}
+													else {
+														Assert(false);
+													}
 
+												}
+												else if(i.isRaid) {
+													if(!raidsVisble)
+														continue;
+													c = Color.DarkSlateBlue;
+												}
+
+												else if(i.isDefense) {
+													c = i.arrival <= serverNow ? defenseArrivedColor : defenseColor;
+													if(isIncoming)
+														++incDef;
+												}
+												else if(i.isAttack &&  (!isIncoming || city.IsVisibleIncomingAttack(i))) {
+													c = assaultColor;
+													if(isIncoming) {
+														++incAttacks;
+														sieged |= i.isSieging;
+														hasSen |= i.isSieging && i.hasSenator;
+														if(i.isSieging)
+															c = siegeColor; 
 													}
-													else if(i.isRaid )
-													{
-														if(!raidsVisble)
-															continue;
-														c = Color.DarkSlateBlue;
-													}
-											
-													else if(i.isDefense)
-													{
-														c = i.arrival <= serverNow ? defenseArrivedColor : defenseColor;
-														if(isIncoming)
-															++incDef;
-													}
-													else if(i.isAttack &&  (!isIncoming || city.IsVisibleIncomingAttack(i) ) )
-													{
-														if(isIncoming)
-														{
-															++incAttacks;
-															sieged |= i.isSieging;
-															hasSen |= i.hasSenator;
-														}
-														if(i.hasSenator)
-														{
+													else {
+
+
+														if(i.hasSenator) {
 															c = senatorColor; ;
 														}
-														else if(i.hasArt)
-														{
-														//	hasArt = true;
+														else if(i.hasArt) {
+															//	hasArt = true;
 															c = artColor;
 														}
 														else if(i.isSiege) // intel maybe available
 														{
 															c = siegeColor;
 														}
-														else
-														{
-															//	hasAssault = true;
-															c = assaultColor;
-														}
-													
+													}
+
 												}
 											}
 											var sel = Spot.IsSelectedOrHovered(i.sourceCid,i.targetCid);
-											if(!(showAll || sel))
-											{
+											if(!(showAll || sel)) {
 												//													DrawRectOutlineShadow(Layer.effects, targetCid, c, null, 2, -4f);
 												continue;
 												//       c.A = (byte)((int)c.A * 3 / 8); // reduce alpha if not selected
 											}
 											// don't double draw
 											var hash = i.GetHashCode();
-											if(drawArmyHash.Add(hash))
-											{
-												var t = (tick  * ((hash&0xffff)/65536f).Lerp(0.375f,0.5f)  );
-											//	var t = (tick +i.sourceCid.CidToRandom()).Wave(1.5f / 512.0f+0.25f,2.0f / 512f+ 0.25f) ;
+											if(drawArmyHash.Add(hash)) {
+												var t = (tick  * ((hash&0xffff)/65536f).Lerp(0.375f,0.5f));
+												//	var t = (tick +i.sourceCid.CidToRandom()).Wave(1.5f / 512.0f+0.25f,2.0f / 512f+ 0.25f) ;
 												var r = t.Ramp();
 												var alpha = 1.0f;
-												TType ttype=Troops.ttZero;;
+												TType ttype = Troops.ttZero; ;
 												if(i.troops.Length > 0) {
-													if(i.shareInfo ) {
+													if(i.shareInfo) {
 														var last = i.lastSeen;
 														var nSprite = last.troops.Count;
 
@@ -1183,13 +1138,11 @@ internal partial class GameClient
 													}
 												}
 												(int x, int y) _c0, _c1;
-												
-												if(isIncoming ^ i.isReturn)
-												{
+
+												if(isIncoming ^ i.isReturn) {
 													_c0 = c0; _c1 = c1;
 												}
-												else
-												{
+												else {
 													_c0 = c1; _c1 = c0;
 												}
 
@@ -1200,22 +1153,17 @@ internal partial class GameClient
 												true,i,alpha: alpha,lineThickness: lineThickness,highlight: sel);
 											}
 										}
-										if(isIncoming)
-										{
-											if(!IsCulledWC(c1))
-											{
-												if(incAttacks > 0)
-												{
+										if(isIncoming) {
+											if(!IsCulledWC(c1)) {
+												if(incAttacks > 0) {
 													Material sprite = null;
-													if(sieged)
-													{
+													if(sieged) {
 														if(hasSen)
 															sprite = siege1Material;
 														else
 															sprite = siege0Material;
 													}
-													else
-													{
+													else {
 														if(city.isSubOrMine)
 															sprite = attack2Material;
 														else if(city.isAllyOrNap)
@@ -1232,8 +1180,7 @@ internal partial class GameClient
 													var _c1 = new Vector2(mid.X + spriteSize,mid.Y + spriteSize);
 													draw.AddQuadWithShadow(Layer.statusOverlay,Layer.effectShadow,sprite,_c0,_c1,Color.White,shadowColor,zEffects);
 												}
-												if(incDef > 0)
-												{
+												if(incDef > 0) {
 													Material sprite = defenseMaterial;
 													float spriteSize = spriteSizeGain;
 
@@ -1250,9 +1197,8 @@ internal partial class GameClient
 											//			c1.ToVector(),tipTextFormatCentered,incAttacks != 0 ? Color.White : Color.Cyan,textBackgroundOpacity,Layer.tileText);
 											//}
 										}
-										else
-										{
-											
+										else {
+
 											// outgoing
 
 											//if(city.hasOutgoingAttacks)
@@ -1262,41 +1208,34 @@ internal partial class GameClient
 								}
 							}
 							drawArmyHash.Clear();
-						
+
 							//
 							// process targets, draw badges
 							//
 							//
-							foreach(var opCid in targetOpponents)
-							{
+							foreach(var opCid in targetOpponents) {
 								// opponents with 
 								var c = City.Get(opCid);
 								var hasSiege = false;
 								var hasPendingSiege = false;
 								var hasAttack = false;
-								foreach(var i in c.incoming)
-								{
-									if(i.isAttack)
-									{
+								foreach(var i in c.incoming) {
+									if(i.isAttack) {
 										hasAttack=true;
 										hasSiege |= i.isSieging;
-										hasPendingSiege |= i.isSiege;
+										//	hasPendingSiege |= i.isSiege;
 
 									}
 								}
-								if(hasAttack)
-								{
+								if(hasAttack) {
 									Material sprite = null;
-									if(hasSiege)
-									{
+									if(hasSiege) {
 										sprite = siege1Material;
 									}
-									else if(hasPendingSiege)
-									{
+									else if(hasPendingSiege) {
 										sprite = siege0Material;
 									}
-									else
-									{
+									else {
 										sprite = attack1Material;
 									}
 									float spriteSize = spriteSizeGain;
@@ -1310,7 +1249,7 @@ internal partial class GameClient
 								}
 							}
 							targetOpponents.Clear();
-						
+
 						}
 						//if(incomingVisible)
 						//{
@@ -1335,8 +1274,7 @@ internal partial class GameClient
 						//}
 						var tradesVisible = Settings.tradesVisible != false;
 						var tradePartlyVisible = Settings.tradesVisible == null;
-						if(tradesVisible)
-						{
+						if(tradesVisible) {
 							try {
 
 								var cullSlopSpace = (32 * pixelScale).RoundToInt();
@@ -1389,46 +1327,38 @@ internal partial class GameClient
 										}
 									}
 								}
-							
+
 							}
-							catch(Exception ex) 
-							{ 
+							catch(Exception ex) {
 							}
 							drawTradesHash.Clear();
 						}
 
-						if(NearRes.IsVisible()||DonationTab.IsVisible())
-						{
+						if(NearRes.IsVisible()||DonationTab.IsVisible()) {
 							var sendOffset = new Vector2(0.125f);//  new System.Numerics.Vector2(0.125f *pixelScale,0.125f *pixelScale);
 							var viewHover = Spot.viewHover;
 							var hasHover = viewHover != 0;
-							foreach(var city in City.subCities)
-							{
+							foreach(var city in City.subCities) {
 								var needsHover = (hasHover && !city.isHover);
 								//	if(!city.testContinentFilter)
 								//		continue;
 								var wc = city.cid.CidToWorld();
 								//var cc = wc.WorldToCamera();
-								if(!needsHover)
-								{
-									if(!IsCulledWC(wc))
-									{
+								if(!needsHover) {
+									if(!IsCulledWC(wc)) {
 										var res = city.sampleResources;
-										for(int r = 0;r < 4;++r)
-										{
+										for(int r = 0;r < 4;++r) {
 											var xT0 = (r + 0.5f) / 4.0f;
 											var xT1 = (r + 1.375f) / 4.0f;
 											var yt0 = 0.0f;
 											var yt1 = MathF.Sqrt(MathF.Sqrt(res[r]  * (1.0f / (1024 * 1024)))).Min(1.0f); // 0 .. 1M
-											var color = r switch
-											{
+											var color = r switch {
 												0 => new Color(150,75,0,255),
 												1 => new Color(128,128,128,255),
 												2 => new Color(24,124,168,255),
 												_ => new Color(192,192,0,255)
 											};
-											if(yt1 < 0.125f)
-											{
+											if(yt1 < 0.125f) {
 												yt1 = 0.25f;
 												color = new Color(255,0,0,255);
 											}
@@ -1450,11 +1380,9 @@ internal partial class GameClient
 								if(mo.isNone)
 									continue;
 								var cityHover = city.isHover;
-								try
-								{
+								try {
 
-									foreach(var toCid in mo.sendCities)
-									{
+									foreach(var toCid in mo.sendCities) {
 										if(needsHover && (toCid!=City.viewHover))
 											continue;
 										var c1 = toCid.CidToWorldV();
@@ -1463,8 +1391,7 @@ internal partial class GameClient
 										var hover = cityHover;// | Spot.IsHover(toCid);
 										DrawAction(wc.ToVector() - sendOffset,c1- sendOffset,hover ? tradeColorHover : tradeColor,lineThickness,hover);
 									}
-									foreach(var toCid in mo.requestCities)
-									{
+									foreach(var toCid in mo.requestCities) {
 										if(needsHover && (toCid!=City.viewHover))
 											continue;
 
@@ -1476,79 +1403,69 @@ internal partial class GameClient
 									}
 
 								}
-								catch(Exception ex)
-								{
+								catch(Exception ex) {
 									LogEx(ex);
 								}
 
 							}
 						}
 						//if(!defenderVisible && !attacksVisible)
-					//	{
-					//		if(Spot.settles.Any())
-					//		{
-					//			try
-					//			{
-					//				foreach(var s in Spot.settles)
-					//				{
-					//					var wc0 = s.cid.CidToWorld();
-					//					var wc1 = s.rcid.CidToWorld();
-					//					if(!IsSegmentCulledWC(wc0,wc1))
-					//					{
+						//	{
+						//		if(Spot.settles.Any())
+						//		{
+						//			try
+						//			{
+						//				foreach(var s in Spot.settles)
+						//				{
+						//					var wc0 = s.cid.CidToWorld();
+						//					var wc1 = s.rcid.CidToWorld();
+						//					if(!IsSegmentCulledWC(wc0,wc1))
+						//					{
 
-					//						DrawAction(0.5f,1.0f,1.0f,wc0.ToVector(),wc1.ToVector(),senatorColor,
-					//						troopImages[ttSenator],false,null,highlight: Spot.IsSelectedOrHovered(s.cid));
-					//						DrawFlag(s.rcid,SpriteAnim.flagGrey,System.Numerics.Vector2.Zero);
+						//						DrawAction(0.5f,1.0f,1.0f,wc0.ToVector(),wc1.ToVector(),senatorColor,
+						//						troopImages[ttSenator],false,null,highlight: Spot.IsSelectedOrHovered(s.cid));
+						//						DrawFlag(s.rcid,SpriteAnim.flagGrey,System.Numerics.Vector2.Zero);
 
-					//					}
+						//					}
 
 
 
-					//				}
-					//			}
-					//			catch(Exception ex)
-					//			{
+						//				}
+						//			}
+						//			catch(Exception ex)
+						//			{
 
-					//			}
-					//		}
+						//			}
+						//		}
 
-					//	}
-						
+						//	}
+
 					}
 
-					foreach(var cid in Spot.selected)
-					{
+					foreach(var cid in Spot.selected) {
 						DrawRectOutlineShadow(Layer.effects - 1,cid,selectColor,null,1.0f,1.0f);
 						//DrawFlag(cid, SpriteAnim.flagSelected, Vector2.Zero);
 					}
-					foreach(var cid in Settings.pinned)
-					{
+					foreach(var cid in Settings.pinned) {
 						DrawFlag(cid,SpriteAnim.flagPinned,new System.Numerics.Vector2(4,-4));
 					}
-					if(Spot.focus != 0)
-					{
+					if(Spot.focus != 0) {
 						var cid = Spot.focus;
 						DrawAccent(cid.cid,-1.125f,focusColor);
 					}
-					if(Spot.viewHover != 0)
-					{
+					if(Spot.viewHover != 0) {
 						var cid = Spot.viewHover;
 						DrawAccent(cid.cid,1.25f,hoverColor);
 					}
 
-					if(Player.viewHover != PlayerId.MaxValue)
-					{
-						if(Player.TryGetValue(Player.viewHover,out var p))
-						{
-							try
-							{
-								foreach(var cid in p.cities)
-								{
+					if(Player.viewHover != PlayerId.MaxValue) {
+						if(Player.TryGetValue(Player.viewHover,out var p)) {
+							try {
+								foreach(var cid in p.cities) {
 									DrawFlag(cid,SpriteAnim.flagGrey,new System.Numerics.Vector2(-4,4));
 								}
 							}
-							catch(Exception ex)
-							{
+							catch(Exception ex) {
 								//LogEx(ex); // collection might change, if this happens just about this render, its 
 							}
 
@@ -1561,43 +1478,36 @@ internal partial class GameClient
 
 
 				{
-					if(wantDetails)
-					{
+					if(wantDetails) {
 						//
 						// Text names
 						//	using (var batch = ds.CreateSpriteBatch(CanvasSpriteSortMode.Bitmap))
 						{
 							// Labels last
-							for(var cy = cy0;cy < cy1;++cy)
-							{
-								for(var cx = cx0;cx < cx1;++cx)
-								{
+							for(var cy = cy0;cy < cy1;++cy) {
+								for(var cx = cx0;cx < cx1;++cx) {
 									(var name, var isMine, var incomingStatus, var hovered, var spot) = World.GetLabel((cx, cy));
 									//var zScale = CanvasHelpers.ParallaxScale(TileData.zCities);
 
-									if(name != null)
-									{
+									if(name != null) {
 
 										var span = 1.0f;
-										var cid = new WorldC(cx, cy);
+										var cid = new WorldC(cx,cy);
 
 										var drawC = (Vector2)(cid);
 
-										if(spot is null)
-										{
+										if(spot is null) {
 											drawC.X += 0.30f;
 											drawC.Y += 0.30f;
 										}
-										else
-										{
+										else {
 											drawC.Y += span *  7.5f / 16.0f;
 										}
 										var z = zCities;
 										var scale = regionFontScale;
 
 
-										if(TryGetViewHover(cid,out var hz))
-										{
+										if(TryGetViewHover(cid,out var hz)) {
 											z += hz * viewHoverZGain;
 											scale *= hz.Lerp(1.0f,1.25f);
 										}
@@ -1620,9 +1530,9 @@ internal partial class GameClient
 										//	   : spot.hasOutgoingAttacks ? nameColorOutgoing
 										//	   : nameColor));
 
-		// a+b-a*b
-		// a*( 1+b/a+b)
-		// a*b*(1/b + 1/a - 1)
+										// a+b-a*b
+										// a*( 1+b/a+b)
+										// a*b*(1/b + 1/a - 1)
 
 										DrawTextBox(name,drawC,nameTextFormat,wantDarkText ? color.A.AlphaToBlack() : Color.White,
 													color,Layer.
@@ -1705,8 +1615,7 @@ internal partial class GameClient
 
 			// show selected
 
-			if(underMouse!= priorUnderMouse)
-			{
+			if(underMouse!= priorUnderMouse) {
 				ToolTips.actionToolTip = underMouse;
 				ToolTipWindow.TipChanged();
 			}
@@ -1742,8 +1651,7 @@ internal partial class GameClient
 			//	}
 			//}
 			var _debugTip = ToolTips.debugTip;
-			if(_debugTip != null)
-			{
+			if(_debugTip != null) {
 				ToolTips.debugTip=null;
 				var alpha = 255;
 				System.Numerics.Vector2 c = new Vector2(clientSpan.X/2,clientSpan.Y -16).ScreenToWorld();
@@ -1752,8 +1660,7 @@ internal partial class GameClient
 #if DEBUG
 			//	DrawRectOutlineShadow(Layer.effects,new Vector2(16,16).ScreenToWorld(),clientSpan.ScreenToWorld() - new Vector2(16f.ScreenToWorld()),Color.Yellow,4,0);
 #endif
-			if(fadeCounter > 0)
-			{
+			if(fadeCounter > 0) {
 
 				fadeCounter = (float)(fadeCounter - (timeSinceLastFrame*0.125f)).Max(0.0);
 				DrawRect(Layer.overlay2d-1,new Vector2(-4,-4).ScreenToWorld(),(clientSpan+new Vector2(4f)).ScreenToWorld(),new Color(byte.MinValue,default,default,fadeCounter.SCurve().UNormToByte()),0);
@@ -1775,18 +1682,15 @@ internal partial class GameClient
 			draw.End();
 
 		}
-		catch(Exception ex)
-		{
+		catch(Exception ex) {
 			LogEx(ex);
 			draw._beginCalled = false;
 		}
 
-		static (int iType, float alpha) GetTroopBlend(float t,int nSprite)
-		{
+		static (int iType, float alpha) GetTroopBlend(float t,int nSprite) {
 			int iType = 0;
 			float alpha = 1;
-			if(nSprite > 1)
-			{
+			if(nSprite > 1) {
 				var fSprite = nSprite;
 				Assert(t > 0);
 				t -= MathF.Floor(t / fSprite) * fSprite;
@@ -1805,8 +1709,7 @@ internal partial class GameClient
 	}
 
 	static Dictionary<int,TextLayout> nameLayoutCache = new Dictionary<int,TextLayout>();
-	static public TextLayout GetTextLayout(string name,TextFormat format)
-	{
+	static public TextLayout GetTextLayout(string name,TextFormat format) {
 		var hash = name.GetHashCode(StringComparison.Ordinal);
 		if(nameLayoutCache.TryGetValue(name.GetHashCode(StringComparison.Ordinal),out var rv))
 			return rv;
@@ -1826,15 +1729,12 @@ internal partial class GameClient
 
 
 
-	public static void DrawTextBox(string text,Vector2 at,TextFormat format,Color color,byte backgroundAlpha,int layer = Layer.tileText,float _expandX = 2.0f,float _expandY = 0f,float zBias = -1,float scale = 0)
-	{
+	public static void DrawTextBox(string text,Vector2 at,TextFormat format,Color color,byte backgroundAlpha,int layer = Layer.tileText,float _expandX = 2.0f,float _expandY = 0f,float zBias = -1,float scale = 0) {
 		DrawTextBox(text,at,format,color,backgroundAlpha == 0 ? new Color() : color.IsDark() ? new Color(byte.MaxValue,byte.MaxValue,byte.MaxValue,backgroundAlpha) : new Color((byte)0,(byte)0,(byte)0,backgroundAlpha),layer,_expandX,_expandY,zBias,scale);
 	}
 
-	private static void DrawTextBox(string text,Vector2 at,TextFormat format,Color color,Color backgroundColor,int layer = Layer.tileText,float _expandX = 0.0f,float _expandY = 0,float zBias = -1,float scale = 0)
-	{
-		if(IsSquareCulledWC(at,textBoxCullSlop))
-		{
+	private static void DrawTextBox(string text,Vector2 at,TextFormat format,Color color,Color backgroundColor,int layer = Layer.tileText,float _expandX = 0.0f,float _expandY = 0,float zBias = -1,float scale = 0) {
+		if(IsSquareCulledWC(at,textBoxCullSlop)) {
 			return;
 		}
 		if(scale == 0)
@@ -1848,15 +1748,14 @@ internal partial class GameClient
 
 
 		// shift everything, then ignore Z
-			
-			//	var atScale = at.ViewToScreen(zBias);
-			//	at = atScale.c;
-			//	scale *= atScale.scale;
-			//	zBias = 0;
+
+		//	var atScale = at.ViewToScreen(zBias);
+		//	at = atScale.c;
+		//	scale *= atScale.scale;
+		//	zBias = 0;
 		var span = textLayout.ScaledSpan(scale);
 		var expand = new Vector2(_expandX.DipToWorld(),_expandY.DipToWorld());
-		if(backgroundColor.A > 0)
-		{
+		if(backgroundColor.A > 0) {
 			var c0 = at;
 			if(format.horizontalAlignment == TextFormat.HorizontalAlignment.center)
 				c0.X -= span.X * 0.5f;
@@ -1873,14 +1772,12 @@ internal partial class GameClient
 		textLayout.Draw(at,scale,color,layer,zBias);
 	}
 
-	private static void FillRoundedRectangle(int layer,Vector2 c0,Vector2 c1,Color background,float z)
-	{
+	private static void FillRoundedRectangle(int layer,Vector2 c0,Vector2 c1,Color background,float z) {
 		draw.AddQuad(layer,quadTexture,c0,c1,background,z);/// c0.CToDepth(),(c1.X,c0.Y).CToDepth(), (c0.X,c1.Y).CToDepth(), c1.CToDepth() );
 	}
 	//	static Vector2 _uv0;
 	//	static Vector2 _uv1;
-	private static void DrawFlag(int cid,SpriteAnim sprite,Vector2 offset)
-	{
+	private static void DrawFlag(int cid,SpriteAnim sprite,Vector2 offset) {
 		//return;
 		//var wc = cid.CidToWorld();
 		//if(IsCulledWC(wc))
@@ -1976,29 +1873,25 @@ internal partial class GameClient
 
 	const float actionStopDistance = 0.375f;
 	private static void DrawAction(float timeToArrival,float journeyTime,float wave,Vector2 c0,Vector2 c1,Color color,
-	Material bitmap,bool applyStopDistance,IToolTip? army,float alpha = 1,float lineThickness = GameClient.lineThickness,bool highlight = false)
-	{
+	Material bitmap,bool applyStopDistance,IToolTip? army,float alpha = 1,float lineThickness = GameClient.lineThickness,bool highlight = false) {
 		if(IsSegmentCulledWC(c0,c1))
 			return;
 		var lineRate = lineAnimationRate;
 		var animWave = false;
 		float progress;
-		if(timeToArrival <= 0.0f )
-		{
+		if(timeToArrival <= 0.0f) {
 			progress = 1.0f;
 			timeToArrival = 0;
 			lineRate = lineAnimationRate*0.25f;// (animationT/16.0f).Wave(-lineAnimationRate,lineAnimationRate)*(1f/128.0f);
 			animWave = true;
 		}
-		else
-		{
+		else {
 			if(timeToArrival >= journeyTime)
 				progress = 1.0f / 16.0f; // just starting
 			else
 				progress = 1f - (timeToArrival / journeyTime); // we don't know the duration so we approximate with 2 hours
 		}
-		if(applyStopDistance)
-		{
+		if(applyStopDistance) {
 			var dr = c1 - c0;
 			var _c0 = c0;
 			var clip = (actionStopDistance / dr.Length()).Min(0.25f);
@@ -2016,12 +1909,10 @@ internal partial class GameClient
 
 		float spriteSize = spriteSizeGain;
 
-		if(army is not null)
-		{
+		if(army is not null) {
 			(var distance, _) = ShellPage.mousePositionW.DistanceToSegment(c0,c1);
 			//ToolTips.debugTip = distance.ToString("N0");
-			if(distance < bestUnderMouseScore)
-			{
+			if(distance < bestUnderMouseScore) {
 				bestUnderMouseScore = distance;
 				underMouse = army;
 				highlight = true;
@@ -2042,8 +1933,7 @@ internal partial class GameClient
 		//		DrawSquare(Layer.effectShadow,c0,shadowColor,zEffectShadow);
 		//}
 		//var dc = new Vector2(spriteSize, spriteSize);
-		if(bitmap != null)
-		{
+		if(bitmap != null) {
 			var mid = progress.Lerp(c0,c1);
 			var _c0 = new Vector2(mid.X - spriteSize,mid.Y - spriteSize);
 			var _c1 = new Vector2(mid.X + spriteSize,mid.Y + spriteSize);
@@ -2057,8 +1947,7 @@ internal partial class GameClient
 
 
 
-	private void DrawAction(Vector2 c0,Vector2 c1,Color color,float thickness,bool highlight)
-	{
+	private void DrawAction(Vector2 c0,Vector2 c1,Color color,float thickness,bool highlight) {
 		DrawAction(0,1.0f,1,c0,c1,color,null,false,null,alpha: 1,lineThickness: thickness,highlight: highlight);
 
 
@@ -2075,16 +1964,13 @@ internal partial class GameClient
 					DrawLine(Layer.effectShadow, cm, cm + dl*inverseL*drawActionLength, (0.0f,1.0f), color, zEffectShadow);
 		*/
 	}
-	private static void DrawSquare(int layer,Vector2 c0,Color color,float zBias)
-	{
+	private static void DrawSquare(int layer,Vector2 c0,Color color,float zBias) {
 		draw.AddQuad(layer,quadTexture,new Vector2(c0.X - smallRectSpan,c0.Y - smallRectSpan),new Vector2(c0.X + smallRectSpan,c0.Y + smallRectSpan),new Vector2(0,0),new Vector2(1,1),color,zBias);
 	}
-	private static void DrawRect(int layer,Vector2 c0,Vector2 c1,Color color,float Z)
-	{
+	private static void DrawRect(int layer,Vector2 c0,Vector2 c1,Color color,float Z) {
 		draw.AddQuad(layer,quadTexture,c0,c1,new Vector2(),new Vector2(1,1),color,zEffects);
 	}
-	private static void DrawRectOutline(int layer,Vector2 c0,Vector2 c1,Color color,float z,float thickness,float _expand = 0f,double animationOffset = 0, bool includeTop=true)
-	{
+	private static void DrawRectOutline(int layer,Vector2 c0,Vector2 c1,Color color,float z,float thickness,float _expand = 0f,double animationOffset = 0,bool includeTop = true) {
 
 		float t = thickness.ScreenToWorld();
 		var expand = _expand.ScreenToWorld();
@@ -2104,28 +1990,24 @@ internal partial class GameClient
 	}
 
 
-	internal static void DrawRectOutlineShadow(int layer,Vector2 c0,Vector2 c1,Color color,float thickness = 1,float expand = 0,double animationOffset = 0, float zScale=1f, bool includeTop=true)
-	{
+	internal static void DrawRectOutlineShadow(int layer,Vector2 c0,Vector2 c1,Color color,float thickness = 1,float expand = 0,double animationOffset = 0,float zScale = 1f,bool includeTop = true) {
 		DrawRectOutline(layer,c0,c1,color,zUI*zScale,thickness,expand,animationOffset,includeTop);
 		DrawRectOutline(Layer.tileShadow,c0,c1,color.GetShadowColorDark(),zShadow,thickness,expand,animationOffset,includeTop);
 	}
-	private static void DrawRectOutlineShadow(int layer,int cid,Color col,string label = null,float thickness = 1,float expand = 0,double animationOffset = 0, bool includeTop=true)
-	{
+	private static void DrawRectOutlineShadow(int layer,int cid,Color col,string label = null,float thickness = 1,float expand = 0,double animationOffset = 0,bool includeTop = true) {
 		var wc = cid.CidToWorld();
 		if(IsCulledWC(wc))
 			return;
 		var cc = wc.ToVector(); ;
 		var c0 = cc - v2Half;
 		var c1 = cc + v2Half;
-		DrawRectOutlineShadow(Layer.effects,c0,c1,col,thickness,expand,animationOffset,includeTop:includeTop);
-		if(label != null)
-		{
+		DrawRectOutlineShadow(Layer.effects,c0,c1,col,thickness,expand,animationOffset,includeTop: includeTop);
+		if(label != null) {
 			DrawTextBox(label,cc,textformatLabel,new Color(col,255),textBackgroundOpacity,Layer.tileText,scale: (regionFontScale * 2.0f));
 		}
 	}
 
-	private static void DrawDiamond(Material lineMaterial,int layer,Vector2 c0,Vector2 c1,Color color,float z,float thickness,float expand)
-	{
+	private static void DrawDiamond(Material lineMaterial,int layer,Vector2 c0,Vector2 c1,Color color,float z,float thickness,float expand) {
 		float d = thickness;
 		var cm = (c0 + c1) * 0.5f;
 		float ext = 0.41f + expand.ScreenToWorld();
@@ -2139,14 +2021,12 @@ internal partial class GameClient
 		draw.AddLine(layer,lineMaterial,cr,cb,d,0.0f,1.0f,color,(cr.CToDepth(z), cb.CToDepth(z)));
 		draw.AddLine(layer,lineMaterial,cb,cl,d,0.0f,1.0f,color,(cb.CToDepth(z), cl.CToDepth(z))); ;
 	}
-	private static void DrawDiamondShadow(int layer,Vector2 c0,Vector2 c1,Color color,float thickness,float expand)
-	{
+	private static void DrawDiamondShadow(int layer,Vector2 c0,Vector2 c1,Color color,float thickness,float expand) {
 		DrawDiamond(whiteMaterial,layer,c0,c1,color,zCities,thickness,expand);
 		if(wantParallax)
 			DrawDiamond(shadowMaterial,Layer.tileShadow,c0,c1,color.GetShadowColorDark(),zCities,thickness,expand);
 	}
-	private static void DrawDiamondShadow(int layer,int cid,Color col,string label = null,float thickness = 3,float expand = 0)
-	{
+	private static void DrawDiamondShadow(int layer,int cid,Color col,string label = null,float thickness = 3,float expand = 0) {
 		var wc = cid.CidToWorld();
 		if(IsCulledWC(wc))
 			return;
@@ -2154,28 +2034,24 @@ internal partial class GameClient
 		var c0 = ww - v2Half;
 		var c1 = ww + v2Half;
 		DrawDiamondShadow(Layer.effects,c0,c1,col,thickness,expand);
-		if(label != null)
-		{
+		if(label != null) {
 			DrawTextBox(label,ww,textformatLabel,new Color(col,255),textBackgroundOpacity,Layer.tileText,scale: (regionFontScale * 2.0f));
 		}
 	}
 
-	static (float u, float v) GetLineUs(Vector2 c0,Vector2 c1,float thickness,float animationSpeed, bool wave)
-	{
+	static (float u, float v) GetLineUs(Vector2 c0,Vector2 c1,float thickness,float animationSpeed,bool wave) {
 		var offset = wave ? (animationSpeed * animationT).Wave() : (animationSpeed * animationT).Wrap01();
 		return (offset, offset-(c0 - c1).Length()* lineWToUs/thickness);
 
 	}
-	private static void DrawLine(int layer,Vector2 c0,Vector2 c1,(float u, float v) uv,Color color,float zBias,float thickness = lineThickness)
-	{
+	private static void DrawLine(int layer,Vector2 c0,Vector2 c1,(float u, float v) uv,Color color,float zBias,float thickness = lineThickness) {
 		//	draw.AddLine(layer,lineDraw, c0, c1, lineThickness, , color,(c0.CToDepth()+ zBias, c1.CToDepth()+ zBias) );
 		draw.AddLine(layer,lineDraw,c0,c1,thickness,uv.u,uv.v,color,(c0.CToDepth(zBias), c1.CToDepth(zBias)));
 	}
 
 
 
-	public static void DrawAccentBaseI(float cX,float cY,float radius,double angle,Color color,int layer,float zBias)
-	{
+	public static void DrawAccentBaseI(float cX,float cY,float radius,double angle,Color color,int layer,float zBias) {
 		var dx0 = radius * (float)Math.Cos(angle);
 		var dy0 = radius * (float)Math.Sin(angle);
 		var angle1 = angle + MathF.PI * 0.1875f;
@@ -2185,22 +2061,19 @@ internal partial class GameClient
 		// rotated by 180
 		DrawLine(layer,new Vector2(cX - dx0,cY - dy0),new Vector2(cX - dx1,cY - dy1),(angle.SignOr0(), 0),color,zBias);
 	}
-	public static void DrawAccentBase(float cX,float cY,float radius,double angle,Color color,int layer,float zBias)
-	{
+	public static void DrawAccentBase(float cX,float cY,float radius,double angle,Color color,int layer,float zBias) {
 		DrawAccentBaseI(cX,cY,radius,angle,color,layer,zBias);
 		DrawAccentBaseI(cX,cY,radius * 0.875f,angle + angle.SignOr0() * 0.125f,color,layer,zBias);
 		//DrawAccentBaseI(ds, cX, cY, radius*0.655f, angle+angle.SignOr0()*0.25f, color);
 	}
 
-	public static void DrawAccent(Vector2 c,float radius,float angularSpeed,Color brush)
-	{
+	public static void DrawAccent(Vector2 c,float radius,float angularSpeed,Color brush) {
 		var angle = angularSpeed * AGame.animationT;
 		if(wantShadow)
 			DrawAccentBase(c.X,c.Y,radius,angle,brush.GetShadowColorDark(),Layer.effectShadow,zEffectShadow);
 		DrawAccentBase(c.X,c.Y,radius,angle,brush,Layer.overlay2d,zEffects);
 	}
-	public static void DrawAccent(int cid,float angularSpeedBase,Color brush,float radiusScale = 1.0f)
-	{
+	public static void DrawAccent(int cid,float angularSpeedBase,Color brush,float radiusScale = 1.0f) {
 
 		var wc = cid.CidToWorld();
 		if(IsCulledWC(wc))
@@ -2217,19 +2090,15 @@ internal partial class GameClient
 	}
 
 
-	public static void UpdateRenderQuality(float renderQuality)
-	{
+	public static void UpdateRenderQuality(float renderQuality) {
 		UpdateClientSpan();
 	}
 
 
 	public static List<(int cid, float z, float vz)> viewHovers = new List<(int cid, float z, float vz)>();
-	static bool TryGetViewHover(int cid,out float z)
-	{
-		foreach(var hover in viewHovers)
-		{
-			if(hover.cid == cid)
-			{
+	static bool TryGetViewHover(int cid,out float z) {
+		foreach(var hover in viewHovers) {
+			if(hover.cid == cid) {
 				z = hover.z;
 				return true;
 			}
@@ -2238,22 +2107,17 @@ internal partial class GameClient
 		return false;
 	}
 
-	protected override void Update(GameTime gameTime)
-	{
+	protected override void Update(GameTime gameTime) {
 
-		try
-		{
+		try {
 
 
 
 
 
-			if(clientSpan.X > 0 && clientSpan.Y > 0 && AppS.isForeground)
-			{
-				if(resolutionDirtyCounter > 0 && !faulted)
-				{
-					if(--resolutionDirtyCounter == 0)
-					{
+			if(clientSpan.X > 0 && clientSpan.Y > 0 && AppS.isForeground) {
+				if(resolutionDirtyCounter > 0 && !faulted) {
+					if(--resolutionDirtyCounter == 0) {
 						wantFastRefresh = false;
 						//	AppS.DispatchOnUIThread(() =>
 						{
@@ -2331,16 +2195,13 @@ internal partial class GameClient
 			//				//}
 
 			//			}
-			if(!faulted && AppS.isForeground)
-			{
-				if(World.bitmapPixels != null)
-				{
+			if(!faulted && AppS.isForeground) {
+				if(World.bitmapPixels != null) {
 					// canvas.Paused = true;
 					var pixels = World.bitmapPixels;
 
 					World.bitmapPixels = null;
-					if(worldObjects != null)
-					{
+					if(worldObjects != null) {
 						var w = worldObjects;
 						worldObjects = null;
 						w.texture.Dispose();
@@ -2358,12 +2219,10 @@ internal partial class GameClient
 				//	World.renderTilesTexture = CreateFromBytes(World.renderTileStaging,World.span,World.span,SurfaceFormat.R32G32B32A32_SInt);
 
 				//}
-				if(World.worldOwnerPixels != null)
-				{
+				if(World.worldOwnerPixels != null) {
 					var ownerPixels = World.worldOwnerPixels;
 					World.worldOwnerPixels = null;
-					if(worldOwners != null)
-					{
+					if(worldOwners != null) {
 						var w = worldOwners;
 						worldOwners = null;
 						w.texture.Dispose();
@@ -2375,12 +2234,11 @@ internal partial class GameClient
 					//worldObjectsDark = new TintEffect() { BufferPrecision = CanvasBufferPrecision.Precision8UIntNormalizedSrgb, Source = worldObjects, Color = new Color() { A = 255, R = 128, G = 128, B = 128 } };
 
 				}
-				if(World.changePixels != null)
-				{
+				if(World.changePixels != null) {
 					var pixels = World.changePixels;
 
 					ClearHeatmapImage();
-				//	worldChanges = CreateFromBytes(pixels,World.outSize,World.outSize,SurfaceFormat.Dxt1,worldSpaceEffect);
+					//	worldChanges = CreateFromBytes(pixels,World.outSize,World.outSize,SurfaceFormat.Dxt1,worldSpaceEffect);
 
 
 				}
@@ -2395,30 +2253,24 @@ internal partial class GameClient
 			//			ShellPage.canvasHitTest.Fill = CnVServer.webViewBrush;
 			//		});
 		}
-		catch(SharpDX.SharpDXException sex)
-		{
-			if(!faulted)
-			{
+		catch(SharpDX.SharpDXException sex) {
+			if(!faulted) {
 				faultCount += 16;
-				if(faulted)
-				{
-					try
-					{
+				if(faulted) {
+					try {
 						CnV.Debug.LogEx(sex,report: false);
 						CnV.Debug.Log($"{sex.ResultCode} {sex.Descriptor.ApiCode} {sex.Descriptor.Description} {sex.Descriptor.ToString()} ");
 						Faulted();
 
 					}
-					catch(Exception ex2)
-					{
+					catch(Exception ex2) {
 
 					}
 				}
 			}
 
 		}
-		catch(Exception _exception)
-		{
+		catch(Exception _exception) {
 			CnV.Debug.LogEx(_exception);
 			++faultCount;
 		}
@@ -2429,15 +2281,12 @@ internal partial class GameClient
 
 	private static SurfaceFormat GetBackBufferFormat() => Settings.hdrMode switch { 0 => SurfaceFormat.Bgra32SRgb, 1 => SurfaceFormat.Rgba1010102, _ => SurfaceFormat.HalfVector4 };
 
-	private static async Task Faulted()
-	{
-		var a = await AppS.DispatchOnUIThreadTask(async () =>
-		{
+	private static async Task Faulted() {
+		var a = await AppS.DispatchOnUIThreadTask(async () => {
 			return await AppS.Failed("Video Driver broke","Please restart, it should recover");
 
 		});
-		if(a == 1)
-		{
+		if(a == 1) {
 			instance.GraphicsDevice.Reset();
 			faultCount = 0;
 		}
@@ -2509,8 +2358,7 @@ internal partial class GameClient
 	//	renderTarget = new CanvasRenderTarget(canvas, (float)(clientSpan.X), (float)(clientSpan.Y), canvas.Dpi, Windows.Graphics.DirectX.DirectXPixelFormat.B8G8R8A8UIntNormalized, CanvasAlphaMode.Premultiplied);
 
 	//}
-	protected override bool BeginDraw()
-	{
+	protected override bool BeginDraw() {
 		if(!AppS.isForeground)
 			return false;
 		if(!Sim.isInitialized)

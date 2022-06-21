@@ -39,7 +39,7 @@
 
 		<StackPanel x:Name="stackPanel"  Margin="0" Padding="0" Background="{x:Null}"   CornerRadius="0" VerticalAlignment="Top"  >
 			<cnv:CityControl x:Name="cityBox" Label="ꁊ"  HorizontalAlignment="Stretch"  Margin= "0" x:FieldModifier="internal" 
-
+					allowNone="false"
 									cityChanged="CityBox_SelectionChanged"
 					                 ToolTipService.ToolTip="Right tap for menu"
 					               

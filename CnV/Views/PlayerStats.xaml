@@ -62,7 +62,8 @@
 			</Button.Content>
 		</Button>
 		<cnv:CityControl x:Name="focus" Label="ꁊ"  MinWidth="160" Height="32" Margin= "4,2" cityChanged="focus_PropertyChanged" x:FieldModifier="internal"
-						 ToolTipService.ToolTip="Spot or City clicked, enter coordinates view a specific spot" />
+						 ToolTipService.ToolTip="Spot or City clicked, enter coordinates view a specific spot"
+						 allowNonCities="True" allowNone="False" allowOtherAlliances="True" allowOtherPlayers="True" />
 
 	</tk:WrapPanel>
 </UserControl>

@@ -38,7 +38,7 @@ public static partial class CityUI
 									try
 									{
 										var _build = City.GetBuild();
-										if(!object.ReferenceEquals(_build,CityStats.instance.cityBox.city))
+										if(!object.ReferenceEquals(_build,CityStats.instance.cityBox._city))
 										{
 //											var id = City.gridCitySource.IndexOf(_build);
 											CityStats.instance.cityBox.SetCity(_build,false);
@@ -385,7 +385,10 @@ public static partial class CityUI
 	}
 	public static void ShowContextMenu(this City me,UIElement uie, Windows.Foundation.Point position)
 	{
-
+		if(!me.isValid) {
+			Assert(false);
+			return;
+		}
 		//   SelectMe(false) ;
 	
 		var flyout = new MenuFlyout();
@@ -399,6 +402,10 @@ public static partial class CityUI
 
 	public static void SelectMe(this City me, bool showClick = false, VirtualKeyModifiers mod = VirtualKeyModifiers.Shift, bool scrollIntoView = true)
 	{
+		if(!me.isValid) {
+			Assert(false);
+			return;
+		}
 		var cid = me.cid;
 		if(showClick || scrollIntoView)
 			NavStack.Push(cid);
