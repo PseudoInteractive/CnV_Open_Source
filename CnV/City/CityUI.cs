@@ -38,7 +38,7 @@ public static partial class CityUI
 									try
 									{
 										var _build = City.GetBuild();
-										if(!object.ReferenceEquals(_build,CityStats.instance.cityBox._city))
+										if(!object.ReferenceEquals(_build,CityStats.instance.cityBox.city))
 										{
 //											var id = City.gridCitySource.IndexOf(_build);
 											CityStats.instance.cityBox.SetCity(_build,false);

@@ -41,29 +41,32 @@ namespace CnV
 		public event PropertyChangedEventHandler PropertyChanged;
 		internal ObservableCollection<City> citySelections = new();
 		#endregion
-		public City _city = City.invalid;
+	//	public City _city = City.invalid;
 		// Sets city silently
 		public bool SetCityI(City value) {
+
+			Assert(value != city);
 			Assert(value is not null);
 			if(!IsValid(value.cid,true)) {
 				return false;
 			}
-			_city = value; // This gets set first
 			TouchSelections();
-			if(_city is not null && !citySelections.Contains(_city))
-				citySelections.Add(_city);
+			if(value is not null && !citySelections.Contains(value))
+				citySelections.Add(value);
+			city = value; // thhis should trigger effecst to update the UPI
 			return true;
 		}
 		public void SetCity(City value, bool triggerCityChanged=true) {
+			Assert(value is not null);
 			if(_city != value) {
-				{
-					if(!SetCityI(value))
-						return;
-				}
-			CallPropertyChanged(nameof(this.city));
+			{
+				if(!SetCityI(value))
+					return;
+				CallPropertyChanged(nameof(this.city));
+			}
 
 			if(triggerCityChanged)
-				cityChanged?.Invoke(this,_city);
+				cityChanged?.Invoke(this,value);
 				
 			}
 		}
@@ -110,28 +113,32 @@ namespace CnV
 		}
 
 		// Not for internal use
-		private City city
-		{
-			get {
-				Assert(_city != null);
-				return allowNone ? _city : _city.IsValid() ? _city : null;
-			}
-			 set {
-				Assert(value != null);
-				if(!object.ReferenceEquals(_city, value) )
-				{
-					SetCityI( value); 
-					cityChanged?.Invoke(this,_city);
+//		public City city
+//		{
+//			 get {
+//				var rv = City;
+//				return rv?? City.invalid;//
+//										 //	if(rv == null)
+////					return 
+////				Assert(_city != null);
+////				return allowNone ? _city : _city.IsValid() ? _city : null;
+//			}
+//			protected  set {
+//				Assert(value != null);
+//				if(!object.ReferenceEquals(_city, value) )
+//				{
+//					SetCityI( value); 
+//					cityChanged?.Invoke(this,_city);
 
-				//	OnPropertyChanged(nameof(this.city));
-				}
-			}
-		}
-		public int cid => city is City c ? c.cid : 0;
-		public BitmapImage icon => city?.icon;
+//				//	OnPropertyChanged(nameof(this.city));
+//				}
+//			}
+//		}
+		public int cid => _city.cid;
+		public BitmapImage icon => _city.icon;
 		public string name
 		{
-			get => city != null ? city.nameAndRemarks : "None";
+			get => _city.nameAndRemarks;
 			set {
 				Note.Show(value);
 			}
@@ -147,7 +154,28 @@ namespace CnV
   typeof(CityControl),
   new PropertyMetadata(null)
 );
+		public static readonly DependencyProperty cityProperty = DependencyProperty.Register(
+  "city",
+  typeof(City),
+  typeof(CityControl),
+  new PropertyMetadata(City.invalid,propertyChangedCallback:cityChangedI)
+);
+		public City  city
+		{
+			get { return (City)GetValue(cityProperty); }
+			set {
+				SetValue(cityProperty,value);
+			}
 
+		}
+		public static void cityChangedI(DependencyObject d,DependencyPropertyChangedEventArgs e) {
+			var c = d as CityControl;
+			var value = e.NewValue as City;
+			Assert(c is not null);
+			c.TouchSelections();
+			if(value is not null && !c.citySelections.Contains(value))
+				c.citySelections.Add(value);
+		}
 		public bool allowNone { get; set; } = true;		
 		public bool allowOtherPlayers { get; set; } = false;		
 		public bool allowOtherAlliances { get; set; } = false;	
@@ -183,7 +211,7 @@ namespace CnV
 			{
 				var image = sender as FrameworkElement;
 				var cc = image.FindParent<CityControl>();
-				if(cc?.city != null)
+				if(cc.isValid)
 					CityUI.ShowCity(cc.city.cid,false,false,false);
 			}
 			catch(Exception _ex)
@@ -194,6 +222,8 @@ namespace CnV
 
 		}
 
+		public bool isValid => city.IsValid();
+
 		private void Image_Tapped(object sender, TappedRoutedEventArgs e)
 		{
 						e.Handled=true;
@@ -202,7 +232,7 @@ namespace CnV
 			{
 				var image = sender as FrameworkElement;
 				var cc = image.FindParent<CityControl>();
-				if(cc?.city!=null)
+				if(cc.isValid)
 					Spot.ProcessCoordClick(cc.city.cid,false,AppS.keyModifiers,false);
 			}
 			catch(Exception _ex)
@@ -221,7 +251,7 @@ namespace CnV
 			{
 				var image = sender as FrameworkElement;
 				var cc = image.FindParent<CityControl>();
-				if(cc?.city != null)
+				if(cc.isValid)
 					cc.city.ShowContextMenu(image,e.GetPosition(image));
 			}
 			catch(Exception _ex)
@@ -306,7 +336,7 @@ namespace CnV
 			}
 			// todo!
 		}
-		
+
 		//private void CityName_SuggestionChosen(AutoSuggestBox sender,AutoSuggestBoxSuggestionChosenEventArgs args)
 		//{
 		//	try
@@ -394,9 +424,9 @@ namespace CnV
 		//		LogEx(_ex);
 
 		//	}
-		
+
 		//}
-		internal event EventHandler<City> cityChanged;
+		public event EventHandler<City> cityChanged;
 		//private void SelectionChanged(object sender,SelectionChangedEventArgs e)
 		//{
 		//	try
@@ -415,7 +445,7 @@ namespace CnV
 		private void CityIconTapped(object sender,TappedRoutedEventArgs e)
 		{
 			e.Handled=true;
-			if(city.IsInvalid())
+			if(!isValid)
 				return;
 			city?.Focus();
 		}
@@ -423,7 +453,7 @@ namespace CnV
 		private void RightTappedX(object sender,RightTappedRoutedEventArgs e)
 		{
 			e.Handled=true;
-			if(city.IsInvalid())
+			if(!isValid)
 				return;
 			try
 			{
@@ -442,7 +472,7 @@ namespace CnV
 			//	citySelections.Clear();
 			TouchSelections();
 		}
-
+		public City _city => city ?? City.invalid;
 		private void TouchSelections() {
 			if(citySelections.Count > 0)
 				return;
@@ -471,6 +501,17 @@ namespace CnV
 
 		//   flyout.XamlRoot = uie.XamlRoot;
 			flyout.ShowAt(cityBox);
+		}
+
+		private void ComboBoxDropdownClosed(object sender,object e) {
+				cityChanged?.Invoke(this,_city);
+
+		}
+
+		private void ComboBoxSelectionChnaged(object sender,SelectionChangedEventArgs e) {
+			if(e.AddedItems.FirstOrDefault() as City != city) {
+				cityChanged?.Invoke(this,_city);
+			}
 		}
 
 

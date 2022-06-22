@@ -32,6 +32,9 @@
 				  ItemsSource="{x:Bind citySelections, Mode=OneWay}"
 					    SelectedItem="{x:Bind city, Mode=TwoWay}"       
 					                Margin="0"
+				  SelectionChangedTrigger="Committed"
+				  DropDownClosed="ComboBoxDropdownClosed"
+				  SelectionChanged="ComboBoxSelectionChnaged"
 					 ToolTipService.ToolTip="Right click to select a recent spot"
 					   
 					   >

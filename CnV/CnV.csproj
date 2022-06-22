@@ -119,6 +119,7 @@
 		<Compile Include="Draw\ViewStep.cs" />
 		<Compile Include="GameUI\ArtifactDialogue.xaml.cs" />
 		<Compile Include="GameUI\Artifacts.xaml.cs" />
+		<Compile Include="GameUI\AttackSender.xaml.cs" />
 		<Compile Include="GameUI\AutobuildDialog.xaml.cs" />
 		<Compile Include="GameUI\BattleReportDialog.xaml.cs" />
 		<Compile Include="GameUI\BossReportDialog.xaml.cs" />
@@ -359,6 +360,9 @@
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Include="GameUI\Artifacts.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="GameUI\AttackSender.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Include="GameUI\AutobuildDialog.xaml">
@@ -628,6 +632,7 @@
 		<None Remove="GameUI\ArtifactDialogue.xaml" />
 		<None Remove="GameUI\Artifacts.xaml" />
 		<None Remove="GameUI\AutobuildDialog.xaml" />
+		<None Remove="GameUI\AtackSender.xaml" />
 		<None Remove="GameUI\BattleReportDialog.xaml" />
 		<None Remove="GameUI\BossReportDialog.xaml" />
 		<None Remove="GameUI\ChartDialog.xaml" />
