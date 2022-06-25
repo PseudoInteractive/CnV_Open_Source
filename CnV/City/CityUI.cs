@@ -73,7 +73,7 @@ public static partial class CityUI
 	internal static void Refresh()
 	{
 		Player.active.OnPropertyChanged();
-		CityStats.Invalidate();
+		City.GetBuild().OnPropertyChanged();
 		PlayerStats.Changed();
 	}
 	public static  void AddToFlyout(this City me, MenuFlyout flyout, bool useSelected = false)
@@ -164,6 +164,7 @@ public static partial class CityUI
 				var sel = Spot.GetSelectedForContextMenu(cid, false);
 				{
 					aWar.AddItem("Attack",(_,_) => SendTroops.ShowInstance(GetBuild(),City.Get(cid),isSettle: false,viaWater: false,type: ArmyType.assault));
+					aWar.AddItem("Attack Targets",(_,_) => AttackSender.ShowInstance(GetBuild(),City.Get(cid) ));
 					var multiString = sel.Count > 1 ? $" _x {sel.Count} selected" : "";
 				//	aWar.AddItem("Cancel Attacks..", me.CancelAttacks);
 					var afly = aWar.AddSubMenu("Attack Planner");

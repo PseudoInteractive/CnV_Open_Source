@@ -109,7 +109,7 @@ namespace CnV.Views
 
 		}
 		internal void TimeScaleChangeNotify() {
-			Debounce.Q(50,runOnUIThread: true,action: () => {
+			Debounce.Q(250,runOnUIThread: true,action: () => {
 
 
 
@@ -975,11 +975,16 @@ namespace CnV.Views
 				//	var t = RefreshWorldData();
 				World.InvalidateCities();
 				ShellPage.CityListNotifyChange(true);
-				foreach(var city in City.allSpots)
-					city.Value.OnPropertyChanged();
+			
 				NotifyCollectionBase.ResetAll(true);
 				CityUI.Refresh();
 				RefreshTabs.Go();
+				await AppS.QueueOnUIThreadTask(() => {
+					foreach(var city in City.allSpots) {
+						city.Value.CallPropertyChanged();
+					}
+				});
+					
 				//await t;
 			}
 			catch(Exception _ex) {

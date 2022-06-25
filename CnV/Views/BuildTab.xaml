@@ -37,7 +37,8 @@
 							FontStretch="Condensed"
 							Loaded="DataGridLoaded"
 							FrozenColumnCount="2"
-							>
+							
+					   >
 	
 			<!--<sf:SfDataGrid.Commands>
 				<view:BuildCustomDataBindingCompleteCommand />

@@ -34,25 +34,61 @@ namespace CnV
 					return 	$"{ttGlyphSword} {b.attackArmy.typeS}, ratio: {b.attackRatio:N2}x";
 			}
 		}
-		internal string wallInfo => $"{ttGlyphWall} {b.wallLevel}";
+		internal string wallInfo => $"{ttGlyphShield}  {ttGlyphWall} level {b.wallLevel}";
 
 		internal string scoutedResources => b.scoutRecord is not null ? b.scoutRecord.resources.Format(" ","Scouted resources\n") : null;
 		public BattleReportDialog(BattleReport _b)
 		{
 			this.b = _b;
 			this.InitializeComponent();
+			if(_b.targetPlayer.sharesInfo || AppS.isTest ) { 
+			var dPlayers = _b.defenders.Select(a => a.GetPlayer(_b) ).Distinct().ToArray();
+				//if(dPlayers.Length > 0) 
+				
+					defenders = new BattleReportPlayerInfo[dPlayers.Length];
+					for(int i = 0;i<dPlayers.Length;++i) {
+						defenders[i] = new BattleReportPlayerInfo(dPlayers[i],_b);
+					}
+				}
+				else {
+					defendersInfo.Visibility = Visibility.Collapsed;
+				}
+
+
+			
 		}
 
 		
 		public static void ShowInstance(BattleReport _b)
 		{
 			var rv = new BattleReportDialog(_b);
-			
+
+
 			rv.Show(false) ;
 			
 		}
+		internal BattleReportPlayerInfo[] defenders;
 
+	}
+	internal sealed class BattleReportPlayerInfo {
+		internal Player p;
+		internal BattleReport b;
 
+		internal string refines => "Refines: " + ArmyResult.RefinesToRes((uint)b.defenders.Where(d => d.GetPlayer(b)== p)
+			.Sum(a=> a.refines )).Format();
+		internal string header => $"{b.defenders.Where(d => d.GetPlayer(b) == p)
+			.Sum(a => a.contribution):P0} {p.name}";
+		internal string troops => "Troops: "+ b.defenders.Where(d => d.GetPlayer(b) == p)
+			.Aggregate(new TroopTypeCounts(),(r,a) => r + a.troops).Format();
+
+		internal string survived => "Survived: "+ b.defenders.Where(d => d.GetPlayer(b) == p)
+			.Aggregate(new TroopTypeCounts(),(r,a) => r + a.survived).Format();
+		
+
+		public BattleReportPlayerInfo(Player p,BattleReport report) {
+			this.p=p;
+			this.b=report;
+		}
 	}
 	
 

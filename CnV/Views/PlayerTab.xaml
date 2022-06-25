@@ -86,9 +86,9 @@
 
 				<sf:GridNumericColumn MappingName="donations" DisplayNumberFormat="N0" />
 
-				<sf:GridNumericColumn MappingName="Ts" DisplayNumberFormat="N0" />
-				<sf:GridNumericColumn MappingName="TsOffense" DisplayNumberFormat="N0"/>
-				<sf:GridNumericColumn MappingName="TsDefense" DisplayNumberFormat="N0" />
+				<sf:GridNumericColumn MappingName="tsIfShared" DisplayNumberFormat="N0" HeaderText="TS"  />
+				<sf:GridNumericColumn MappingName="tsOffenseIfShared" DisplayNumberFormat="N0"  HeaderText="Offense"  />
+				<sf:GridNumericColumn MappingName="tsDefenseIfShared" DisplayNumberFormat="N0"  HeaderText="defense"  />
 
 				<sf:GridNumericColumn MappingName="kills"
 				                      TextAlignment="Center"

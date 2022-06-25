@@ -16,8 +16,8 @@ namespace CnV.Views
 			public UpdateHtmlOffsets() : base(null)
 			{
 				runOnUiThread = true;
-				debounceDelay = 100;
-				throttleDelay = 200;
+				debounceDelay = 200;
+				throttleDelay = 300;
 				base.func = F;
 			}
 

@@ -139,7 +139,7 @@ namespace CnV.Views
 			if (sel != null)
 			{
 
-				if(sel.incoming.Where(a => a.shareInfo).OrderBy(a=>a.arrival).ThenBy(a=> a.isDefense ? 0 : 1).ToArray().SyncList(instance.targetIncoming)) {
+				if(sel.incoming.Where(a => a.shareInfo).OrderBy(a=>a.arrival).ThenBy(a=> a.type).ToArray().SyncList(instance.targetIncoming)) {
 					instance.armyGrid.ResetAutoColumns();
 					if(showHistory) {
 						var tab = HitHistoryTab.instance;

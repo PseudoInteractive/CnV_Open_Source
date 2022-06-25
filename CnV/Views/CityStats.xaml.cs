@@ -496,19 +496,13 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 		{
 			if(_city == lastDisplayed)
 				ClearLastDisplayed();
-			if(_city.isBuild)
-			{
-				Invalidate();
-			}
+			_city.OnPropertyChanged();
 		}
 		public static void CityRecruitChange(City _city)
 		{
 			if(_city == lastDisplayed)
 				ClearLastDisplayed();
-			if(_city.isBuild)
-			{
-				Invalidate();
-			}
+			_city.OnPropertyChanged();
 		}
 		//public void OnPropertyChanged() =>
 		//		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
@@ -1318,7 +1312,7 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 								army.isReturn? "Region/UI/icon_player_own_troops_ret.png"  : 
 								army.isSettle ? "Region/UI/icon_player_own_settlement.png" : 
 								army.isDefense ? "Region/UI/icon_player_own_support_inc.png" :
-								army.isSiege ? "Region/UI/icon_player_alliance_siege.png" :
+								army.isSiege&&army.shareInfo ? "Region/UI/icon_player_alliance_siege.png" :
 								"Region/UI/icon_player_own_attack.png");
 		
 		

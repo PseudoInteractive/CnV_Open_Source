@@ -80,13 +80,14 @@
 		<PackageReference Include="Microsoft.Extensions.ObjectPool" Version="7.0.0-preview.5.22303.8" />
 		<PackageReference Include="Microsoft.Extensions.Primitives" Version="7.0.0-preview.5.22301.12" />
 		<PackageReference Include="Microsoft.Graphics.Win2D" Version="1.0.3.1" />
-		<PackageReference Include="Microsoft.Identity.Client" Version="4.44.0">
+		<PackageReference Include="Microsoft.Identity.Client" Version="4.45.0">
 			<TreatAsUsed>true</TreatAsUsed>
 		</PackageReference>
 		<PackageReference Include="Azure.Data.Tables" Version="12.6.0" />
 		<PackageReference Include="Azure.Storage.Blobs" Version="12.13.0-beta.1" />
 		<PackageReference Include="MessagePack" Version="2.4.23-alpha" />
-		<PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="2.21.0" />
+		<PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="2.22.0" />
+		<PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="6.20.0" />
 		<PackageReference Include="Microsoft.Windows.CsWinRT" Version="1.6.4" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.1" />
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.1" />

@@ -12,7 +12,7 @@ using Layer = CnV.Draw.Layer;
 using KeyF = CnV.KeyFrame<float>;
 
 namespace CnV;
-
+using static Troops;
 internal partial class GameClient
 {
 	public static TextFormat textformatLabel = new TextFormat(TextFormat.HorizontalAlignment.center,TextFormat.VerticalAlignment.center);
@@ -1040,7 +1040,8 @@ internal partial class GameClient
 													continue;
 											}
 
-											if(!isIncoming && (i.isAttack || i.isDefense) && !i.isReturn && !IsCulledWC(c0)) {
+											if(!isIncoming && (i.isAttack ) && !i.isReturn && !IsCulledWC(c0)) {
+												Assert(i.shareInfo);
 												targetOpponents.Add(i.targetCid);
 											}
 
@@ -1094,7 +1095,7 @@ internal partial class GameClient
 													}
 													else {
 
-
+														Assert(i.shareInfo);
 														if(i.hasSenator) {
 															c = senatorColor; ;
 														}
@@ -1123,7 +1124,7 @@ internal partial class GameClient
 												//	var t = (tick +i.sourceCid.CidToRandom()).Wave(1.5f / 512.0f+0.25f,2.0f / 512f+ 0.25f) ;
 												var r = t.Ramp();
 												var alpha = 1.0f;
-												TType ttype = Troops.ttZero; ;
+												TType ttype = Troops.ttInvalid; ;
 												if(i.troops.Length > 0) {
 													if(i.shareInfo) {
 														var last = i.lastSeen;
@@ -1134,7 +1135,7 @@ internal partial class GameClient
 													}
 													else {
 														// TODO base it on travel time
-														ttype = i.travelType.TTypeGuess();
+														ttype = i.travelType.TravelTypeToTT();
 													}
 												}
 												(int x, int y) _c0, _c1;
@@ -1149,7 +1150,7 @@ internal partial class GameClient
 
 												DrawAction(i.TimeToArrival(serverNow),i.journeyTime,r,
 													_c0.ToVector(),
-												_c1.ToVector(),c,i.troops.Any() ? troopImages[ttype] : null,
+												_c1.ToVector(),c,ttype != ttInvalid ?troopImages[ttype] : null,
 												true,i,alpha: alpha,lineThickness: lineThickness,highlight: sel);
 											}
 										}
@@ -1215,7 +1216,9 @@ internal partial class GameClient
 							//
 							foreach(var opCid in targetOpponents) {
 								// opponents with 
+								
 								var c = City.Get(opCid);
+								
 								var hasSiege = false;
 								var hasPendingSiege = false;
 								var hasAttack = false;
@@ -1486,7 +1489,7 @@ internal partial class GameClient
 							// Labels last
 							for(var cy = cy0;cy < cy1;++cy) {
 								for(var cx = cx0;cx < cx1;++cx) {
-									(var name, var isMine, var incomingStatus, var hovered, var spot) = World.GetLabel((cx, cy));
+									(var name, var isMine, var hovered, var spot) = World.GetLabel((cx, cy));
 									//var zScale = CanvasHelpers.ParallaxScale(TileData.zCities);
 
 									if(name != null) {

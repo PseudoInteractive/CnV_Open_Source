@@ -206,8 +206,8 @@ namespace CnV.Views
 	  })
 		{
 			runOnUiThread=true,
-			debounceDelay=50,
-			throttleDelay=200,
+			debounceDelay=250,
+			throttleDelay=300,
 			throttled=true
 		};
 
@@ -420,7 +420,7 @@ namespace CnV.Views
 			VirtualKey.U,VirtualKey.D,VirtualKey.Escape,(VirtualKey)192, VirtualKey.F,VirtualKey.C,VirtualKey.R,VirtualKey.S,VirtualKey.A,VirtualKey.B,VirtualKey.I,VirtualKey.T,
 			VirtualKey.M,VirtualKey.V,VirtualKey.L, VirtualKey.E,VirtualKey.H,VirtualKey.W,VirtualKey.G,VirtualKey.Y,VirtualKey.Z,VirtualKey.K,
 			VirtualKey.X,VirtualKey.O,VirtualKey.P,VirtualKey.Q});
-			rv.UnionWith(Enumerable.Range(0,9).Select(x => (VirtualKey)(VirtualKey.Number0 + x)));
+			rv.UnionWith(Enumerable.Range(0,10).Select(x => (VirtualKey)(VirtualKey.Number0 + x)));
 			return rv;
 			
 		}

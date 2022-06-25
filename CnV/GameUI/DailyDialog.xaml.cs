@@ -121,6 +121,9 @@ namespace CnV
 			// wait for next
 			{
 				var dt = nextClaim - Sim.simTime;
+				if(Player.isSubbing) {
+					dt =  new( ServerTime.secondsPerHour); // no claims while subbing
+				}
 				if(dt > 0) {
 					AppS.QueueIdleTask(DailyRewardTask,((dt+60)*1000 /Sim.timeScale).RoundToInt());
 					return;

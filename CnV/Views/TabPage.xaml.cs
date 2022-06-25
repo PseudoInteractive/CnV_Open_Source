@@ -92,59 +92,59 @@ namespace CnV.Views
 		// chat tab is never hidden
 		public static bool IsBigEnoughToSee( FrameworkElement e) => e.ActualHeight > 10 && e.ActualWidth > 10;
 	//	public bool shouldBeVisible=> (ShellPage.rightTabsVisible || object.ReferenceEquals(this,ChatTab.tabPage));
-		public static async void LayoutChanged()
+		public static void LayoutChanged()
 		{
-			await Task.Delay(200);
+	//		await Task.Delay(200);
 
-			var rightVisible = ShellPage.rightTabsVisible;
-			bool[] pagesVisible= {
-				rightVisible && IsBigEnoughToSee(mainTabs),
-				rightVisible&&IsBigEnoughToSee(secondaryTabs),
-				true || IsBigEnoughToSee(ChatTab.tabPage)			// leave chat for now
-				};
-			var pageCount = tabPages.Length;
-			if(hiddenTabs == null)
-				hiddenTabs = new UserTab[pageCount][];
+	//		var rightVisible = ShellPage.rightTabsVisible;
+	//		bool[] pagesVisible= {
+	//			rightVisible && IsBigEnoughToSee(mainTabs),
+	//			rightVisible&&IsBigEnoughToSee(secondaryTabs),
+	//			true || IsBigEnoughToSee(ChatTab.tabPage)			// leave chat for now
+	//			};
+	//		var pageCount = tabPages.Length;
+	//		if(hiddenTabs == null)
+	//			hiddenTabs = new UserTab[pageCount][];
 			
-			Assert(pageCount == pagesVisible.Length);
-			for(int pageId=0;pageId<pageCount;++pageId)
-			{
-	//			ref var hidden = ref hiddenTabs[pageId];
+	//		Assert(pageCount == pagesVisible.Length);
+	//		for(int pageId=0;pageId<pageCount;++pageId)
+	//		{
+	////			ref var hidden = ref hiddenTabs[pageId];
 
-				var hiddenTab = hiddenTabs[pageId];
-				var page = tabPages[pageId];
-				var visibleNow = pagesVisible[pageId];
-				if(visibleNow == page.isVisible )
-				{
-					// leave it, maybe resize columns
-				}
-				else
-				{
-					page.isVisible = visibleNow;
-					if(visibleNow)
-					{
-						page.RemoveAllTabs();
-						var first= true;
-						if(hiddenTabs[pageId] != null )
-						{
-							foreach( var i in hiddenTabs[pageId])
-							{
-								page.Add(i,first);
-								first = false;
-								i.refresh.Go();
-							}
-						}
-						hiddenTabs[pageId] = null;
-					}
-					else
-					{
-						hiddenTabs[pageId] = page.Tabs.TabItems.Select(a => (a as TabViewItem).Content as UserTab).
-							OrderByDescending(a=>a.isFocused).ToArray();  //replace
-						page.RemoveAllTabs();
-					}
+	//			var hiddenTab = hiddenTabs[pageId];
+	//			var page = tabPages[pageId];
+	//			var visibleNow = pagesVisible[pageId];
+	//			if(visibleNow == page.isVisible )
+	//			{
+	//				// leave it, maybe resize columns
+	//			}
+	//			else
+	//			{
+	//				page.isVisible = visibleNow;
+	//				if(visibleNow)
+	//				{
+	//					page.RemoveAllTabs();
+	//					var first= true;
+	//					if(hiddenTabs[pageId] != null )
+	//					{
+	//						foreach( var i in hiddenTabs[pageId])
+	//						{
+	//							page.Add(i,first);
+	//							first = false;
+	//							i.refresh.Go();
+	//						}
+	//					}
+	//					hiddenTabs[pageId] = null;
+	//				}
+	//				else
+	//				{
+	//					hiddenTabs[pageId] = page.Tabs.TabItems.Select(a => (a as TabViewItem).Content as UserTab).
+	//						OrderByDescending(a=>a.isFocused).ToArray();  //replace
+	//					page.RemoveAllTabs();
+	//				}
 
-				}
-			}
+	//			}
+	//		}
 		}
 
 		public static bool Show(UserTab tab)

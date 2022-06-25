@@ -1,6 +1,7 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 
+using System.Diagnostics.Metrics;
 using System.Runtime.InteropServices.WindowsRuntime;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -16,7 +17,7 @@ namespace CnV
 			set {
 				if(viaWater != value) {
 					viaWater = value;
-					UpdateTravelTime();
+					OnPropertyChanged();
 				}
 			}
 		}
@@ -28,7 +29,7 @@ namespace CnV
 			set {
 				if(value!=useHorns) {
 					useHorns=value;
-					UpdateTravelTime();
+					OnPropertyChanged();
 				}
 			}
 		}
@@ -37,7 +38,7 @@ namespace CnV
 			set {
 				if(value!=waitReturn) {
 					waitReturn=value;
-					UpdateTravelTime();
+					OnPropertyChanged();
 				}
 			}
 		}
@@ -81,7 +82,7 @@ namespace CnV
 
 			}
 		}
-		internal int armyType { get => isAttack ? (int)type - Army.armyTypeAttackStart : 0; set {
+		internal int uiArmyType { get => isAttack ? (int)type - Army.armyTypeAttackStart : 0; set {
 				if(isAttack) 
 					type=(ArmyType)(value+Army.armyTypeAttackStart);
 			}
@@ -94,25 +95,26 @@ namespace CnV
 		public SendTroops() {
 			this.InitializeComponent();
 			instance = this;
-			PropertyChanged += SendTroops_PropertyChanged;
-			arrivalUI.PropertyChanged += SendTroops_PropertyChanged;
+			arrivalUI.PropertyChanged += PropagatePropertyChanged;
 
 		}
 
-		private void SendTroops_PropertyChanged(object? sender,PropertyChangedEventArgs e) {
-			UpdateTravelTime();
-			OnPropertyChanged();
+	
+		private void PropagatePropertyChanged(object? sender,PropertyChangedEventArgs e) {
+			PropertyChanged?.Invoke(this,new PropertyChangedEventArgs(null));
+			//PropertyChanged?.Invoke(this,e);
 
 		}
 
-		private void UpdateTravelTime() {
-			var depart = departure;
+		private string travelInfoS { get {
+				var depart = departure;
 
-			var rv =  $"Travel time: {travelTimeWithHorms.Format()}\nDepart: {depart}\nArrival: {(arrival)}";
-			if(depart+10 < Sim.simTime) {
-				rv += " (depart is past)";
+				var rv = $"Travel time: {travelTimeWithHorms.Format()}\nDepart: {depart}\nArrival: {(arrival)}";
+				if(depart+10 < Sim.simTime) {
+					rv += " (depart is past)";
+				}
+				return rv;
 			}
-			travelInfo.Text= rv;
 		}
 
 		private void UpdateTroopItems(TroopTypeCounts? troops) {
@@ -121,7 +123,7 @@ namespace CnV
 				foreach(var t in troops.Value) {
 					var rv = new SendTroopItem(target: target,city: city,type: t.t,count: (int)t.c,prior: prior);
 					troopItems.Add(rv);
-					rv.PropertyChanged += SendTroops_PropertyChanged; // memory leak
+					rv.PropertyChanged += PropagatePropertyChanged; // memory leak
 				}
 			}
 			else {
@@ -130,7 +132,7 @@ namespace CnV
 					if(ttHome.GetCount(i) > 0) {
 						var rv = new SendTroopItem(target: target,city: city,type: i,prior: prior);
 						troopItems.Add(rv);
-						rv.PropertyChanged += SendTroops_PropertyChanged;
+						rv.PropertyChanged += PropagatePropertyChanged;
 					}
 				}
 			}
@@ -142,7 +144,7 @@ namespace CnV
 		bool isDefense => type==ArmyType.defense && !isSettle;
 		int splits => isCavernRaid ? splitsCombo.SelectedIndex+1 : 1;
 		internal bool isAttack => type.IsAttack();// is (>=Army.attackFirst and <= Army.attackLast);
-		public static async Task<bool> ShowInstance(City city = null,City target = null,bool isSettle = false,bool viaWater = false,ArmyType type = ArmyType.nop,Army? prior = null,TroopTypeCounts? troops = null,ServerTime arrival = default, bool ? useHorns=null, bool? waitReturn=null) {
+		public static async Task<bool> ShowInstance(City city = null,City target = null,bool isSettle = false,bool viaWater = false,ArmyType type = ArmyType.nop,Army? prior = null,TroopTypeCounts? troops = null,ServerTime arrival = default, bool ? useHorns=null, bool? waitReturn=null, bool ? notSameAlliance=null) {
 			try {
 				if(city == target && prior is null) {
 					AppS.MessageBox("Cannot send to self");
@@ -191,7 +193,8 @@ namespace CnV
 					rv.waitReturnCheckbox.Visibility = Visibility.Collapsed;
 				}
 				//rv._departure = depart;
-				rv.notSameAlliance.IsChecked=true;
+				if(notSameAlliance is not null)
+				rv.notSameAlliance.IsChecked=notSameAlliance.Value;
 				rv.notSameAlliance.Visibility = Visibility.Collapsed;
 			
 
@@ -226,6 +229,7 @@ namespace CnV
 					rv.arrivalUI.Clear();
 					if(isAttack && rv.type is (>=Army.attackFirst and <= Army.attackLast)) {
 						// leave it
+						rv.type = type;
 					}
 					else {
 						if(rv.type != type) {
@@ -266,7 +270,9 @@ namespace CnV
 				}
 				rv.raidPanel.Visibility = rv.isCavernRaid ? Visibility.Visible : Visibility.Collapsed;
 				rv.OnPropertyChanged();
-				return await rv.Show(false);
+				var result = await rv.Show(false);
+				rv.troopItems = Array.Empty<SendTroopItem>();
+				return result;
 			}
 			catch(Exception _ex) {
 				LogEx(_ex);
@@ -426,11 +432,12 @@ namespace CnV
 					if(verbose) AppS.MessageBox($"Please send something");
 					return (false, 0);
 				}
-			
 
-			if(city.freeCommandSlots < splits) {
-				if(verbose) AppS.MessageBox($"Out of command slots");
-				return (false, 0);
+			if(!isReturn) {
+				if(city.freeCommandSlots < splits) {
+					if(verbose) AppS.MessageBox($"Out of command slots");
+					return (false, 0);
+				}
 			}
 
 

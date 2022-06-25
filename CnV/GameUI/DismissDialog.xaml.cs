@@ -43,7 +43,7 @@ namespace CnV
 
 			for(int i = 0;i<tCount;++i)
 				troopItems[i] = new() { city = city,type=city.troopsHome.v[i].t };
-	
+			OnPropertyChanged();
 		}
 
 	

@@ -81,6 +81,8 @@ namespace CnV
 		public ServerTime dateTime
 		{
 			get {
+				if(AppS.isShuttingDown)
+					return default;
 				var rv = ServerTime.CombineDateTime(date.SelectedDate,time.SelectedTime);
 				if(!recent.Contains(rv))
 					recent.Add(rv);

@@ -5,7 +5,7 @@
     xmlns:cnv="using:CnV"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	MaxHeight="600"
+	MaxHeight="700"
 	xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
 	xmlns:tkui="using:CommunityToolkit.WinUI.UI"
     mc:Ignorable="d">
@@ -15,6 +15,7 @@
 		
 
 		<Grid.RowDefinitions>
+			<RowDefinition Height="auto"/>
 			<RowDefinition Height="auto"/>
 			<RowDefinition Height="auto"/>
 			<RowDefinition Height="auto"/>
@@ -89,7 +90,21 @@
 
 
 			</StackPanel>
-
+			<StackPanel Grid.Row="11" Grid.ColumnSpan="2" x:Name="defendersInfo" >
+				<TextBox  Text="--- Defender Breakdown ---" Margin="8,8" />
+				<ListView ItemsSource="{x:Bind defenders}"  >
+				<ListView.ItemTemplate>
+					<DataTemplate x:DataType="cnv:BattleReportPlayerInfo">
+						<StackPanel>
+							<TextBlock Text="{x:Bind header}" />
+							<TextBlock Text="{x:Bind troops}"  TextWrapping="Wrap" />
+							<TextBlock Text="{x:Bind survived}"  TextWrapping="Wrap" />
+							<TextBlock Text="{x:Bind refines}" TextWrapping="Wrap"/>
+						</StackPanel>
+					</DataTemplate>
+				</ListView.ItemTemplate>
+			</ListView>
+			</StackPanel>
 		</Grid>
 	</ScrollViewer>
 </cnv:DialogG>
