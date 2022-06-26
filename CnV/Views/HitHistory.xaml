@@ -18,7 +18,12 @@
 			<RowDefinition Height="auto"/>
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
+		<StackPanel Orientation="Horizontal">
 		<ComboBox Header="CityFilter" x:Name="cityFilterCombo" ItemsSource="{x:Bind cityFilter, Mode=OneWay}" SelectedIndex="0" SelectionChanged="cityFilterCombo_SelectionChanged" />
+		<CheckBox x:Name="Inc" IsChecked="True" />
+		<CheckBox x:Name="Out" IsChecked="True" />
+		<CheckBox x:Name="Mine" IsChecked="False" />
+		</StackPanel>
 		<sf:SfDataGrid 
 			Grid.Row="1"
 			x:Name="historyGrid"

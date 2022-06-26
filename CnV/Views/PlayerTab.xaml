@@ -134,6 +134,10 @@
 									  DisplayNumberFormat="N0"
 											 />
 				<sf:GridNumericColumn MappingName="cityFaith"/>
+
+				<sf:GridTextColumn MappingName="rssProduced"
+				                     		 />
+
 			</sf:SfDataGrid.Columns>
 			<sf:SfDataGrid.DetailsViewDefinition>
 				<!--  FirstLevelNestedGrid1 is created here  -->

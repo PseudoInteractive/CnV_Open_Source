@@ -242,7 +242,7 @@ namespace CnV.Views
 				lastSelected = sel;
 				if(sel != null) {
 					var visibilityTime = Sim.simTime + sel.scoutRange;
-					var items=  sel.incoming.Where(a => a.isDefense || (a.arrival <= visibilityTime && a.departed) ).OrderBy(a => a.arrival).ThenBy(a=> a.isDefense ? 0 : 1).ToArray();
+					var items=  sel.incoming.Where(a => a.isDefense || (a.arrival <= visibilityTime && a.departed) ).OrderBy(a=> a.isDefense ? 0 : 1).ThenBy(a => a.arrival).ToArray();
 					items.SyncList(armiesIncoming);
 					armyGrid.ResetAutoColumns();
 					if(updatehistoryTab) {

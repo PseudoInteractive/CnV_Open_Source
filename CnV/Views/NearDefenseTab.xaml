@@ -100,6 +100,9 @@
 			<NumberBox Value="{x:Bind _filterTSTotal,Mode=TwoWay}" Style="{StaticResource NumberBoxRightAlignPositive}"
                            NumberFormatter="{x:Bind cnv:App.formatterInt,Mode=OneTime}" 
                           Header="Min TS(Total)" Width="140" Margin="6,0,6,0" AcceptsExpression="True" SmallChange="5000" />
+			<NumberBox Value="{x:Bind _sendFraction,Mode=TwoWay}" Style="{StaticResource NumberBoxRightAlignPositive}"
+                         
+                          Header="Send %" Width="140" Margin="6,0,6,0" AcceptsExpression="True" SmallChange="0.125" />
         </tk:WrapPanel>
         <tk:DataGrid x:Name="supportGrid" x:FieldModifier="public"
                         AutoGenerateColumns="False"

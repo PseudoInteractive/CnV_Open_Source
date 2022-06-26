@@ -28,9 +28,12 @@ namespace CnV.Views
 			var sel = instance.cityFilterCombo.SelectedItem as City;
 			var filterDay = Sim.simTime - ServerTime.secondsPerDay*4;
 
+			var mine = Mine.IsChecked.Value;
+			var outgoing = Inc.IsChecked.Value;
+			var inc = Inc.IsChecked.Value;
 			BattleReport[] items;
 			if(sel == null || sel.IsInvalid())
-				items= BattleReport.all.Where(a => (a.sourcePlayer.sharesInfo||a.targetPlayer.sharesInfo) && filterDay < a.arrival) .ToArray();
+				items= BattleReport.all.Where(a => ((outgoing && a.sourcePlayer.sharesInfo ) |(inc&&a.targetPlayer.sharesInfo)) && filterDay < a.arrival && (!mine || (a.sourcePlayer.isSubOrMe |a.targetPlayer.isSubOrMe) ) ) .ToArray();
 			else {
 				var cid = sel.cid;
 				items = BattleReport.all.Where(a =>(a.targetCid == cid || a.sourceCid==cid) && filterDay < a.arrival).ToArray();

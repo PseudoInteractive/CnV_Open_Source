@@ -65,6 +65,7 @@ namespace CnV
 			nameof(DataPoint.tsOffense),
 			nameof(DataPoint.tsDefense),
 			nameof(DataPoint.kills),
+			nameof(DataPoint.rssProduced),
 
 		};
 		private bool _byAlliance;
@@ -120,7 +121,7 @@ namespace CnV
 					
 					Assert(values.Length > 0);
 					var series = new FastLineSeries() {
-						YBindingPath=member,XBindingPath="t",Label=name,
+						YBindingPath=member=="rssProduced" ? "rssProduced.wood" : member,XBindingPath="t",Label=name,
 						ItemsSource=values,
 						ShowTooltip=true,
 						StrokeThickness=5,

@@ -60,6 +60,18 @@ namespace CnV.Views
 			instance.Hide();
 			Settings.SaveAll();
 		}
+		public static void Destroy()
+		{
+			// Todo
+			if(instance != null) {
+				instance.Hide();
+				instance.dungeonGrid.Dispose();
+				instance.dungeonGrid= null;
+				instance= null;
+				hasRunOnce=false;
+			}
+		}
+
 		static bool hasRunOnce;
 		public static async Task Show(City city, List<Dungeon> dungeons)
 		{

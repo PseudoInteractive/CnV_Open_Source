@@ -39,13 +39,13 @@ namespace CnV;
 				switch (e.Record)
 				{
 					case Player player: {
-						if(ChartDialog.ShowPlayerMetric(e.Column.MappingName.ToLowerInvariant(),false))
+						if(ChartDialog.ShowPlayerMetric(e.Column.HeaderText.ToLowerInvariant(),false))
 							return;
 						break;
 
 					};
 					case Alliance alliance: {
-						if(ChartDialog.ShowPlayerMetric(e.Column.MappingName,true))
+						if(ChartDialog.ShowPlayerMetric(e.Column.HeaderText,true))
 							return;
 						break;
 

@@ -23,9 +23,10 @@ namespace CnV.Views
 		public int filterTSTotal = 10000;
 		public int filterTSHome;
 		public bool useHorns;
+		internal float sendFraction = 1.0f;
 		public bool portal { get; set; }
 		public bool onlyHome { get; set; } = true;
-
+		public float _sendFraction { get => sendFraction; set { sendFraction = value; refresh.Go(); } }  // defenders outside of this window are not 
 		public float _filterTime { get => filterTime; set { filterTime = value; refresh.Go(); } }  // defenders outside of this window are not included
 		public int _filterTSTotal { get => filterTSTotal; set { filterTSTotal = value; refresh.Go(); } }
 		public int _filterTSHome { get => filterTSHome; set { filterTSHome = value; refresh.Go(); } } // need at this this many ts at home to be considered for def
@@ -107,7 +108,7 @@ namespace CnV.Views
 					{
 						foreach(var city in City.gridCitySource) {
 							Assert(city is City);
-							if( (city.troopsHome.TS(Include) < filterTSHome) &&
+							if( (city.troopsHome.TS(Include) < filterTSHome) ||
 								 (city.troopsOwned.TS(Include) < filterTSTotal))
 								continue;
 							if(viaWater && !city.isOnWater)
@@ -142,7 +143,7 @@ namespace CnV.Views
 								// handle Galleys
 								if(ttGalleys.count > 0) {
 									var galleys = ttGalleys.count;
-									var landTroops = troops.TS((tt) => IsLandRaider(tt));
+									var landTroops = (troops.TS((tt) => IsLandRaider(tt) )*sendFraction ).CeilToUint();
 									var requiredGalleys = landTroops.DivideRoundUp(tsCarryPerGalley);
 									var sendGain = 1.0;
 									if(galleys >= requiredGalleys) {
@@ -154,21 +155,21 @@ namespace CnV.Views
 									supporter.tSend.SetInPlace( new (ttGalley,galleys));
 									foreach(var tt in troops) {
 										if(tt.type == ttStinger) {
-											supporter.tSend += tt;
+											supporter.tSend += tt*sendFraction;
 										}
 										else {
 											if(!IsLandRaider(tt.type) || !Include(tt.type))
 												continue;
-											supporter.tSend += new TroopTypeCount(tt.type,(uint)(sendGain * tt.count)); // round down
+											supporter.tSend += new TroopTypeCount(tt.type,(uint)(sendGain *sendFraction* tt.count)); // round down
 										}
 									}
 								}
 								else {
-									supporter.tSend += troops.Where((tt) => tt.type == ttStinger); // take stingers
+									supporter.tSend += troops.Where((tt) => tt.type == ttStinger).Select(t=>t*sendFraction); // take stingers
 								}
 							}
 							else {
-								supporter.tSend += troops.Where(tt => Include(tt.t) && (canTravelViaWater||!tt.isNaval));
+								supporter.tSend += troops.Where(tt => Include(tt.t) && (canTravelViaWater||!tt.isNaval)).Select(t=>t*sendFraction);
 							}
 							supporter.travel = (travelTime);  // penality for targtes that we cannot make it to
 						}
@@ -294,15 +295,15 @@ namespace CnV.Views
 			var flyout = new MenuFlyout();
 			flyout.SetXamlRoot(text);
 			AApp.AddItem(flyout,"Troops Home",(_,_) => {
-				supporter.tSend =  supporter.city.troopsHome.Where(t => Include(t) );
+				supporter.tSend =  supporter.city.troopsHome.Where(t => Include(t) )*sendFraction;
 				supporter.NotifyChange();
 			});
 			AApp.AddItem(flyout,"Troops home and returning",(_,_) => {
-				supporter.tSend = supporter.city.troopsHomeAndReturning.Where(t=>  Include(t) );
+				supporter.tSend = supporter.city.troopsHomeAndReturning.Where(t=>  Include(t) )*sendFraction;
 				supporter.NotifyChange();
 			});
 			AApp.AddItem(flyout,"Total Troops",(_,_) => {
-				supporter.tSend = supporter.city.troopsOwned.Where(t=>  Include(t) );
+				supporter.tSend = supporter.city.troopsOwned.Where(t=>  Include(t) )*sendFraction;
 				supporter.NotifyChange();
 			});
 			AApp.AddItem(flyout,"None",(_,_) => {
@@ -437,6 +438,10 @@ namespace CnV.Views
 		private void troopTypeGrid_RightTapped(object sender,RightTappedRoutedEventArgs e) {
 			Log(sender.ToString());
 			Log(e.OriginalSource.ToString());
+		}
+
+		private void ValChanged(NumberBox sender,NumberBoxValueChangedEventArgs args) {
+			refresh.Go();
 		}
 	}
 
