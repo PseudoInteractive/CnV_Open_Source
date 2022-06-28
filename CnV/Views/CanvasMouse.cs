@@ -148,7 +148,7 @@ partial class ShellPage
 			if(!wc.isNan)
 			{
 				var spot = Spot.GetOrAdd(wc.cid);
-				if(!AppS.IsKeyPressedShiftOrControl())
+				if(AppS.IsKeyPressedShiftOrControl())
 					spot.SetFocus(true,true,false);
 				var position = args.Position;
 				AppS.DispatchOnUIThread(priority: DispatcherQueuePriority.High,action: () =>

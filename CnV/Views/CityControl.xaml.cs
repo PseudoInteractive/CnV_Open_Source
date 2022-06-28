@@ -53,12 +53,12 @@ namespace CnV
 			TouchSelections();
 			if(value is not null && !citySelections.Contains(value))
 				citySelections.Add(value);
-			city = value; // thhis should trigger effecst to update the UPI
+			SetValue(cityProperty,value); // thhis should trigger effecst to update the UPI
 			return true;
 		}
 		public void SetCity(City value, bool triggerCityChanged=true) {
 			Assert(value is not null);
-			if(_city != value) {
+			if(city != value) {
 			{
 				if(!SetCityI(value))
 					return;
@@ -158,24 +158,24 @@ namespace CnV
   "city",
   typeof(City),
   typeof(CityControl),
-  new PropertyMetadata(City.invalid,propertyChangedCallback:cityChangedI)
+  new PropertyMetadata(City.invalid)
 );
 		public City  city
 		{
 			get { return (City)GetValue(cityProperty); }
 			set {
-				SetValue(cityProperty,value);
-			}
+				if((City)GetValue(cityProperty) != value) { SetCityI(value); }
+							}
 
 		}
-		public static void cityChangedI(DependencyObject d,DependencyPropertyChangedEventArgs e) {
-			var c = d as CityControl;
-			var value = e.NewValue as City;
-			Assert(c is not null);
-			c.TouchSelections();
-			if(value is not null && !c.citySelections.Contains(value))
-				c.citySelections.Add(value);
-		}
+		//public static void cityChangedI(DependencyObject d,DependencyPropertyChangedEventArgs e) {
+		//	var c = d as CityControl;
+		//	var value = e.NewValue as City;
+		//	Assert(c is not null);
+		//	c.TouchSelections();
+		//	if(value is not null && !c.citySelections.Contains(value))
+		//		c.citySelections.Add(value);
+		//}
 		public bool allowNone { get; set; } = true;		
 		public bool allowOtherPlayers { get; set; } = false;		
 		public bool allowOtherAlliances { get; set; } = false;	
@@ -477,8 +477,9 @@ namespace CnV
 			if(citySelections.Count > 0)
 				return;
 			var l = City.gridCitySource.Where(a=>IsValid(a.cid,false)).ToArray();
-			if(_city is not null && !l.Contains(_city) && (allowNone|| !_city.IsInvalid()) )
-				l = l.Prepend(_city).ToArray();
+			var c = city;
+			if(c is not null && !l.Contains(c) && (allowNone|| !c.IsInvalid()) )
+				l = l.Prepend(c).ToArray();
 			if(allowNone && !l.Contains(City.invalid) )
 				l = l.Prepend(City.invalid).ToArray();
 

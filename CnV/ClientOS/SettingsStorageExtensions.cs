@@ -229,7 +229,7 @@ namespace CnV.Helpers
 					}
 					else if (t == typeof(Nullable<bool>) )
                     {
-                        bool? rv = (int)o switch { 0 => false, 1 => true, _ => null };
+                        bool? rv = o is bool b ? b : (int)o switch { 0 => false, 1 => true, _ => null };
                        return rv;
                     }
                     if (o is string && t != typeof(string))

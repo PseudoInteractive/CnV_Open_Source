@@ -39,15 +39,13 @@ namespace CnV;
 				switch (e.Record)
 				{
 					case Player player: {
-						if(ChartDialog.ShowPlayerMetric(e.Column.HeaderText.ToLowerInvariant(),false))
-							return;
-						break;
-
+						ChartDialog.ShowPlayerMetric(e.Column.HeaderText,false);
+						return;
+						
 					};
 					case Alliance alliance: {
-						if(ChartDialog.ShowPlayerMetric(e.Column.HeaderText,true))
-							return;
-						break;
+						ChartDialog.ShowPlayerMetric(e.Column.HeaderText,true);
+						return;
 
 					};
 					case City city:

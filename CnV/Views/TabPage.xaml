@@ -3,15 +3,23 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    
+	  HorizontalAlignment="Stretch"
+	 VerticalAlignment="Stretch"
+    MinHeight="256"
     mc:Ignorable="d"
     
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-	
+	<Grid.ColumnDefinitions>
+		<ColumnDefinition Width="*"/>
+	</Grid.ColumnDefinitions>
+	<Grid.RowDefinitions>
+		<RowDefinition Height="*"/>
+	</Grid.RowDefinitions>
 	<TabView x:Name="Tabs" x:FieldModifier="public"
                       TabWidthMode="SizeToContent"
                              VerticalAlignment="Stretch"
                       IsTabStop="True"
+			 MinHeight="256"
                              HorizontalAlignment="Stretch"
                              AddTabButtonClick="Tabs_AddTabButtonClick"
                              TabCloseRequested="Tabs_TabCloseRequested"

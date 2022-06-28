@@ -34,7 +34,7 @@ namespace CnV
 		public string nameAndRemarks => target.nameAndRemarks;
 		public int cid =>  target.cid;
 		public int cont =>  target.cont;
-		public string cityName => target.FormatName(true,true,false);
+		public string cityName => target.FormatName(true,true,true);
 		public ImageSource icon => target.icon;
 
 		public string xy => target.xy;

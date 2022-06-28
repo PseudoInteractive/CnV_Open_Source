@@ -45,12 +45,12 @@
 					               
 					
 					   Background="{StaticResource ExpanderBrushHeader}"
-					   RightTapped="{x:Bind views:ShellPage.BuildHomeRightTapped}"
+			
 					  />
 
 			<!--Incoming-->
-			
-			<Expander IsExpanded="True" Expanding="Expander_Expanding" Visibility="{x:Bind incomingVisible,Mode=OneWay}"  x:Name="expIncoming" HorizontalAlignment="Stretch" Background="{StaticResource ExpanderBrushContent}" 
+
+			<Expander  IsExpanded="True" Expanding="Expander_Expanding" Visibility="{x:Bind incomingVisible,Mode=OneWay}"  x:Name="expIncoming" HorizontalAlignment="Stretch" Background="{StaticResource ExpanderBrushContent}" 
 					  xmlns:tkui="using:CommunityToolkit.WinUI.UI" >
 				<Expander.Header   >
 					<Border Background="Maroon" BorderThickness="0" Padding="3" CornerRadius="{StaticResource baseCR}" >
@@ -78,7 +78,7 @@
 
 			<!-- Palace -->
 
-			<Expander IsExpanded="True" Background="{StaticResource ExpanderBrushContent}" Expanding="Expander_Expanding" Visibility="{x:Bind palaceVisible,Mode=OneWay}"  x:Name="expPalace"   >
+			<Expander HorizontalAlignment="Stretch" IsExpanded="True" Background="{StaticResource ExpanderBrushContent}" Expanding="Expander_Expanding" Visibility="{x:Bind palaceVisible,Mode=OneWay}"  x:Name="expPalace"   >
 				<Expander.Header   >
 					<Border  Padding="3" CornerRadius="{StaticResource baseCR}" >
 						<TextBlock Text ="{x:Bind palaceVirtue, Mode=OneWay}" Margin="0"   Style="{StaticResource TextBlockSmall}"  HorizontalAlignment="Right"  />
@@ -92,8 +92,8 @@
 			</Expander>
 
 			<!--Resources-->
-			
-			<Expander Background="{StaticResource ExpanderBrushContent}" Expanding="Expander_Expanding" IsExpanded="True"   x:Name="expResource"   >
+
+			<Expander HorizontalAlignment="Stretch" Background="{StaticResource ExpanderBrushContent}" Expanding="Expander_Expanding" IsExpanded="True"   x:Name="expResource"   >
 				<ToolTipService.ToolTip >
 					<ToolTip  Content="{x:Bind ResToolTip, Mode=OneWay}" />
 				</ToolTipService.ToolTip>
@@ -128,7 +128,7 @@
 
 			<!--Build Queue-->
 
-			<Expander  Expanding="Expander_Expanding" IsExpanded="True" x:Name="expBuildQueue" Background="{StaticResource ExpanderBrushContent}"  >
+			<Expander HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch" Expanding="Expander_Expanding" IsExpanded="True" x:Name="expBuildQueue" Background="{StaticResource ExpanderBrushContent}"  >
 
 				<Expander.Header   >
 
@@ -180,7 +180,7 @@
 
 			<!--Buildings-->
 
-			<Expander    Expanding="Expander_Expanding" x:Name="expBuildings" IsExpanded="True" Background="{StaticResource ExpanderBrushContent}" >
+			<Expander HorizontalAlignment="Stretch"  Expanding="Expander_Expanding" x:Name="expBuildings" IsExpanded="True" Background="{StaticResource ExpanderBrushContent}" >
 				<Expander.Header   >
 					<Border x:Name="buildingsHeader" Background="{x:Bind cnv:ImageHelper.GetAsBrush('UI/menues/main_menu/bgr_quickuse_buildqueue.png') }"
 							Tapped="AutobuildTapped"
@@ -224,7 +224,7 @@
 
 			<!--Enlistment-->
 
-			<Expander  IsExpanded="True" Expanding="Expander_Expanding" x:Name="expEnlistment" ContextRequested="EnlistmentContextRequested" Background="{StaticResource ExpanderBrushContent}" >
+			<Expander   HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch" IsExpanded="True" Expanding="Expander_Expanding" x:Name="expEnlistment" ContextRequested="EnlistmentContextRequested" Background="{StaticResource ExpanderBrushContent}" >
 				<Expander.Header>
 					<Button  HorizontalContentAlignment="Right" 
 							ToolTipService.ToolTip="{x:Bind recruitTooltip,Mode=OneWay}"
@@ -270,7 +270,7 @@
 
 			<!--Commands-->
 
-			<Expander  IsExpanded="True" Expanding="Expander_Expanding" x:Name="expCommands" Background="{StaticResource ExpanderBrushContent}"  >
+			<Expander HorizontalAlignment="Stretch" IsExpanded="True" Expanding="Expander_Expanding" x:Name="expCommands" Background="{StaticResource ExpanderBrushContent}"  >
 				<Expander.Header>
 					<Button Background="{x:Bind cnv:ImageHelper.GetAsBrush('UI/menues/main_menu/bgr_quickuse_research.png') }"  BorderThickness="0" Padding="0" Margin="2,0,2,0"  Content="{x:Bind commandsTitle, Mode=OneWay}"  HorizontalContentAlignment="Right" HorizontalAlignment="Stretch" Style="{StaticResource ButtonSmall}"
 							 >
@@ -302,7 +302,7 @@
 				</ListView>
 
 			</Expander>
-			<Expander  IsExpanded="True" Expanding="Expander_Expanding" x:Name="expReinforcements" Background="{StaticResource ExpanderBrushContent}" >
+			<Expander HorizontalAlignment="Stretch" IsExpanded="True" Expanding="Expander_Expanding" x:Name="expReinforcements" Background="{StaticResource ExpanderBrushContent}" >
 				<Expander.Header   >
 					<Border Background="{x:Bind cnv:ImageHelper.GetAsBrush('UI/menues/main_menu/bgr_quickuse_recruitmentqueue.png') }"  BorderThickness="0" Padding="0" Margin="2,0,2,0"  
 							>
@@ -315,7 +315,7 @@
 						<StackPanel>
 							<TextBlock Text="Owned" Style="{StaticResource TextBlockSmall}" Margin="4"  Visibility="{x:Bind TroopsHomeVisible,Mode=OneWay}" />
 							<TextBlock Text="{x:Bind TroopsOwnedS, Mode=OneWay}"  Style="{StaticResource TextBlockSmall}"  
-									   TextWrapping="Wrap" FontSize="16" MaxLines="8" Margin="8,2,2,2" />
+									   TextWrapping="Wrap"  MaxLines="8" Margin="8,2,2,2" />
 						</StackPanel>
 					</Border>
 					<Border   CornerRadius="4" Margin="0" Padding="4"  
@@ -324,7 +324,7 @@
 						<StackPanel>
 							<TextBlock Text="Here" Style="{StaticResource TextBlockSmall}" Margin="4" />
 							<TextBlock Text="{x:Bind TroopsHomeS, Mode=OneWay}"  Style="{StaticResource TextBlockSmall}"  
-									   TextWrapping="Wrap" FontSize="16" MaxLines="8" Margin="8,2,2,2" />
+									   TextWrapping="Wrap"  MaxLines="8" Margin="8,2,2,2" />
 						</StackPanel>
 					</Border>
 					<Border   CornerRadius="4" Margin="0" Padding="4" 
@@ -333,7 +333,7 @@
 						<StackPanel>
 							<TextBlock Text="Incoming or returning" Style="{StaticResource TextBlockSmall}" Margin="4" />
 							<TextBlock Text="{x:Bind IncomingReinforcements, Mode=OneWay}"  Style="{StaticResource TextBlockSmall}"  
-									   TextWrapping="Wrap" FontSize="16" MaxLines="8" Margin="8,2,2,2" />
+									   TextWrapping="Wrap"  MaxLines="8" Margin="8,2,2,2" />
 							<ListView 
 						  SelectionMode="Single"  
 						  Margin="0" Padding="0" HorizontalAlignment="Stretch" 
@@ -361,7 +361,7 @@
 
 			<!--Trades-->
 
-			<Expander Expanding="Expander_Expanding" x:Name="expTrades" IsExpanded="True" Background="{StaticResource ExpanderBrushContent}" >
+			<Expander HorizontalAlignment="Stretch" Expanding="Expander_Expanding" x:Name="expTrades" IsExpanded="True" Background="{StaticResource ExpanderBrushContent}" >
 				<Expander.Header>
 					<Button Content="{x:Bind tradesTitle, Mode=OneWay}" Style="{StaticResource ButtonSmall}" Margin="2,0,2,0" Padding="8,2" HorizontalAlignment="Stretch" Click="TradesClick"
 							ToolTipService.ToolTip="{x:Bind tradesToolTip,Mode=OneWay}"/>

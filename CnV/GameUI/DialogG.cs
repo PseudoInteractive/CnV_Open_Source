@@ -53,6 +53,7 @@ namespace CnV
 		//	ManipulationMode = ManipulationModes.TranslateX|ManipulationModes.TranslateY;
 			IsExpanded=true;
 			var brush =   AppS.Brush( (Windows.UI.Color)App.instance.Resources["SystemAccentColorDark3"]);
+			HorizontalAlignment= HorizontalAlignment.Stretch;
 			Background = brush;
 			//var shadow = App.instance.Resources["Shadow8"] as AttachedDropShadow;
 			//Effects.SetShadow(this,shadow);

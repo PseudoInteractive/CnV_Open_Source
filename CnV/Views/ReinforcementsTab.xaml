@@ -5,9 +5,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:sf="using:Syncfusion.UI.Xaml.DataGrid"
-    xmlns:dataGrid="using:Syncfusion.UI.Xaml.DataGrid"
+    xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
 	xmlns:view="using:CnV.Views"
-	xmlns:game="using:CnV"
+	xmlns:cnv="using:CnV"
 	Loaded="ReinLoaded"
     Tag="Reinforcements"
     >
@@ -15,26 +15,31 @@
     <Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="*"/>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
 		
 		<TextBlock Grid.Row="0" Text="{x:Bind reinInTitle, Mode=OneWay}" />
-		
+		<tk:WrapPanel Grid.Row="1" >
+			<ToggleSwitch  OnContent="Incoming" OffContent="Outgoing" IsOn="{x:Bind wantIncoming,Mode=TwoWay}"  Toggled="ToggleSwitch_Toggled"/>
+			<ComboBox Header="From" SelectedIndex="{x:Bind _filter,Mode=TwoWay}"  ItemsSource="{x:Bind cnv:Alliance.cityFilterList}" />
+			<!--<cnv:CityControl Label="Filter to" x:Name="cityFilter" allowNone="True" allowOtherAlliances="False" allowOtherPlayers="True" />-->
+		</tk:WrapPanel>
 		<sf:SfDataGrid x:Name="reinIn"
 							x:FieldModifier="public"
-							Grid.Row="1"
+							Grid.Row="2"
+   						IsReadOnly="True"
 					   AllowResizingColumns="True"
 							
-							ItemsSource="{x:Bind citiesIn, Mode=OneWay}"
-							SelectionMode="Extended"
+							ItemsSource="{x:Bind cities, Mode=OneWay}"
+							
 							FontSize="{StaticResource SmallFontSize}"
 							SelectionUnit="Row"
 					   AutoGenerateColumns="False"
 					   AllowEditing="False"
 					   AllowDraggingColumns="True"
-					
+					   AutoGenerateRelations="False"
+					ShowToolTip="True"
 		              
 
 
@@ -44,18 +49,29 @@
                                         HeaderText="I"
                                         ColumnWidthMode="None" 
                                         Width="32" />
-				<sf:GridTextColumn MappingName="cityName"
-                                      
+				<sf:GridTextColumn MappingName="nameAndRemarks"
+                                      HeaderText="City"
                                        TextAlignment="Left"
                                        />
-				
-				<sf:GridTextColumn MappingName="Claim"
+
+				<sf:GridNumericColumn MappingName="uiClaim"
+									  HeaderText="Claim"
+									    DisplayNumberFormat="P0"
 									   
 
                                        TextAlignment="Center" />
+				<sf:GridCheckBoxColumn  MappingName="underSiege"
+									   
+
+                                                      TextAlignment="Center" />
+				<sf:GridTextColumn MappingName="playerName" HeaderText="Player"
+                                      
+                                       TextAlignment="Left"
+                                       />
 				<sf:GridHyperlinkColumn MappingName="xy"
 
 				                      />
+				
 				<sf:GridNumericColumn MappingName="tsDefMax"
 											HeaderText="MaxD"
 									   
@@ -73,10 +89,7 @@
                                             DisplayNumberFormat="N0" />
 
 			
-				<sf:GridCheckBoxColumn  MappingName="underSiege"
-									   
-
-                                                      TextAlignment="Center" />
+				
 				<sf:GridNumericColumn MappingName="incomingAttackCount"
 									  HeaderText="#atk"
 									   
@@ -84,7 +97,13 @@
                                             TextAlignment="Center"
                                             DisplayNumberFormat="N0" />
 				<sf:GridNumericColumn MappingName="incomingDefenders"
-                                            HeaderText="#def"
+                                            HeaderText="#defIn"
+									   
+
+                                            TextAlignment="Center"
+                                            DisplayNumberFormat="N0" />
+				<sf:GridNumericColumn MappingName="outgoingDefenders"
+                                            HeaderText="#defOut"
 									   
 
                                             TextAlignment="Center"
@@ -111,11 +130,10 @@
 			</sf:SfDataGrid.Columns>
 			<sf:SfDataGrid.DetailsViewDefinition>
 				<!--  FirstLevelNestedGrid1 is created here  -->
-				<sf:GridViewDefinition RelationalColumn="reinforcementsIn">
+				<sf:GridViewDefinition RelationalColumn="reinforcementsMap">
 					<sf:GridViewDefinition.DataGrid>
 						<sf:SfDataGrid x:Name="armiesIn" 
 									   AutoGenerateColumns="False"
-							SelectionMode="Extended"
 							
 							SelectionUnit="Row"
 							AutoGenerateRelations="False"

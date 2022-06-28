@@ -14,7 +14,7 @@ namespace CnV.Views
 				cityFilter.OnReset();
 				cityFilterCombo.SelectedItem = c;
 				if(!isFocused) {
-					ShowOrAdd(true,onlyIfClosed: false);
+					ShowOrAdd<HitHistoryTab>(true,onlyIfClosed: false);
 
 				}
 
@@ -54,8 +54,8 @@ namespace CnV.Views
 				return;
 			AppS.QueueOnUIThread(instance.UpdateDataGrid);
 		}
-		public static HitHistoryTab instance;
-		public static xDataGrid HistoryGrid => instance.historyGrid;
+		public static HitHistoryTab? instance;
+		//public static xDataGrid HistoryGrid => instance?.historyGrid;
 		//        public static Army showingRowDetails;
 
 		//public DataTemplate GetTsInfoDataTemplate()
@@ -95,7 +95,7 @@ namespace CnV.Views
 		//}
 
 
-		public static bool IsVisible() => instance.isFocused;
+		public static bool IsVisible() => instance is not null && instance.isFocused;
 
 		private void cityFilterCombo_SelectionChanged(object sender,Microsoft.UI.Xaml.Controls.SelectionChangedEventArgs e) {
 			UpdateDataGrid();

@@ -62,10 +62,10 @@ namespace CnV
 			nameof(DataPoint.raiding),
 			nameof(DataPoint.cities),
 			nameof(DataPoint.ts),
-			nameof(DataPoint.tsOffense),
-			nameof(DataPoint.tsDefense),
+			nameof(DataPoint.offense),
+			nameof(DataPoint.defense),
 			nameof(DataPoint.kills),
-			nameof(DataPoint.rssProduced),
+			nameof(DataPoint.rssproduced),
 
 		};
 		private bool _byAlliance;
@@ -77,11 +77,11 @@ namespace CnV
 			}
 		}
 
-		internal static bool ShowPlayerMetric(string property, bool byAlliance) {
-			var id = metrics.IndexOf(property);
+		internal static async Task<bool> ShowPlayerMetric(string property, bool byAlliance) {
+			var id = metrics.IndexOf(property.ToLowerInvariant() );
 			if(id==-1)
 				return false;
-			instance.ShowOrAdd(true,onlyIfClosed: true);
+			await ShowOrAdd<ChartDialog>(true,onlyIfClosed: true);
 			// will trigger callback
 			instance.byAlliance = byAlliance;
 			// will trigger callback

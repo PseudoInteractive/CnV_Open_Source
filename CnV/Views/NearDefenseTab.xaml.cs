@@ -11,8 +11,8 @@ namespace CnV.Views
 	public sealed partial class NearDefenseTab:UserTab
 	{
 
-		public static NearDefenseTab instance;
-		public static bool IsVisible() => instance.isFocused;
+		public static NearDefenseTab? instance;
+		public static bool IsVisible() =>  instance is not null && instance.isFocused;
 		const bool waitReturn = true;
 		public bool sendViaWater { get; set; }
 
@@ -25,7 +25,7 @@ namespace CnV.Views
 		public bool useHorns;
 		internal float sendFraction = 1.0f;
 		public bool portal { get; set; }
-		public bool onlyHome { get; set; } = true;
+		public bool onlyHome { get; set; } = false;
 		public float _sendFraction { get => sendFraction; set { sendFraction = value; refresh.Go(); } }  // defenders outside of this window are not 
 		public float _filterTime { get => filterTime; set { filterTime = value; refresh.Go(); } }  // defenders outside of this window are not included
 		public int _filterTSTotal { get => filterTSTotal; set { filterTSTotal = value; refresh.Go(); } }
@@ -51,6 +51,11 @@ namespace CnV.Views
 			flyout.Closing += Flyout_Closing;
 			flyout.ShowAt(button);
 		}
+		public override async Task Closed()
+		{ 
+			await base.Closed();
+			instance = null;
+		}
 
 		private void Flyout_Closing(Microsoft.UI.Xaml.Controls.Primitives.FlyoutBase sender, Microsoft.UI.Xaml.Controls.Primitives.FlyoutBaseClosingEventArgs args)
 		{
@@ -66,10 +71,10 @@ namespace CnV.Views
 		}
 
 		public static void GetSelected(List<int> rv) {
-			var i = instance;
+			
 			if(!NearDefenseTab.IsVisible())
 				return;
-
+			var i = instance;
 			foreach(var sel in i.supportGrid.SelectedItems) {
 				var s = sel as Supporter;
 				Assert(s != null);

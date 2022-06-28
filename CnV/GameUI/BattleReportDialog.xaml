@@ -9,7 +9,7 @@
 	xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
 	xmlns:tkui="using:CommunityToolkit.WinUI.UI"
     mc:Ignorable="d">
-	<ScrollViewer BorderThickness="1" CornerRadius="2" Margin="2" BorderBrush="{StaticResource SystemControlBackgroundAccentRevealBorderBrush}" tkui:Effects.Shadow="{StaticResource CnvShadow}"
+	<ScrollViewer BorderThickness="1" CornerRadius="2" Margin="2" BorderBrush="{StaticResource SystemControlBackgroundAccentRevealBorderBrush}" 
  >
 	<Grid Width="600"  >
 		

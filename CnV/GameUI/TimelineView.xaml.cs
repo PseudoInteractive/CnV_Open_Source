@@ -84,7 +84,7 @@ namespace CnV
 
 		}
 
-		public static bool IsVisible() => instance.isFocused;
+		public static bool IsVisible() =>  instance is not null && instance.isFocused;
 		public override TabPage defaultPage => TabPage.secondaryTabs;
 
 		public static void NotifyChange() {

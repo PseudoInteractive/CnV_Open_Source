@@ -22,7 +22,7 @@ namespace CnV
         public uint tsTotal => city.troopsOwned.TS(NearDefenseTab.Include);
 		public TimeSpanS travel;
 		public int validTargets { get; set; }
-		public string travelTime => travel.MulRoundUp(NearDefenseTab.instance.useHorns.Switch(1.0f,0.5f)).Format();
+		public string travelTime => travel.MulRoundUp((NearDefenseTab.instance?.useHorns).Switch(1.0f,0.5f,1.0f)).Format();
 		public TroopTypeCounts tSend = new();
 		public uint tsSend
         {
@@ -36,7 +36,7 @@ namespace CnV
 				
 			} }
        
-        public ServerTime eta =>departure +  travel.MulRoundUp(NearDefenseTab.instance.useHorns.Switch(1.0f,0.5f)); 
+        public ServerTime eta =>departure +  travel.MulRoundUp((NearDefenseTab.instance?.useHorns).Switch(1.0f,0.5f,1.0f)); 
 
         public string troopInfo
         {
@@ -67,7 +67,7 @@ namespace CnV
 			{
 				OnPropertyChanged(member);
 				
-				if (NearDefenseTab.instance.supportGrid.SelectedItem == this)
+				if (NearDefenseTab.instance?.supportGrid.SelectedItem == this)
 					NearDefenseTab.instance.RefreshSupportByType();
 
 			});

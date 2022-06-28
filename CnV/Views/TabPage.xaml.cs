@@ -19,57 +19,55 @@ using System.Linq;
 
 namespace CnV.Views
 {
-	public sealed partial class TabPage:Grid
-	{
+	public sealed partial class TabPage:Grid {
 		public static List<Window> tabWindows = new();
 		public static TabPage? mainTabs;
 		public static TabPage? secondaryTabs;
 		public static TabPage[]? tabPages;
 		public static UserTab[][]? hiddenTabs;
 
-		static TabPage CreateTabView(Frame frame)
-		{
-			var rv = new TabPage();
-			frame.Content = rv;
-		//	frame.Navigate(typeof(TabPage));
-			return rv;
-
-		}
-		public static void Initialize()
-		{
 		
+		public static void Initialize() {
 
-			try
-			{
+
+			try {
 				ChatTab.Ctor();
 
-				mainTabs = CreateTabView(ShellPage.instance.rightTabs);
-				secondaryTabs = CreateTabView(ShellPage.instance.spotTabs);
-				ChatTab.tabPage = CreateTabView(ShellPage.instance.chatTabs);
+				mainTabs = (ShellPage.instance.rightTabs);
+				secondaryTabs = (ShellPage.instance.spotTabs);
+				ChatTab.tabPage = (ShellPage.instance.chatTabs);
 				tabPages = new[] { mainTabs,secondaryTabs,ChatTab.tabPage };
 
 				UserTab.InitUserTabs();
-				
+
 
 			}
-			catch(Exception __ex)
-			{
+			catch(Exception __ex) {
 				Debug.LogEx(__ex);
 			}
 		}
 
-		public void Add(UserTab me,bool selectMe)
-		{
-			me.isOpen = true;
-			var vi = new TabViewItem()
-			{
-				Header = me.Tag as string,
-				IconSource = TabPage.GetIconForTab(me),
-				Content = me
-			};
+		internal void Add(TabInfo info,bool selectMe,UserTab tab) {
+			//me.isOpen = true;
+			var vi = new TabViewItem() {
+				Header =tab is not null ? tab.Tag as string : info.name,
+				IconSource = TabPage.GetIconForTab(info),
+				Tag= info,
+				Content =  new Frame() {  IsNavigationStackEnabled=false},
+				};
+				var content = tab ??  (info.persist ? info.t.GetConstructor(Type.EmptyTypes).Invoke(null) as UserTab : null);
+			vi.Set( content );
+
+			//if(info.persist  )
+			//{
+			//	if(tab is not null)
+			//		f.Navigate()
+			//	f.Navigate(	  ),
+		
+			//}
 			Tabs.TabItems.Add(vi );
 
-			me.Opened();
+//			me.Opened();
 
 			if(selectMe)
 				this.Tabs.SelectedItem= vi;
@@ -164,24 +162,25 @@ namespace CnV.Views
 			}
 			return rv;
 		}
-		public static bool Close(UserTab tab)
+		public static Task Close(UserTab tab)
 		{
 			bool rv = false;
 			if(AppS.isShuttingDown)
-				return false;
+				return Task.CompletedTask;
 			foreach(var tabPage in tabPages)
 			{
 				foreach(TabViewItem ti in tabPage.Tabs.TabItems)
 				{
-					if(ti.Content.AsObject() == tab)
+					if( object.ReferenceEquals( ti.GetTab(), tab) )
 					{
-						tabPage.RemoveTab(ti);
-						break;
+						// This might trigger selection changed?
+						return tabPage.RemoveTab(ti);
+
 					}
 				}
 			}
 
-			return rv;
+			return Task.CompletedTask;
 		}
 
 		
@@ -219,99 +218,102 @@ namespace CnV.Views
 		//}
 
 	
-		void RemoveAllTabs()
-		{
-			if(AppS.isShuttingDown)
-				return;
+		//void RemoveAllTabs()
+		//{
+		//	if(AppS.isShuttingDown)
+		//		return;
 
-			var _tab = Tabs;
-			while(_tab.TabItems.Count > 0)
-			{
+		//	var _tab = Tabs;
+		//	while(_tab.TabItems.Count > 0)
+		//	{
 				
-				RemoveTab(_tab.TabItems[0] as TabViewItem);
-			}
-		}
+		//		RemoveTab(_tab.TabItems[0] as TabViewItem);
+		//	}
+		//}
 
 
 
-		bool AddAnyChatTab(bool selectIt)
-		{
-			foreach(var tab in ChatTab.all)
-			{
-				if(tab.isOpen)
-					continue;
+		//bool AddAnyChatTab(bool selectIt)
+		//{
+		//	foreach(var tab in ChatTab.all)
+		//	{
+		//		if(tab.isOpen)
+		//			continue;
 
-				tab.ShowOrAdd(selectIt);
-				return true;
-			}
-			return false;
-		}
+		//		tab.ShowOrAdd(selectIt);
+		//		return true;
+		//	}
+		//	return false;
+		//}
 
 		public static void ShowTabs()
 		{
 			AppS.DispatchOnUIThreadIdle(()=>
 			{
-				BuildTab.instance.ShowOrAdd(true);
-				SpotTab.instance.ShowOrAdd(true);
-				PlayerTab.instance.ShowOrAdd(false);
-				MainPage.instance.ShowOrAdd(false);
+			//	BuildTab.instance.ShowOrAdd(true);
+			//	SpotTab.instance.ShowOrAdd(true);
+			//	PlayerTab.instance.ShowOrAdd(false);
+			//	MainPage.instance.ShowOrAdd(false);
 				
-				ChatTab.tabPage.AddChatTabs();
+			//	ChatTab.tabPage.AddChatTabs();
 			});
 		}
 
 
-		static Dictionary<string,Symbol> tabSymbolIcons = new Dictionary<string,Symbol> {
-			{ "Raid", Symbol.ReShare },
-			{ "RssSender", Symbol.Share },
-			{ "Boss", Symbol.View },
-			{ "AttackPlanner", Symbol.Audio },
-			{ "world", Symbol.Microphone },
-			{ "Build", Symbol.Repair },
-			{ "Reinforcements", Symbol.AddFriend },
-			{ "Planner", Symbol.Map },
-			{ "NearRes", Symbol.Download },
-			{ "officer" ,Symbol.Admin },
-			{ "BossHits", Symbol.Play },
-			{ "Timeline", Symbol.Calendar },
-			{ "Palace", Symbol.Like }
-		};
+		//static Dictionary<string,Symbol> tabSymbolIcons = new Dictionary<string,Symbol> {
+		//	{ "Raid", Symbol.ReShare },
+		//	{ "RssSender", Symbol.Share },
+		//	{ "Boss", Symbol.View },
+		//	{ "AttackPlanner", Symbol.Audio },
+		//	{ "world", Symbol.Microphone },
+		//	{ "Build", Symbol.Repair },
+		//	{ "Reinforcements", Symbol.AddFriend },
+		//	{ "Planner", Symbol.Map },
+		//	{ "NearRes", Symbol.Download },
+		//	{ "officer" ,Symbol.Admin },
+		//	{ "BossHits", Symbol.Play },
+		//	{ "Timeline", Symbol.Calendar },
+		//	{ "Palace", Symbol.Like }
+		//};
 
-		static Dictionary<string,string> tabFontIcons = new Dictionary<string,string> {
-			{ "Incoming" , "\uF0EF"  },//tab.Tag as string,
-            {    "DefenseHistory", "\uEA0D" },
-			{    "Recent" ,  "\uF738" },
-			{  "NearDefense", "\uEA18" },
-			{ "alliance", "\uE902" },
-			{ "player", "\uE902" },
-			{ "Outgoing","\uE189" },
-			{ "Hits","\uEA69" },
-			{ "Chart","\uEA69" },
-			{ "Heat", "\uF738" },
-			{ "PlayerChange", "\uE822" }
-		};
+		//static Dictionary<string,string> tabFontIcons = new Dictionary<string,string> {
+		//	{ "Incoming" , "\uF0EF"  },//tab.Tag as string,
+  //          {    "DefenseHistory", "\uEA0D" },
+		//	{    "Recent" ,  "\uF738" },
+		//	{  "NearDefense", "\uEA18" },
+		//	{ "alliance", "\uE902" },
+		//	{ "player", "\uE902" },
+		//	{ "Outgoing","\uE189" },
+		//	{ "Hits","\uEA69" },
+		//	{ "Chart","\uEA69" },
+		//	{ "Heat", "\uF738" },
+		//	{ "PlayerChange", "\uE822" }
+		//};
 		public bool isVisible=true;
 
-		public static Microsoft.UI.Xaml.Controls.IconSource GetIconForTab(UserTab tab)
+		internal static Microsoft.UI.Xaml.Controls.IconSource GetIconForTab(TabInfo tab)
 		{
-			if(tab.Tag is null)
-				return new SymbolIconSource() { Symbol = Symbol.Emoji2 };
-			if(tabSymbolIcons.TryGetValue(tab.Tag as string,out var symbol))
-				return new SymbolIconSource() { Symbol = symbol };
-			if(tabFontIcons.TryGetValue(tab.Tag as string,out var glyph))
-				return new Microsoft.UI.Xaml.Controls.FontIconSource() { Glyph = glyph };
-			return new SymbolIconSource() { Symbol = Symbol.Comment };
+			if(tab.fontIcon != default)
+				return new Microsoft.UI.Xaml.Controls.FontIconSource() { Glyph = tab.fontIcon.ToString() };
+			return new SymbolIconSource() { Symbol = tab.symbol };
 		}
-		private static IconElement GetOldIconForTab(UserTab tab)
+
+		internal static Microsoft.UI.Xaml.Controls.IconElement GetOldIconForTab(TabInfo tab)
 		{
-			if (tab.Tag is null)
-				return new SymbolIcon() { Symbol = Symbol.Emoji2 };
-			if(tabSymbolIcons.TryGetValue(tab.Tag as string,out var symbol))
-				return new SymbolIcon() { Symbol = symbol };
-			if(tabFontIcons.TryGetValue(tab.Tag as string,out var glyph))
-				return new FontIcon() { Glyph = glyph };
-			return new SymbolIcon() { Symbol=Symbol.Comment }; // whisper
+			if(tab.fontIcon != default)
+				return new Microsoft.UI.Xaml.Controls.FontIcon() { Glyph = tab.fontIcon.ToString() };
+			return new SymbolIcon() { Symbol = tab.symbol };
 		}
+		//private static IconElement GetOldIconForTab(UserTab tab)
+		//{
+		//	if (tab.Tag is null)
+		//		return new SymbolIcon() { Symbol = Symbol.Emoji2 };
+		//	if(tabSymbolIcons.TryGetValue(tab.Tag as string,out var symbol))
+		//		return new SymbolIcon() { Symbol = symbol };
+		//	if(tabFontIcons.TryGetValue(tab.Tag as string,out var glyph))
+		//		return new FontIcon() { Glyph = glyph };
+		//	return new SymbolIcon() { Symbol=Symbol.Comment }; // whisper
+		//}
 
 		
 
@@ -321,15 +323,15 @@ namespace CnV.Views
 		//	RemoveTabsOnClose();
 		//}
 
-		public TabPage AddChatTabs()
-		{
-			var selectIt = true;
-			while(AddAnyChatTab(selectIt))
-			{
-				selectIt = false;
-			}
-			return this;
-		}
+		//public TabPage AddChatTabs()
+		//{
+		//	var selectIt = true;
+		//	while(AddAnyChatTab(selectIt))
+		//	{
+		//		selectIt = false;
+		//	}
+		//	return this;
+		//}
 
 
 		//private void CoreTitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
@@ -477,17 +479,17 @@ namespace CnV.Views
 			//}
 		}
 
-		public MenuFlyoutItem AddTabMenuItem(UserTab tab)
+		internal MenuFlyoutItem AddTabMenuItem(TabInfo info)
 		{
-			var title = tab.Tag as string;
+			var title = info.name;
 			Assert(title is not null);
 
 
-			var rv = new MenuFlyoutItem() { DataContext=tab,Text = title,Icon= GetOldIconForTab(tab) };
+			var rv = new MenuFlyoutItem() { DataContext=info,Text = title,Icon= GetOldIconForTab(info) };
 
 			void Rv_Click(object sender,RoutedEventArgs e)
 			{
-				((sender as MenuFlyoutItem).DataContext as UserTab).ShowOrAdd(true,page:this);
+				UserTab.ShowOrAdd( (sender as MenuFlyoutItem).DataContext as TabInfo,true,page:this);
 			}
 			rv.Click += Rv_Click;
 			return rv;
@@ -500,18 +502,20 @@ namespace CnV.Views
 			if(_sender == null)
 				_sender = sender;
 			var menu = new MenuFlyout();
-			foreach(var tab in UserTab.userTabs)
+			foreach(var tab in TabInfo.all)
 			{
-				if(!(tab.isOpen|| (tab is PlannerTab)) )
+				if(tab.t == typeof(PlannerTab) || tab.t== typeof(ChatTab))
+					continue;
+				if(!tab.isOpen) 
 					menu.Items.Add(AddTabMenuItem(tab));
 			}
 
-			foreach(var tab in ChatTab.all)
-			{
-				if(tab.isOpen)
-					continue;
-				menu.Items.Add(AddTabMenuItem(tab));
-			}
+			//foreach(var tab in ChatTab.all)
+			//{
+			//	if(tab.isOpen)
+			//		continue;
+			//	menu.Items.Add(AddTabMenuItem(tab));
+			//}
 			if(menu.Items.Count == 0)
 				menu.Items.Add(new MenuFlyoutItem() { Text = "All the Tabs are open" });
 			menu.SetXamlRoot(sender);
@@ -524,28 +528,27 @@ namespace CnV.Views
 			//    Header = "New Item", Content = new ChatTab() { Tag = "New Item" } });
 		}
 
-		static void RemoveTab(TabView view,TabViewItem tab)
+		static Task RemoveTab(TabView view,TabViewItem tab)
 		{
 			if(AppS.isShuttingDown)
-				return;
-			var itab = tab.Content as UserTab;
-			tab.Content = null; // remove it
+				return Task.CompletedTask;
+			var itab = tab.GetTab();
+			tab.Clear(); // remove it
 			view.TabItems.Remove(tab);
 			if(itab != null)
 			{
-				itab.isFocused = false;
-				itab.isOpen = false;
-				itab.VisibilityChanged(false,longTerm: true);
-				itab.Close();
+			
+				return itab.Closed();
 			}
 			// var chatTab = tab.Content as ChatTab;
 			// Log("FreeTab1 " + chatTab.Name);
 			// Assert(chatTab.isActive);
 			// chatTab.isActive = false;
+			return Task.CompletedTask;
 		}
-		void RemoveTab(TabViewItem tab)
+		Task RemoveTab(TabViewItem tab)
 		{
-			RemoveTab(Tabs,tab);
+			return RemoveTab(Tabs,tab);
 		}
 		private void Tabs_TabCloseRequested(TabView sender,TabViewTabCloseRequestedEventArgs args)
 		{
@@ -557,29 +560,46 @@ namespace CnV.Views
 			foreach(var tab in e.RemovedItems)
 			{
 
-				var userControl = (tab as TabViewItem).Content as UserTab;
-				if(userControl != null)
-				{
-					if(userControl.isFocused)
-					{
-						userControl.isFocused = false;
-						await userControl.VisibilityChanged(false,longTerm: false);
+				var userTab = (tab as TabViewItem).GetTab();
+				if(userTab != null) {
+					
+					var info = TabInfo.Get(userTab.GetType());
+					if(!info.persist) {
+						
+						(tab as TabViewItem).Clear();
+						await userTab.Closed();
 					}
-				}
-			}
-			foreach(var tab in e.AddedItems)
-			{
-				var userControl = (tab as TabViewItem).Content as UserTab;
-				if(userControl != null)
-				{
-					if(!userControl.isFocused)
-					{
-						{
-							userControl.isFocused = true;
-							userControl.VisibilityChanged(true,false);
+					else {
+						if(userTab.isFocused) {
+							userTab.isFocused = false;
+							await userTab.VisibilityChanged(false,longTerm: false);
 						}
 					}
 				}
+				else {
+					//Assert(false);
+				}
+
+			}
+			foreach(var tab in e.AddedItems)
+			{
+				var userTab = (tab as TabViewItem).GetTab();
+				if(userTab == null) {
+					var info = (tab as TabViewItem).Tag as TabInfo;
+					userTab = info.t.GetConstructor(Type.EmptyTypes).Invoke(null) as UserTab;
+					// opened etc
+					userTab.isOpen=true;
+					userTab.Opened();
+
+					(tab as TabViewItem).Set( userTab );
+				}
+
+				if(!userTab.isFocused)
+				{
+					userTab.isFocused = true;
+					await userTab.VisibilityChanged(true,false);
+				}
+				
 			}
 
 			CityUI.SyncSelectionToUI(true);

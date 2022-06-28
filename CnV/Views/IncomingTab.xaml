@@ -35,8 +35,8 @@
 						
 						Loaded="DataGridLoaded"
                         AutoGenerateColumns="False"
-                        
-                        
+                        FrozenColumnCount="2"
+                        IsReadOnly="True"
                         FontSize="{StaticResource SmallFontSize}"
                         RowHeight="{StaticResource MediumGridRowHeight}"
                             
@@ -54,13 +54,16 @@
                                         HeaderText="I"
                                         ColumnWidthMode="None" 
                                         Width="32" />
-				<sf:GridTextColumn MappingName="Claim"
-									   
+				<sf:GridNumericColumn MappingName="uiClaim"
+									  HeaderText="claim"
+									    DisplayNumberFormat="P0"
 
                                        TextAlignment="Center" />
+				
 				<sf:GridHyperlinkColumn MappingName="xy"
 
 				                      />
+			
 				<sf:GridNumericColumn MappingName="tsDefMax"
 											HeaderText="MaxD"
 									   
@@ -103,7 +106,7 @@
                                       
                                        TextAlignment="Left" />
 
-				<sf:GridTextColumn MappingName="cityName"
+				<sf:GridTextColumn MappingName="nameAndRemarks"
                                       
                                        TextAlignment="Left"
                                          IsHidden="True" />
@@ -131,6 +134,11 @@
                                  
                                        
                                        TextAlignment="Left" />
+				<sf:GridTextColumn MappingName="nameAndRemarks"
+										   HeaderText="Name"
+										   TextAlignment="Left"
+										 
+										    />
 				<sf:GridTextColumn MappingName="attackers"
                                  
                                        

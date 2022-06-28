@@ -17,63 +17,41 @@ using System.Collections.ObjectModel;
 
 using Syncfusion.UI.Xaml.Grids;
 
-public partial class UserTab:UserControl, IANotifyPropertyChanged
-{
+using static CnV.Views.UserTab;
+
+public partial class UserTab:Page, IANotifyPropertyChanged {
 
 	private const string returnReinforcement = nameof(returnReinforcement);
 	public virtual TabPage? defaultPage => TabPage.mainTabs;
 
-	public readonly record struct DataGridProxy(UserTab tab,xDataGrid sf)
-	{
+	public readonly record struct DataGridProxy(UserTab tab,xDataGrid sf) {
 		public ObservableCollection<object> SelectedItems() => sf.SelectedItems;
 	}
 	public ImmutableArray<xDataGrid> myDataGrids = ImmutableArray<xDataGrid>.Empty;
 
-//	public static Dictionary<xDataGrid,UserTab> dataGrids = new();
+	//	public static Dictionary<xDataGrid,UserTab> dataGrids = new();
 
 	internal List<xDataGrid> dataGrids = new(); // grids owned by this tab
 
-	public virtual IEnumerable<xDataGrid> GetDataGrids()
-	{
+	public virtual IEnumerable<xDataGrid> GetDataGrids() {
 		yield break;
 	}
 
 	public event PropertyChangedEventHandler? PropertyChanged;
-	public void CallPropertyChanged(string? members = null)
-	{
+	public void CallPropertyChanged(string? members = null) {
 		PropertyChanged?.Invoke(this,new PropertyChangedEventArgs(members));
 	}
-	public void OnPropertyChanged(string? member = null)
-	{
+	public void OnPropertyChanged(string? member = null) {
 		if(PropertyChanged is not null) ((IANotifyPropertyChanged)this).IOnPropertyChanged(member);
 	}
+	
 
-	public static UserTab[]? userTabs;
 
+
+	
 
 	public static void InitUserTabs()
 	{
-
-		userTabs = new UserTab[] {
-				new BuildTab(),
-				new MainPage(),
-				new PlayerTab(),
-				new PalaceTab(),
-				new DonationTab(),
-				new IncomingTab(),
-				new HitHistoryTab(),
-				new AttackTab(),
-				new PlannerTab(),
-				new SpotTab(),
-				new ReinforcementsTab(),
-				new OutgoingTab(),
-				new AllianceTab(),
-				new NearDefenseTab(),
-				new NearRes(),
-				new ChartDialog(),
-				new TimelineView(),
-				new NPCHistory(),
-		};
 
 	}
 
@@ -142,9 +120,9 @@ public partial class UserTab:UserControl, IANotifyPropertyChanged
 															//			this.Width = 500;
 															//			this.Height = 500;
 															//	ScrollViewer.SetVerticalScrollMode(this, ScrollMode.Auto); //DependencyObjectExtensions.FindDescendant<ScrollViewer>(this).AllowFocusOnInteraction= false;
-		//Margin= new(8);
-		//Loaded+=OnLoaded;
-
+															//Margin= new(8);
+															//Loaded+=OnLoaded;
+		userTabs.InterlockedAdd(this);
 	}
 	protected void DataGridLoaded(object sender,RoutedEventArgs e)
 	{
@@ -196,109 +174,146 @@ public partial class UserTab:UserControl, IANotifyPropertyChanged
 	//}
 
 
-	public void SetPlus(bool set)
-	{
-		AppS.QueueOnUIThread(() =>
-		{
-			(var tp, var tvi) = GetViewItem();
-			if(tvi!=null)
-			{
-				var h = tvi.Header as string;
-				var hasNumber = ((h[0] >= '0') && (h[0] <= '9'));
-				if(!set)
-				{
-					if(hasNumber)
-					{
-						tvi.Header = h.Substring(2);
-					}
-				}
-				else
-				{
-					if(hasNumber)
-					{
-						tvi.Header=(int.Parse(h.Substring(0,1))+1).Min(9) + h.Substring(1);
-					}
-					else
-					{
-						tvi.Header = "1 " + h;
-					}
-				}
-			}
-		});
-	}
+	//public void SetPlus(bool set)
+	//{
+	//	AppS.QueueOnUIThread(() =>
+	//	{
+	//		(var tp, var tvi) = GetViewItem();
+	//		if(tvi!=null)
+	//		{
+	//			var h = tvi.Header as string;
+	//			var hasNumber = ((h[0] >= '0') && (h[0] <= '9'));
+	//			if(!set)
+	//			{
+	//				if(hasNumber)
+	//				{
+	//					tvi.Header = h.Substring(2);
+	//				}
+	//			}
+	//			else
+	//			{
+	//				if(hasNumber)
+	//				{
+	//					tvi.Header=(int.Parse(h.Substring(0,1))+1).Min(9) + h.Substring(1);
+	//				}
+	//				else
+	//				{
+	//					tvi.Header = "1 " + h;
+	//				}
+	//			}
+	//		}
+	//	});
+	//}
 
-	public (TabPage tabPage, TabViewItem tabViewItem) GetViewItem()
+
+	internal static (TabPage tabPage, TabViewItem tabViewItem, UserTab tab, bool tabExists, bool hasFocus) GetViewItem(TabInfo t)
 	{
 		foreach(var tabPage in TabPage.tabPages)
 		{
 			foreach(TabViewItem ti in tabPage.Tabs.TabItems)
 			{
-				if(ti.Content == this)
-					return (tabPage, ti);
+				if( ti.Tag as TabInfo == t) {
+					return (tabPage, ti, ti.GetTab(),true, ti.GetTab()?.isFocused == true  );
+
+				}
 			}
 		}
-		return (null, null);
+		return (null, null,null,false,false);
 	}
-	public IEnumerable<TabPage> GetTabPages()
+		internal static (TabPage tabPage, TabViewItem tabViewItem, UserTab tab, bool tabExists, bool hasFocus) GetViewItem(UserTab t)
 	{
 		foreach(var tabPage in TabPage.tabPages)
 		{
 			foreach(TabViewItem ti in tabPage.Tabs.TabItems)
 			{
-				if(ti.Content == this)
-				{
-					yield return tabPage;
-					break;
+				if( ti.GetTab() == t) {
+					return (tabPage, ti, ti.GetTab(),true, ti.GetTab()?.isFocused == true );
+
 				}
 			}
 		}
+		return (null, null,null,false,false);
+	}
+	internal static ImmutableArray<UserTab> userTabs = ImmutableArray<UserTab>.Empty;
+	
+	
+	//public IEnumerable<TabPage> GetTabPages()
+	//{
+	//	foreach(var tabPage in TabPage.tabPages)
+	//	{
+	//		foreach(TabViewItem ti in tabPage.Tabs.TabItems)
+	//		{
+	//			if(ti.Content == this)
+	//			{
+	//				yield return tabPage;
+	//				break;
+	//			}
+	//		}
+	//	}
+	//}
+
+	
+	public Task Close()
+	{
+		if(!isOpen) {
+			Assert(false);
+			return Task.CompletedTask;
+		}
+		return TabPage.Close(this);
+	}
+	public virtual async Task Closed()
+	{
+		isFocused = false;
+		isOpen = false;
+		try {
+			await VisibilityChanged(false,longTerm: true);
+			userTabs.InterlockedRemove(this);
+			// Todo: Set member to null
+			foreach(var d in dataGrids) {
+				d.Dispose();
+			}
+		}
+		catch(Exception ex) {
+			LogEx(ex);
+		}
+		dataGrids.Clear();
 	}
 
-	public void Show()
-	{
-		if(!isOpen)
-		{
-			ShowOrAdd(true);
-		}
-		else
-		{
-			if(!isFocused)
-				TabPage.Show(this);
-			//    else
-			//      tab.Refresh();
-		}
-
-	}
-	public virtual void Close()
-	{
-		if(!isOpen)
-			return;
-		TabPage.Close(this);
-	}
 	// Callback
 	public virtual void Opened()	
 		{
 		Assert(isOpen==true);
 	}
 
-	public void ShowOrAdd(bool selectMe = true,bool onlyIfClosed = false,TabPage page = null)
+	internal static Task ShowOrAdd<T>(bool selectMe = true,bool onlyIfClosed = false,TabPage page = null, UserTab tab=null) where T: UserTab {
+		return ShowOrAdd(TabInfo.Get(typeof(T)),selectMe,onlyIfClosed,page,tab);
+	}	
+	
+	internal static Task ShowOrAdd(TabInfo ti,bool selectMe = true,bool onlyIfClosed = false,TabPage page=null,UserTab tab=null)
 
 	{
-		AppS.DispatchOnUIThread(() =>
+		return AppS.DispatchOnUIThreadTask(() =>
 	{
-		if(onlyIfClosed && isOpen)
+	
+		var info = tab is not null ? GetViewItem(tab) : GetViewItem(ti);
+		if(onlyIfClosed && info.tabExists)
 			return;
 
 		// already here?
-		var existing = GetViewItem();
-		if(existing.tabPage != null)
+		if(info.tabExists )
 		{
 			if(selectMe)
-				existing.tabPage.Tabs.SelectedItem = existing.tabViewItem;
+				info.tabPage.Tabs.SelectedItem = info.tabViewItem;
 			return;
 		}
-
-		(page??defaultPage).Add(this,selectMe);
+		// Todo
+		(page??(ti.page 
+		switch { 
+			TabInfo.TabPageId.main=>TabPage.mainTabs,
+			TabInfo.TabPageId.secondary=>TabPage.secondaryTabs,
+			TabInfo.TabPageId.chat=>ChatTab.tabPage,
+		}
+		)).Add(ti,selectMe,tab);
 	});
 	}
 
@@ -492,6 +507,40 @@ public partial class UserTab:UserControl, IANotifyPropertyChanged
 
 }
 
+internal record class TabInfo(bool persist,Type t,string name,TabInfo.TabPageId page,Symbol symbol = default,char fontIcon = default) {
+
+	internal enum TabPageId {
+		main,
+		secondary,
+		chat
+	}
+
+	internal static TabInfo[] all = new TabInfo[] {
+		new TabInfo(false,typeof( BuildTab),"Build",TabPageId.main,Symbol.Repair),
+			new(   false, typeof( MainPage),"Raid",TabPageId.main,Symbol.ReShare),
+			new(   false, typeof( PlayerTab),"Player",TabPageId.main,default,'\uE902'),
+			new(   false, typeof( PalaceTab),"Palace",TabPageId.main, Symbol.Like ),
+			new(   false, typeof( DonationTab),"RssSender",TabPageId.main,Symbol.Share),
+			new(   false, typeof( IncomingTab),"Incoming",TabPageId.main,fontIcon:'\uF0EF'),
+			new(   false, typeof( HitHistoryTab),"Hits",TabPageId.secondary,fontIcon:'\uEA69'),
+			//	typeof( AttackTab),"Build",TabPageId.main),
+			new(   false, typeof( PlannerTab),"Planner",TabPageId.main,Symbol.Map),
+			new(   false, typeof( SpotTab),"Recent",TabPageId.secondary,fontIcon:'\uF738'),
+			new(   false, typeof( ReinforcementsTab),"Reinforcements",TabPageId.main,Symbol.AddFriend ),
+			new(    false,typeof( OutgoingTab),"Outgoing",TabPageId.main,fontIcon:'\uE189'),
+			new(    false,typeof( AllianceTab),"Alliance",TabPageId.main,fontIcon:'\uE902'),
+			new(    false,typeof( NearDefenseTab),"NearDefense",TabPageId.main,fontIcon:'\uEA18'),
+			new(    false,typeof( NearRes),"Near Res",TabPageId.main,Symbol.Download ),
+			new(    false,typeof( ChartDialog),"Chart",TabPageId.secondary,fontIcon:'\uEA69'),
+			new(    false,typeof( TimelineView),"Timeline",TabPageId.main,Symbol.Calendar ),
+			new(    false,typeof( NPCHistory),"Boss Hits",TabPageId.main, Symbol.Play),
+			new(    true,typeof( ChatTab),"Chat",TabPageId.chat, Symbol.VideoChat),
+		};
+		internal static TabInfo Get(Type t) {
+		return all.First(i => i.t == t);
+	}
+	internal bool isOpen => UserTab.GetViewItem(this).tabExists;
+	}
 
 public static class UserTabHelpers
 {
@@ -499,7 +548,10 @@ public static class UserTabHelpers
 	//{
 	//	return UserTab.dataGrids[grid];
 	//}
-
+	internal static UserTab GetTab(this TabViewItem t) => (t.Content as Frame).Content as UserTab;
+	internal static Frame GetFrame(this TabViewItem t) => (t.Content as Frame);
+	internal static void Clear(this TabViewItem t) => (t.Content as Frame).Content = new Page();
+	internal static void Set(this TabViewItem t, UserTab tab) => (t.Content as Frame).Content = tab ?? new Page();
 	internal static bool IsCityGrid(this xDataGrid grid) => object.ReferenceEquals(grid.ItemsSource,City.gridCitySource);
 }
 

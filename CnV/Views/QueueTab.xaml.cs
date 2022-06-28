@@ -38,8 +38,7 @@ namespace CnV.Views
 		private const int      badBuildingThreshold = 20;
 
 
-		public static bool IsVisible() => instance.isFocused;
-
+		public static bool IsVisible() =>  instance is not null && instance.isFocused;
 
 		public QueueTab()
 		{

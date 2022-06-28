@@ -143,8 +143,9 @@ namespace CnV
 
 				
 				while(!Sim.isPastWarmup) {
-					await Task.Delay(250).ConfigureAwait(false);
+					await Task.Delay(500).ConfigureAwait(false);
 				}
+				Assert(Sim.isPastWarmup);
 				while(!City.myCities.Any()) {
 					await Task.Delay(500).ConfigureAwait(false);
 				}

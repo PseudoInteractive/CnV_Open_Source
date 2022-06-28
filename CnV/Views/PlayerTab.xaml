@@ -88,7 +88,7 @@
 
 				<sf:GridNumericColumn MappingName="tsIfShared" DisplayNumberFormat="N0" HeaderText="TS"  />
 				<sf:GridNumericColumn MappingName="tsOffenseIfShared" DisplayNumberFormat="N0"  HeaderText="Offense"  />
-				<sf:GridNumericColumn MappingName="tsDefenseIfShared" DisplayNumberFormat="N0"  HeaderText="defense"  />
+				<sf:GridNumericColumn MappingName="tsDefenseIfShared" DisplayNumberFormat="N0"  HeaderText="Defense"  />
 
 				<sf:GridNumericColumn MappingName="kills"
 				                      TextAlignment="Center"

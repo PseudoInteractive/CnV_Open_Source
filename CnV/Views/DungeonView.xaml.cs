@@ -34,8 +34,9 @@ namespace CnV.Views
 
 		NotifyCollection<Dungeon> items = new();
 
+		// Todo: Clear this out when raiding done
 		public static int openCity;
-		public static DungeonView instance;
+		public static DungeonView? instance;
 		public static void Initialize()
 		{
 			Dungeon.Initialize();

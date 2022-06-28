@@ -10,7 +10,7 @@ namespace CnV.Views
 	public sealed partial class BossTab : UserTab
     {
         public static BossTab instance;
-        public static bool IsVisible() => instance.isFocused;
+        public static bool IsVisible() =>  instance is not null && instance.isFocused;
 
 		public static NotifyCollection<City> cities = new();
 

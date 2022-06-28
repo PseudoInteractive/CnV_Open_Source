@@ -165,7 +165,7 @@
                                         >
                     <tk:DataGridTextColumn.CellStyle>
                         <Style BasedOn="{StaticResource CellRight}" TargetType="tk:DataGridCell">
-                         <Setter Property="ToolTipService.ToolTip" Value="When raids will return.  A negative value means that they are on their way out, if the value is small and negative you can recall them instantly with 'Home Please' "/>
+                         <Setter Property="ToolTipService.ToolTip" Value="When raids will return. "/>
                         </Style>
                     </tk:DataGridTextColumn.CellStyle>
                 </tk:DataGridTextColumn>
@@ -173,9 +173,15 @@
                                         Binding="{Binding name, Mode=OneWay }"
                                         IsReadOnly="True"
                                             CellStyle="{StaticResource CellLeft}" />
-				<tk:DataGridTextColumn Header="Send TS" Binding="{Binding tsSend,Converter={StaticResource IntConverter}, Mode=OneWay}"
-                                       CellStyle="{StaticResource CellRight}" IsReadOnly="True"  Tag="tsSend"
-                                        />
+				<tk:DataGridTextColumn Header="Avail TS" Binding="{Binding tsSend,Converter={StaticResource IntConverter}, Mode=OneWay}"
+                                     
+                                        >
+					<tk:DataGridTextColumn.CellStyle>
+						<Style BasedOn="{StaticResource CellRight}" TargetType="tk:DataGridCell">
+							<Setter Property="ToolTipService.ToolTip" Value="Is OnlyHome is set these are the troops home, otherwise these are the troops not allocated for something else."/>
+						</Style>
+					</tk:DataGridTextColumn.CellStyle>
+				</tk:DataGridTextColumn>
 				<tk:DataGridTextColumn Header="Home TS" Binding="{Binding tsHome,Converter={StaticResource IntConverter}, Mode=OneWay}"
                                        CellStyle="{StaticResource CellRight}" IsReadOnly="True" Tag="tsHome"
                                         />

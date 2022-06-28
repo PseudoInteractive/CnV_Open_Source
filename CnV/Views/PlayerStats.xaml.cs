@@ -139,7 +139,7 @@ namespace CnV
 		}
 
 		private void OutgoingTapped(object sender,RoutedEventArgs e) {
-			OutgoingTab.instance.Show();
+			OutgoingTab.ShowOrAdd<OutgoingTab>();
 		}
 		internal void UpdateOutgoingText() {
 			var c = OutgoingTab.GetOutgoingCounts();
@@ -194,7 +194,7 @@ namespace CnV
 		}
 
 		private void IncomingTapped(object sender,RoutedEventArgs e) {
-			IncomingTab.instance.Show();
+			IncomingTab.ShowOrAdd<IncomingTab>();
 
 		}
 

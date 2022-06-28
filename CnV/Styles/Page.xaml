@@ -59,7 +59,7 @@
     <Thickness x:Key="ExpanderHeaderPadding">0,0,0,0</Thickness>
     <Thickness x:Key="ExpanderChevronMargin">0,0,0,0</Thickness>
 	<SolidColorBrush x:Key="ExpanderHeaderBackground" Color="{StaticResource SystemAccentColorDark3}" />
-	<Style TargetType="Expander"   >
+	<!--<Style TargetType="Expander"   >
 		<Setter Property="MinHeight" Value="12" />
 		<Setter Property="HorizontalAlignment" Value="Stretch" />
 		<Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -70,7 +70,7 @@
 		<Setter Property="Padding" Value="0" />
 		<Setter Property="IsTabStop" Value="True" />
 		<Setter Property="TabFocusNavigation" Value="Cycle" />
-	</Style>
+	</Style>-->
 	<Style TargetType="FlyoutPresenter"  >
 		<Setter Property="IsDefaultShadowEnabled" Value="True" />
 		<Setter Property="MaxWidth" Value="800" />
@@ -88,7 +88,6 @@
 	<Thickness x:Key="ExpanderContentDownBorderThickness">0</Thickness>
 	<Thickness x:Key="ExpanderContentUpBorderThickness">0</Thickness>
 
-	<tkui:AttachedDropShadow x:Key="CnvShadow" Offset="4,4" Color="#200038"  CornerRadius="3" BlurRadius="4" Opacity="0.875" />
 
 
 

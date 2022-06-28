@@ -41,7 +41,7 @@ namespace CnV.Views
 		public static StorageFolder folder;
 		public static AttackTab instance;
 		
-        public static bool IsVisible() => instance.isFocused;
+        public static bool IsVisible() =>  instance is not null && instance.isFocused;
 
         public static NotifyCollection<City> attacksUI = new ();
         public static NotifyCollection<City> targetsUI = new ();

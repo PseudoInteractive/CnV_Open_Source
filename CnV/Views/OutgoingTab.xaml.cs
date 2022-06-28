@@ -19,7 +19,7 @@ namespace CnV.Views
 			set => filterFrom = (Alliance.CityFilter)value;
 		}
 
-		public static OutgoingTab instance;
+		public static OutgoingTab? instance;
         //        public static Report showingRowDetails;
 
         //public DataTemplate GetTsInfoDataTemplate()
@@ -44,16 +44,20 @@ namespace CnV.Views
             //      var data = defenderGrid.GetDataView();
         }
 
-
-
-		public static Spot selected 
-		{
-			get {
-				if(!instance.isFocused)
-					return null;
-				return  instance.attackerGrid.CurrentItem as Spot;
-			}
+		public override async Task Closed()
+		{ 
+			await base.Closed();
+			instance = null;
 		}
+
+		//public static Spot selected 
+		//{
+		//	get {
+		//		if(!instance.isFocused)
+		//			return null;
+		//		return  instance.attackerGrid.CurrentItem as Spot;
+		//	}
+		//}
 
 
 		ObservableCollection<City> targets = new();
@@ -87,12 +91,7 @@ namespace CnV.Views
 					if(OutgoingTab.IsVisible()) {
 
 						try {
-							var _targets = (instance.filterFrom switch {
-								Alliance.CityFilter.me => City.myCities,
-								Alliance.CityFilter.subs => City.subCities,
-								Alliance.CityFilter.alliance => City.allianceCities,
-								_ => City.alliedCities,
-							}).SelectMany(c => c.outgoing.Where(a => a.isOutgoingAttack).Select(a => a.targetCity)).Distinct().
+							var _targets = instance.filterFrom.GetCityList().SelectMany(c => c.outgoing.Where(a => a.isOutgoingAttack).Select(a => a.targetCity)).Distinct().
 							Where(w =>
 																							  w.testContinentFilter
 																							&& (instance.includeInternal || !w.isAllyOrNap)).OrderBy(w => w.firstIncoming).ToArray();
@@ -128,12 +127,15 @@ namespace CnV.Views
         }
 
 
-		public static bool IsVisible() => instance.isFocused;
+		public static bool IsVisible() =>  instance is not null && instance.isFocused;
 
 		//static Debounce selChanged = new Debounce(SelChanged) { runOnUiThread = true };
 		static City lastSelected;
 		static void UpdateTargetIncoming(bool showHistory)
 		{
+			if(!IsVisible())
+				return;
+
 			var sel = instance.attackerGrid.SelectedItem as Spot;
 			lastSelected =sel;
 			if (sel != null)
@@ -143,7 +145,7 @@ namespace CnV.Views
 					instance.armyGrid.ResetAutoColumns();
 					if(showHistory) {
 						var tab = HitHistoryTab.instance;
-						tab.SetFilter(sel);
+						tab?.SetFilter(sel);
 						
 					}
 				}
@@ -167,7 +169,7 @@ namespace CnV.Views
 
 		private void ToggleSwitch_Toggled(object sender, RoutedEventArgs e)
 		{
-			instance.refresh.Go();
+			refresh.Go();
 		}
 
 		private void filterFromChanged(object sender,Microsoft.UI.Xaml.Controls.SelectionChangedEventArgs e)

@@ -9,7 +9,7 @@ using CnV;
 
 public sealed partial class AllianceTab:UserTab
 {
-	public static AllianceTab instance;
+	public static AllianceTab? instance;
 
 	NotifyList<Alliance> allianceList = new();
 
@@ -93,8 +93,13 @@ public sealed partial class AllianceTab:UserTab
 		//	}
 	}
 
+	public override async Task Closed()
+		{ 
+			await base.Closed();
+			instance = null;
+		}
 
-	public static bool IsVisible() => instance.isFocused;
+	public static bool IsVisible() =>  instance is not null && instance.isFocused;
 	public static void AlliancesChanged()
 	{
 		if(IsVisible())

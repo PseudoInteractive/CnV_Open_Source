@@ -6,7 +6,6 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
-    xmlns:animatedvisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
 			 xmlns:tkui="using:CommunityToolkit.WinUI.UI"
       xmlns:views="using:CnV.Views"
       x:Name="shellPage"
@@ -176,18 +175,8 @@
 					              Click="SendError"
 					              ToolTipService.ToolTip="Send an error Report"  />
 
-					<AppBarButton Label="Settings"   Click="ShowSettings">
-						<AppBarButton.Icon>
-						<AnimatedIcon x:Name='AnimatedIcon'>
-							<AnimatedIcon.Source>
-								<animatedvisuals:AnimatedSettingsVisualSource/>
-							</AnimatedIcon.Source>
-							<AnimatedIcon.FallbackIconSource>
-								<FontIconSource FontFamily="Segoe MDL2 Assets" Glyph="&#xE713;"/>
-							</AnimatedIcon.FallbackIconSource>
-						</AnimatedIcon>
-						</AppBarButton.Icon>
-					</AppBarButton>
+					<AppBarButton Label="Settings"   Click="ShowSettings" Icon="Setting" />
+
 
 				</CommandBar.PrimaryCommands>
 		<CommandBar.SecondaryCommands>
@@ -271,8 +260,8 @@
 					<RowDefinition Height="3*"  x:Name="rowTabTop"  />
 					<RowDefinition Height="*"/>
 				</Grid.RowDefinitions>
-				<Frame x:Name="rightTabs"   IsNavigationStackEnabled="False" x:FieldModifier="public" />
-				<Frame x:Name="spotTabs"  Grid.Row="1" IsNavigationStackEnabled="False" x:FieldModifier="public" />
+				<views:TabPage x:Name="rightTabs"  x:FieldModifier="public"   />
+				<views:TabPage x:Name="spotTabs"  Grid.Row="1"  x:FieldModifier="public" />
 				<tk:GridSplitter
 				IsTabStop="True"
 				CursorBehavior="ChangeOnSplitterHover"
@@ -300,7 +289,7 @@
 					<ColumnDefinition Width="*"/>
 					<ColumnDefinition Width="100"  x:Name="columnChat"  />
 				</Grid.ColumnDefinitions>
-				<Frame x:Name="chatTabs" x:FieldModifier="public" Grid.Column ="1" Grid.Row="1"  Margin="12,12,16,0" IsNavigationStackEnabled="False"  />
+				<views:TabPage x:Name="chatTabs" x:FieldModifier="public" Grid.Column ="1" Grid.Row="1"  Margin="12,12,16,0"  />
 				<!--Chat Width resizer-->
 				<tk:GridSplitter
                         Background="{x:Null}"
@@ -361,7 +350,10 @@
 				</Expander.Header>
 				<ListView x:Name="InAppNote" x:FieldModifier="public"  Margin="0" Padding="0"
 						  Background="#aa140030"
-                   ItemsSource="{x:Bind inAppNotes,Mode=OneWay}"  MaxHeight="250"  >
+                 MaxHeight="250"  >
+					<ListView.Items>
+						<x:String>"🙃"</x:String>
+					</ListView.Items>
 					<ListView.ItemTemplate>
 						<DataTemplate  x:DataType="x:String"  >
 							<TextBlock  x:Name="message" Text="{x:Bind }"  Margin="1"  Padding="0,0,0,0"    

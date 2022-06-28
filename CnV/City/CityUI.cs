@@ -38,7 +38,7 @@ public static partial class CityUI
 									try
 									{
 										var _build = City.GetBuild();
-										if(!object.ReferenceEquals(_build,CityStats.instance.cityBox.city))
+									//	if(!object.ReferenceEquals(_build,CityStats.instance.cityBox.city))
 										{
 //											var id = City.gridCitySource.IndexOf(_build);
 											CityStats.instance.cityBox.SetCity(_build,false);
@@ -548,52 +548,42 @@ public static partial class CityUI
 		}
 	}
 	
-	public static void DefendMe(this Spot me)
+	public static async void DefendMe(this Spot me)
 	{
 		var cids = GetSelectedForContextMenu(me.cid, false);
 
 		NearDefenseTab.defendants.Set(cids.Select(a => City.Get(a)), true);
 
-		var tab = NearDefenseTab.instance;
-		tab.ShowOrAdd(true);
-		tab.refresh.Go();
+		
+		await UserTab.ShowOrAdd<NearDefenseTab>(true);
+		NearDefenseTab.instance.refresh.Go();
 	}
 
 
-	public static void ShowNearRes(this City me)
+	public static async void ShowNearRes(this City me)
 	{
+		await UserTab.ShowOrAdd<NearRes>(true);
+
 		var tab = NearRes.instance;
 		tab.target = me;
-		if(!tab.isOpen)
-		{
-			tab.ShowOrAdd(true);
-		}
-		else
-		{
-			if(!tab.isFocused)
-				TabPage.Show(tab);
-			else
-				tab.refresh.Go();
-		}
+		tab.refresh.Go();
 	}
-	public static void ShowIncoming(this City me) {
+	public static async void ShowIncoming(this City me) {
 		if(me.isAlliedWithPlayer) {
 
 
-			var tab = IncomingTab.instance;
-			AppS.DispatchOnUIThread(() => tab.Show());
+			await IncomingTab.ShowOrAdd<IncomingTab>();
 
 			AppS.DispatchOnUIThreadIdle(() => {
-				tab.defenderGrid.SetFocus(me);
+				IncomingTab.instance.defenderGrid.SetFocus(me);
 			});
 
 		}
 		else {
-			var tab = OutgoingTab.instance;
-			AppS.DispatchOnUIThread(() => tab.Show());
+			await OutgoingTab.ShowOrAdd<OutgoingTab>();
 			AppS.DispatchOnUIThreadIdle(() =>
 										{
-											tab.attackerGrid.SetFocus(me);
+											OutgoingTab.instance.attackerGrid.SetFocus(me);
 										});
 		}
 	}
@@ -743,12 +733,8 @@ public partial class City
 		switch(e.Column.MappingName)
 		{
 
-			case nameof(cityName):
-			case nameof(icon):
-			case nameof(remarks):
-				wantSelect = false;
-				DoClick();
-				break;
+		
+		
 			case nameof(bStage):
 				DoTheStuff();
 				break;
@@ -783,6 +769,8 @@ public partial class City
 					Raiding.Return(cid, true,fast:false);
 				}
 				break;
+			case nameof(cityName):
+			case nameof(icon):
 			case nameof(nameAndRemarks):
 				// first click selects
 				// second acts as coord click

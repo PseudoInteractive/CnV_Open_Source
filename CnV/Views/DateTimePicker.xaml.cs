@@ -174,6 +174,7 @@ namespace CnV.Views
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}
 
+		internal void ResetRecentTimesComboBox() => recentTimesBox.SelectedItem = null;
 		private void ComboBox_SelectionChanged(object sender, Microsoft.UI.Xaml.Controls.SelectionChangedEventArgs e)
 		{
 			if (recentTimesBox.SelectedItem != null )

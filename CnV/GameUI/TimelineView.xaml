@@ -29,7 +29,7 @@
 			</Border>
 		</DataTemplate>
 	</UserControl.Resources>
-	<Grid>
+	<Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
 		<Grid.RowDefinitions>
 			<RowDefinition Height="auto" />
 			<RowDefinition Height="*" />
@@ -50,6 +50,8 @@
 						 FontFamily="{StaticResource CnvIcons}"
 						 FontStretch="Condensed"
 						 ViewType="Month"
+						 VerticalAlignment="Stretch"
+						 HorizontalAlignment="Stretch"
 						 
 						 ResourceGroupType="None"
 						DisplayDate="{x:Bind initialDisplayDate,Mode=OneTime}"
@@ -65,7 +67,7 @@
 				<sfs:DragDropSettings TimeIndicatorFormat = "HH:mm:ss" />
 			</sfs:SfScheduler.DragDropSettings>
 			<sfs:SfScheduler.TimelineViewSettings>
-				<sfs:TimelineViewSettings TimeRulerFormat="HH:mm" RowMinHeight="64"  AppointmentTemplate="{StaticResource agendaTemplate}" />
+				<sfs:TimelineViewSettings TimeRulerFormat="HH:mm" RowMinHeight="64"   AppointmentTemplate="{StaticResource agendaTemplate}" />
 			</sfs:SfScheduler.TimelineViewSettings>
 			<sfs:SfScheduler.DaysViewSettings>
 				<sfs:DaysViewSettings TimeRulerFormat="HH:mm"  AppointmentTemplate="{StaticResource agendaTemplate}"  />

@@ -24,7 +24,7 @@ namespace CnV.Views
 		//    Assert(rv != null);
 		//    return rv;
 		//}
-		public static SfDataGrid CityGrid => instance.cityGrid;
+		public static SfDataGrid CityGrid => instance?.cityGrid;
 		//  static MenuFlyout cityMenuFlyout;
 		public BuildTab()
 		{
@@ -323,9 +323,15 @@ namespace CnV.Views
 		//} // The tab was dragged somewhere else
 
 
-		public static bool IsVisible() => instance.isFocused;
+		public static bool IsVisible() =>  instance is not null && instance.isFocused;
 
 	
+		public override async Task Closed()
+		{ 
+			await base.Closed();
+			instance = null;
+		}
+
 
 		private void SelectAll(object sender,RoutedEventArgs e)
 		{

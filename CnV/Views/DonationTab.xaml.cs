@@ -13,7 +13,7 @@ using Syncfusion.UI.Xaml.Grids;
 
 public sealed partial class DonationTab : UserTab
 {
-	public static DonationTab instance;
+	public static DonationTab? instance;
 
 	//public ObservableCollection<DonationOrder> donationOrders = new();
 	//public static bool wantTempleDonations;
@@ -23,10 +23,10 @@ public sealed partial class DonationTab : UserTab
 	//public string[] priorityNames = { "Do Not Send","NA", "Low", "Medium", "High"  };
 	ObservableCollection<City> donationGridSource = new();
 
-	public static bool ViaWater { get => viaWater; set {
+	 internal static bool ViaWater { get => viaWater; set {
 		if(viaWater == value) return;
 			viaWater=value;
-			DonationTab.instance.refresh.Go();
+			DonationTab.instance?.refresh.Go();
 		} }
 
 	public DonationTab()
@@ -48,10 +48,11 @@ public sealed partial class DonationTab : UserTab
 				var l = City.gridCitySource.Where((city) => (ViaWater ? city.shipsHome > Settings.tradeSendReserveShips :
 				city.cartsHome > Settings.tradeSendReserveCarts))
 					.OrderBy(a => a.cont).ThenByDescending(a => (!ViaWater ? a.cartsHome * 1000 : a.shipsHome*10_000).Min(a.sampleResources.sum)).ToArray();
+				if(instance is not null) {
+					if(l.SyncList(instance.donationGridSource)) {
+						instance.donationGrid.ResetAutoColumns();
 
-				if(l.SyncList(instance.donationGridSource)) {
-					instance.donationGrid.ResetAutoColumns();
-
+					}
 				}
 			});
 
@@ -59,7 +60,7 @@ public sealed partial class DonationTab : UserTab
 		}
 	}
 
-	public static bool IsVisible() => instance.isFocused;
+	public static bool IsVisible() => instance is not null && instance.isFocused;
 
 	// List<BlessedCity> blessedGridSource = new List<BlessedCity>();
 	public async override Task VisibilityChanged(bool visible, bool longTerm)

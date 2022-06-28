@@ -27,7 +27,7 @@ namespace CnV.Views
 		//    Assert(rv != null);
 		//    return rv;
 		//}
-		public static SfDataGrid CityGrid => instance.cityGrid;
+		public static SfDataGrid CityGrid => instance?.cityGrid;
     
       //  static MenuFlyout cityMenuFlyout;
         public MainPage()
@@ -41,7 +41,12 @@ namespace CnV.Views
 
 
 		}
-
+		public override async Task Closed()
+		{ 
+			await base.Closed();
+			DungeonView.Destroy();
+			instance = null;
+		}
 	
 
 		
@@ -395,8 +400,7 @@ namespace CnV.Views
         //} // The tab was dragged somewhere else
 
 
-        public static bool IsVisible() => instance.isFocused;
-
+        public static bool IsVisible() =>  instance is not null && instance.isFocused;
 		static string[] raidingTips =
 		{
 			//nameof(instance.TipRaiding101),

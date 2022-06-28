@@ -41,7 +41,7 @@ namespace CnV.Views
 				return;
 			AppS.QueueOnUIThread( instance.UpdateDataGrid );
 		}
-        public static NPCHistory instance;
+        public static NPCHistory? instance;
       
         //        public static Army showingRowDetails;
 
@@ -72,10 +72,14 @@ namespace CnV.Views
         }
 
 
-
+		public override async Task Closed()
+		{ 
+			await base.Closed();
+			instance = null;
+		}
 
       
-        public static bool IsVisible() => instance.isFocused;
+        public static bool IsVisible() =>  instance is not null && instance.isFocused;
 
 		private void filterFromChanged(object sender,Microsoft.UI.Xaml.Controls.SelectionChangedEventArgs e)
 		{

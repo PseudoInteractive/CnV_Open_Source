@@ -13,9 +13,9 @@ namespace CnV.Views
     {
 		public override TabPage defaultPage => TabPage.secondaryTabs;
 
-		public NotifyCollection<Spot> spotMRU { get; } = new NotifyCollection<Spot>();
+		public static NotifyCollection<Spot> spotMRU { get; } = new NotifyCollection<Spot>();
 
-        public static NotifyCollection<Spot> SpotMRU => instance.spotMRU;
+        public static NotifyCollection<Spot> SpotMRU => spotMRU;
         public static int disableSelection;
 	    public static SpotTab instance;
         public SpotTab()
@@ -29,7 +29,7 @@ namespace CnV.Views
 			//			selectedGrid.ProcessTooltips();
 			//			spotGrids.Add(selectedGrid);
 		}
-        public static bool IsVisible() => instance.isFocused;
+        public static bool IsVisible() =>  instance is not null && instance.isFocused;
 
         public static int silenceSelectionChanges;
 
@@ -210,7 +210,11 @@ namespace CnV.Views
 				Spot.GetOrAdd(cid).SetPinned(pinned);
 			}
 		}
-
+		public override async Task Closed()
+		{ 
+			await base.Closed();
+			instance = null;
+		}
 	
 		//      public static void ToggleSelected(Spot rv)
 		//      {

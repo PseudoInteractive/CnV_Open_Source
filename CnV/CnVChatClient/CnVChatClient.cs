@@ -125,22 +125,21 @@ namespace CnVDiscord
 
 						var channels = await connection.JoinAsync(new() { playerId=me.pid,world=Sim.worldId,alliance=me.allianceId,allianceTitle=me.allianceTitle }); // Todo store role somewhere
 						Log("Got Channels " + channels.Length);
-						AppS.DispatchOnUIThread(async () =>
+						
+							await ChatTab.RemoveChatTabs();
+						foreach(var channel in channels)
 						{
-							ChatTab.RemoveChatTabs();
-							foreach(var channel in channels)
-							{
-								if(connection is null)
-									break;
-								Log(channel);
-								var c = CnVJsonMessagePackDiscordChannel.Get(channel);
-								ChatTab.CreateChatTab(c);
-								await connection.ConnectChannelAsync(new()
-								{ channelId = c.Id,lastRecieved = 0 }); // todo:  Lastrecieved
+							if(connection is null)
+								break;
+							Log(channel);
+							var c = CnVJsonMessagePackDiscordChannel.Get(channel);
+							await ChatTab.CreateChatTab(c).ConfigureAwait(false);
+							await connection.ConnectChannelAsync(new()
+							{ channelId = c.Id,lastRecieved = 0 }).ConfigureAwait(false); // todo:  Lastrecieved
 
 
-							}
-						});
+						}
+						
 						Note.Show($"Connected to Chat ({channels.Length} channels)");
 						initialized=true;
 						isBusy = false;

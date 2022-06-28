@@ -61,19 +61,20 @@ public static partial class ADataGrid
 		}
 	}
 	internal static void ResetAutoColumns(this xDataGrid grid) {
-		
-		Task.Delay(1000).ContinueWith((_) =>
-			AppS.QueueOnUIThreadIdle(() => {
+
+		//Task.Delay(1000).ContinueWith((_) =>
+		Debounce.Q(runOnUIThread: true, debounceT:350, action: () => {
 			if(grid.ItemsSource is null)
 				return;
 			if(!grid.IsLoaded)
 				return;
-				grid.ColumnSizer.ResetAutoCalculationforAllColumns();
-				grid.ColumnSizer.Refresh();
+			grid.ColumnSizer.ResetAutoCalculationforAllColumns();
+			grid.ColumnSizer.Refresh();
+		//	Note.Show("Reset Columns");
 
-			})
-			);
-		}
+		});//)
+			//);
+	}
 
 	public static ChangeContextDisposable ChangeContext(this xDataGrid grid) => new ChangeContextDisposable(grid);
 
@@ -115,7 +116,7 @@ public static partial class ADataGrid
 				HeaderText = headerText,
 				IsReadOnly = true,
 				ColumnWidthMode=ColumnWidthMode.SizeToCells,
-				MappingName = nameof(City.cityName)
+				MappingName = nameof(City.nameAndRemarks)
 			});
 			if(wantRemarks)
 				grid.Columns.Add(new GridTextColumn()

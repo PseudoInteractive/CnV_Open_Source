@@ -89,6 +89,7 @@ namespace CnV
 				return rv;
 			}
 		}
+		internal void ResetRecentTimesComboBox() => recentTimesCombo.SelectedItem = null;
 
 		private void RecentChanged(object sender,SelectionChangedEventArgs e)
 		{

@@ -1074,7 +1074,7 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 		private void CityBox_SelectionChanged(object sender,Spot e) {
 
 			var sel = e;
-			if(sel != null && sel.cid != City.build && e.CanVisit() ) {
+			if(sel.IsValid() && sel.cid != City.build && e.CanVisit() ) {
 				City.ProcessCoordClick(sel.cid,false,AppS.keyModifiers);
 			}
 		}

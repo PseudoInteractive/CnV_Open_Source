@@ -72,7 +72,7 @@ namespace CnV
 
 		private async void ShowClick(object sender,RoutedEventArgs e) {
 		
-			NPCHistory.instance.ShowOrAdd();
+			await UserTab.ShowOrAdd<NPCHistory>();
 
 			NPCHistory.instance.grid.SetFocus(report);
 			Hide(true);

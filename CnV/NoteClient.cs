@@ -68,10 +68,15 @@ namespace CnV
 		//	static Priority currentPriority;
 		//	static DateTime nextInAppNote = new DateTime(0);
 		//static MarkdownTextBlock markDownText;
-		static int lastAddedNote;
-		static void UpdateNoteUI() {
-			ShellPage.instance.inAppNotes.OnAdded(lastAddedNote);
-			lastAddedNote = ShellPage.instance.inAppNotes.Count;
+		//static int lastAddedNote;
+		static void UpdateNoteUI(string s) {
+			if(ShellPage.instance.InAppNote.Items.Count > 64) {
+				ShellPage.instance.InAppNote.Items.RemoveAt(0);
+			}
+			ShellPage.instance.InAppNote.Items.Add(s);
+			
+//			lastAddedNote = ShellPage.instance.inAppNotes.Count;
+			
 		}
 	//	static CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 		internal static void Show(string s, Debug.Priority priority=Debug.Priority.medium, bool useInfoBar = false, int timeout = 5000, bool showDebugOutput=true, bool showNote=true)
@@ -157,8 +162,8 @@ namespace CnV
 								//}
 								//var textNull = ShellPage.instance.noteText.Length == 0;
 								// update on screen
-								ShellPage.instance.inAppNotes.Add( $"{Sim.simTime.Format(new() { wantDate=Sim.isWarmup })}  {s}");
-								AppS.QueueOnUIThreadIdle(UpdateNoteUI);
+								var str =  $"{Sim.simTime.Format(new() { wantDate=Sim.isWarmup })}  {s}";
+								AppS.QueueOnUIThreadIdle(()=>UpdateNoteUI(str));
 								//ShellPage.instance.inAppNotes.CollectionChanged();
 								//AppS.QueueOnUIThreadIdle( () =>
 								//{

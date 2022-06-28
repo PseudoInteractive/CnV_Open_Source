@@ -18,7 +18,7 @@ namespace CnV.Views
 		}
 
 		public static Spot lastSelected;
-		public static IncomingTab instance;
+		public static IncomingTab? instance;
 
 		internal ObservableCollection<City> citiesWithIncoming = new();
 		internal ObservableCollection<Army> armiesIncoming = new();
@@ -161,7 +161,7 @@ namespace CnV.Views
 
 			//					lastSelected = sel;
 
-			if(!Sim.isPastWarmup)
+			if(!Sim.isPastWarmup && PlayerStats.instance is not null)
 				return;
 
 				AppS.QueueOnUIThreadIdle(() => {
@@ -170,12 +170,7 @@ namespace CnV.Views
 					if(IncomingTab.IsVisible()) {
 						try {
 							var includeInternal = instance.includeInternal;
-							var _targets = instance.filterTo switch {
-								Alliance.CityFilter.me => City.myCities,
-								Alliance.CityFilter.subs => City.subCities,
-								Alliance.CityFilter.alliance => City.allianceCities,
-								_ => City.alliedCities,
-							};
+							var _targets = instance.filterTo.GetCityList();
 
 							var newItems = _targets.Where(w => w.testContinentFilter
 															&& w.HasIncomingAttacks(includeInternal)
@@ -222,7 +217,7 @@ namespace CnV.Views
 			return base.VisibilityChanged(visible,longTerm: longTerm);
 
 		}
-		public static bool IsVisible() => instance.isFocused;
+		public static bool IsVisible() =>  instance is not null && instance.isFocused;
 
 
 
@@ -242,13 +237,13 @@ namespace CnV.Views
 				lastSelected = sel;
 				if(sel != null) {
 					var visibilityTime = Sim.simTime + sel.scoutRange;
-					var items=  sel.incoming.Where(a => a.isDefense || (a.arrival <= visibilityTime && a.departed) ).OrderBy(a=> a.isDefense ? 0 : 1).ThenBy(a => a.arrival).ToArray();
+					var items=  sel.incoming.Where(a => a.isDefense || (a.arrival <= visibilityTime && a.departed) ).OrderBy(a => a.arrival).ThenBy(a=> a.isDefense ? 0 : 1).ToArray();
 					items.SyncList(armiesIncoming);
 					armyGrid.ResetAutoColumns();
 					if(updatehistoryTab) {
 						var tab = HitHistoryTab.instance;
-						tab.SetFilter(sel);
-
+						tab?.SetFilter(sel);
+						
 						
 					}
 				}
@@ -259,7 +254,7 @@ namespace CnV.Views
 		}
 
 		private void filterChanged(object sender,RoutedEventArgs e) {
-			instance.refresh.Go();
+			refresh.Go();
 		}
 
 		private void ExportSheetsClick(object sender,RoutedEventArgs e) {

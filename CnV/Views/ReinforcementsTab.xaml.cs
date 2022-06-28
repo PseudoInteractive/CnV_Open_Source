@@ -19,20 +19,27 @@ namespace CnV.Views
 	using Services;
 	using Syncfusion.UI.Xaml.DataGrid;
 	using Syncfusion.UI.Xaml.Grids;
-
+using static CnV.Alliance;
 
 	public sealed partial class ReinforcementsTab : UserTab
 	{
-		public static bool IsVisible() => instance is var f  && f.isFocused == true;
+		public static bool IsVisible() =>  instance is not null && instance.isFocused;
 		
 		public override TabPage                defaultPage => TabPage.secondaryTabs;
-		public          string                 reinInTitle;
-		public          string                 reinOutTitle;
+		public          string                 reinInTitle = string.Empty;
 //		public          NotifyCollection<City> citiesOut = new();
-		public          NotifyCollection<City> citiesIn  = new();
-		public static   ReinforcementsTab      instance;
-		public          int                    targetCid;
-
+		public          ObservableCollection<City> cities  = new();
+		public static   ReinforcementsTab?      instance;
+		internal bool wantIncoming;
+		Alliance.CityFilter filter = Alliance.CityFilter.allied;
+		internal int _filter {
+			get => (int)filter;
+			set { if(filter != (Alliance.CityFilter)value) {
+					filter = (Alliance.CityFilter)value;
+					AppS.QueueOnUIThread(Update);
+				}
+			}
+		}
 		public ReinforcementsTab()
 		{
 			instance = this;
@@ -53,7 +60,7 @@ namespace CnV.Views
 			if (visible)
 			{
 				//	await CityBuild._IsPlanner(true,false);
-				await Update();
+				AppS.QueueOnUIThread(Update);
 
 				//	BuildingsChanged(City.GetBuild(),false);
 			}
@@ -120,42 +127,39 @@ namespace CnV.Views
 
 		}
 
-		public async Task Update()
+		public void Update()
 		{
-			citiesIn.Clear();
-//			citiesOut.Clear();
-		//	var refreshTask = NotifyCollectionBase.ProcessAllCollectionChangesNow();
-			var _cid = targetCid;
-			var showAll = _cid == 0;
-			using var work = new WorkScope("Checking reinforcements..");
+			bool invalidate = true;
+			//			citiesOut.Clear();
+			//	var refreshTask = NotifyCollectionBase.ProcessAllCollectionChangesNow();
+			var spot = City.invalid;// cityFilter.city;
+		
 			//await ReinforcementsOverview.instance.Post();
 //			await refreshTask;
 			
-			var _spot = _cid == 0 ? null : Spot.GetOrAdd(_cid);
-
 			var tab = this;
 
-			var spots = !showAll ? new[] { _spot } : City.subCities;
+			var spots = spot.isValid? new[] {spot} : filter.GetCityList();
+;
 
 			//		var orders = new List<Reinforcement>();
 
-			if (showAll)
-			{
-				tab.reinInTitle = "All Reinforcements";
-				tab.reinOutTitle = "All Outgoing Reinforcements";
-			}
-			else
-			{
-
-				tab.reinInTitle = "Reinforcements";
-				tab.reinOutTitle = "Outgoing Reinforcements";
-			}
-
+				tab.reinInTitle = spot.isValid ? $"{spot} reinforcements" : "Reinforcements";
+	
 			//tab. panel.Children.Add(new TextBlock() { Text = showAll ? "All Incoming Reinforcements" : "Reinforcements Here:" });
 			{
-				var targets = spots.SelectMany(s => s.reinforcementsOut).Select(s => s.targetCity).Distinct();
-				tab.citiesIn.Set(spots.Where(s => s.reinforcementsIn.AnyNullable()).Concat(targets).Distinct().ToArray().OrderByDescending(s => s.reinforcementSortScore)
-					.ToArray(), true, true,skipHashCheck:true);
+				spots = spots.Where(c => c.reinforcementsMap.Any()).ToArray();
+				if(invalidate) {
+					tab.cities.Clear();
+					foreach(var s in spots) {
+						s.OnPropertyChanged();
+					}
+				}
+				//var targets = spot.isValid ? spots : (wantIncoming.IsOn ?
+				//	spots.SelectMany(c => c.reinforcementsIn).Select(s => s.sourceCity) : 
+				//	spots.SelectMany(c => c.reinforcementsOut).Select(s => s.sourceCity))   .Distinct();
+				spots.SyncList(tab.cities); //.SyncList .Set(spots.Where(s => s.reinforcementsIn.AnyNullable()).Concat(targets).Distinct().ToArray().OrderByDescending(s => s.reinforcementSortScore)
+				//	.ToArray(), true, true,skipHashCheck:true);
 			}
 			//{
 			//	tab.citiesOut.Set(
@@ -166,7 +170,7 @@ namespace CnV.Views
 			//}
 			
 
-			tab.OnPropertyChanged();
+		//	tab.OnPropertyChanged();
 			
 			//var memStream = new MemoryStream();
 			//reinIn.Serialize(memStream, new() { });
@@ -183,14 +187,15 @@ namespace CnV.Views
 
 		}
 
-		public static async void ShowReinforcements(int _cid, UIElement uie)
+		public static async  void ShowReinforcements(int _cid, UIElement uie)
 		{
 			try
 			{
+				await ShowOrAdd<ReinforcementsTab>();
 				var tab = ReinforcementsTab.instance;
-				tab.targetCid = _cid;
-				await tab.Update();
-
+				//	tab.cityFilter.SetCity(_cid.AsCity() );
+				tab.Update();
+				
 				//}
 				//	var result = await msg.ShowAsync2(uie);
 				//	if(result == ContentDialogResult.Primary)
@@ -218,7 +223,6 @@ namespace CnV.Views
 
 				//	}
 
-				tab.ShowOrAdd(true, false);
 
 			}
 			catch(Exception __ex)
@@ -228,5 +232,28 @@ namespace CnV.Views
 
 
 		}
+
+		public override async Task Closed()
+		{ 
+			await base.Closed();
+			instance = null;
+		}
+   //     private void DetailsViewExpanding(object sender,GridDetailsViewExpandingEventArgs e) {
+			//var city = e.Record as City;
+			// e.DetailsViewItemsSource.Clear();
+			// e.DetailsViewItemsSource.Add( "reinforcementsMap", 	new ObservableCollection<Army>(instance.wantIncoming.IsOn ? city.reinforcementsIn : city.reinforcementsOut ));
+		
+   //     }
+
+
+		private void ToggleSwitch_Toggled(object sender,RoutedEventArgs e) {
+			// invalidate all cities
+
+			AppS.QueueOnUIThread(Update);
+		}
+
+		//private void reinIn_DetailsViewCollapsing(object sender,GridDetailsViewCollapsingEventArgs e) {
+
+		//}
 	}
 }

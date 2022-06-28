@@ -10,7 +10,7 @@ using CnV;
 public sealed partial class PlayerTab:UserTab
 {
 	private const string workStr = "Refreshing build states..";
-	public static PlayerTab instance;
+	public static PlayerTab? instance;
 
 	NotifyList<Player> playerList = new();
 
@@ -96,8 +96,13 @@ public sealed partial class PlayerTab:UserTab
 	}
 
 
-	public static bool IsVisible() => instance.isFocused;
+	public static bool IsVisible() =>  instance is not null && instance.isFocused;
 
+	public override async Task Closed()
+		{ 
+			await base.Closed();
+			instance = null;
+		}
 	private void OnLoaded(object sender,RoutedEventArgs e)
 	{
 		base.SetupDataGrid(playerGrid);

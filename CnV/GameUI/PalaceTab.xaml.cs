@@ -91,7 +91,7 @@ public sealed partial class PalaceTab:UserTab
 	}
 
 
-	public static bool IsVisible() => instance.isFocused;
+	public static bool IsVisible() => instance is not null && instance.isFocused;
 
 	private void OnLoaded(object sender,RoutedEventArgs e)
 	{

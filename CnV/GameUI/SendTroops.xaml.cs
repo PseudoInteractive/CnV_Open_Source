@@ -167,6 +167,8 @@ namespace CnV
 				}
 
 				var rv = instance ?? new SendTroops();
+				rv.arrivalUI.ResetRecentTimesComboBox();
+
 				rv.prior = prior;
 				rv.armyTypeCombo.Visibility = Visibility.Collapsed;
 				if((type == ArmyType.defense && !isSettle)||((prior is not null&&prior.isDefense))) {

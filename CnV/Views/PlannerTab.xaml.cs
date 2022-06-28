@@ -24,8 +24,8 @@ namespace CnV.Views
 
 	public sealed partial class PlannerTab : UserTab
 	{
-		public static PlannerTab instance;
-		public static bool IsVisible() => instance.isFocused;
+		public static PlannerTab? instance;
+		public static bool IsVisible() =>  instance is not null && instance.isFocused;
 		internal static ulong lastSavedLayout;
 
 		public  override async Task VisibilityChanged(bool visible, bool longTerm)
@@ -572,14 +572,14 @@ namespace CnV.Views
 
 		private void Done(object sender, RoutedEventArgs e)
 		{
-			PlannerTab.instance.Close();
+			Close();
 		}
 
-		public override void Close()
+		public override async Task Closed()
 		{ 
-			base.Close();
-			CityBuild._IsPlanner(false);
-
+			await CityBuild._IsPlanner(false);
+			await base.Closed();
+			instance = null;
 		}
 
 		private void RotateCenterClick(object sender, RoutedEventArgs e)

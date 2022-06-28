@@ -563,7 +563,7 @@ internal partial class GameClient
 			//}
 			var isWinter = Settings.IsThemeWinter();
 			//				var attacksVisible = DefenseHistoryTab.IsVisible() | OutgoingTab.IsVisible() | IncomingTab.IsVisible() | HitTab.IsVisible() | AttackTab.IsVisible();
-			var attacksVisible = OutgoingTab.IsVisible() | IncomingTab.IsVisible() | AttackTab.IsVisible();
+		//	var attacksVisible = OutgoingTab.IsVisible() | IncomingTab.IsVisible() | AttackTab.IsVisible();
 
 
 
@@ -625,7 +625,7 @@ internal partial class GameClient
 
 
 
-			var rgb = attacksVisible ? 255 : 255;
+			var rgb = 255;
 			var tint = new Color(rgb,rgb,rgb,intAlpha);
 			var tintShadow = new Color(0,0,16,intAlpha * 3 / 4);
 			//	var tintAlpha = (byte)(alpha * 255.0f).RoundToInt();
@@ -896,8 +896,8 @@ internal partial class GameClient
 
 					cityVisitorCounts.Clear();
 
-					var incomingVisible = IncomingTab.IsVisible() || ReinforcementsTab.IsVisible() || NearDefenseTab.IsVisible() || Settings.incomingAlwaysVisible;
-					var outgoingVisible = AttackTab.IsVisible() || OutgoingTab.IsVisible() || Settings.attacksAlwaysVisible;
+					var incomingVisible = Settings.incomingAlwaysVisible != false;
+					var outgoingVisible = Settings.attacksAlwaysVisible != false;
 					{
 
 						if(AttackTab.IsVisible()) {
@@ -1007,8 +1007,8 @@ internal partial class GameClient
 								}
 								var raidsVisble = Settings.raidVisible != false;
 								var list = City.alliedCities; //defenders ? Spot.defendersI : Spot.defendersO;
-								bool noneIsAll = list.Length <= Settings.showAttacksLimit;
-								bool showAll = list.Length <= Settings.showAttacksLimit0 ||(isIncoming ? Settings.incomingAlwaysVisible : Settings.attacksAlwaysVisible);
+								//bool noneIsAll = list.Length <= Settings.showAttacksLimit;
+								bool showAll =(isIncoming ? Settings.incomingAlwaysVisible==true : Settings.attacksAlwaysVisible==true);
 								foreach(var city in list) {
 									if(!city.testContinentFilter)
 										continue;

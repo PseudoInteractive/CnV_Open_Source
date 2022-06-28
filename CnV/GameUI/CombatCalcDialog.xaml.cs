@@ -109,7 +109,7 @@ namespace CnV
 				defenders[i].count =0;
 				
 			}
-			foreach(var tt in c.troopsOwned) {
+			foreach(var tt in c.troopsHerePlusIncoming) {
 				defenders[tt.t].count = tt.c;
 			}
 			var towers = c.postSlots;

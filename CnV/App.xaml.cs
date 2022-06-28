@@ -435,7 +435,7 @@ namespace CnV
 					//	Windows.UI.ViewManagement.ApplicationView.PreferredLaunchWindowingMode =Windows.UI.ViewManagement.ApplicationViewWindowingMode.Maximized;// new Size(bounds.Width, bounds.Height);
 					//				Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TryEnterViewModeAsync(Windows.UI.ViewManagement.ApplicationViewMode.CompactOverlay);
 
-					FocusVisualKind = FocusVisualKind.Reveal;
+				//	FocusVisualKind = FocusVisualKind.Reveal;
 
 					window = new();
 					AppS.globalQueue = window.DispatcherQueue;

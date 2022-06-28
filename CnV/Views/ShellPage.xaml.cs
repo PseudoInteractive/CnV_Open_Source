@@ -109,7 +109,7 @@ namespace CnV.Views
 
 		}
 		internal void TimeScaleChangeNotify() {
-			Debounce.Q(250,runOnUIThread: true,action: () => {
+			Debounce.Q(runOnUIThread: true,action: () => {
 
 
 
@@ -469,7 +469,7 @@ namespace CnV.Views
 
 				// Links will not work until after the game is set up
 				try {
-					if(SystemInformation.Instance==null || SystemInformation.Instance.IsAppUpdated ) {
+					if(SystemInformation.Instance==null || SystemInformation.Instance.IsAppUpdated) {
 						AppS.DispatchOnUIThread(Settings.ShowWhatsNew);
 					}
 
@@ -507,7 +507,7 @@ namespace CnV.Views
 						if(Player.me.gender == Gender.na) {
 							var rv = await AppS.DoYesNoBox("Gender","Which would you like to be?","Female","Male","Nonbinary");
 							Player.me.gender = rv switch { 0 => Gender.male, 1 => Gender.female, _ => Gender.both };
-							await (new PlayerGameEntity(Player.me.pid) {  sex=(int)Player.me.gender}).UpsertAsync();
+							await (new PlayerGameEntity(Player.me.pid) { sex=(int)Player.me.gender }).UpsertAsync();
 						}
 
 						var okay3 = await APlayFab.Init();
@@ -535,19 +535,19 @@ namespace CnV.Views
 
 				}
 				if(AppS.appAlreadyRunning) {
-					var a = await AppS.DoYesNoBox(title:"Conquest and Virtue is already running",text:"Please close all game windows, of if you see none, restart computer",
+					var a = await AppS.DoYesNoBox(title: "Conquest and Virtue is already running",text: "Please close all game windows, of if you see none, restart computer",
 								yes: "Exit",
-								no: "Closed Others"							
+								no: "Closed Others"
 
 								);
-								if(a != 0) {
-									Application.Current.Exit();
-									await Task.Delay(-1).ConfigureAwait(false);
-								}
-						
-						
-						
+					if(a != 0) {
+						Application.Current.Exit();
+						await Task.Delay(-1).ConfigureAwait(false);
 					}
+
+
+
+				}
 
 				WorkUpdate("Init");
 				await Task.Run(CnVClient.InitializeGame);
@@ -567,8 +567,8 @@ namespace CnV.Views
 
 				IncomingTab.UpdateIncomingStatus();
 				PlayerStats.instance.UpdateOutgoingText();
-				
-				KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F5,Refresh )  );
+
+				KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F5,Refresh));
 				KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Left,NavStack.BackInvoked,
 																VirtualKeyModifiers.Menu));
 				KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F1,(_,m) => { m.Handled=true; ErrorReport(); },
@@ -607,8 +607,10 @@ namespace CnV.Views
 				KeyboardAccelerators.Add(BuildKeyboardAccelerator(key: VirtualKey.F12,modifiers:
 																VirtualKeyModifiers.Control|VirtualKeyModifiers.Menu,OnKeyboardAcceleratorInvoked: (_,a) => {
 																	a.Handled=true;
-																	if(AppS.isTest)
-																		ArtifactDialogue.ShowInstance(Artifact.GetForPlayerRank(Artifact.ArtifactType.karma),free:true );
+																	if(AppS.isTest) {
+																		AppS.allIntel ^= true;
+																		Trace(AppS.allIntel.ToString());
+																	}
 																}));
 				KeyboardAccelerators.Add(BuildKeyboardAccelerator(key: VirtualKey.F12,modifiers:
 																VirtualKeyModifiers.Shift|VirtualKeyModifiers.Menu,OnKeyboardAcceleratorInvoked: (_,a) => {
@@ -979,9 +981,10 @@ namespace CnV.Views
 				NotifyCollectionBase.ResetAll(true);
 				CityUI.Refresh();
 				RefreshTabs.Go();
+				Note.Show($"Refresh all");
 				await AppS.QueueOnUIThreadTask(() => {
-					foreach(var city in City.allSpots) {
-						city.Value.CallPropertyChanged();
+					foreach(var city in City.allCities) {
+						city.CallPropertyChanged();
 					}
 				});
 					

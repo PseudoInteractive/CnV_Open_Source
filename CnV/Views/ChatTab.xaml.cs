@@ -178,28 +178,32 @@ namespace CnV.Views
 			return base.VisibilityChanged(visible,longTerm: longTerm);
 		}
 
-		internal static bool CreateChatTab(DiscordChannel channel)
+		internal static Task CreateChatTab(DiscordChannel channel)
 		{
 			//		Trace($"Create {channel.Id}");
 			var existing = all.FirstOrDefault(a => a.discordChannel?.Id == channel?.Id);
 			if(existing != null)
 			{
 			//	existing.items.Clear(); // reset and re fetch
-				return false;
+				return Task.CompletedTask;
 			}
-			var tab = new ChatTab() { discordChannel = channel,Tag = channel.Name,defaultPostType = ChatEntry.GetDefaultPostType(channel.Name) };
-			all = all.Add(tab);
-			tab.ShowOrAdd();
-			return true;
+			return AppS.DispatchOnUIThreadTask(() => {
+				var tab = new ChatTab() { discordChannel = channel,Tag = channel.Name,defaultPostType = ChatEntry.GetDefaultPostType(channel.Name) };
+				all = all.Add(tab);
+				return ShowOrAdd<ChatTab>(tab: tab).ConfigureAwait(false);
+			}
+			  );
 		}
-		internal static void RemoveChatTabs()
+		internal static Task RemoveChatTabs()
 		{
-			while(all.Length > 0)
-			{
-				var tab = all[0];
-				all = all.RemoveAt(0);
-				tab.Close();
-			}
+			return AppS.DispatchOnUIThreadTask( async () => {
+				while(all.Length > 0) {
+					var tab = all[0];
+					all = all.RemoveAt(0);
+					await tab.Close();
+				}
+			});
+
 		}
 
 
@@ -218,10 +222,10 @@ namespace CnV.Views
 			try
 			{
 
-				if(!isOpen)
-				{
-					ShowOrAdd(true,false);
-				}
+				//if(!isOpen)
+				//{
+				//	ShowOrAdd<ChatTab>(true,false,tab:this);
+				//}
 				var at = entry.time;
 				//var activeGroup = Groups.Count > 0 ? Groups.Last() : null;
 				//var lastHour = activeGroup == null ? -99 : activeGroup.time.Hour;

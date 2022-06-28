@@ -24,7 +24,8 @@
         <sf:SfDataGrid Grid.Row="1" x:Name="attackerGrid"
 						x:FieldModifier="public"
                         AutoGenerateColumns="False"
-						
+						IsReadOnly="True"
+					   FrozenColumnCount="2"
 						Loaded="DataGridLoaded"
                         FontSize="{StaticResource SmallFontSize}"
                         RowHeight="{StaticResource MediumGridRowHeight}"
@@ -40,7 +41,9 @@
                                         HeaderText="I"
                                         Width="32"
                                          />
-                <sf:GridTextColumn MappingName="Claim"
+				<sf:GridNumericColumn MappingName="uiClaim"
+									  HeaderText="Claim"
+									    DisplayNumberFormat="P0"
                                             
                                        
                                        TextAlignment="Center"
@@ -70,10 +73,7 @@
                                        
                                         />
                 
-                <sf:GridTextColumn MappingName="cityName"
-                                       
-                                       TextAlignment="Left"
-                                        IsHidden="True" />
+                
 				<sf:GridTextColumn     MappingName="allianceName"
 									   HeaderText="Alliance"
                                        
@@ -86,20 +86,23 @@
                                             TextAlignment="Center"
                                             
                                              />
+				<sf:GridTextColumn MappingName="nameAndRemarks"
+                                       
+                                       TextAlignment="Left" />
 
             </sf:SfDataGrid.Columns>
         </sf:SfDataGrid>
         <sf:SfDataGrid x:Name="armyGrid"
                                     ItemsSource="{x:Bind targetIncoming, Mode=OneWay}"
 									
-                                    Grid.Row="2"
+                                    Grid.Row="3"
                                     FontSize="{StaticResource SmallFontSize}"
                                     HorizontalAlignment="Stretch"
                                     RowHeight="{StaticResource MediumGridRowHeight}"
                                     
-                       
+                       IsReadOnly="True"
                                     
-                                    
+                                    FrozenColumnCount="2"
                                     AutoGenerateColumns="False">
             <sf:SfDataGrid.Columns>
                 <sf:GridTimeColumn MappingName="T"

@@ -15,7 +15,7 @@ namespace CnV.Views
 
 	public sealed partial class NearRes : UserTab
 	{
-		public static NearRes instance;
+		public static NearRes? instance;
 		public static bool IsVisible() => instance is not null && instance.isFocused;
 		bool _viaWater;
 		public bool viaWater { get =>_viaWater;
@@ -426,8 +426,11 @@ namespace CnV.Views
 		}
 		Debounce DebouceItemChanged = new (async ()=>
 		{
-			await instance.DoRefresh();
-			supporters.NotifyReset();
+			if(instance is not null) {
+
+				await instance.DoRefresh();
+				supporters.NotifyReset();
+			}
 		});
 
 		private async void ItemValueChanged(Microsoft.UI.Xaml.Controls.NumberBox sender, Microsoft.UI.Xaml.Controls.NumberBoxValueChangedEventArgs args)

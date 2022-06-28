@@ -163,20 +163,20 @@
 							   OffContent="None"
 							   ToolTipService.ToolTip="If set to Tinted, castles and cities will use the colors specified in world view"
 							   />
-				
-				<ToggleSwitch  Header="Incoming visible"
-							   IsOn="{x:Bind cnv:Settings.incomingAlwaysVisible, Mode=TwoWay}"
+
+				<CheckBox  Content="Incoming Visible"
+						   IsThreeState="True"
+							   IsChecked="{x:Bind cnv:Settings.incomingAlwaysVisible, Mode=TwoWay}"
 							   Margin="4"
-							   OnContent="Always"
-							   OffContent="If Tab Open"
-							   ToolTipService.ToolTip="Allows you to always show incoming overlays (potentialy slower and more confusing) or to only show the overlays if an incoming tab is selected"
+							 
+							   ToolTipService.ToolTip="On:  Show all incoming overlays (potentialy slower and more confusing), Off: don't show, Maybe: Only show if source or target is hovered or selected"
 							   />
-				<ToggleSwitch  Header="Outgoing visible"
-							   IsOn="{x:Bind cnv:Settings.attacksAlwaysVisible, Mode=TwoWay}"
+				<CheckBox  Content="Outgoing Visible"
+							 IsThreeState="True"
 							   Margin="4"
-							   OnContent="Always"
-							   OffContent="If Tab Open"
-							   ToolTipService.ToolTip="Allows you to always show outgoing overlays (potentialy slower and more confusing) or to only show the overlays if an ougoing tab is selected"
+							   IsChecked="{x:Bind cnv:Settings.attacksAlwaysVisible, Mode=TwoWay}"
+							  
+							   ToolTipService.ToolTip="On:  Show all outgoing overlays (potentialy slower and more confusing), Off: don't show, Maybe: Only show if source or target is hovered or selected"
 							   />
 				<CheckBox  Content="Raids Visible" IsThreeState="True"
 							   Margin="4"

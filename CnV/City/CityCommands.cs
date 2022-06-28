@@ -174,7 +174,7 @@ public partial class City
 								sb.AppendLinePre("...");
 								break;
 							}
-							sb.Append($"\nꁔ← {City.GetOrAddCity(i.sourceCid).FormatName(false,true,false)}\n{i.troops.Format()}");
+							sb.Append($"\nꁔ← {City.GetOrAddCity(i.sourceCid).FormatName(true,true,true)}\n{i.troops.Format()}");
 						}
 
 					}
