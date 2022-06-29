@@ -8,14 +8,16 @@ namespace CnV.Views
 	public sealed partial class HitHistoryTab:UserTab
 	{
 		NotifyList<City> cityFilter = new(new[] { City.invalid });
-		internal void SetFilter(City c) {
-			AppS.QueueOnUIThread(() => {
-				cityFilter.AddIfAbsent(c);
-				cityFilter.OnReset();
-				cityFilterCombo.SelectedItem = c;
-				if(!isFocused) {
-					ShowOrAdd<HitHistoryTab>(true,onlyIfClosed: false);
+		internal static void SetFilter(City c) {
+			AppS.QueueOnUIThread( async () => {
+				if(!IsVisible()) {
+						await ShowOrAdd<HitHistoryTab>(true,onlyIfClosed: false);
 
+				}
+				if(instance is not null) {
+					instance.cityFilter.AddIfAbsent(c);
+					instance.cityFilter.OnReset();
+					instance.cityFilterCombo.SelectedItem = c;
 				}
 
 			});
@@ -64,6 +66,11 @@ namespace CnV.Views
 		//    Assert(rv != null);
 		//    return rv;
 		//}
+			public override async Task Closed()
+		{ 
+			await base.Closed();
+			instance = null;
+		}
 		public HitHistoryTab() {
 			Assert(instance == null);
 			instance = this;

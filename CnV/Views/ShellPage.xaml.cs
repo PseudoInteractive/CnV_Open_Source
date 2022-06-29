@@ -796,7 +796,7 @@ namespace CnV.Views
 			Refresh();
 
 			WorkEnd("Refresh");
-			Note.Show("Refresh");
+		//	Note.Show("Refresh");
 			// args.Handled = true;
 		}
 
@@ -981,7 +981,7 @@ namespace CnV.Views
 				NotifyCollectionBase.ResetAll(true);
 				CityUI.Refresh();
 				RefreshTabs.Go();
-				Note.Show($"Refresh all");
+			//	Note.Show($"Refresh all");
 				await AppS.QueueOnUIThreadTask(() => {
 					foreach(var city in City.allCities) {
 						city.CallPropertyChanged();

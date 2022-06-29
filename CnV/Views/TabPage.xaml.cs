@@ -250,10 +250,10 @@ namespace CnV.Views
 		{
 			AppS.DispatchOnUIThreadIdle(()=>
 			{
-			//	BuildTab.instance.ShowOrAdd(true);
-			//	SpotTab.instance.ShowOrAdd(true);
+				BuildTab.ShowOrAdd<BuildTab>(true);
+				SpotTab.ShowOrAdd<SpotTab>(true);
 			//	PlayerTab.instance.ShowOrAdd(false);
-			//	MainPage.instance.ShowOrAdd(false);
+				MainPage.ShowOrAdd<MainPage>(false);
 				
 			//	ChatTab.tabPage.AddChatTabs();
 			});

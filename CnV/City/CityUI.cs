@@ -163,7 +163,9 @@ public static partial class CityUI
 			{
 				var sel = Spot.GetSelectedForContextMenu(cid, false);
 				{
-					aWar.AddItem("Attack",(_,_) => SendTroops.ShowInstance(GetBuild(),City.Get(cid),isSettle: false,viaWater: false,type: ArmyType.assault));
+					aWar.AddItem("Assault..",(_,_) => SendTroops.ShowInstance(GetBuild(),City.Get(cid),isSettle: false,viaWater: false,type: ArmyType.assault));
+					aWar.AddItem("Siege..",(_,_) => SendTroops.ShowInstance(GetBuild(),City.Get(cid),isSettle: false,viaWater: false,type: ArmyType.siege));
+					aWar.AddItem("Scout..",(_,_) => SendTroops.ShowInstance(GetBuild(),City.Get(cid),isSettle: false,viaWater: false,type: ArmyType.scout));
 					aWar.AddItem("Attack Targets",(_,_) => AttackSender.ShowInstance(GetBuild(),City.Get(cid) ));
 					var multiString = sel.Count > 1 ? $" _x {sel.Count} selected" : "";
 				//	aWar.AddItem("Cancel Attacks..", me.CancelAttacks);
@@ -552,7 +554,7 @@ public static partial class CityUI
 	{
 		var cids = GetSelectedForContextMenu(me.cid, false);
 
-		NearDefenseTab.defendants.Set(cids.Select(a => City.Get(a)), true);
+		NearDefenseTab.defendants.Set(new[] { me } );// cids.Select(a => City.Get(a)), true);
 
 		
 		await UserTab.ShowOrAdd<NearDefenseTab>(true);
@@ -588,8 +590,8 @@ public static partial class CityUI
 		}
 	}
 	public static void ShowHitHistory(this City me) {
-			var tab = HitHistoryTab.instance;
-			AppS.DispatchOnUIThread(() => tab.SetFilter(me) );
+		
+			AppS.DispatchOnUIThread(() => HitHistoryTab.SetFilter(me) );
 	
 	}
 

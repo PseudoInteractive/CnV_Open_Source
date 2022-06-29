@@ -195,6 +195,12 @@
                                        ToolTipService.ToolTip="Time at which troops would arrive if sent now without wings"
                                        Binding="{Binding eta,Converter={StaticResource DateTimeConverter},Mode=OneWay}"
                                        />
+				<tk:DataGridTextColumn Header="Send"
+                                       CellStyle="{StaticResource CellLeft}"
+                                       IsReadOnly="True"
+                                       ToolTipService.ToolTip="Troops that will be sent"
+                                       Binding="{Binding sendTroopsS,Mode=OneWay}"
+                                       />
 
 
 
@@ -239,7 +245,7 @@
                         </DataTemplate>
                     </tk:DataGridTemplateColumn.CellTemplate>
                 </tk:DataGridTemplateColumn>
-                <tk:DataGridTextColumn Header="Type" Binding="{Binding troopType, Mode=OneTime}"
+                <tk:DataGridTextColumn Header="Type" Binding="{Binding troopType}"
                                        CellStyle="{StaticResource CellLeft}" IsReadOnly="True"
                                         />
                 <tk:DataGridTemplateColumn Header="Send" IsReadOnly="False">

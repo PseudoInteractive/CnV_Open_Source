@@ -270,7 +270,8 @@ public partial class UserTab:Page, IANotifyPropertyChanged {
 			userTabs.InterlockedRemove(this);
 			// Todo: Set member to null
 			foreach(var d in dataGrids) {
-				d.Dispose();
+				if( !(d.Tag is string s && s == "noDestroy" ) )
+					d.Dispose();
 			}
 		}
 		catch(Exception ex) {

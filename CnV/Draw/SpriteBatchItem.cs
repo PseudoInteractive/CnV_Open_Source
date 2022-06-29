@@ -23,7 +23,7 @@ namespace CnV
 		public List<VertexSprite> sprites;
 		public List<Mesh> meshes;
 
-		public SpriteBatchItemList(Material _material)
+		SpriteBatchItemList(Material _material)
 		{
 			material = _material;
 			sprites = new List<VertexSprite>();
@@ -34,8 +34,21 @@ namespace CnV
 			//freePool.AddRange(sprites);
 			sprites.Clear();
 			meshes.Clear();
-			material = null;
+			var pool = freePool.GetOrAdd(material._sortingKey,(key)=> new() );
+			pool.Push(this);
+
 		}
+
+		// Int is material Key
+		public static Dictionary<int,Stack<SpriteBatchItemList>> freePool = new();
+		public static SpriteBatchItemList Alloc(Material mat) {
+			if(freePool.TryGetValue(mat._sortingKey,out var pool )) {
+				if(pool.TryPop(out var result))
+					return result;
+			}
+			return new SpriteBatchItemList(mat);
+		}
+
 		//public static List<VertexSprite> freePool = new List<VertexSprite>();
 		//public static VertexSprite Alloc()
 		//{

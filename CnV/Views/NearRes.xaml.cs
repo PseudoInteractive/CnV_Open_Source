@@ -432,6 +432,11 @@ namespace CnV.Views
 				supporters.NotifyReset();
 			}
 		});
+			public override async Task Closed()
+		{ 
+			await base.Closed();
+			instance = null;
+		}
 
 		private async void ItemValueChanged(Microsoft.UI.Xaml.Controls.NumberBox sender, Microsoft.UI.Xaml.Controls.NumberBoxValueChangedEventArgs args)
 		{

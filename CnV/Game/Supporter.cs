@@ -20,6 +20,7 @@ namespace CnV
         public string raidReturn => city.raidReturn;
         public uint tsHome =>  city.troopsHome.TS(NearDefenseTab.Include);
         public uint tsTotal => city.troopsOwned.TS(NearDefenseTab.Include);
+		public string sendTroopsS => tSend.Format();
 		public TimeSpanS travel;
 		public int validTargets { get; set; }
 		public string travelTime => travel.MulRoundUp((NearDefenseTab.instance?.useHorns).Switch(1.0f,0.5f,1.0f)).Format();

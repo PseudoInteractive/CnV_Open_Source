@@ -144,8 +144,7 @@ namespace CnV.Views
 				if(sel.incoming.Where(a => a.shareInfo).OrderBy(a=>a.arrival).ThenBy(a=> a.type).ToArray().SyncList(instance.targetIncoming)) {
 					instance.armyGrid.ResetAutoColumns();
 					if(showHistory) {
-						var tab = HitHistoryTab.instance;
-						tab?.SetFilter(sel);
+						HitHistoryTab.SetFilter(sel);
 						
 					}
 				}

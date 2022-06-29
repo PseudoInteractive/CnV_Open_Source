@@ -145,6 +145,8 @@
 					<sf:GridViewDefinition.DataGrid>
 						<sf:SfDataGrid x:Name="citiesGrid" 
 									   AutoGenerateColumns="False"
+									    Tag="noDestroy"
+									   
 							SelectionMode="Extended"
 							RowHeight="{StaticResource LargeGridRowHeight}"
 							FontSize="{StaticResource SmallFontSize}"

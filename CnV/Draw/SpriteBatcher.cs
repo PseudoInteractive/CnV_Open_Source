@@ -105,7 +105,7 @@ namespace CnV.Draw
 			var textureKey = material.texture != null ? material.texture._sortingKey : 0;
 			if (!perEffect.TryGetValue(textureKey, out var list))
 			{
-				list = new SpriteBatchItemList(material);
+				list = SpriteBatchItemList.Alloc(material);
 				perEffect.Add(textureKey, list);
 			}
 			return list;

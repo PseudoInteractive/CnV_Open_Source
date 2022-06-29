@@ -30,7 +30,7 @@ using static CnV.Alliance;
 //		public          NotifyCollection<City> citiesOut = new();
 		public          ObservableCollection<City> cities  = new();
 		public static   ReinforcementsTab?      instance;
-		internal bool wantIncoming;
+	//	internal bool wantIncoming;
 		Alliance.CityFilter filter = Alliance.CityFilter.allied;
 		internal int _filter {
 			get => (int)filter;
@@ -121,6 +121,7 @@ using static CnV.Alliance;
 				hasLoaded = true;
 				SetupDataGrid(reinIn);
 				SetupDataGrid(armiesIn);
+				SetupDataGrid(armiesOut);
 				//SetupReinforcementGrid( reinIn,false);
 			//	SetupReinforcementGrid(reinOut,true);
 			}
@@ -132,7 +133,7 @@ using static CnV.Alliance;
 			bool invalidate = true;
 			//			citiesOut.Clear();
 			//	var refreshTask = NotifyCollectionBase.ProcessAllCollectionChangesNow();
-			var spot = City.invalid;// cityFilter.city;
+			var spot =  cityFilter.city;
 		
 			//await ReinforcementsOverview.instance.Post();
 //			await refreshTask;
@@ -148,7 +149,7 @@ using static CnV.Alliance;
 	
 			//tab. panel.Children.Add(new TextBlock() { Text = showAll ? "All Incoming Reinforcements" : "Reinforcements Here:" });
 			{
-				spots = spots.Where(c => c.reinforcementsMap.Any()).ToArray();
+				spots = spots.Where(c => c.reinforcementsInUI.Any() || c.reinforcementsOutUI.Any() ).ToArray();
 				if(invalidate) {
 					tab.cities.Clear();
 					foreach(var s in spots) {
@@ -193,7 +194,7 @@ using static CnV.Alliance;
 			{
 				await ShowOrAdd<ReinforcementsTab>();
 				var tab = ReinforcementsTab.instance;
-				//	tab.cityFilter.SetCity(_cid.AsCity() );
+				tab.cityFilter.SetCity(_cid.AsCity() );
 				tab.Update();
 				
 				//}

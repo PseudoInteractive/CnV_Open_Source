@@ -125,7 +125,7 @@
 						<sf:SfDataGrid x:Name="donationTargetsGrid" 
 									   AutoGenerateColumns="False"
 							SelectionMode="Single"
-									   
+									    Tag="noDestroy"
 									   FontFamily="{StaticResource CnvIcons}"
 							SelectionUnit="Row"
 							AutoGenerateRelations="False"
@@ -205,7 +205,7 @@
 				<sf:GridViewDefinition.DataGrid>
 					<sf:SfDataGrid x:Name="marketTargetsGrid" 
 									   AutoGenerateColumns="False"
-								  
+								   Tag="noDestroy"
 							SelectionMode="Single"
 									   FontFamily="{StaticResource CnvIcons}"
 							SelectionUnit="Row"

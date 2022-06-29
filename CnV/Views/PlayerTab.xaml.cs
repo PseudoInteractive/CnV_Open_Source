@@ -42,7 +42,11 @@ public sealed partial class PlayerTab:UserTab
 	}
 
 
-
+		public override async Task Closed()
+		{ 
+			await base.Closed();
+			instance = null;
+		}
 
 
 	override public async Task VisibilityChanged(bool visible,bool longTerm)
@@ -98,11 +102,7 @@ public sealed partial class PlayerTab:UserTab
 
 	public static bool IsVisible() =>  instance is not null && instance.isFocused;
 
-	public override async Task Closed()
-		{ 
-			await base.Closed();
-			instance = null;
-		}
+
 	private void OnLoaded(object sender,RoutedEventArgs e)
 	{
 		base.SetupDataGrid(playerGrid);

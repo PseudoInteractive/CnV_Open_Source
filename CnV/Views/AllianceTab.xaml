@@ -66,6 +66,7 @@
 				<sf:GridViewDefinition RelationalColumn="players">
 					<sf:GridViewDefinition.DataGrid>
 						<sf:SfDataGrid x:Name="playersGrid" 
+									    Tag="noDestroy"
 									   AutoGenerateColumns="False"
 							SelectionMode="Extended"
 							RowHeight="{StaticResource LargeGridRowHeight}"

@@ -162,7 +162,7 @@ public sealed partial class AttackSender:DialogG, INotifyPropertyChanged
 	}
 
 	TroopTypeCounts GetTroops(City target) {
-		var source = city.troopsHomeAndReturning;
+		var source = city.troopsHomeAndReturningNotScheduled;
 
 		return (TroopTypeCounts)sendInfo.Where(a => source.Any(a.type)).Select(a => new TroopTypeCount(a.type,source.GetCount(a.type)));
 	}

@@ -12,7 +12,7 @@ namespace CnV
 
 	public sealed partial class TimelineView:Views.UserTab
 	{
-		public static TimelineView instance;
+		public static TimelineView? instance;
 
 		internal PlayerId[] playerFilter = Array.Empty<PlayerId>();
 		//public ObservableCollection<ScheduleAppointment> appointments = new();
@@ -121,7 +121,11 @@ namespace CnV
 				EndTime=timeRange.t1
 			};
 		}
-
+		public override async Task Closed()
+		{ 
+			await base.Closed();
+			instance = null;
+		}
 		private void UpdateDataI() {
 			Assert(isInUpdateI == 0);
 			Interlocked.Increment(ref isInUpdateI);

@@ -9,7 +9,7 @@ using CnV;
 
 public sealed partial class PalaceTab:UserTab
 {
-	public static PalaceTab instance;
+	public static PalaceTab? instance;
 
 
 	//        public static City showingRowDetails;
@@ -89,7 +89,11 @@ public sealed partial class PalaceTab:UserTab
 		//		AppS.DispatchOnUIThreadLow(() => Spot.SyncUISelection(true, City.GetBuild() ));
 		//	}
 	}
-
+		public override async Task Closed()
+		{ 
+			await base.Closed();
+			instance = null;
+		}
 
 	public static bool IsVisible() => instance is not null && instance.isFocused;
 

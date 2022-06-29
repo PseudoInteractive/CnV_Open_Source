@@ -241,8 +241,7 @@ namespace CnV.Views
 					items.SyncList(armiesIncoming);
 					armyGrid.ResetAutoColumns();
 					if(updatehistoryTab) {
-						var tab = HitHistoryTab.instance;
-						tab?.SetFilter(sel);
+						HitHistoryTab.SetFilter(sel);
 						
 						
 					}
@@ -256,7 +255,11 @@ namespace CnV.Views
 		private void filterChanged(object sender,RoutedEventArgs e) {
 			refresh.Go();
 		}
-
+			public override async Task Closed()
+		{ 
+			await base.Closed();
+			instance = null;
+		}
 		private void ExportSheetsClick(object sender,RoutedEventArgs e) {
 			defenderGrid.SelectAll();
 			var sel = defenderGrid.SelectedItems;

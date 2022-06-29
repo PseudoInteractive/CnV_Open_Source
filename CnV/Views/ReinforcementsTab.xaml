@@ -21,9 +21,9 @@
 		
 		<TextBlock Grid.Row="0" Text="{x:Bind reinInTitle, Mode=OneWay}" />
 		<tk:WrapPanel Grid.Row="1" >
-			<ToggleSwitch  OnContent="Incoming" OffContent="Outgoing" IsOn="{x:Bind wantIncoming,Mode=TwoWay}"  Toggled="ToggleSwitch_Toggled"/>
+			<!--<ToggleSwitch  OnContent="Incoming" OffContent="Outgoing" IsOn="{x:Bind wantIncoming,Mode=TwoWay}"  Toggled="ToggleSwitch_Toggled"/>-->
 			<ComboBox Header="From" SelectedIndex="{x:Bind _filter,Mode=TwoWay}"  ItemsSource="{x:Bind cnv:Alliance.cityFilterList}" />
-			<!--<cnv:CityControl Label="Filter to" x:Name="cityFilter" allowNone="True" allowOtherAlliances="False" allowOtherPlayers="True" />-->
+			<cnv:CityControl Label="Filter to" x:Name="cityFilter" allowNone="True" allowOtherAlliances="False" allowOtherPlayers="True" />
 		</tk:WrapPanel>
 		<sf:SfDataGrid x:Name="reinIn"
 							x:FieldModifier="public"
@@ -130,11 +130,12 @@
 			</sf:SfDataGrid.Columns>
 			<sf:SfDataGrid.DetailsViewDefinition>
 				<!--  FirstLevelNestedGrid1 is created here  -->
-				<sf:GridViewDefinition RelationalColumn="reinforcementsMap">
+				<sf:GridViewDefinition RelationalColumn="reinforcementsInUI">
 					<sf:GridViewDefinition.DataGrid>
 						<sf:SfDataGrid x:Name="armiesIn" 
 									   AutoGenerateColumns="False"
 							
+									   Tag="noDestroy"
 							SelectionUnit="Row"
 							AutoGenerateRelations="False"
 							ShowToolTip="True"
@@ -143,6 +144,7 @@
 							<sf:SfDataGrid.Columns >
 
 								<sf:GridTimeColumn
+													HeaderText="Incoming"
                                                    MappingName="T"
                                                    DisplayTimeFormat="MM/dd',' HH':'mm':'ss"
                                                    TextAlignment="Center" />
@@ -180,7 +182,57 @@
 						</sf:SfDataGrid>
 					</sf:GridViewDefinition.DataGrid>
 				</sf:GridViewDefinition>
-				<!--  FirstLevelNestedGrid2 is created here  -->
+				<sf:GridViewDefinition RelationalColumn="reinforcementsOutUI">
+					<sf:GridViewDefinition.DataGrid>
+						<sf:SfDataGrid x:Name="armiesOut" 
+									   AutoGenerateColumns="False"
+							Tag="noDestroy"
+							SelectionUnit="Row"
+							AutoGenerateRelations="False"
+							ShowToolTip="True"
+							FontStretch="Condensed"
+									   >
+							<sf:SfDataGrid.Columns >
+
+								<sf:GridTimeColumn
+									HeaderText="Outgoing"
+                                                   MappingName="T"
+                                                   DisplayTimeFormat="MM/dd',' HH':'mm':'ss"
+                                                   TextAlignment="Center" />
+
+
+								<sf:GridImageColumn MappingName="targetIcon"
+                                        HeaderText="O"
+                                        ColumnWidthMode="None" 
+                                        Width="32" />
+								<sf:GridHyperlinkColumn MappingName="tXY"
+
+				                      />
+								<sf:GridTextColumn MappingName="tPlayer"
+                                                   HeaderText="Player"
+
+                                                   TextAlignment="Left" />
+								<sf:GridTextColumn MappingName="troopS"
+												HeaderText="Troops"
+                                                   ColumnWidthMode="Auto" 
+                                                   TextAlignment="Left" />
+
+								<sf:GridNumericColumn MappingName="dist"
+
+                                       TextAlignment="Right"
+                                            DisplayNumberFormat="N0" />
+
+								<sf:GridTextColumn MappingName="targetCN"
+                                                   HeaderText="City"
+
+                                                   ColumnWidthMode="Auto" 
+                                                   TextAlignment="Left" />
+
+
+							</sf:SfDataGrid.Columns>
+						</sf:SfDataGrid>
+					</sf:GridViewDefinition.DataGrid>
+				</sf:GridViewDefinition>
 
 			</sf:SfDataGrid.DetailsViewDefinition>
 

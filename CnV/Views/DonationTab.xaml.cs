@@ -38,6 +38,11 @@ public sealed partial class DonationTab : UserTab
 		//	spotGrids.Add(donationGrid);
 	//	CityUI.cityListChanged += CityListChanged;
 	}
+		public override async Task Closed()
+		{ 
+			await base.Closed();
+			instance = null;
+		}
 
 	private static void DoRefresh()
 	{

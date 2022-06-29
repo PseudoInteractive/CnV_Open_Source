@@ -34,7 +34,7 @@ namespace CnV.Views
 		public static SupportByTroopType[] supportByTroopTypeEmpty = Array.Empty<SupportByTroopType>();
 //		public static int[] splitArray = { 1,2,3,4,5 };
 		public static bool Include(TType tt) => ttInclude[tt];
-		static bool []ttInclude = Troops.ttCanBeDefense.ArrayClone();
+		static bool []ttInclude = Troops.ttPrefersDefense.ArrayClone();
 
 		
 		private void IncludeButtonClick(object sender, RoutedEventArgs e)
@@ -70,17 +70,17 @@ namespace CnV.Views
 			refresh.Go();
 		}
 
-		public static void GetSelected(List<int> rv) {
+		//public static void GetSelected(List<int> rv) {
 			
-			if(!NearDefenseTab.IsVisible())
-				return;
-			var i = instance;
-			foreach(var sel in i.supportGrid.SelectedItems) {
-				var s = sel as Supporter;
-				Assert(s != null);
-				rv.AddIfAbsent(s.cid);
-			}
-		}
+		//	if(!NearDefenseTab.IsVisible())
+		//		return;
+		//	var i = instance;
+		//	foreach(var sel in i.supportGrid.SelectedItems) {
+		//		var s = sel as Supporter;
+		//		Assert(s != null);
+		//		rv.AddIfAbsent(s.cid);
+		//	}
+		//}
 		internal void SetArrived(ServerTime t) {
 			sendAtUI.SetDateTime(t);
 		}
@@ -138,7 +138,7 @@ namespace CnV.Views
 							if(supporter == null) {
 								supporter = new Supporter() { city = city };
 							}
-							var troops = (onlyHome ? city.troopsHome : city.troopsHomeAndReturning);
+							var troops = (onlyHome ? city.troopsHomeNotScheduled : city.troopsHomeAndReturningNotScheduled);
 							s.Add(supporter);
 							supporter.tSend.Clear();
 
@@ -269,14 +269,14 @@ namespace CnV.Views
 			var stt = text.DataContext as SupportByTroopType;
 			var flyout = new MenuFlyout();
 			flyout.SetXamlRoot(text);
-			AApp.AddItem(flyout,"Troops Home",(_,_) => {
+			AApp.AddItem(flyout,"Troops Home (not scheduled)",(_,_) => {
 				var supporter = stt.supporter;
-				supporter.tSend.SetInPlace( new(stt.type,stt.supporter.city.troopsHome.GetCount(stt.type)));
+				supporter.tSend.SetInPlace( new(stt.type,stt.supporter.city.troopsHomeNotScheduled.GetCount(stt.type)));
 				supporter.NotifyChange();
 			});
-			AApp.AddItem(flyout,"Troops home and returning",(_,_) => {
+			AApp.AddItem(flyout,"Troops home and returning (not scheduled)",(_,_) => {
 				var supporter = stt.supporter;
-				supporter.tSend.SetInPlace( new TroopTypeCount(stt.type,stt.supporter.city.troopsHomeAndReturning.GetCount(stt.type)));
+				supporter.tSend.SetInPlace( new TroopTypeCount(stt.type,stt.supporter.city.troopsHomeAndReturningNotScheduled.GetCount(stt.type)));
 				supporter.NotifyChange();
 			});
 			AApp.AddItem(flyout,"Total Troops",(_,_) => {
@@ -299,12 +299,12 @@ namespace CnV.Views
 			var supporter = text.DataContext as Supporter;
 			var flyout = new MenuFlyout();
 			flyout.SetXamlRoot(text);
-			AApp.AddItem(flyout,"Troops Home",(_,_) => {
-				supporter.tSend =  supporter.city.troopsHome.Where(t => Include(t) )*sendFraction;
+			AApp.AddItem(flyout,"Troops Home (not scheduled)",(_,_) => {
+				supporter.tSend =  supporter.city.troopsHomeNotScheduled.Where(t => Include(t) )*sendFraction;
 				supporter.NotifyChange();
 			});
-			AApp.AddItem(flyout,"Troops home and returning",(_,_) => {
-				supporter.tSend = supporter.city.troopsHomeAndReturning.Where(t=>  Include(t) )*sendFraction;
+			AApp.AddItem(flyout,"Troops home and returning (not scheduled)" ,(_,_) => {
+				supporter.tSend = supporter.city.troopsHomeAndReturningNotScheduled.Where(t=>  Include(t) )*sendFraction;
 				supporter.NotifyChange();
 			});
 			AApp.AddItem(flyout,"Total Troops",(_,_) => {
@@ -357,13 +357,13 @@ namespace CnV.Views
 				//}
 			
 			var hours = new TimeSpanS(0);
-			var def = FindValidDefendants(sendViaWater && defendants.Any(d => d.isOnWater),onlyHome,city,ref hours);
+			var def = FindValidDefendants(sendViaWater,onlyHome,city,ref hours);
 			var success = true;
 			foreach(var d in def) {
 				var ts = supporter.tSend /  (def.Count);
 				var cid = d.cid;
-
-					success &= await SendTroops.ShowInstance(City.Get(supporter.cid),City.Get(cid),false,sendViaWater,ArmyType.defense,null,ts,_arriveAt,useHorns:useHorns,waitReturn:waitReturn);
+					var _d = d;
+					success &= await SendTroops.ShowInstance(City.Get(supporter.cid),_d,false,sendViaWater,ArmyType.defense,null,ts,_arriveAt,useHorns:useHorns,waitReturn:waitReturn);
 			//	Assert(success);
 				Log($"Sent {ts} from {supporter.cid.AsCity()} to {cid.AsCity()} @{_arriveAt.ToString()}");
 				//	await Task.Delay(500);
