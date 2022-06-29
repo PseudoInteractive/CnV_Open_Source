@@ -22,7 +22,8 @@
 
 		<sf:SfDataGrid x:Name="dungeonGrid" 
 		              
-						      
+						      					   IsReadOnly="True"
+
 							ItemsSource="{x:Bind items}"
 							
 							

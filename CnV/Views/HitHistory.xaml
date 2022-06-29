@@ -20,15 +20,16 @@
 		</Grid.RowDefinitions>
 		<StackPanel Orientation="Horizontal">
 		<ComboBox Header="CityFilter" x:Name="cityFilterCombo" ItemsSource="{x:Bind cityFilter, Mode=OneWay}" SelectedIndex="0" SelectionChanged="cityFilterCombo_SelectionChanged" />
-		<CheckBox x:Name="Inc" IsChecked="True" Content="Incoming" />
-		<CheckBox x:Name="Out" IsChecked="True" Content="Outgoing" />
-		<CheckBox x:Name="Mine" IsChecked="False" Content="Only Mine" />
+		<CheckBox x:Name="Inc" IsChecked="True" Content="Incoming" Checked="FilterChanged" Unchecked="FilterChanged" />
+		<CheckBox x:Name="Out" IsChecked="True" Content="Outgoing" Checked="FilterChanged" Unchecked="FilterChanged" />
+		<CheckBox x:Name="Mine" IsChecked="False" Content="Only Mine" Checked="FilterChanged"  Unchecked="FilterChanged" />
 		</StackPanel>
 		<sf:SfDataGrid 
 			Grid.Row="1"
 			x:Name="historyGrid"
 AllowFocusOnInteraction="True"
 Loaded="DataGridLoaded"				
+					   IsReadOnly="True"
 
                         AutoGenerateColumns="False"
                         

@@ -23,6 +23,7 @@
 							x:FieldModifier="public"
 							AllowFiltering="True"
 					   ShowGroupDropArea="True"
+					   IsReadOnly="True"
 							Grid.Row="3"
 							CellStyle="{StaticResource SfTextCell}"
 					   FontFamily="{StaticResource CnvIcons}"

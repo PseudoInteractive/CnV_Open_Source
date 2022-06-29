@@ -63,7 +63,8 @@
 		<sf:SfDataGrid x:Name="donationGrid"
 		                x:FieldModifier="public"
 		                Grid.Row="2" 
-								 							
+								 								   IsReadOnly="True"
+				
 		                AutoGenerateColumns="False"
 					   FontStretch="Condensed"
 					    ItemsSource="{x:Bind donationGridSource, Mode=OneWay}"
@@ -125,12 +126,13 @@
 						<sf:SfDataGrid x:Name="donationTargetsGrid" 
 									   AutoGenerateColumns="False"
 							SelectionMode="Single"
-									    Tag="noDestroy"
+									    Tag="details"
 									   FontFamily="{StaticResource CnvIcons}"
 							SelectionUnit="Row"
 							AutoGenerateRelations="False"
 							ShowToolTip="True"
-							
+												   IsReadOnly="True"
+
 									   >
 							<sf:SfDataGrid.Columns >
 
@@ -204,8 +206,10 @@
 				<sf:GridViewDefinition RelationalColumn="marketTargets">
 				<sf:GridViewDefinition.DataGrid>
 					<sf:SfDataGrid x:Name="marketTargetsGrid" 
+								   					   IsReadOnly="True"
+
 									   AutoGenerateColumns="False"
-								   Tag="noDestroy"
+								   Tag="details"
 							SelectionMode="Single"
 									   FontFamily="{StaticResource CnvIcons}"
 							SelectionUnit="Row"

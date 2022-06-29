@@ -28,7 +28,8 @@ AllowFocusOnInteraction="True"
 Loaded="DataGridLoaded"				
 
                         AutoGenerateColumns="False"
-                        
+                        					   IsReadOnly="True"
+
                         
 					    FontSize="{StaticResource SmallFontSize}"
                          

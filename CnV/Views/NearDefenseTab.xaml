@@ -22,7 +22,8 @@
 		<sf:SfDataGrid x:Name="defendantGrid" x:FieldModifier="public"
                         Grid.Row="1"
 						AutoGenerateColumns="False"
-                        
+                        					   IsReadOnly="True"
+
 								 IsTabStop="True"
 								 
                         Loaded="DataGridLoaded"

@@ -94,13 +94,13 @@
         </sf:SfDataGrid>
         <sf:SfDataGrid x:Name="armyGrid"
                                     ItemsSource="{x:Bind targetIncoming, Mode=OneWay}"
-									
+														   IsReadOnly="True"
+
                                     Grid.Row="3"
                                     FontSize="{StaticResource SmallFontSize}"
                                     HorizontalAlignment="Stretch"
                                     RowHeight="{StaticResource MediumGridRowHeight}"
                                     
-                       IsReadOnly="True"
                                     
                                     FrozenColumnCount="2"
                                     AutoGenerateColumns="False">

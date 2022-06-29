@@ -4,34 +4,43 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:cnv="using:CnV"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-	Width="650"
+	
 	xmlns:sfe="using:Syncfusion.UI.Xaml.Editors"
 	xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-	<Grid>
+	<ScrollViewer>
+		<Grid Width="650" >
 		<Grid.RowDefinitions>
-			<RowDefinition  />
+			<RowDefinition Height="auto" />
+			<RowDefinition Height="auto" />
+			<RowDefinition Height="auto" />
+			<RowDefinition Height="auto" />
 			<RowDefinition Height="auto" />
 			<RowDefinition Height="auto" />
 			<RowDefinition Height="auto" />
 		</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
 
-		<Button x:Name="buttoGo"  Grid.Row="3" Style="{StaticResource ButtonMedium}"  Click="SendTroopsClick" HorizontalAlignment="Right" Margin="8,2,4,2">
+			<cnv:CityControl Label="Attacker" city="{x:Bind cityUI, Mode=TwoWay}" allowNonCities="False" allowOtherAlliances="False" allowOtherPlayers="False" allowNone="False" />
+
+		<Button x:Name="buttoGo"  Grid.Row="4" Style="{StaticResource ButtonMedium}"  Click="SendTroopsClick" HorizontalAlignment="Right" Margin="8,2,4,2">
 			<Button.Content>
 				<SymbolIcon Symbol="Play" />
 			</Button.Content>
 		</Button>
-		<TextBlock Grid.Row="3" x:Name="travelInfo"  Margin="4,2,70,2" TextWrapping="Wrap"  />
-		<GridView x:Name="targetList" Grid.Row="0"  ItemsSource="{x:Bind targets,Mode=OneWay}"  HorizontalAlignment="Stretch" >
-			<GridView.ItemTemplate >
+			<TextBlock Grid.Row="5" Text="{x:Bind travelTimeS, Mode=OneWay}"  Margin="4,2,70,2" TextWrapping="Wrap"  />
+		<ListView x:Name="targetList" Grid.Row="1"  ItemsSource="{x:Bind targets,Mode=OneWay}"  HorizontalAlignment="Stretch" >
+			<ListView.ItemTemplate >
 				<DataTemplate  x:DataType="cnv:AttackTargetItem" >
 					<tk:WrapPanel   Height="48" Margin="1"  HorizontalAlignment="Stretch" >
 
-						<cnv:CityControl city="{x:Bind target, Mode=TwoWay}" allowNonCities="False" allowOtherAlliances="True" allowOtherPlayers="True" allowNone="False" />
+						<cnv:CityControl Label=" ꁉ " city="{x:Bind targetUI, Mode=TwoWay}" allowNonCities="False" allowOtherAlliances="True" allowOtherPlayers="True" />
 						<CheckBox Content="Real"  IsChecked="{x:Bind isReal, Mode=TwoWay}" Margin="4,2" ToolTipService.ToolTip="If set, this is the real attack, otherwise it is fake" />
 						<!--<TextBlock x:Name="attackStrength"  Text="{x:Bind AttackStrength(),Mode=OneWay}" TextWrapping="Wrap" />-->
-						<Button   Click="RemoveTarget"  Margin="8,2,4,2" ToolTipService.ToolTip="Click to remove this target">
+						<Button   Click="RemoveTarget"  Margin="8,0,4,0" Padding="1" ToolTipService.ToolTip="Click to remove this target">
 							<Button.Content>
 								<SymbolIcon Symbol="Clear" />
 							</Button.Content>
@@ -41,9 +50,14 @@
 
 
 				</DataTemplate>
-			</GridView.ItemTemplate>
-		</GridView>
-		<tk:WrapPanel Grid.Row="2" Orientation="Horizontal" Padding="4">
+			</ListView.ItemTemplate>
+		</ListView>
+		<Button  Grid.Row="2" HorizontalAlignment="Right" Click="AddTarget"  Margin="8,0,4,0" Padding="1" ToolTipService.ToolTip="Click to add a target">
+			<Button.Content>
+				<SymbolIcon Symbol="AddFriend" />
+			</Button.Content>
+		</Button>
+		<tk:WrapPanel Grid.Row="4" Orientation="Horizontal" Padding="4">
 			<ToggleSwitch IsOn="{x:Bind ViaWater, Mode=TwoWay}" OnContent="Water" OffContent="Land" />
 			<CheckBox x:Name="notSameAlliance" Content="Cancel if ally"  IsChecked="True" Margin="4,2" ToolTipService.ToolTip="If set, attack will be cancelled if the target is allied at the time of arrival" />
 			<CheckBox x:Name="waitReturnCheckbox" Content="Wait Return" IsChecked="{x:Bind WaitReturn, Mode=TwoWay}"  Margin="4,2" ToolTipService.ToolTip="If set, departure will be occur once sufficient troops return"  />
@@ -58,9 +72,9 @@
 			<NumberBox Description="Min TS" Value="{x:Bind city.minTS,Mode=OneWay}" IsEnabled="false" />
 		</tk:WrapPanel>
 		
-		<GridView x:Name="sendInfoView"  Grid.Row="1" VerticalAlignment="Stretch"  ItemsSource="{x:Bind sendInfo,Mode=OneWay}" >
+		<ListView x:Name="sendInfoView"  Grid.Row="3" VerticalAlignment="Stretch"  ItemsSource="{x:Bind sendInfo,Mode=OneWay}" >
 
-			<GridView.ItemTemplate >
+			<ListView.ItemTemplate >
 				<DataTemplate  x:DataType="cnv:AttackTroopItem" >
 					<Grid  Height="Auto" Margin="1"  Width="310" >
 
@@ -87,16 +101,18 @@
 							<TextBlock  Grid.Row="0" Grid.Column="1"
 										HorizontalTextAlignment="Right"
 										Text="{x:Bind troopsHome,Mode=OneWay}" Style="{StaticResource TextBlockMedium}" VerticalAlignment="Center"  Margin="8,0,8,0"/>
-							<CheckBox  Grid.Column="0"  Grid.Row="1"  Content="Use for Fake"
+							<CheckBox  Grid.Column="0"  Grid.Row="1"  Content="Use for Real"
                                         IsChecked="{x:Bind useForReal,Mode=TwoWay}"   Margin="8,0,8,0" HorizontalAlignment="Left" VerticalAlignment="Center"  />
-							<CheckBox  Grid.Column="1"  Grid.Row="1"  Content="Use for Real"
+							<CheckBox  Grid.Column="1"  Grid.Row="1"  Content="Use for Fake"
                                         IsChecked="{x:Bind useForFakes,Mode=TwoWay}" Margin="8,0,8,0" HorizontalAlignment="Left"  VerticalAlignment="Center"  />
 						</Grid>
 					</Grid>
 				</DataTemplate>
-			</GridView.ItemTemplate>
+			</ListView.ItemTemplate>
 
-		</GridView>
+		</ListView>
+		<TextBox Grid.Row="6"  Text="{x:Bind json,Mode=TwoWay}" IsSpellCheckEnabled ="False"  AcceptsReturn="True"  TextWrapping="Wrap"  />
 
 	</Grid>
+	</ScrollViewer>
 </cnv:DialogG>

@@ -22,6 +22,8 @@
         <sf:SfDataGrid x:Name="cityGrid"
                                  x:FieldModifier="public"
                                  Loaded="DataGridLoaded"	
+					   					   IsReadOnly="True"
+
                         Grid.Row="0"
                         AutoGenerateColumns="False"
                         FontSize="{StaticResource MediumFontSize}"

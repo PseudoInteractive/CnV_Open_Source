@@ -13,6 +13,7 @@ using Syncfusion.UI.Xaml.Grids.ScrollAxis;
 using Views;
 using Microsoft.UI.Xaml;
 using Windows.UI.Text;
+using Syncfusion.UI.Xaml.DataGrid.Serialization;
 
 /// <summary>
 /// Tag is used to save/load the dataGrid
@@ -60,15 +61,16 @@ public static partial class ADataGrid
 			}
 		}
 	}
-	internal static void ResetAutoColumns(this xDataGrid grid) {
+	internal static void ResetAutoColumns(this xDataGrid grid, bool reset=true) {
 
 		//Task.Delay(1000).ContinueWith((_) =>
-		Debounce.Q(runOnUIThread: true, debounceT:350, action: () => {
+		Debounce.Q(runOnUIThread: true, debounceT:1000, action: () => {
 			if(grid.ItemsSource is null)
 				return;
 			if(!grid.IsLoaded)
 				return;
-			grid.ColumnSizer.ResetAutoCalculationforAllColumns();
+			if(reset)
+				grid.ColumnSizer.ResetAutoCalculationforAllColumns();
 			grid.ColumnSizer.Refresh();
 		//	Note.Show("Reset Columns");
 
@@ -344,11 +346,10 @@ public static partial class ADataGrid
 				//c.
 				
 			}
-			if(tab is not null)
-				grid.DetailsViewExpanded += tab.DetailsViewUpdateColumnWidths;
-
+			//	if(tab is not null)
+			//		grid.DetailsViewExpanded += tab.DetailsViewUpdateColumnWidths;
 			grid.ResetAutoColumns();
-			
+//			grid.LoadDataGrid();
 		//	grid.ColumnSizer.Refresh();
 			return _lock0;
 
@@ -360,8 +361,8 @@ public static partial class ADataGrid
 	}
 
 	//			grid.LiveDataUpdateMode = Syncfusion.UI.Xaml.Data.LiveDataUpdateMode.AllowChildViewUpdate;
-	
 
+	
 
 	public static class Statics
 	{
@@ -376,5 +377,58 @@ public static partial class ADataGrid
 		grid.ScrollItemIntoView(p);
 
 	}
+}
+public static partial class UserTabHelpers
+{
+	internal static  SerializationOptions serializationOptions = new() { SerializeCaptionSummary=false,SerializeDetailsViewDefinition=false,SerializeColumns=false,SerializeGroupSummaries=false,SerializeGrouping=false,SerializeFiltering=false,SerializeSorting=false,
+	SerializeStackedHeaders=false,SerializeTableSummaries=false,SerializeUnboundRows=false};
+	internal static DeserializationOptions deserializationOptions = new() { DeserializeCaptionSummary=false,DeserializeDetailsViewDefinition=false,DeserializeColumns=false,DeserializeGroupSummaries=false,DeserializeGrouping=false,DeserializeFiltering=false,DeserializeSorting=false,
+	DeserializeStackedHeaders=false,DeserializeTableSummaries=false,DeserializeUnboundRows=false};
+	
+	internal static async void SaveAndDispose(this xDataGrid grid) {
+		try {
+			Assert(grid.Name is not null);
+			var folder = ApplicationData.Current.LocalFolder;
+			var storageFile = await folder.CreateFileAsync($"Grid_{grid.Name}.xml",CreationCollisionOption.ReplaceExisting);
+			grid.Serialize(storageFile,serializationOptions);
+
+			// No need to dispose
+			if(grid.Tag is string s && s == "details")
+				return;
+			}
+			catch(Exception ex) {
+				LogEx(ex);
+		}
+
+		await Task.Delay(3000);
+		try {
+			if(!(grid.Tag is string s && s == "details"))
+				grid.Dispose();
+			}
+			catch(Exception ex) {
+				LogEx(ex);
+		}
+
+	}
+	internal static async void LoadDataGrid(this xDataGrid grid) {
+		//if(grid.Tag is string s && !s.StartsWith("details") ) 
+		try {
+			var folder = ApplicationData.Current.LocalFolder;
+			Assert(grid.Name is not null);
+			var storageFile = await folder.GetFileAsync($"Grid_{grid.Name}.xml");
+			if(storageFile is not null) {
+				grid.Deserialize(storageFile,deserializationOptions);
+				return;
+			}
+		}
+		catch(Exception ex) {
+			LogEx(ex);
+		}
+		
+		// Fall Through
+		grid.ResetAutoColumns();
+		
+	}
+
 }
 

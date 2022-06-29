@@ -95,8 +95,8 @@ namespace CnV.Views
 							Where(w =>
 																							  w.testContinentFilter
 																							&& (instance.includeInternal || !w.isAllyOrNap)).OrderBy(w => w.firstIncoming).ToArray();
-							_targets.SyncList(instance.targets);
-							instance.attackerGrid.ResetAutoColumns();
+							if(_targets.SyncList(instance.targets))
+								instance.attackerGrid.ResetAutoColumns();
 							UpdateTargetIncoming(false);
 						}
 						catch(Exception e) {

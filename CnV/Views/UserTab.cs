@@ -17,6 +17,8 @@ using System.Collections.ObjectModel;
 
 using Syncfusion.UI.Xaml.Grids;
 
+using Windows.Storage;
+
 using static CnV.Views.UserTab;
 
 public partial class UserTab:Page, IANotifyPropertyChanged {
@@ -261,23 +263,27 @@ public partial class UserTab:Page, IANotifyPropertyChanged {
 		}
 		return TabPage.Close(this);
 	}
+	
+	
 	public virtual async Task Closed()
 	{
 		isFocused = false;
 		isOpen = false;
 		try {
 			await VisibilityChanged(false,longTerm: true);
-			userTabs.InterlockedRemove(this);
-			// Todo: Set member to null
-			foreach(var d in dataGrids) {
-				if( !(d.Tag is string s && s == "noDestroy" ) )
-					d.Dispose();
-			}
-		}
-		catch(Exception ex) {
+		}catch(Exception ex) {
 			LogEx(ex);
 		}
+		userTabs.InterlockedRemove(this);
+		foreach(var grid in dataGrids) {
+			if(!(grid.Tag is string s && s == "details"))
+				grid.Dispose();
+
+			//		AppS.QueueOnUIThreadIdle(d.SaveAndDispose);
+			}
+			
 		dataGrids.Clear();
+		
 	}
 
 	// Callback
@@ -498,13 +504,13 @@ public partial class UserTab:Page, IANotifyPropertyChanged {
 		}
 	}
 
-	internal void DetailsViewUpdateColumnWidths(object sender,GridDetailsViewExpandedEventArgs e) {
-		var send2 = e.OriginalSender;
-		if(sender is xDataGrid grid)
-			grid.ResetAutoColumns();
-		if(send2 != sender && send2 is xDataGrid grid2)
-			grid2.ResetAutoColumns();
-	}
+	//internal void DetailsViewUpdateColumnWidths(object sender,GridDetailsViewExpandedEventArgs e) {
+	//	var send2 = e.OriginalSender;
+	//	if(sender is xDataGrid grid)
+	//		grid.ResetAutoColumns();
+	//	if(send2 != sender && send2 is xDataGrid grid2)
+	//		grid2.ResetAutoColumns();
+	//}
 
 }
 
@@ -543,7 +549,7 @@ internal record class TabInfo(bool persist,Type t,string name,TabInfo.TabPageId 
 	internal bool isOpen => UserTab.GetViewItem(this).tabExists;
 	}
 
-public static class UserTabHelpers
+public  static partial class UserTabHelpers
 {
 	//internal static UserTab GetTab(this xDataGrid grid)
 	//{
@@ -554,5 +560,7 @@ public static class UserTabHelpers
 	internal static void Clear(this TabViewItem t) => (t.Content as Frame).Content = new Page();
 	internal static void Set(this TabViewItem t, UserTab tab) => (t.Content as Frame).Content = tab ?? new Page();
 	internal static bool IsCityGrid(this xDataGrid grid) => object.ReferenceEquals(grid.ItemsSource,City.gridCitySource);
+
+	
 }
 

@@ -29,7 +29,7 @@ namespace CnV.Views
 			};
 
 			if( rs.SyncList( items )) {
-				grid.ResetAutoColumns();
+				grid.ResetAutoColumns(true);
 
 			}
 	

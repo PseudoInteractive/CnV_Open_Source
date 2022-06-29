@@ -40,15 +40,16 @@ namespace CnV.Views
 				var cid = sel.cid;
 				items = BattleReport.all.Where(a =>(a.targetCid == cid || a.sourceCid==cid) && filterDay < a.arrival).ToArray();
 			}
-			items.SyncList(reports);
-			//if(IncomingTab.IsVisible()) {
-			//	IncomingTab.NotifyIncomingUpdated();
-			//}
-			//if(OutgoingTab.IsVisible()) {
-			//	OutgoingTab.NotifyOutgoingUpdated();
-			//}
-			historyGrid.ResetAutoColumns();
+			if(items.SyncList(reports)) {
 
+				//if(IncomingTab.IsVisible()) {
+				//	IncomingTab.NotifyIncomingUpdated();
+				//}
+				//if(OutgoingTab.IsVisible()) {
+				//	OutgoingTab.NotifyOutgoingUpdated();
+				//}
+				historyGrid.ResetAutoColumns(true);
+			}
 
 		}
 		public static void CombatNotify() {
@@ -105,7 +106,11 @@ namespace CnV.Views
 		public static bool IsVisible() => instance is not null && instance.isFocused;
 
 		private void cityFilterCombo_SelectionChanged(object sender,Microsoft.UI.Xaml.Controls.SelectionChangedEventArgs e) {
-			UpdateDataGrid();
+			AppS.QueueOnUIThread(UpdateDataGrid);
 		}
-	}
+
+        private void FilterChanged(object sender,Microsoft.UI.Xaml.RoutedEventArgs e) {
+			AppS.QueueOnUIThread( UpdateDataGrid);
+        }
+    }
 }

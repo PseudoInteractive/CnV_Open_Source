@@ -30,13 +30,14 @@
 		</tk:WrapPanel>
 		<sf:SfDataGrid x:Name="defenderGrid"
 						Grid.Row="1"
+					   IsReadOnly="True"
 
                         x:FieldModifier="public"
 						
 						Loaded="DataGridLoaded"
                         AutoGenerateColumns="False"
                         FrozenColumnCount="2"
-                        IsReadOnly="True"
+                 
                         FontSize="{StaticResource SmallFontSize}"
                         RowHeight="{StaticResource MediumGridRowHeight}"
                             
@@ -149,7 +150,8 @@
 		<sf:SfDataGrid x:Name="armyGrid"
                         Grid.Row="2"
                        
-						
+											   IsReadOnly="True"
+
 
 						
                                     FontSize="{StaticResource SmallFontSize}"

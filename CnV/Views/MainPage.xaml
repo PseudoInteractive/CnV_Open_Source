@@ -26,7 +26,8 @@
 		              	x:FieldModifier="public"
 							Grid.Row="3"
 							Loaded="DataGridLoaded"
-							 
+							 					   IsReadOnly="True"
+
 						FrozenColumnCount="3"
 							
 							ItemsSource="{x:Bind game:City.gridCitySource, Mode=OneWay}"

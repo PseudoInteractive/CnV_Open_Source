@@ -25,6 +25,7 @@
 							x:FieldModifier="public"
 					   Grid.Row="3"
 							AllowFiltering="True"
+					   IsReadOnly="True"
 
 							ItemsSource="{x:Bind playerList, Mode=OneWay}"
 							AutoGenerateColumns="False"
@@ -145,8 +146,9 @@
 					<sf:GridViewDefinition.DataGrid>
 						<sf:SfDataGrid x:Name="citiesGrid" 
 									   AutoGenerateColumns="False"
-									    Tag="noDestroy"
-									   
+									    Tag="details"
+									   					   IsReadOnly="True"
+
 							SelectionMode="Extended"
 							RowHeight="{StaticResource LargeGridRowHeight}"
 							FontSize="{StaticResource SmallFontSize}"

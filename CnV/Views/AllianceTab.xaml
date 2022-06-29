@@ -23,7 +23,8 @@
 							x:FieldModifier="public"
 					   Grid.Row="3"
 							AllowFiltering="True"
-							
+												   IsReadOnly="True"
+
 							ItemsSource="{x:Bind cnv:Alliance.all}"
 							AutoGenerateColumns="False"
 							SelectionMode="Extended"
@@ -66,7 +67,9 @@
 				<sf:GridViewDefinition RelationalColumn="players">
 					<sf:GridViewDefinition.DataGrid>
 						<sf:SfDataGrid x:Name="playersGrid" 
-									    Tag="noDestroy"
+									   					   IsReadOnly="True"
+
+									    Tag="details"
 									   AutoGenerateColumns="False"
 							SelectionMode="Extended"
 							RowHeight="{StaticResource LargeGridRowHeight}"

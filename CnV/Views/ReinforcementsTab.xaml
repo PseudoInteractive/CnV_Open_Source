@@ -134,8 +134,9 @@
 					<sf:GridViewDefinition.DataGrid>
 						<sf:SfDataGrid x:Name="armiesIn" 
 									   AutoGenerateColumns="False"
-							
-									   Tag="noDestroy"
+												   IsReadOnly="True"
+
+									   Tag="details"
 							SelectionUnit="Row"
 							AutoGenerateRelations="False"
 							ShowToolTip="True"
@@ -186,11 +187,13 @@
 					<sf:GridViewDefinition.DataGrid>
 						<sf:SfDataGrid x:Name="armiesOut" 
 									   AutoGenerateColumns="False"
-							Tag="noDestroy"
+							Tag="details"
 							SelectionUnit="Row"
 							AutoGenerateRelations="False"
 							ShowToolTip="True"
 							FontStretch="Condensed"
+									   					   IsReadOnly="True"
+
 									   >
 							<sf:SfDataGrid.Columns >
 

@@ -178,7 +178,10 @@ namespace CnV.Views
 							//var sel = defenderGrid.SelectedItems.ToArray();
 							//++SpotTab.silenceSelectionChanges;
 
-							newItems.SyncList(instance.citiesWithIncoming);
+							if( newItems.SyncList(instance.citiesWithIncoming) ) {
+								instance.defenderGrid.ResetAutoColumns(true);
+
+							}
 
 							var sel = instance.defenderGrid.SelectedItem;
 							if(sel is not null && newItems.Contains(sel)) {
@@ -186,7 +189,6 @@ namespace CnV.Views
 								instance.defenderGrid.ScrollItemIntoView(sel);
 
 							}
-							instance.defenderGrid.ResetAutoColumns();
 							instance.UpdateArmyGrid(true,false);
 						}
 						catch(Exception ex) { LogEx(ex); }
@@ -238,8 +240,9 @@ namespace CnV.Views
 				if(sel != null) {
 					var visibilityTime = Sim.simTime + sel.scoutRange;
 					var items=  sel.incoming.Where(a => a.isDefense || (a.arrival <= visibilityTime && a.departed) ).OrderBy(a => a.arrival).ThenBy(a=> a.isDefense ? 0 : 1).ToArray();
-					items.SyncList(armiesIncoming);
-					armyGrid.ResetAutoColumns();
+					if(items.SyncList(armiesIncoming)) {
+						armyGrid.ResetAutoColumns();
+					}
 					if(updatehistoryTab) {
 						HitHistoryTab.SetFilter(sel);
 						

@@ -55,7 +55,7 @@ public sealed partial class DonationTab : UserTab
 					.OrderBy(a => a.cont).ThenByDescending(a => (!ViaWater ? a.cartsHome * 1000 : a.shipsHome*10_000).Min(a.sampleResources.sum)).ToArray();
 				if(instance is not null) {
 					if(l.SyncList(instance.donationGridSource)) {
-						instance.donationGrid.ResetAutoColumns();
+						instance.donationGrid.ResetAutoColumns(true);
 
 					}
 				}

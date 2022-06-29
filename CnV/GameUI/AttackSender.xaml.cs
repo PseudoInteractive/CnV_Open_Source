@@ -3,6 +3,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text.Json;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -17,7 +18,7 @@ public sealed partial class AttackSender:DialogG, INotifyPropertyChanged
 		set {
 			if(viaWater != value) {
 				viaWater = value;
-				UpdateTravelTime();
+				OnPropertyChanged();
 			}
 		}
 	}
@@ -31,7 +32,7 @@ public sealed partial class AttackSender:DialogG, INotifyPropertyChanged
 		set {
 			if(value!=waitReturn) {
 				waitReturn=value;
-				UpdateTravelTime();
+				OnPropertyChanged();
 			}
 		}
 	}
@@ -42,6 +43,14 @@ public sealed partial class AttackSender:DialogG, INotifyPropertyChanged
 	protected override string title => $"Send attacks from {city}";
 	internal static AttackSender? instance;
 	internal City city;
+	internal City cityUI { get => city;
+		set { 
+			if(city != value) {
+				city = value;
+				UpdateTroopItems();
+			}
+		}
+	}
 	internal ServerTime arrival {
 		get {
 			var a = this.arrivalUI.dateTime;
@@ -82,29 +91,33 @@ public sealed partial class AttackSender:DialogG, INotifyPropertyChanged
 	public AttackSender() {
 		this.InitializeComponent();
 		instance = this;
-		PropertyChanged += SendTroops_PropertyChanged;
 		arrivalUI.PropertyChanged += SendTroops_PropertyChanged;
 
 	}
 
 	private void SendTroops_PropertyChanged(object? sender,PropertyChangedEventArgs e) {
-		UpdateTravelTime();
 		OnPropertyChanged();
+	
 
 	}
 
-	private void UpdateTravelTime() {
-		var depart = departure;
+	protected string  travelTimeS {
+		get {
+			var depart = departure;
 
-		var rv = $"Travel time: {travelTime.Format()}\nDepart: {depart}\nArrival: {(arrival)}";
-		if(depart+10 < Sim.simTime) {
-			rv += " (depart is past)";
+			var rv = $"Travel time: {travelTime.Format()}\nDepart: {depart}\nArrival: {(arrival)}";
+			if(depart+10 < Sim.simTime) {
+				rv += " (depart is past)";
+			}
+			return rv; 
 		}
-		travelInfo.Text= rv;
 	}
 
 	private void UpdateTroopItems() {
 
+		foreach(var s in sendInfo) {
+			s.PropertyChanged-= SendTroops_PropertyChanged;
+		}
 		sendInfo.Clear();
 		//foreach(var target in targets) {
 		var ttHome = city.troopsOwnedPlusRecruiting;
@@ -115,6 +128,7 @@ public sealed partial class AttackSender:DialogG, INotifyPropertyChanged
 				rv.PropertyChanged += SendTroops_PropertyChanged;
 			}
 		}
+		OnPropertyChanged();
 		//}
 	}
 
@@ -134,6 +148,7 @@ public sealed partial class AttackSender:DialogG, INotifyPropertyChanged
 
 			var selected = City.GetSelectedForContextMenu(firstTarget.cid,false,city.cid,true,false);
 			rv.targets.Clear();
+			int counter = 0;
 			foreach(var selI in selected) {
 				var target = selI.AsCity();
 				if(target == city)
@@ -145,7 +160,7 @@ public sealed partial class AttackSender:DialogG, INotifyPropertyChanged
 					}
 				
 				}
-				rv.targets.Add(new(target,rv));
+				rv.targets.Add(new(target,rv,counter++==0));
 			}
 			rv.UpdateTroopItems();
 			//rv._departure = depart;
@@ -201,7 +216,7 @@ public sealed partial class AttackSender:DialogG, INotifyPropertyChanged
 		}
 
 
-		if(city.freeCommandSlots < targets.Count) {
+		if(city.freeCommandSlots < validTargets.Count() ) {
 			if(verbose) AppS.MessageBox($"Out of command slots");
 			return (false);
 		}
@@ -340,11 +355,11 @@ public sealed partial class AttackSender:DialogG, INotifyPropertyChanged
 
 	internal TimeSpanS travelTime {
 		get {
-			if(!targets.Any())
+			if(!validTargets.Any())
 				return default;
 			var t = GetTroopCounts();
 
-			return targets.Max(a => Army.JourneyTime(city,a.target.cid,transport,a.isReal ? t.reals : t.fakes,false));
+			return validTargets.Max(a => Army.JourneyTime(city,a.target.cid,transport,a.isReal ? t.reals : t.fakes,false));
 		}
 	}
 	//internal TimeSpanS travelTimeWithHorms => new((travelTime*useHorns.Switch(1.0f,0.5f)).CeilToInt());
@@ -362,15 +377,20 @@ public sealed partial class AttackSender:DialogG, INotifyPropertyChanged
 				//	Done();
 				//	return;
 				//}
+			if(!validTargets.Any() ) {
+
+				AppS.MessageBox("Please add or set target cities","");
+				return;
+			}
 			var troops = GetTroopCounts();
 			if(!troops.hasEnough) {
-				AppS.MessageBox($"Not enoguh troops for minTS\n","");
+				AppS.MessageBox("Not enough troops for minTS","");
 				return;
 			}
 			var valid = AreTargetsValid((troops.reals, troops.fakes),true);
 			if(!valid)
 				return;
-			foreach(var t in targets) {
+			foreach(var t in validTargets) {
 				if(!await IsValid(t.isReal ? troops.reals : troops.fakes,t.target,true)) {
 					return;
 				}
@@ -385,7 +405,7 @@ public sealed partial class AttackSender:DialogG, INotifyPropertyChanged
 			//var arrival = this.arrivalUI.dateTime;
 			//if(arrival == default)
 			//	arrival = departure + travelTimeWithHorms;
-			foreach(var t in targets) {
+			foreach(var t in validTargets) {
 				var _t = t;
 				await SendTroops.ShowInstance(city,t.target,false,viaWater,t.isReal ? realType : fakeType,null,t.isReal ? troops.reals : troops.fakes,arrival,false,waitReturn,notSameAlliance: notSameAlliance.IsChecked);
 			}
@@ -425,20 +445,27 @@ public sealed partial class AttackSender:DialogG, INotifyPropertyChanged
 
 
 	public event PropertyChangedEventHandler? PropertyChanged;
-	public void OnPropertyChanged(string? member = null) {
+	
+	public void CallPropertyChanged() {
 		if(this.PropertyChanged is not null)
-			AppS.QueueOnUIThread(() => PropertyChanged?.Invoke(this,new(member)));
+			PropertyChanged?.Invoke(this,new(null));
 	}
-	public static void Changed(string? member = null) {
-		if(instance is not null) {
-			instance.OnPropertyChanged(member);
-			foreach(var i in instance.targets)
-				i.OnPropertyChanged(member);
-		}
+
+	public void OnPropertyChanged() {
+		if(this.PropertyChanged is not null)
+			AppS.QueueOnUIThread(CallPropertyChanged);
 	}
-	public IEnumerable<City> targetCities => targets.Select(a => a.target);
+	//public static void Changed(string? member = null) {
+	//	if(instance is not null) {
+	//		instance.OnPropertyChanged(member);
+	//		foreach(var i in instance.validTargets)
+	//			i.OnPropertyChanged(member);
+	//	}
+	//}
+	public IEnumerable<City> targetCities => validTargets.Select(a => a.target);
+	public IEnumerable<AttackTargetItem> validTargets => targets.Where(a => a.target.IsValid() );
 	public TroopTypeCounts troopsToSend => city.troopsOwned;
-	public (int reals, int fakes) realsAndFakes => (targets.Count(a => a.isReal), targets.Count(a => a.isFake));
+	public (int reals, int fakes) realsAndFakes => (validTargets.Count(a => a.isReal), validTargets.Count(a => a.isFake));
 
 	public (TroopTypeCounts reals, TroopTypeCounts fakes, bool hasEnough) GetTroopCounts() {
 		var tsSend = troopsToSend;
@@ -462,8 +489,10 @@ public sealed partial class AttackSender:DialogG, INotifyPropertyChanged
 
     private void RemoveTarget(object sender,RoutedEventArgs e) {
 		var s = sender as Button;
-		var ctx = s.DataContext;
-		Assert(ctx is AttackTargetItem);
+		var ctx = s.DataContext as AttackTargetItem;
+		Assert(ctx is not null);
+		targets.Remove(ctx);
+		OnPropertyChanged();
 
     }
 	internal int uiRealType {
@@ -480,20 +509,92 @@ public sealed partial class AttackSender:DialogG, INotifyPropertyChanged
 
 
 			}
+
+	private void AddTarget(object sender,RoutedEventArgs e) {
+		targets.Add(new(City.invalid,this,false));
+
+	}
+
+	internal override bool closeOnCitySwitch => false;
+
+	internal JsonAttack AsJsonAttack() {
+		JsonAttack rv = new();
+		rv.attacker = city.cid.CidToString();
+		rv.t = arrival;
+		rv.real = realType.EnumName();
+		rv.fake = fakeType.EnumName();
+		var ts = validTargets.ToArray();
+		var t = new JsonAttack.Target[ts.Length];
+		for(int i = 0;i < ts.Length;i++) {
+			t[i].c = ts[i].target.cid.CidToString();
+			t[i].real = ts[i].isReal;
+		}
+		rv.targets = t;
+		return rv;
+	}
+	internal string json { 
+		get 
+		{
+			return JsonSerializer.Serialize(AsJsonAttack(), JSON.jsonSerializerOptionsPretty);
+		}
+		set {
+			try {
+
+				// Toddo
+				var js = JsonSerializer.Deserialize<JsonAttack>(value,JSON.jsonSerializerOptions);
+				var source = js.attacker.FromCoordinate();
+				if(source > 0) {
+
+				}
+
+				OnPropertyChanged();
+
+			}
+			catch(Exception ex) {
+				Note.Show("Invalid Json");
+			}
+		}
+	}
+
 }
 
 
+internal class JsonAttack {
+	public string attacker { get; set; }
+	public DateTime t { get; set; }
+	public Target[] targets { get; set; }
+
+	public string real { get; set; }
+	public string fake { get; set; }
+
+	internal struct Target {
+	
+		public string c { get; set; }
+		public bool real { get; set; } 
+	}
+
+}
+
 public class AttackTargetItem:ANotifyPropertyChanged
 		{
-
+			internal City targetUI {
+		get => target;
+		set {
+			if(target != value) {
+				target = value;
+				attackSender.OnPropertyChanged();
+			}
+		}
+		}
 			internal City target;
 			internal AttackSender attackSender;
 			internal bool isReal;
 			internal bool isFake => !isReal;
 			internal City source => attackSender.city;
-			public AttackTargetItem(Spot target,AttackSender attackSender) {
+			public AttackTargetItem(Spot target,AttackSender attackSender, bool isReal) {
 				this.target=target;
 				this.attackSender=attackSender;
+				this.isReal= isReal;
 				
 			}
 
