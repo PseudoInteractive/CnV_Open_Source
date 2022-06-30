@@ -151,7 +151,7 @@ partial class ShellPage
 				if(AppS.IsKeyPressedShiftOrControl())
 					spot.SetFocus(true,true,false);
 				var position = args.Position;
-				AppS.DispatchOnUIThread(priority: DispatcherQueuePriority.High,action: () =>
+				AppS.DispatchOnUIThread(action: () =>
 					 spot.ShowContextMenu(canvas,position));
 
 			}

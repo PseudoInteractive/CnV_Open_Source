@@ -164,7 +164,7 @@ namespace CnV.Views
 			if(!Sim.isPastWarmup && PlayerStats.instance is not null)
 				return;
 
-				AppS.QueueOnUIThreadIdle(() => {
+				AppS.QueueOnUIThread(() => {
 					
 					PlayerStats.instance.UpdateIncomingText();
 					if(IncomingTab.IsVisible()) {

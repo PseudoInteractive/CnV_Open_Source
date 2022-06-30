@@ -9,7 +9,7 @@
       "MonoGame.Framework/1.0.0": {
         "dependencies": {
           "Microsoft.Windows.CsWinRT": "1.6.4",
-          "Microsoft.Windows.SDK.BuildTools": "10.0.22000.197",
+          "Microsoft.Windows.SDK.BuildTools": "10.0.22621.1",
           "Microsoft.WindowsAppSDK": "1.1.1",
           "SharpDX": "4.2.0",
           "SharpDX.DXGI": "4.2.0",
@@ -18,8 +18,8 @@
           "SharpDX.XAudio2": "4.2.0",
           "SharpDX.XInput": "4.2.0",
           "SharpGen.Runtime.COM": "2.0.0-beta.11",
-          "StbImageSharp": "2.27.8",
-          "StbImageWriteSharp": "1.13.5",
+          "StbImageSharp": "2.27.11",
+          "StbImageWriteSharp": "1.16.7",
           "runtimepack.Microsoft.Windows.SDK.NET.Ref": "10.0.22000.25"
         },
         "runtime": {
@@ -55,10 +55,10 @@
           }
         }
       },
-      "Microsoft.Windows.SDK.BuildTools/10.0.22000.197": {},
+      "Microsoft.Windows.SDK.BuildTools/10.0.22621.1": {},
       "Microsoft.WindowsAppSDK/1.1.1": {
         "dependencies": {
-          "Microsoft.Windows.SDK.BuildTools": "10.0.22000.197"
+          "Microsoft.Windows.SDK.BuildTools": "10.0.22621.1"
         },
         "runtime": {
           "lib/net5.0-windows10.0.18362.0/Microsoft.InteractiveExperiences.Projection.dll": {
@@ -312,19 +312,19 @@
           }
         }
       },
-      "StbImageSharp/2.27.8": {
+      "StbImageSharp/2.27.11": {
         "runtime": {
           "lib/netstandard2.0/StbImageSharp.dll": {
-            "assemblyVersion": "2.27.8.0",
-            "fileVersion": "2.27.8.0"
+            "assemblyVersion": "2.27.11.0",
+            "fileVersion": "2.27.11.0"
           }
         }
       },
-      "StbImageWriteSharp/1.13.5": {
+      "StbImageWriteSharp/1.16.7": {
         "runtime": {
           "lib/netstandard2.0/StbImageWriteSharp.dll": {
-            "assemblyVersion": "1.13.5.0",
-            "fileVersion": "1.13.5.0"
+            "assemblyVersion": "1.16.7.0",
+            "fileVersion": "1.16.7.0"
           }
         }
       },
@@ -930,12 +930,12 @@
       "path": "microsoft.windows.cswinrt/1.6.4",
       "hashPath": "microsoft.windows.cswinrt.1.6.4.nupkg.sha512"
     },
-    "Microsoft.Windows.SDK.BuildTools/10.0.22000.197": {
+    "Microsoft.Windows.SDK.BuildTools/10.0.22621.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-Yzovh74wAbTrVSAtaMuPXoJ2WTLG6LlFtDoqc9LF25G8XYU/pFTw5td4InYg1r62hgB664arPoYn47ecbud7VQ==",
-      "path": "microsoft.windows.sdk.buildtools/10.0.22000.197",
-      "hashPath": "microsoft.windows.sdk.buildtools.10.0.22000.197.nupkg.sha512"
+      "sha512": "sha512-Sp1DkYvg7yxuhamwxv+qFC66KC3paKQpwK8Q1J6XuAh6nzXIInmsDcpJ3szr0XGud4ysXojqwTfGdW01gvZ/0g==",
+      "path": "microsoft.windows.sdk.buildtools/10.0.22621.1",
+      "hashPath": "microsoft.windows.sdk.buildtools.10.0.22621.1.nupkg.sha512"
     },
     "Microsoft.WindowsAppSDK/1.1.1": {
       "type": "package",
@@ -1119,19 +1119,19 @@
       "path": "sharpgen.runtime.com/2.0.0-beta.11",
       "hashPath": "sharpgen.runtime.com.2.0.0-beta.11.nupkg.sha512"
     },
-    "StbImageSharp/2.27.8": {
+    "StbImageSharp/2.27.11": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-/LM7rEtSf7SWEJOPJfKVh3L0q/a+uYHOgaZg0bfz7QTqTzGUBRUcDWdxcjcANyj7RCSLH+40bmOflKziLTnrfw==",
-      "path": "stbimagesharp/2.27.8",
-      "hashPath": "stbimagesharp.2.27.8.nupkg.sha512"
+      "sha512": "sha512-KGXsx0IG2sNqjgu8w0w118bQmRx8avNxu8SbXKNW7izjrYTXrd5urAscez3qoIfaLeR4NdpxwHkkW/oInTp5Zg==",
+      "path": "stbimagesharp/2.27.11",
+      "hashPath": "stbimagesharp.2.27.11.nupkg.sha512"
     },
-    "StbImageWriteSharp/1.13.5": {
+    "StbImageWriteSharp/1.16.7": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-AxnCp3V1OwpVhLYeftM+pBF2Ob8iqqMeppZmOb7H5rE6H0xdBU/F2BXWgty5OpjXbFaIuybFEieEmbxLdH+CJg==",
-      "path": "stbimagewritesharp/1.13.5",
-      "hashPath": "stbimagewritesharp.1.13.5.nupkg.sha512"
+      "sha512": "sha512-NF9kOxi0iS9VunklnRKgOpAWC2knCGKRjdy7RT6XAqYNyb7LQfyPHPdl4l1fJw7TFYKrGQzQOmK1XpBONC2MoA==",
+      "path": "stbimagewritesharp/1.16.7",
+      "hashPath": "stbimagewritesharp.1.16.7.nupkg.sha512"
     },
     "System.AppContext/4.3.0": {
       "type": "package",

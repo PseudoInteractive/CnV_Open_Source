@@ -28,7 +28,7 @@
 							Loaded="DataGridLoaded"
 							 					   IsReadOnly="True"
 
-						FrozenColumnCount="3"
+						FrozenColumnsCount="3"
 							
 							ItemsSource="{x:Bind game:City.gridCitySource, Mode=OneWay}"
 							AutoGenerateColumns="False"
@@ -86,11 +86,7 @@
 												TextAlignment="Right"
 												DisplayNumberFormat="P1"
 												ToolTipService.ToolTip="% raiding troops idle" />
-				<sf:GridNumericColumn MappingName="tsHome"
-												TextAlignment="Right"
-												ToolTipService.ToolTip="TS of Troops at home (including non raiding troops)"
-												DisplayNumberFormat="N0"
-												IsHidden="True"/>
+
 				<sf:GridHyperlinkColumn MappingName="raidReturn"
 				                        ToolTipService.ToolTip="Click here to bring troops home asap"
 				                        />
@@ -107,33 +103,8 @@
 										   TextAlignment="Center"
 								   
 										    />	
-				<sf:GridTextColumn MappingName="remarks"
-										   TextAlignment="Left"
-										   IsHidden="True" />
-					<sf:GridTextColumn MappingName="senny"
-										   TextAlignment="Left"
-										   IsHidden="True" />
-				<sf:GridCheckBoxColumn  MappingName="isCastle"
-											  IsHidden="True"
-											   />
-				<sf:GridCheckBoxColumn  MappingName="isOnWater"
-											  IsHidden="True"
-											   />
-					<sf:GridNumericColumn MappingName="carryCapacity"
-												TextAlignment="Right"
-												DisplayNumberFormat="N0"
-												IsHidden="True"
-												 />
-					<sf:GridNumericColumn MappingName="activeCommands"
-												TextAlignment="Right"
-												DisplayNumberFormat="N0"
-												IsHidden="True"
-												 />
-					<sf:GridNumericColumn MappingName="commandSlots"
-												TextAlignment="Right"
-												DisplayNumberFormat="N0"
-												IsHidden="True"
-												 />
+
+
 					<sf:GridTextColumn MappingName="troopsString"
 												TextAlignment="Left"
 											

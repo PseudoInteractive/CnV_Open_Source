@@ -137,13 +137,13 @@ namespace CnV
 					series.Tapped+=(a,b) => {
 						Note.Show("left tapped");
 					};
-					series.PointerPressed+=(a,b) => {
-						var c = b.GetCurrentPoint(sfChart).Position;
-						int id = series.GetDataPointIndex(c.X,c.Y);
-						var t = (series.ItemsSource as DataPoint[])[id];
-						var st = ServerTime.PseudoLocalAsServerTime(t.t); 
-						Sim.GotoTime(st);
-					};
+					//series.PointerPressed+=(a,b) => {
+					//	var c = b.GetCurrentPoint(sfChart).Position;
+					//	int id = series.GetDataPointIndex(c.X,c.Y);
+					//	var t = (series.ItemsSource as DataPoint[])[id];
+					//	var st = ServerTime.PseudoLocalAsServerTime(t.t); 
+					//	Sim.GotoTime(st);
+					//};
 					seriesList.Add(series);
 				}
 				if(hidden)
@@ -175,27 +175,29 @@ namespace CnV
 
 		}
 
-		private void sfChart_SelectionChanged(object sender,ChartSelectionChangedEventArgs e) {
-			Note.Show($"Sel changed {e.SelectedIndex} {e.SelectedSeries?.Label}");
-		}
+	
 
-		private void sfChart_SelectionChanging(object sender,ChartSelectionChangingEventArgs e) {
-			Note.Show($"Sel changed {e.SelectedIndex} {e.SelectedSeries?.Label}");
-		}
+		//private void PrimaryAxisClicked(object sender,AxisLabelClickedEventArgs e) {
+		//	var label = e.Label;
+		//	Log(label);
+		//	if( DateTime.TryParse(label.Content.ToString(), out var t))
+		//	{
+		//		Sim.GotoTime(ServerTime.PseudoLocalAsServerTime(t));
+		//	}
+		//}
 
-		private void PrimaryAxisClicked(object sender,AxisLabelClickedEventArgs e) {
-			var label = e.Label;
-			Log(label);
-			if( DateTime.TryParse(label.Content.ToString(), out var t))
-			{
-				Sim.GotoTime(ServerTime.PseudoLocalAsServerTime(t));
-			}
-		}
+		//private void SecondaryAxisClicked(object sender,AxisLabelClickedEventArgs e) {
 
-		private void SecondaryAxisClicked(object sender,AxisLabelClickedEventArgs e) {
+		//	var label = e.Label;
+		//	Log(label);
+		//}
 
-			var label = e.Label;
-			Log(label);
+        private void sfChart_SelectionChanging(object sender,SelectionChangingEventArgs e) {
+				Note.Show($"Sel changing {e.CurrentIndex} {e.PreviousIndex}");
+        }
+
+		private void sfChart_SelectionChanged(object sender,Syncfusion.UI.Xaml.Charts.SelectionChangedEventArgs e) {
+						Note.Show($"Sel changed {e.CurrentIndex} {e.PreviousIndex}");
 		}
 	}
 }

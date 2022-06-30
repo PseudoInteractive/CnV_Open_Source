@@ -36,7 +36,7 @@
 						
 						Loaded="DataGridLoaded"
                         AutoGenerateColumns="False"
-                        FrozenColumnCount="2"
+                        FrozenColumnsCount="2"
                  
                         FontSize="{StaticResource SmallFontSize}"
                         RowHeight="{StaticResource MediumGridRowHeight}"
@@ -107,20 +107,13 @@
                                       
                                        TextAlignment="Left" />
 
-				<sf:GridTextColumn MappingName="nameAndRemarks"
-                                      
-                                       TextAlignment="Left"
-                                         IsHidden="True" />
-				<sf:GridTextColumn MappingName="allianceName"
-								   HeaderText="Alliance"
-                                      
-                                       
-                                       IsHidden="True" />
+
+
 				<sf:GridNumericColumn MappingName="cont"
                                             TextAlignment="Center" />
 				<sf:GridNumericColumn MappingName="scoutRangeHrs"
                                             TextAlignment="Right"
-                                             IsHidden="True" />
+                                              />
 				<sf:GridNumericColumn MappingName="tsOffMax"
                                              HeaderText="offense home"
 									   
@@ -128,9 +121,7 @@
                                        TextAlignment="Right"
                                             DisplayNumberFormat="N0"
                                               />
-				<sf:GridCheckBoxColumn  MappingName="isOnWater"
 
-                                                      TextAlignment="Center" IsHidden="True" />
 				<sf:GridTextColumn MappingName="incTT"
                                  
                                        

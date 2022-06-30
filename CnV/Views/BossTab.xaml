@@ -60,10 +60,7 @@
                                                      
                                    HeaderText="troops"
                                              />
-                <sf:GridNumericColumn MappingName="points"
-                                                     IsHidden="True"
-                                            
-                                                     />
+
             </sf:SfDataGrid.Columns>
         </sf:SfDataGrid>
         <sf:SfDataGrid x:Name="bossGrid" x:FieldModifier="public"

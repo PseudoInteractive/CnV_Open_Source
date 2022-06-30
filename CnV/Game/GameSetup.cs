@@ -283,9 +283,9 @@ namespace CnV
 
 				//	await Task.Delay(1000);
 
-				//	System.GC.Collect(2,GCCollectionMode.Default,true,true);
+				System.GC.Collect(2,GCCollectionMode.Default,true,true);
 
-				//	GCSettings.LatencyMode = GCLatencyMode.SustainedLowLatency;
+			//		GCSettings.LatencyMode = GCLatencyMode.SustainedLowLatency;
 			//	reinforcementsTask = new(interval:64.0f,()=> ReinforcementsOverview.instance.Post(),initialDelay:4.0f );
 			//	senInfoTask        = new( interval: 68f, City.UpdateSenatorInfo, 3.0f);
 				Sim.isInitialized      = true;

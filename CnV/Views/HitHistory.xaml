@@ -40,7 +40,7 @@ Loaded="DataGridLoaded"
                         ItemsSource="{x:Bind reports, Mode=OneWay}"
                         SelectionMode="Single"
                         SelectionUnit="Row"
-				FrozenColumnCount="2"
+				FrozenColumnsCount="2"
 			FontStretch="Condensed"
 					   >
 			

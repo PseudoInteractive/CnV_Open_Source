@@ -2200,16 +2200,17 @@ internal partial class GameClient
 			//			}
 			if(!faulted && AppS.isForeground) {
 				if(World.bitmapPixels != null) {
-					// canvas.Paused = true;
-					var pixels = World.bitmapPixels;
+					Assert(false);
+					//// canvas.Paused = true;
+					//var pixels = World.bitmapPixels;
 
-					World.bitmapPixels = null;
-					if(worldObjects != null) {
-						var w = worldObjects;
-						worldObjects = null;
-						w.texture.Dispose();
-					}
-					worldObjects = CreateFromBytes(pixels,World.outSize,World.outSize,SurfaceFormat.Dxt1SRgb,defaultEffect);
+					//World.bitmapPixels = null;
+					//if(worldObjects != null) {
+					//	var w = worldObjects;
+					//	worldObjects = null;
+					//	w.texture.Dispose();
+					//}
+					//worldObjects = CreateFromBytes(pixels,World.outSize,World.outSize,SurfaceFormat.Dxt1SRgb,defaultEffect);
 				}
 				//if(World.renderTileStaging != null)
 				//{
@@ -2223,14 +2224,15 @@ internal partial class GameClient
 
 				//}
 				if(World.worldOwnerPixels != null) {
-					var ownerPixels = World.worldOwnerPixels;
-					World.worldOwnerPixels = null;
-					if(worldOwners != null) {
-						var w = worldOwners;
-						worldOwners = null;
-						w.texture.Dispose();
-					}
-					worldOwners = CreateFromBytes(ownerPixels,World.outSize,World.outSize,SurfaceFormat.Dxt1SRgb,defaultEffect);
+					Assert(false);
+					//var ownerPixels = World.worldOwnerPixels;
+					//World.worldOwnerPixels = null;
+					//if(worldOwners != null) {
+					//	var w = worldOwners;
+					//	worldOwners = null;
+					//	w.texture.Dispose();
+					//}
+					//worldOwners = CreateFromBytes(ownerPixels,World.outSize,World.outSize,SurfaceFormat.Dxt1SRgb,defaultEffect);
 					//canvas.Paused = falwirse;
 					//if (worldObjectsDark != null)
 					//    worldObjectsDark.Dispose();

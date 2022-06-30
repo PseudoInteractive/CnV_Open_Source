@@ -34,11 +34,11 @@ namespace CnV
 
 		const string work = "fetch outgoing";
 
-		public static void ProcessTask() 
-		{
-			OutgoingUpdateDebounce.Go();
-		}
-		public static Debounce OutgoingUpdateDebounce = new(_Process) {  debounceDelay = 1000, throttleDelay = 2000 };
+		//public static void ProcessTask() 
+		//{
+		//	OutgoingUpdateDebounce.Go();
+		//}
+		//public static Debounce OutgoingUpdateDebounce = new(_Process) {  debounceDelay = 1000, throttleDelay = 2000 };
 
 		public async static Task _Process() { }
 //		public async static Task _Process()

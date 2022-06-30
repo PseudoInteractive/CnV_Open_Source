@@ -21,7 +21,7 @@
 				<ToggleSwitch  OnContent="Alliances" OffContent="Players" IsOn="{x:Bind byAlliance,Mode=TwoWay}" />
 			</StackPanel>
 
-			<sfc:SfCartesianChart x:Name="sfChart" Grid.Row="1" SelectionChanged="sfChart_SelectionChanged"  SelectionChanging="sfChart_SelectionChanging"    >
+			<sfc:SfCartesianChart x:Name="sfChart" Grid.Row="1"      >
 				<sfc:SfCartesianChart.Resources>
 					<DataTemplate x:Key="tooltipTemplate0">
 						<Border IsHitTestVisible="False" Background="White" CornerRadius="4" Padding="4" BorderThickness="1" BorderBrush="Purple" >
@@ -41,23 +41,27 @@
 					<sfc:ChartLegend CheckBoxVisibility="Visible" ToggleSeriesVisibility="True"   />
 				</sfc:SfCartesianChart.Legend>
 
-				<sfc:SfCartesianChart.PrimaryAxis>
-					<sfc:DateTimeAxis  Interval="1" IntervalType="Days" LabelFormat="MM/dd"  ShowTrackballInfo="True" LabelClicked="PrimaryAxisClicked" />
-				</sfc:SfCartesianChart.PrimaryAxis>
+				<sfc:SfCartesianChart.XAxes>
+					<sfc:DateTimeAxis  Interval="1" IntervalType="Days" LabelFormat="MM/dd"  ShowTrackballInfo="True"  />
+				</sfc:SfCartesianChart.XAxes>
 
-				<sfc:SfCartesianChart.SecondaryAxis>
-					<sfc:NumericalAxis    LabelClicked="SecondaryAxisClicked"  ShowTrackballInfo="True" />
-				</sfc:SfCartesianChart.SecondaryAxis>
-				<sfc:SfCartesianChart.Behaviors>
-					<sfc:ChartZoomPanBehavior   />
+				<sfc:SfCartesianChart.YAxes>
+					<sfc:NumericalAxis     ShowTrackballInfo="True" />
+				</sfc:SfCartesianChart.YAxes>
+				<sfc:SfCartesianChart.ZoomPanBehavior>
+					<sfc:ChartZoomPanBehavior/>
+				</sfc:SfCartesianChart.ZoomPanBehavior>
+			
+				<sfc:SfCartesianChart.CrosshairBehavior>
+				<sfc:ChartCrosshairBehavior  />
+			</sfc:SfCartesianChart.CrosshairBehavior>
 
-					<sfc:ChartSelectionBehavior  Type="Point"  />
-
-					<sfc:ChartCrosshairBehavior  />
+			<sfc:SfCartesianChart.SelectionBehavior>
+				<sfc:SeriesSelectionBehavior Type="Single" SelectionChanged="sfChart_SelectionChanged" SelectionChanging="sfChart_SelectionChanging"  />
+			</sfc:SfCartesianChart.SelectionBehavior>
 					<!---	<sfc:ChartTrackballBehavior  /> -->
 					<!--<sfc:ChartTooltipBehavior  ShowDuration="5000"   />-->
 
-				</sfc:SfCartesianChart.Behaviors>
 
 			</sfc:SfCartesianChart>
 		</Grid>

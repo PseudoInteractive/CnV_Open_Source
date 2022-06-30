@@ -25,19 +25,15 @@
 					   ShowGroupDropArea="True"
 					   IsReadOnly="True"
 							Grid.Row="3"
-							CellStyle="{StaticResource SfTextCell}"
-					   FontFamily="{StaticResource CnvIcons}"
-					   RowStyle="{StaticResource sfRowStyle}"
+					
 							ItemsSource="{x:Bind game:City.gridCitySource, Mode=OneWay}"
 							AutoGenerateColumns="False"
 							SelectionMode="Extended"
-							RowHeight="{StaticResource ShortGridRowHeight}"
-							FontSize="{StaticResource SmallFontSize}"
+						
 							SelectionUnit="Row"
 							ShowToolTip="True"
 							FontStretch="Condensed"
 							Loaded="DataGridLoaded"
-							FrozenColumnCount="2"
 							
 					   >
 	
@@ -122,11 +118,7 @@
 										   ToolTipService.ToolTip="Walls are set to autobuild?"
 										  Width="32"
 										    />
-				<!--<sf:GridTextColumn MappingName="buildingStr"
-										   HeaderTip="Buildings"
-										   ToolTipService.ToolTip="Number of buildings"
-										   CellStyle="{StaticResource CenterAlignLink}"
-										    />-->
+				
 				<sf:GridNumericColumn MappingName="Bldgs"
 										   ToolTipService.ToolTip="May or may not include queued buildings"
 										   TextAlignment="Right"
@@ -157,22 +149,9 @@
 										   TextAlignment="Center"
 								   
 										    />
-				<sf:GridTextColumn MappingName="remarks"
-										   TextAlignment="Left"
-										   ColumnWidthMode="Auto"
-										   IsHidden="True" />
-				<sf:GridTextColumn MappingName="senny"
-										   TextAlignment="Left"
-										   ColumnWidthMode="Auto"
-										   IsHidden="True" />
-				<sf:GridCheckBoxColumn MappingName="isCastle"
-											  IsHidden="True"
-											  ColumnWidthMode="Auto"
-											   />
-				<sf:GridCheckBoxColumn MappingName="isOnWater"
-											  IsHidden="True"
-											  ColumnWidthMode="Auto"
-											   />
+
+
+
 				<sf:GridNumericColumn MappingName="bcTowers"
 										  ToolTipService.ToolTip="Towers count"
 										   ColumnWidthMode="Auto"

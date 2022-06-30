@@ -69,7 +69,7 @@
 		<PackageReference Include="Enums.NET" Version="4.0.0" />
 		<PackageReference Include="Grpc.Net.Client" Version="2.46.0" />
 		<PackageReference Include="Humanizer.Core" Version="2.14.1" />
-		<PackageReference Include="MagicOnion.Client" Version="4.5.0" />
+		<PackageReference Include="MagicOnion.Client" Version="4.5.1" />
 		<PackageReference Include="MessagePackAnalyzer" Version="2.4.35">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -79,7 +79,6 @@
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0-preview.5.22301.12" />
 		<PackageReference Include="Microsoft.Extensions.ObjectPool" Version="7.0.0-preview.5.22303.8" />
 		<PackageReference Include="Microsoft.Extensions.Primitives" Version="7.0.0-preview.5.22301.12" />
-		<PackageReference Include="Microsoft.Graphics.Win2D" Version="1.0.3.1" />
 		<PackageReference Include="Microsoft.Identity.Client" Version="4.45.0">
 			<TreatAsUsed>true</TreatAsUsed>
 		</PackageReference>
@@ -89,21 +88,21 @@
 		<PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="2.22.0" />
 		<PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="6.20.0" />
 		<PackageReference Include="Microsoft.Windows.CsWinRT" Version="1.6.4" />
-		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.197" />
+		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.1" />
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.1" />
 		<PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
 		<PackageReference Include="PlayFabAllSDK" Version="1.108.220118" />
-		<PackageReference Include="Syncfusion.Chart.WinUI" Version="20.1.0.61" />
-		<PackageReference Include="Syncfusion.Editors.WinUI" Version="20.1.0.61" />
-		<PackageReference Include="Syncfusion.Grid.WinUI" Version="20.1.0.61" />
-		<PackageReference Include="Syncfusion.Licensing" Version="20.1.0.61" />
+		<PackageReference Include="Syncfusion.Chart.WinUI" Version="20.2.0.36" />
+		<PackageReference Include="Syncfusion.Editors.WinUI" Version="20.2.0.36" />
+		<PackageReference Include="Syncfusion.Grid.WinUI" Version="20.2.0.36" />
+		<PackageReference Include="Syncfusion.Licensing" Version="20.2.0.36" />
 		<PackageReference Include="SharpDX" Version="4.2.0" />
 		<PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
 		<PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
 		<PackageReference Include="SharpDX.DXGI" Version="4.2.0" />
 		<PackageReference Include="SharpDX.MediaFoundation" Version="4.2.0" />
 		<PackageReference Include="SharpGen.Runtime.COM" Version="2.0.0-beta.11" />
-		<PackageReference Include="Syncfusion.Scheduler.WinUI" Version="20.1.0.61" />
+		<PackageReference Include="Syncfusion.Scheduler.WinUI" Version="20.2.0.36" />
 		<PackageReference Include="System.Collections.Immutable" Version="7.0.0-preview.5.22301.12" />
 		<PackageReference Include="System.Memory.Data" Version="7.0.0-preview.5.22301.12" />
 		<PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="7.0.0-preview.2.22152.2" />

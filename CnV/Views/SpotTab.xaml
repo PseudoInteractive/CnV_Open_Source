@@ -41,7 +41,7 @@
                         
                         SelectionMode="Extended"
                         SelectionUnit="Row"
-					   FrozenColumnCount="1"
+					   FrozenColumnsCount="1"
                         
 						>
 							  
@@ -72,9 +72,7 @@
                 <sf:GridNumericColumn MappingName="points"
                                      
                                       />
-                                <sf:GridTextColumn MappingName="remarks"
-                                       TextAlignment="Left"
-                                       IsHidden="True" />
+
                                 <sf:GridCheckBoxColumn  MappingName="isCastle"
                                           IsHidden="False"
                                            />

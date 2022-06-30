@@ -25,7 +25,7 @@
 						x:FieldModifier="public"
                         AutoGenerateColumns="False"
 						IsReadOnly="True"
-					   FrozenColumnCount="2"
+					   FrozenColumnsCount="2"
 						Loaded="DataGridLoaded"
                         FontSize="{StaticResource SmallFontSize}"
                         RowHeight="{StaticResource MediumGridRowHeight}"
@@ -102,7 +102,7 @@
                                     RowHeight="{StaticResource MediumGridRowHeight}"
                                     
                                     
-                                    FrozenColumnCount="2"
+                                    FrozenColumnsCount="2"
                                     AutoGenerateColumns="False">
             <sf:SfDataGrid.Columns>
                 <sf:GridTimeColumn MappingName="T"

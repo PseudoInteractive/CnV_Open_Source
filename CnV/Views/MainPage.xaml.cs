@@ -619,30 +619,30 @@ namespace CnV.Views
 			DungeonView.Show(null, null);
 		}
 
-		private async void ReturnRaidsForOutgoing(object sender, RoutedEventArgs e)
-		{
-			using var work = new WorkScope("Return For Outgoing..");
-			var counter = OutgoingOverview.outgoingCounter+1;
-			OutgoingOverview.OutgoingUpdateDebounce.Go();
+		//private async void ReturnRaidsForOutgoing(object sender, RoutedEventArgs e)
+		//{
+		//	using var work = new WorkScope("Return For Outgoing..");
+		//	var counter = OutgoingOverview.outgoingCounter+1;
+		//	OutgoingOverview.OutgoingUpdateDebounce.Go();
 
-			do
-			{
-				await Task.Delay(500);
-			} while (counter > OutgoingOverview.outgoingCounter);
+		//	do
+		//	{
+		//		await Task.Delay(500);
+		//	} while (counter > OutgoingOverview.outgoingCounter);
 					
-			int cities = 0;
-			foreach(var city in Spot.subCities)
-			{
-				if(city.hasOutgoingAttacks)
-				{
-					await city.ShowReturnAt(false);
-					await Task.Delay(200);
-					++cities;
-				}
-			}
-			Note.Show($"{cities} returned cities with outgoing");
+		//	int cities = 0;
+		//	foreach(var city in Spot.subCities)
+		//	{
+		//		if(city.hasOutgoingAttacks)
+		//		{
+		//			await city.ShowReturnAt(false);
+		//			await Task.Delay(200);
+		//			++cities;
+		//		}
+		//	}
+		//	Note.Show($"{cities} returned cities with outgoing");
 
-		}
+		//}
 
 		
 

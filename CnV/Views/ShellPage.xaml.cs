@@ -624,7 +624,7 @@ namespace CnV.Views
 
 				await Task.Delay(500);
 				await ShellPage.RefreshX();
-			//	TabPage.ShowTabs();
+				TabPage.ShowTabs();
 
 				AppS.DispatchOnUIThread(ShellPage.SetupNonCoreInput);
 				AppS.QueueIdleTask(DailyDialog.DailyRewardTask);
@@ -981,13 +981,15 @@ namespace CnV.Views
 				NotifyCollectionBase.ResetAll(true);
 				CityUI.Refresh();
 				RefreshTabs.Go();
-			//	Note.Show($"Refresh all");
-				await AppS.QueueOnUIThreadTask(() => {
-					foreach(var city in City.allCities) {
-						city.CallPropertyChanged();
-					}
-				});
-					
+				//	Note.Show($"Refresh all");
+
+				foreach(var city in City.allCities) {
+					city.OnPropertyChanged();
+				}
+
+			
+				System.GC.Collect(2,GCCollectionMode.Default,true,true);
+
 				//await t;
 			}
 			catch(Exception _ex) {
@@ -1002,7 +1004,7 @@ namespace CnV.Views
 			RefreshX();
 		}
 
-		public static Debounce RefreshTabs = new(_RefreshTabs) { };
+		public static Debounce RefreshTabs = new(_RefreshTabs) { debounceDelay= 400 };
 
 		public static Task _RefreshTabs() {
 			// fall through from shift-refresh. Shift refresh does both

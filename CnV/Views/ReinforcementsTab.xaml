@@ -81,12 +81,7 @@
 				<sf:GridTextColumn MappingName="defString"
 									   HeaderText="Total In"
                                       />
-				<sf:GridNumericColumn MappingName="tsHome"
-                                            HeaderText="tsNow"
-									   IsHidden="True"
 
-                                            TextAlignment="Right"
-                                            DisplayNumberFormat="N0" />
 
 			
 				
@@ -119,7 +114,7 @@
                                             TextAlignment="Center" />
 				<sf:GridNumericColumn MappingName="scoutRangeHrs"
                                             TextAlignment="Right"
-                                             IsHidden="True" />
+                                             />
 				<sf:GridTextColumn MappingName="incTT"
                                        
                                        TextAlignment="Left" />

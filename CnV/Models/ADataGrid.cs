@@ -283,7 +283,7 @@ public static partial class ADataGrid
 			grid.ColumnSizer.AutoFitMode = AutoFitMode.SmartFit;
 			//grid.ColumnSizer.Margin = new(16);
 		//	grid.FontSize = Settings.smallFontSize;
-			grid.AlternationCount = 2;
+		//	grid.AlternationCount = 2;
 		//	grid.AllowRowHoverHighlighting = true;
 			grid.RowHeight = Settings.shortGridRowHeight;
 			//	grid.FontSize = Settings.smallFontSize;
@@ -329,7 +329,7 @@ public static partial class ADataGrid
 			grid.ShowToolTip=true;
 		//	grid.IsRightTapEnabled=true;
 			grid.AllowFiltering = false;
-			grid.ShowToolTip=true;
+		
 //			grid.CellToolTipOpening
 			//				grid.AllowFrozenGroupHeaders = false;
 			grid.ColumnWidthMode = Syncfusion.UI.Xaml.Grids.ColumnWidthMode.SizeToCells;

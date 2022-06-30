@@ -40,7 +40,7 @@ public sealed partial class AttackSender:DialogG, INotifyPropertyChanged
 	public ObservableCollection<AttackTroopItem> sendInfo = new();
 
 	internal bool waitReturn = true;
-	protected override string title => $"Send attacks from {city}";
+	protected override string title => "Attack Sender";
 	internal static AttackSender? instance;
 	internal City city;
 	internal City cityUI { get => city;
@@ -409,7 +409,8 @@ public sealed partial class AttackSender:DialogG, INotifyPropertyChanged
 				var _t = t;
 				await SendTroops.ShowInstance(city,t.target,false,viaWater,t.isReal ? realType : fakeType,null,t.isReal ? troops.reals : troops.fakes,arrival,false,waitReturn,notSameAlliance: notSameAlliance.IsChecked);
 			}
-			Done();
+			AppS.MessageBox("Attacks Sent! (hopefully)","");
+		//	Done();
 		}
 		catch(Exception ex) { LogEx(ex); }
 	}
@@ -447,8 +448,11 @@ public sealed partial class AttackSender:DialogG, INotifyPropertyChanged
 	public event PropertyChangedEventHandler? PropertyChanged;
 	
 	public void CallPropertyChanged() {
-		if(this.PropertyChanged is not null)
+		if(this.PropertyChanged is not null) {
+
 			PropertyChanged?.Invoke(this,new(null));
+		}
+		
 	}
 
 	public void OnPropertyChanged() {
@@ -532,12 +536,10 @@ public sealed partial class AttackSender:DialogG, INotifyPropertyChanged
 		rv.targets = t;
 		return rv;
 	}
-	internal string json { 
-		get 
-		{
-			return JsonSerializer.Serialize(AsJsonAttack(), JSON.jsonSerializerOptionsPretty);
-		}
-		set {
+	
+	internal void ApplyAttackString(object sender,RoutedEventArgs e)	
+		 {
+			var value = attackString.Text;
 			try {
 
 				// Toddo
@@ -554,8 +556,22 @@ public sealed partial class AttackSender:DialogG, INotifyPropertyChanged
 				Note.Show("Invalid Json");
 			}
 		}
+	
+
+	private void Copy(object sender,RoutedEventArgs e) {
+		attackString.SelectAll();
+		attackString.CopySelectionToClipboard();
 	}
 
+	private void Paste(object sender,RoutedEventArgs e) {
+		attackString.SelectAll();
+		attackString.PasteFromClipboard();
+		
+	}
+
+	private void GetAttackString(object sender,RoutedEventArgs e) {
+		attackString.Text = JsonSerializer.Serialize(AsJsonAttack(), JSON.jsonSerializerOptionsPretty);
+	}
 }
 
 

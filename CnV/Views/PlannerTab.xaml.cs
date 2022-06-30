@@ -239,7 +239,7 @@ namespace CnV.Views
 		{
 			return (cc.x >= span0) && (cc.y>=span0) && (cc.x <= span1) && (cc.y <= span1);
 		}
-		public static Debounce PleaseRefresh = new (PlannerTab.UpdateStats) { runOnUiThread = true };
+		public static Debounce PleaseRefresh = new (PlannerTab.UpdateStats) { runOnUiThread = true,debounceDelay=400 };
 
 		
 
