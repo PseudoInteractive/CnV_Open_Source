@@ -392,6 +392,12 @@ public partial class UserTab:Page, IANotifyPropertyChanged {
 					e.ToolTip.Content = b.targetCity.toolTip;
 
 			}
+			else  if(e.Record is Army army)
+			{
+				
+					e.ToolTip.Content = army.WorldToolTip().tip;
+
+			}
 
 		}
 		

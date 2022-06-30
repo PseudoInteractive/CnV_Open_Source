@@ -280,14 +280,14 @@ public static partial class ADataGrid
 				grid.ColumnSizer.FontFamily = XamlHelper.cnvFont;
 			//	grid.ColumnSizer.FontWeight = Microsoft.UI.Text.FontWeights.Normal;
 //			grid.ColumnSizer.FontSize = Settings.mediumFontSize;
-			grid.ColumnSizer.AutoFitMode = AutoFitMode.Default;
+			grid.ColumnSizer.AutoFitMode = AutoFitMode.SmartFit;
 			//grid.ColumnSizer.Margin = new(16);
 		//	grid.FontSize = Settings.smallFontSize;
 			grid.AlternationCount = 2;
 		//	grid.AllowRowHoverHighlighting = true;
 			grid.RowHeight = Settings.shortGridRowHeight;
-		//	grid.FontSize = Settings.smallFontSize;
-			
+			//	grid.FontSize = Settings.smallFontSize;
+			grid.ElementSoundMode = ElementSoundMode.Off;
 			grid.FontWeight=Microsoft.UI.Text.FontWeights.Normal;
 			grid.FontSize = Settings.smallFontSize;
 			grid.FontStretch = Windows.UI.Text.FontStretch.Condensed;
@@ -301,8 +301,8 @@ public static partial class ADataGrid
 			grid.AllowResizingColumns = true;
 		//	grid.CanMaintainScrollPosition=true;
 			//grid.ShowToolTip=true;
-			grid.CellStyle = App.instance.Resources["SfTextCell"] as Style;
-			grid.RowStyle = App.instance.Resources["sfRowStyle"] as Style;
+		//	grid.CellStyle = App.instance.Resources["SfTextCell"] as Style;
+		//	grid.RowStyle = App.instance.Resources["sfRowStyle"] as Style;
 			grid.HeaderStyle=App.instance.Resources["sfHeaderStyle"] as Style;
 			grid.AllowEditing=false;
 			grid.AllowDraggingColumns=true;
@@ -322,14 +322,15 @@ public static partial class ADataGrid
 			grid.HeaderContextFlyout = new();
 			grid.HeaderContextFlyout.SetXamlRoot(grid);
 
-
+	//		grid.NotificationSubscriptionMode = Syncfusion.UI.Xaml.Data.NotificationSubscriptionMode.CollectionChange;
 			grid.CurrentCellRequestNavigate += UserTab.CelNavigate;
 			grid.CellTapped += ADataGrid.SfCellTapped;
 		//	grid.AllowGrouping = false;
 			grid.ShowToolTip=true;
 		//	grid.IsRightTapEnabled=true;
 			grid.AllowFiltering = false;
-
+			grid.ShowToolTip=true;
+//			grid.CellToolTipOpening
 			//				grid.AllowFrozenGroupHeaders = false;
 			grid.ColumnWidthMode = Syncfusion.UI.Xaml.Grids.ColumnWidthMode.SizeToCells;
 //			grid.ColumnWidthMode = Syncfusion.UI.Xaml.Grids.ColumnWidthMode.SizeToCells;
@@ -338,14 +339,14 @@ public static partial class ADataGrid
 		//		grid.SourceType = sourceType;// ?? UserTab.GetContainerType(grid.ItemsSource);
 			//grid.UseSystemFocusVisuals = true;
 			grid.ShowSortNumbers = true;
-			foreach(var c in 			grid.Columns ) {
-				c.ShowHeaderToolTip=true;
-				c.ShowToolTip=true;
+			//foreach(var c in 			grid.Columns ) {
+			//	c.ShowHeaderToolTip=true;
+			//	c.ShowToolTip=true;
 
-				//	c.CellStyle = App.instance.Resources["SfTextCell"] as Style;
-				//c.
+			//	//	c.CellStyle = App.instance.Resources["SfTextCell"] as Style;
+			//	//c.
 				
-			}
+			//}
 			//	if(tab is not null)
 			//		grid.DetailsViewExpanded += tab.DetailsViewUpdateColumnWidths;
 			grid.ResetAutoColumns();

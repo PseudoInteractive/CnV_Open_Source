@@ -621,10 +621,10 @@ namespace CnV.Views
 
 				//AppS.SetState(AppS.State.active);
 
-				TabPage.ShowTabs();
 
 				await Task.Delay(500);
-				ShellPage.RefreshX();
+				await ShellPage.RefreshX();
+			//	TabPage.ShowTabs();
 
 				AppS.DispatchOnUIThread(ShellPage.SetupNonCoreInput);
 				AppS.QueueIdleTask(DailyDialog.DailyRewardTask);
