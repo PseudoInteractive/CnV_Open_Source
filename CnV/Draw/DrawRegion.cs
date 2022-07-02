@@ -292,7 +292,7 @@ internal partial class GameClient
 			shapeSizeGain = MathF.Sqrt(pixelScale * (1.50f / 64.0f)).DipToWorld();
 			spriteSizeGain = 32 * Settings.iconScale*shapeSizeGain;
 			var deltaZoom = viewZoomLag - detailsZoomThreshold;
-			var wantDetails = deltaZoom > 0 && regionFontScale > fontCullScaleW;
+			var wantDetails = deltaZoom > 0 && (regionFontScale >fontCullScaleW );
 			var wantImage = deltaZoom < detailsZoomFade;
 			var deltaZoomCity = viewZoomLag - cityZoomThreshold;
 			var wantCity = deltaZoomCity >= 0;
@@ -1478,10 +1478,12 @@ internal partial class GameClient
 
 				}
 
+				var isControl = AppS.IsKeyPressedControl();
+				var isShift = AppS.IsKeyPressedShift();
 
 
 				{
-					if(wantDetails) {
+					if(wantDetails | isControl|isShift) {
 						//
 						// Text names
 						//	using (var batch = ds.CreateSpriteBatch(CanvasSpriteSortMode.Bitmap))
@@ -1516,7 +1518,8 @@ internal partial class GameClient
 										}
 										//	drawC = drawC.Project(zLabels);
 										//var layout = GetTextLayout(name,nameTextFormat);
-										var color = World.GetTint(cid).Modulate(32);
+										var _t = World.GetTint(cid);
+										var color = _t.Modulate(32);
 										//var color = spot ==null ? nameColorDungeon
 										//	:
 										//	(isMine ?
@@ -1536,12 +1539,20 @@ internal partial class GameClient
 										// a+b-a*b
 										// a*( 1+b/a+b)
 										// a*b*(1/b + 1/a - 1)
-
-										DrawTextBox(name,drawC,nameTextFormat,wantDarkText ? color.A.AlphaToBlack() : Color.White,
+										if(wantDetails)
+											DrawTextBox(name,drawC,nameTextFormat,wantDarkText ? color.A.AlphaToBlack() : Color.White,
 													color,Layer.
 													tileText,3,2,z,scale);
 										//										layout.Draw(drawC,
 										//									, Layer.tileText, z,PlanetDepth);
+										if(spot is not null) {
+											if(isControl && spot.isTemple) {
+												DrawRectOutlineShadow(Layer.effects - 1,cid,Color.Cyan,null,1.0f,2.0f);
+											}
+											if(isShift && spot.isCityOrCastle) {
+												DrawRectOutlineShadow(Layer.effects - 1,cid,_t with { A = 255},null,1.0f,0.0f);
+											}
+										}
 
 									}
 									//if(false)

@@ -30,11 +30,11 @@ namespace CnV
 
 
 
-		
+		record struct test(int a, int a3, int a10, int a11);
 
 		public static async Task InitializeGame()
 	{
-		
+
 
 
 			//var p0 = ServerTime.GetNightProtection(new ServerTime(2022,3,1,21,30,0));
@@ -50,11 +50,14 @@ namespace CnV
 			//selector.Add(0.25f,3);
 			//selector.Add(0.25f,4);
 			//selector.Add(0.125f,5);
-			//var sels = new int[6];
-			//var rnd = new XXRand(11);
-			//for(int i =0;i<1000;++i) {
-			//	var sel = selector.Select(ref rnd);
-			//	++sels[sel];
+			//{
+			//	var t = new test[100];
+			//	var rnd = new XXRand(11);
+			//	for(int i = 0;i<100;++i) {
+			//		var a = rnd.Next(1000);
+			//		t[i] = new(a,a.IDiv3(),a.IDiv10(),a.IDiv100());
+			//		Trace(t[i]);
+			//	}
 			//}
 			//int q = 0;
 
@@ -141,9 +144,17 @@ namespace CnV
 
 
 
-				
-				while(!Sim.isPastWarmup) {
-					await Task.Delay(500).ConfigureAwait(false);
+				{
+					int counter = 0;
+					while(!Sim.isPastWarmup) {
+						await Task.Delay(1000).ConfigureAwait(false);
+						if( (++counter % 2) == 0 )
+						{
+							var t = (float) (Sim.simTime - Sim.serverStartTime)/(Sim.NowToServerSeconds() -  Sim.serverStartTime);
+							ShellPage.WorkUpdate($"Loading {t:P0}");
+
+						}
+					}
 				}
 				Assert(Sim.isPastWarmup);
 				while(!City.myCities.Any()) {

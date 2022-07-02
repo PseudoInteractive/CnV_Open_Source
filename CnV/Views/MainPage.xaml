@@ -50,11 +50,15 @@
 				<sf:GridHyperlinkColumn HeaderText= "+" 
 				                        MappingName="dungeonsToggle"
 				                        Width="20"
+																				  ColumnWidthMode="None"
+
 				                        ToolTipService.ToolTip="Tap to expend or collapse dungeons" />
 					<sf:GridImageColumn MappingName="icon"
 											HeaderText="I"
 											Width="32"
 											ToolTipService.ToolTip="Click to switch to this city"
+																				  ColumnWidthMode="None"
+
 											 />
 					<sf:GridTextColumn MappingName="nameAndRemarks"
 										 
@@ -69,14 +73,16 @@
 					<sf:GridNumericColumn MappingName="cont"
 												TextAlignment="Center"
 											Width="42"
+										  ColumnWidthMode="None"
 									/>
-				<sf:GridNumericColumn MappingName="tsTotal"
+				<sf:GridNumericColumn ValueBinding="{Binding tsTotal, Mode=OneWay}"
+									  UseBindingValue="True"
 												HeaderText="TS"
 												TextAlignment="Right"
-												ToolTipService.ToolTip="TS enlisted in city"
 												DisplayNumberFormat="N0"
 												 />
-				<sf:GridNumericColumn MappingName="tsRaid"
+				<sf:GridNumericColumn ValueBinding="{Binding tsRaid, Mode=OneWay}"
+									  UseBindingValue="True"
 												HeaderText="Raid"
 												TextAlignment="Right"
 												DisplayNumberFormat="N0"

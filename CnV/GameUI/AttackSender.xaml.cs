@@ -537,7 +537,7 @@ public sealed partial class AttackSender:DialogG, INotifyPropertyChanged
 		return rv;
 	}
 	
-	internal void ApplyAttackString(object sender,RoutedEventArgs e)	
+	internal async void ApplyAttackString(object sender,RoutedEventArgs e)	
 		 {
 			var value = attackString.Text;
 			try {
@@ -546,8 +546,23 @@ public sealed partial class AttackSender:DialogG, INotifyPropertyChanged
 				var js = JsonSerializer.Deserialize<JsonAttack>(value,JSON.jsonSerializerOptions);
 				var source = js.attacker.FromCoordinate();
 				if(source > 0) {
+				var i = await AppS.DoYesNoBox("Set Attacking City?",$"{source.AsCity()} is in AttackString");
+					if(i==-1)
+						return;
+					if(i==1) {
+						cityUI = source.AsCity();
 
+					}
 				}
+			targets.Clear();
+			
+			foreach(var t in js.targets) {
+				var target = t.c.FromCoordinate().AsCity();
+				if(target == city || target.IsInvalid())
+					continue;
+				
+				targets.Add(new(target,this,t.real));
+			}
 
 				OnPropertyChanged();
 

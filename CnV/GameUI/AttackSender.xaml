@@ -102,15 +102,15 @@
 			</ListView.ItemTemplate>
 
 		</ListView>
-			
-				<Grid Grid.Row="6" BorderThickness="1" BorderBrush="Gray" Margin="8,8,0,0" Padding="4" Background="DarkRed" BackgroundSizing="OuterBorderEdge" >
+
+			<Grid Grid.Row="6" BorderThickness="1" BorderBrush="Gray" Margin="8,8,0,0" Padding="4"  BackgroundSizing="OuterBorderEdge" Visibility="Visible" >
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="auto" />
 							<ColumnDefinition Width="*" />
 						</Grid.ColumnDefinitions>
 				<Grid.RowDefinitions>
 					<RowDefinition Height="auto" />
-					<RowDefinition Height="auto" />
+					<RowDefinition Height="128" />
 				</Grid.RowDefinitions>
 				<TextBlock  Text="AttackString" VerticalAlignment="Center" Style="{StaticResource TextBlockMedium}" Margin="8,0,4,0"  />
 						<StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" >
@@ -119,10 +119,10 @@
 						<Button Content="Paste"  HorizontalAlignment="Right" Click="Paste" IsEnabled="{x:Bind attackString.CanPasteClipboardContent, Mode=OneWay}" />
 						<Button Content="Apply" HorizontalAlignment="Right"  Click="ApplyAttackString" />
 						</StackPanel>
-					</Grid>
-					<TextBox Grid.Row="1" Grid.ColumnSpan="2" x:Name="attackString"   Margin="8,16,0,0"   IsSpellCheckEnabled ="False"  AcceptsReturn="True"  TextWrapping="Wrap"  />
+					
+					<TextBox Grid.Row="1" Grid.ColumnSpan="2" x:Name="attackString"   Margin="8,16,0,0"   IsSpellCheckEnabled ="False"  AcceptsReturn="True"  TextWrapping="Wrap" Visibility="Visible" />
 
-
+			</Grid>
 		</Grid>
 	</ScrollViewer>
 </cnv:DialogG>
