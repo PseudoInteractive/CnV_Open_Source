@@ -83,11 +83,9 @@ public static partial class CityUI
 		var aMisc   = flyout.AddSubMenu("Misc..");
 		var aExport = new MenuFlyoutSubItem();// flyout.AddSubMenu("Import/Export..");
 		var aWar    = AApp.AddSubMenu(flyout, "War..");
-		if (me.isCityOrCastle)
-		{
+		if(me.isCityOrCastle) {
 			// Look - its my city!
-			if (me.isSubOrMine )
-			{
+			if(me.isSubOrMine) {
 
 				//{
 				//	var tags = TagHelper.GetTags(this);
@@ -102,95 +100,87 @@ public static partial class CityUI
 				//	}
 				//}
 				// This one has multi select
-				
+
 				int count = 1;
-				if (useSelected)
-				{
+				if(useSelected) {
 					count = MainPage.GetContextCidCount(cid);
 				}
 
-				var aRaid = AApp.AddSubMenu(flyout, "Raid..");
-				aRaid.AddItem($"Raid ..", () => DungeonView.ShowDungeonList(City.Get(cid),false));
-	//			return await DungeonView.ShowDungeonList(City.Get(_cid),  autoRaid);
+				var aRaid = AApp.AddSubMenu(flyout,"Raid..");
+				aRaid.AddItem($"Raid ..",() => DungeonView.ShowDungeonList(City.Get(cid),false));
+				//			return await DungeonView.ShowDungeonList(City.Get(_cid),  autoRaid);
 
 
-				if (count > 1)
-				{
-					aRaid.AddItem($"End Raids x{count} selected", MainPage.ReturnSlowClick, cid)
+				if(count > 1) {
+					aRaid.AddItem($"End Raids x{count} selected",MainPage.ReturnSlowClick,cid)
 						.SetToolTip("Returns raids when they are done (stops them from repeating");
-					aRaid.AddItem($"Stop Raids x{count} selected", MainPage.ReturnFastClick, cid)
+					aRaid.AddItem($"Stop Raids x{count} selected",MainPage.ReturnFastClick,cid)
 						.SetToolTip("Stops raids and returns them immediately");
-				//	aRaid.AddItem($"Return At...x{count}",        ()=> ReturnAtBatch(cid) );
+					//	aRaid.AddItem($"Return At...x{count}",        ()=> ReturnAtBatch(cid) );
 
 				}
-				else
-				{
+				else {
 
-					aRaid.AddItem("End Raids",    me.ReturnSlowClick)
+					aRaid.AddItem("End Raids",me.ReturnSlowClick)
 						.SetToolTip("Returns raids when they are done (stops them from repeating");
-					aRaid.AddItem("Stop Raids",    me.ReturnFastClick).SetToolTip("Stops raids and returns them immediately");;
-				//	aRaid.AddItem("Return At...", me.ReturnAt);
+					aRaid.AddItem("Stop Raids",me.ReturnFastClick).SetToolTip("Stops raids and returns them immediately"); ;
+					//	aRaid.AddItem("Return At...", me.ReturnAt);
 				}
 
 
-				aSetup.AddItem("Setup...",    (_, _) => CityUI.SetupClick(cid,SetupFlags.suggestAutobuild | SetupFlags.layout));
-				aSetup.AddItem("Settings...",    (_, _) => CityUI.SetupClick(cid,SetupFlags.none));
-				aSetup.AddItem("Name...",    (_, _) => CityUI.SetupClick(cid,SetupFlags.name));
-				
-				aSetup.AddItem("Set Recruit", (_, _) => CitySettings.SetRecruitFromTag(cid));
+				aSetup.AddItem("Setup...",(_,_) => CityUI.SetupClick(cid,SetupFlags.suggestAutobuild | SetupFlags.layout));
+				aSetup.AddItem("Settings...",(_,_) => CityUI.SetupClick(cid,SetupFlags.none));
+				aSetup.AddItem("Name...",(_,_) => CityUI.SetupClick(cid,SetupFlags.name));
+
+				aSetup.AddItem("Set Recruit",(_,_) => CitySettings.SetRecruitFromTag(cid));
 				//aSetup.AddItem("Change...",   (_, _) => ShareString.Show(cid, default));
-				aSetup.AddItem("Move Stuff",  (_, _) => me.MoveStuffLocked());
+				aSetup.AddItem("Move Stuff",(_,_) => me.MoveStuffLocked());
 				//aSetup.AddItem("Remove Castle", (_, _) => 
 				//{
 				//	CityBuild.
 
 				//}
 				//   AApp.AddItem(flyout, "Clear Res", (_, _) => CnVServer.ClearCenterRes(cid) );
-				aSetup.AddItem("Clear Res", me.ClearRes);
+				aSetup.AddItem("Clear Res",me.ClearRes);
 
 
-				aExport.AddItem("Troops to Sheets", me.CopyForSheets);
+				aExport.AddItem("Troops to Sheets",me.CopyForSheets);
 			}
-			else
-			{
-				if ( me.cityName == null)
-				{
+			else {
+				if(me.cityName == null) {
 					Sim.FetchCity(cid);
 				}
 
 			}
 
 			{
-				var sel = Spot.GetSelectedForContextMenu(cid, false);
+				var sel = Spot.GetSelectedForContextMenu(cid,false);
 				{
 					aWar.AddItem("Assault..",(_,_) => SendTroops.ShowInstance(GetBuild(),City.Get(cid),isSettle: false,viaWater: false,type: ArmyType.assault));
 					aWar.AddItem("Siege..",(_,_) => SendTroops.ShowInstance(GetBuild(),City.Get(cid),isSettle: false,viaWater: false,type: ArmyType.siege));
 					aWar.AddItem("Scout..",(_,_) => SendTroops.ShowInstance(GetBuild(),City.Get(cid),isSettle: false,viaWater: false,type: ArmyType.scout));
-					aWar.AddItem("Attack Targets",(_,_) => AttackSender.ShowInstance(GetBuild(),City.Get(cid) ));
+					aWar.AddItem("Attack Targets",(_,_) => AttackSender.ShowInstance(GetBuild(),City.Get(cid)));
 					var multiString = sel.Count > 1 ? $" _x {sel.Count} selected" : "";
-				//	aWar.AddItem("Cancel Attacks..", me.CancelAttacks);
+					//	aWar.AddItem("Cancel Attacks..", me.CancelAttacks);
 					var afly = aWar.AddSubMenu("Attack Planner");
-					if (!me.player.isAllyOrNap)
-					{
-						afly.AddItem("Ignore Player" + multiString, (_, _) => AttackTab.IgnorePlayer(cid.CidToPid()));
+					if(!me.player.isAllyOrNap) {
+						afly.AddItem("Ignore Player" + multiString,(_,_) => AttackTab.IgnorePlayer(cid.CidToPid()));
 					}
 
-					afly.AddItem("Add as Target" + multiString, (_, _) => AttackTab.AddTarget(sel));
-					afly.AddItem("Add as Attacker" + multiString, (_, _) =>
-																{
-																	using var work =
-																			new WorkScope("Add as attackers..");
+					afly.AddItem("Add as Target" + multiString,(_,_) => AttackTab.AddTarget(sel));
+					afly.AddItem("Add as Attacker" + multiString,(_,_) => {
+						using var work =
+								new WorkScope("Add as attackers..");
 
-																	string s = string.Empty;
-																	foreach (var id in sel)
-																	{
-																		s = s + id.CidToString() + "\t";
-																	}
+						string s = string.Empty;
+						foreach(var id in sel) {
+							s = s + id.CidToString() + "\t";
+						}
 
-																	AttackTab.AddAttacksFromString(s, false);
-																	Note.Show($"Added attacker {s}");
+						AttackTab.AddAttacksFromString(s,false);
+						Note.Show($"Added attacker {s}");
 
-																});
+					});
 
 				}
 				//else
@@ -214,27 +204,55 @@ public static partial class CityUI
 			}
 			//if (cid != City.build)
 			{
-				aSetup.AddItem("Find Closest Hub",    (_, _) => CityUI.SetClosestHub(cid));
-				aSetup.AddItem("Set As Hub", (_, _) => SetTradeSettings(City.build, sourceHub: cid, targetHub: cid));
-				aSetup.AddItem("Set as Target hub", (_, _) => SetTradeSettings(City.build, sourceHub: null, targetHub: cid));
-				aSetup.AddItem("Set as Source hub", (_, _) => SetTradeSettings(City.build, sourceHub: cid, targetHub: null));
+				aSetup.AddItem("Find Closest Hub",(_,_) => CityUI.SetClosestHub(cid));
+				aSetup.AddItem("Set As Hub",(_,_) => SetTradeSettings(City.build,sourceHub: cid,targetHub: cid));
+				aSetup.AddItem("Set as Target hub",(_,_) => SetTradeSettings(City.build,sourceHub: null,targetHub: cid));
+				aSetup.AddItem("Set as Source hub",(_,_) => SetTradeSettings(City.build,sourceHub: cid,targetHub: null));
 				//if(Player.myName == "Avatar")
 				//    AApp.AddItem(flyout, "Set target hub I", (_, _) => CitySettings.SetOtherHubSettings(City.build, cid));
 			}
 
 
-		//	aWar.AddItem("Attack",       (_, _) => Spot.JSAttack(cid));
-			aWar.AddItem("Near Defence", me.DefendMe);
-			if (me.incoming.Any())
-				aWar.AddItem("Incoming", me.ShowIncoming);
-			aWar.AddItem("Hits", me.ShowHitHistory );
+			//	aWar.AddItem("Attack",       (_, _) => Spot.JSAttack(cid));
+			aWar.AddItem("Near Defence",me.DefendMe);
+			if(me.incoming.Any())
+				aWar.AddItem("Incoming",me.ShowIncoming);
+			aWar.AddItem("Hits",me.ShowHitHistory);
 			//if(me.outgoing.Any())
-			
+
 			//	if (Raid.test)
-			aWar.AddItem("Send Defence",            (_, _) => City.GetBuild().SendDefence(WorldC.FromCid(cid) ));
-		//	aWar.AddItem("Recruit Sen",             (_, _) => Recruit.Send(cid, ttSenator, 1, true));
-			aWar.AddItem("Show Reinforcements",     (_, _) => ReinforcementsTab.ShowReinforcements(cid, null));
-			aWar.AddItem("Show All Reinforcements", (_, _) => ReinforcementsTab.ShowReinforcements(0,   null));
+			aWar.AddItem("Send Defence",(_,_) => City.GetBuild().SendDefence(WorldC.FromCid(cid)));
+			//	aWar.AddItem("Recruit Sen",             (_, _) => Recruit.Send(cid, ttSenator, 1, true));
+			aWar.AddItem("Show Reinforcements",(_,_) => ReinforcementsTab.ShowReinforcements(cid,null));
+			aWar.AddItem("Show All Reinforcements",(_,_) => ReinforcementsTab.ShowReinforcements(0,null));
+			aWar.AddItem("Return outgoing reinforcements",async (_,_) => {
+				foreach(var army in me.outgoing) {
+					if(army.isDefense && !army.isReturn) {
+						if(army.departed) {
+							await SendTroops.ShowInstance(prior: army);
+						}
+						else {
+							CnVEventReturnTroops.TryReturn(army);
+						}
+					}
+				}
+			});
+			aWar.AddItem("Return incoming reinforcements",async (_,_) => {
+				foreach(var army in me.incoming) {
+					Assert(!army.isReturn);
+					if(army.isDefense && !army.isReturn) {
+						
+						if(army.departed) {
+							await SendTroops.ShowInstance(prior: army);
+						}
+						else {
+							CnVEventReturnTroops.TryReturn(army);
+						}
+					}
+				}
+			});
+
+
 			aExport.AddItem("Defense Sheet", me.ExportToDefenseSheet);
 			AApp.AddItem(flyout, "Send Res", (_, _) => SendResDialogue.ShowInstance(City.GetBuild(),me,null,null,palaceDonation:null));
 			AApp.AddItem(flyout, "Near Res", me.ShowNearRes);
@@ -552,12 +570,13 @@ public static partial class CityUI
 	
 	public static async void DefendMe(this Spot me)
 	{
-		var cids = GetSelectedForContextMenu(me.cid, false);
+		//var cids = GetSelectedForContextMenu(me.cid, false);
 
-		NearDefenseTab.defendants.Set(new[] { me } );// cids.Select(a => City.Get(a)), true);
+		
 
 		
 		await UserTab.ShowOrAdd<NearDefenseTab>(true);
+		NearDefenseTab.instance.SetDefendant(me );// cids.Select(a => City.Get(a)), true);
 		NearDefenseTab.instance.refresh.Go();
 	}
 

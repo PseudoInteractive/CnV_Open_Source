@@ -401,6 +401,10 @@
 						Margin="8"
 						MinWidth="120" />
 
+				<Button Content="Reset Empire"
+						Click="Reset"
+						Margin="8"
+						MinWidth="120" />
 			</wct:WrapPanel>
 
 				<StackPanel Orientation="Horizontal">

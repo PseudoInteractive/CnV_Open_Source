@@ -1607,7 +1607,7 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 			});
 		}	
 
-			flyout.AddItem("Speedup",Symbol.Forward,() =>
+			flyout.AddItem("Speedup",Symbol.Forward,async () =>
 			{
 				try
 				{
@@ -1622,14 +1622,31 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 					
 					
 					var city = trade.sourceCity;
+					var prior = city.tradesOut;
 					var id = city.tradesOut.IndexOf(trade);
 					Assert(id != -1);
 					if(id >= 0)
 					{
-						const int toUse = 1;
+					
+						var timeLeft = (trade.isReturning ? trade.returnTime : trade.arrival) - Sim.simTime;
+						var speedUp = trade.viaLand ? art.r[14] : art.r[15];
+						Assert(speedUp > 0);
+						var toUse = (timeLeft.seconds *(trade.viaLand ? trade.transport.carts : trade.transport.ships)).DivideRoundUp( speedUp*ServerTime.secondsPerHour );
+						
+						if( toUse > 1 ) {
+							var i = await AppS.DoYesNoBox($"Use how many Items?",$"Trade will require {toUse} to {(trade.isReturning ? "return" :"reach its destination")} instantly",toUse.ToString(),"1");
+							if(i == -1)
+								return;
+							if(i==0)
+								toUse = 1;
+
+						}
 						var needed = toUse- Player.active.ArtifactCount(artifact);
 						if(!Artifact.Get(artifact).IsOkayToUse(toUse))
 							return;
+						if( city.tradesOut != prior ) {
+							AppS.MessageBox("Trades changed, please try again");
+						}
 						SocketClient.DeferSendStart();
 
 						try
@@ -1639,7 +1656,7 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 								new CnVEventPurchaseArtifacts((ushort)artifact, (ushort)needed,Player.active.id).EnqueueAsap();
 							}
 
-							(new CnVEventUseArtifacts(city.c) { artifactId = (ushort)artifact,count = toUse,aux=id }).EnqueueAsap();
+							(new CnVEventUseArtifacts(city.c) { artifactId = (ushort)artifact,count = (ushort)toUse,aux=id }).EnqueueAsap();
 
 						}
 						catch(Exception _ex)

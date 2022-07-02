@@ -310,6 +310,7 @@ public static partial class ADataGrid
 	//		grid.ColumnSizer.AutoFitMode = AutoFitMode.SmartFit;
 
 			grid.AllowTriStateSorting=true;
+			grid.CopyOption = GridCopyOptions.CopyData|GridCopyOptions.IncludeFormat|GridCopyOptions.IncludeHeaders|GridCopyOptions.IncludeHiddenColumn;
 //			grid.FontStretch = Windows.UI.Text.FontStretch.Condensed;
 			//grid.ExpanderColumnWidth = 16;
 			if (tab is not null && grid.IsCityGrid())

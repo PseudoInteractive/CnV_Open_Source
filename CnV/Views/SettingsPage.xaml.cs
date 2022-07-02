@@ -961,13 +961,24 @@ namespace CnV
 			await Task.Delay(-1);
 		}
 
-		
-		//private async void ChangeNameTapped(object sender, RoutedEventArgs e)
-		//{
-		//	Hide();
-		//	await CnVSignin.EditProfile();
+		private async void Reset(object sender,RoutedEventArgs e) {
+			var c = Player.active.cities;
+			if(await AppS.DoYesNoBox($"Reset {Player.active.name}","Are you sure?") == 1) {
 
-		//}
-	}
+				for(int i = c.Length;--i>= 0;) {
+					new CnVEventAbandon( (WorldC)(c[i]),Player.activeId,i==0).EnqueueAsap();
+				}
+			}
+
+        }
+
+
+        //private async void ChangeNameTapped(object sender, RoutedEventArgs e)
+        //{
+        //	Hide();
+        //	await CnVSignin.EditProfile();
+
+        //}
+    }
 
 }

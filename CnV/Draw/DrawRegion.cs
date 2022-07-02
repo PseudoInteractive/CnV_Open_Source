@@ -1546,11 +1546,11 @@ internal partial class GameClient
 										//										layout.Draw(drawC,
 										//									, Layer.tileText, z,PlanetDepth);
 										if(spot is not null) {
-											if(isControl && spot.isTemple) {
-												DrawRectOutlineShadow(Layer.effects - 1,cid,Color.Cyan,null,1.0f,2.0f);
+											if(isControl && (spot.isTemple|spot.isBlessed) ) {
+												DrawRectOutlineShadow(Layer.effects - 1,cid,Color.Cyan,expand:2.0f);
 											}
 											if(isShift && spot.isCityOrCastle) {
-												DrawRectOutlineShadow(Layer.effects - 1,cid,_t with { A = 255},null,1.0f,0.0f);
+												DrawRectOutlineShadow(Layer.effects - 1,cid,_t with { A = 255});
 											}
 										}
 
@@ -2008,7 +2008,7 @@ internal partial class GameClient
 		DrawRectOutline(layer,c0,c1,color,zUI*zScale,thickness,expand,animationOffset,includeTop);
 		DrawRectOutline(Layer.tileShadow,c0,c1,color.GetShadowColorDark(),zShadow,thickness,expand,animationOffset,includeTop);
 	}
-	private static void DrawRectOutlineShadow(int layer,int cid,Color col,string label = null,float thickness = 1,float expand = 0,double animationOffset = 0,bool includeTop = true) {
+	private static void DrawRectOutlineShadow(int layer,int cid,Color col,string label = null,float thickness = 1.5f,float expand = 0,double animationOffset = 0,bool includeTop = true) {
 		var wc = cid.CidToWorld();
 		if(IsCulledWC(wc))
 			return;

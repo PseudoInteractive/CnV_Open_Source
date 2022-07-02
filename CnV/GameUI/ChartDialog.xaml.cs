@@ -62,10 +62,11 @@ namespace CnV
 			nameof(DataPoint.raiding),
 			nameof(DataPoint.cities),
 			nameof(DataPoint.ts),
-			nameof(DataPoint.offense),
-			nameof(DataPoint.defense),
+			nameof(DataPoint.tsOffense),
+			nameof(DataPoint.tsDefense),
 			nameof(DataPoint.kills),
-			nameof(DataPoint.rssproduced),
+			nameof(DataPoint.offReputation),
+			nameof(DataPoint.rssProduced),
 
 		};
 		private bool _byAlliance;
@@ -78,7 +79,7 @@ namespace CnV
 		}
 
 		internal static async Task<bool> ShowPlayerMetric(string property, bool byAlliance) {
-			var id = metrics.IndexOf(property.ToLowerInvariant() );
+			var id = metrics.IndexOfIgnoreCase(property );
 			if(id==-1)
 				return false;
 			await ShowOrAdd<ChartDialog>(true,onlyIfClosed: true);
@@ -121,7 +122,8 @@ namespace CnV
 					
 					Assert(values.Length > 0);
 					var series = new FastLineSeries() {
-						YBindingPath=member=="rssProduced" ? "rssProduced.wood" : member,XBindingPath="t",Label=name,
+						YBindingPath=member==nameof(DataPoint.rssProduced) ? "rssProduced.wood" : member,
+						XBindingPath="t",Label=name,
 						ItemsSource=values,
 						ShowTooltip=true,
 						StrokeThickness=5,
@@ -157,6 +159,12 @@ namespace CnV
 			}
 
 		}
+		public override async Task Closed()
+		{ 
+			await base.Closed();
+			instance = null;
+		}
+
 		public override TabPage defaultPage => TabPage.secondaryTabs;
 		override public Task VisibilityChanged(bool visible,bool longTerm) {
 			//   Log("Vis change" + visible);

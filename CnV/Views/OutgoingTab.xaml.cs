@@ -87,7 +87,7 @@ namespace CnV.Views
 				return;
 
 				AppS.QueueOnUIThread(() => {
-					PlayerStats.instance.UpdateOutgoingText();
+					PlayerStats.instance?.UpdateOutgoingText();
 					if(OutgoingTab.IsVisible()) {
 
 						try {

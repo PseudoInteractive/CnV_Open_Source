@@ -10,7 +10,7 @@ using System.Text.Json;
 
 namespace CnV;
 
-	using static Troops;
+using static Troops;
 public sealed partial class AttackSender:DialogG, INotifyPropertyChanged
 {
 	internal bool ViaWater {
@@ -43,8 +43,9 @@ public sealed partial class AttackSender:DialogG, INotifyPropertyChanged
 	protected override string title => "Attack Sender";
 	internal static AttackSender? instance;
 	internal City city;
-	internal City cityUI { get => city;
-		set { 
+	internal City cityUI {
+		get => city;
+		set {
 			if(city != value) {
 				city = value;
 				UpdateTroopItems();
@@ -97,11 +98,11 @@ public sealed partial class AttackSender:DialogG, INotifyPropertyChanged
 
 	private void SendTroops_PropertyChanged(object? sender,PropertyChangedEventArgs e) {
 		OnPropertyChanged();
-	
+
 
 	}
 
-	protected string  travelTimeS {
+	protected string travelTimeS {
 		get {
 			var depart = departure;
 
@@ -109,7 +110,7 @@ public sealed partial class AttackSender:DialogG, INotifyPropertyChanged
 			if(depart+10 < Sim.simTime) {
 				rv += " (depart is past)";
 			}
-			return rv; 
+			return rv;
 		}
 	}
 
@@ -158,7 +159,7 @@ public sealed partial class AttackSender:DialogG, INotifyPropertyChanged
 
 						return false;
 					}
-				
+
 				}
 				rv.targets.Add(new(target,rv,counter++==0));
 			}
@@ -216,7 +217,7 @@ public sealed partial class AttackSender:DialogG, INotifyPropertyChanged
 		}
 
 
-		if(city.freeCommandSlots < validTargets.Count() ) {
+		if(city.freeCommandSlots < validTargets.Count()) {
 			if(verbose) AppS.MessageBox($"Out of command slots");
 			return (false);
 		}
@@ -377,7 +378,7 @@ public sealed partial class AttackSender:DialogG, INotifyPropertyChanged
 				//	Done();
 				//	return;
 				//}
-			if(!validTargets.Any() ) {
+			if(!validTargets.Any()) {
 
 				AppS.MessageBox("Please add or set target cities","");
 				return;
@@ -410,7 +411,7 @@ public sealed partial class AttackSender:DialogG, INotifyPropertyChanged
 				await SendTroops.ShowInstance(city,t.target,false,viaWater,t.isReal ? realType : fakeType,null,t.isReal ? troops.reals : troops.fakes,arrival,false,waitReturn,notSameAlliance: notSameAlliance.IsChecked);
 			}
 			AppS.MessageBox("Attacks Sent! (hopefully)","");
-		//	Done();
+			//	Done();
 		}
 		catch(Exception ex) { LogEx(ex); }
 	}
@@ -446,13 +447,13 @@ public sealed partial class AttackSender:DialogG, INotifyPropertyChanged
 
 
 	public event PropertyChangedEventHandler? PropertyChanged;
-	
+
 	public void CallPropertyChanged() {
 		if(this.PropertyChanged is not null) {
 
 			PropertyChanged?.Invoke(this,new(null));
 		}
-		
+
 	}
 
 	public void OnPropertyChanged() {
@@ -467,7 +468,7 @@ public sealed partial class AttackSender:DialogG, INotifyPropertyChanged
 	//	}
 	//}
 	public IEnumerable<City> targetCities => validTargets.Select(a => a.target);
-	public IEnumerable<AttackTargetItem> validTargets => targets.Where(a => a.target.IsValid() );
+	public IEnumerable<AttackTargetItem> validTargets => targets.Where(a => a.target.IsValid());
 	public TroopTypeCounts troopsToSend => city.troopsOwned;
 	public (int reals, int fakes) realsAndFakes => (validTargets.Count(a => a.isReal), validTargets.Count(a => a.isFake));
 
@@ -491,28 +492,28 @@ public sealed partial class AttackSender:DialogG, INotifyPropertyChanged
 
 	}
 
-    private void RemoveTarget(object sender,RoutedEventArgs e) {
+	private void RemoveTarget(object sender,RoutedEventArgs e) {
 		var s = sender as Button;
 		var ctx = s.DataContext as AttackTargetItem;
 		Assert(ctx is not null);
 		targets.Remove(ctx);
 		OnPropertyChanged();
 
-    }
+	}
 	internal int uiRealType {
 
-				get => (int)realType - Army.armyTypeAttackStart;
-				set => realType=(ArmyType)(value+Army.armyTypeAttackStart);
+		get => (int)realType - Army.armyTypeAttackStart;
+		set => realType=(ArmyType)(value+Army.armyTypeAttackStart);
 
 
-			}
-		internal int uiFakeType {
+	}
+	internal int uiFakeType {
 
-				get => (int)fakeType - Army.armyTypeAttackStart;
-				set => fakeType=(ArmyType)(value+Army.armyTypeAttackStart);
+		get => (int)fakeType - Army.armyTypeAttackStart;
+		set => fakeType=(ArmyType)(value+Army.armyTypeAttackStart);
 
 
-			}
+	}
 
 	private void AddTarget(object sender,RoutedEventArgs e) {
 		targets.Add(new(City.invalid,this,false));
@@ -525,8 +526,8 @@ public sealed partial class AttackSender:DialogG, INotifyPropertyChanged
 		JsonAttack rv = new();
 		rv.attacker = city.cid.CidToString();
 		rv.t = arrival;
-		rv.real = realType.EnumName();
-		rv.fake = fakeType.EnumName();
+		rv.real = realType.EnumNameCode();
+		rv.fake = fakeType.EnumNameCode();
 		var ts = validTargets.ToArray();
 		var t = new JsonAttack.Target[ts.Length];
 		for(int i = 0;i < ts.Length;i++) {
@@ -536,42 +537,45 @@ public sealed partial class AttackSender:DialogG, INotifyPropertyChanged
 		rv.targets = t;
 		return rv;
 	}
-	
-	internal async void ApplyAttackString(object sender,RoutedEventArgs e)	
-		 {
-			var value = attackString.Text;
-			try {
 
-				// Toddo
-				var js = JsonSerializer.Deserialize<JsonAttack>(value,JSON.jsonSerializerOptions);
-				var source = js.attacker.FromCoordinate();
-				if(source > 0) {
-				var i = await AppS.DoYesNoBox("Set Attacking City?",$"{source.AsCity()} is in AttackString");
-					if(i==-1)
-						return;
-					if(i==1) {
-						cityUI = source.AsCity();
+	internal async void ApplyAttackString(object sender,RoutedEventArgs e) {
+		var value = attackString.Text;
+		try {
 
-					}
+			// Toddo
+			var js = JsonSerializer.Deserialize<JsonAttack>(value,JSON.jsonSerializerOptions);
+			var source = js.attacker.FromCoordinate();
+			if(source > 0) {
+				var i = (source == city.cid) ? 1 : await AppS.DoYesNoBox("Set Attacking City?",$"Select yes to set attackert to {source.AsCity()}, select No to keep the current city");
+				if(i==-1)
+					return;
+				if(i==1) {
+					cityUI = source.AsCity();
+					Enum.TryParse<ArmyType>(js.real,ignoreCase:true,out realType);
+					Enum.TryParse<ArmyType>(js.fake,ignoreCase:true,out fakeType);
 				}
+				js.t = new(js.t.Ticks,DateTimeKind.Unspecified);
+				arrivalUI.SetDateTime(js.t);
+			}
 			targets.Clear();
-			
+
 			foreach(var t in js.targets) {
 				var target = t.c.FromCoordinate().AsCity();
 				if(target == city || target.IsInvalid())
 					continue;
-				
+
 				targets.Add(new(target,this,t.real));
 			}
 
-				OnPropertyChanged();
+			
 
-			}
-			catch(Exception ex) {
-				Note.Show("Invalid Json");
-			}
 		}
-	
+		catch(Exception ex) {
+			Note.Show("Invalid Json");
+		}
+		OnPropertyChanged();
+	}
+
 
 	private void Copy(object sender,RoutedEventArgs e) {
 		attackString.SelectAll();
@@ -581,16 +585,17 @@ public sealed partial class AttackSender:DialogG, INotifyPropertyChanged
 	private void Paste(object sender,RoutedEventArgs e) {
 		attackString.SelectAll();
 		attackString.PasteFromClipboard();
-		
+
 	}
 
 	private void GetAttackString(object sender,RoutedEventArgs e) {
-		attackString.Text = JsonSerializer.Serialize(AsJsonAttack(), JSON.jsonSerializerOptionsPretty);
+		attackString.Text = JsonSerializer.Serialize(AsJsonAttack(),JSON.jsonSerializerOptionsPretty);
 	}
 }
 
 
-internal class JsonAttack {
+internal class JsonAttack
+{
 	public string attacker { get; set; }
 	public DateTime t { get; set; }
 	public Target[] targets { get; set; }
@@ -598,17 +603,18 @@ internal class JsonAttack {
 	public string real { get; set; }
 	public string fake { get; set; }
 
-	internal struct Target {
-	
+	internal struct Target
+	{
+
 		public string c { get; set; }
-		public bool real { get; set; } 
+		public bool real { get; set; }
 	}
 
 }
 
 public class AttackTargetItem:ANotifyPropertyChanged
-		{
-			internal City targetUI {
+{
+	internal City targetUI {
 		get => target;
 		set {
 			if(target != value) {
@@ -616,58 +622,58 @@ public class AttackTargetItem:ANotifyPropertyChanged
 				attackSender.OnPropertyChanged();
 			}
 		}
-		}
-			internal City target;
-			internal AttackSender attackSender;
-			internal bool isReal;
-			internal bool isFake => !isReal;
-			internal City source => attackSender.city;
-			public AttackTargetItem(Spot target,AttackSender attackSender, bool isReal) {
-				this.target=target;
-				this.attackSender=attackSender;
-				this.isReal= isReal;
-				
-			}
+	}
+	internal City target;
+	internal AttackSender attackSender;
+	internal bool isReal;
+	internal bool isFake => !isReal;
+	internal City source => attackSender.city;
+	public AttackTargetItem(Spot target,AttackSender attackSender,bool isReal) {
+		this.target=target;
+		this.attackSender=attackSender;
+		this.isReal= isReal;
 
-			TroopTypeCounts troops => attackSender.GetTroopCounts() switch { var rf when isFake => rf.fakes, var rf => rf.reals };
-		
-			
+	}
 
-			//internal string AttackStrength() {
-			//	return $"Attack Strength:\n{troops.AttackStrength(city.player,target.isDungeonOrBoss ? Cavern.Get(target.c).combatWeakness : CombatCategory.invalid):N0}";
-			//}
-			
-
-		}
-		public class AttackTroopItem:ANotifyPropertyChanged
-		{
-
-
-			public TType type;
-			internal bool useForReal;
-			internal bool useForFakes;
-
-			internal City source => sender.city;
-			internal AttackSender sender;
-
-			public AttackTroopItem(AttackSender attack,TType type,bool useforReal,bool useForFakes) {
-				this.type=type;
-				this.sender=attack;
-				this.useForReal=useforReal;
-				this.useForFakes=useForFakes;
-			}
-
-			//	internal TroopTypeCount tt => new(type,(uint)_count.Max(0));
-			internal ImageSource image => Troops.Image(type);
-			internal TroopInfo info => TroopInfo.all[type];
-
-
-			public string troopsHome => $"{source.troopsHome.GetCount(type).Format()}/{source.troopsOwned.GetCount(type).Format()}";
+	TroopTypeCounts troops => attackSender.GetTroopCounts() switch { var rf when isFake => rf.fakes, var rf => rf.reals };
 
 
 
-		}
-	
-	
+	//internal string AttackStrength() {
+	//	return $"Attack Strength:\n{troops.AttackStrength(city.player,target.isDungeonOrBoss ? Cavern.Get(target.c).combatWeakness : CombatCategory.invalid):N0}";
+	//}
+
+
+}
+public class AttackTroopItem:ANotifyPropertyChanged
+{
+
+
+	public TType type;
+	internal bool useForReal;
+	internal bool useForFakes;
+
+	internal City source => sender.city;
+	internal AttackSender sender;
+
+	public AttackTroopItem(AttackSender attack,TType type,bool useforReal,bool useForFakes) {
+		this.type=type;
+		this.sender=attack;
+		this.useForReal=useforReal;
+		this.useForFakes=useForFakes;
+	}
+
+	//	internal TroopTypeCount tt => new(type,(uint)_count.Max(0));
+	internal ImageSource image => Troops.Image(type);
+	internal TroopInfo info => TroopInfo.all[type];
+
+
+	public string troopsHome => $"{source.troopsHome.GetCount(type).Format()}/{source.troopsOwned.GetCount(type).Format()}";
+
+
+
+}
+
+
 
 

@@ -57,7 +57,6 @@
                 <sf:GridHyperlinkColumn MappingName="xy"
                                        />
                <sf:GridCheckBoxColumn  MappingName="pinned"
-                                         IsHidden="False"
                                          ToolTipService.ToolTip="Hold down shift to toggle pinned status for all selected spots"
                                           Width="32" />
 
@@ -74,10 +73,8 @@
                                       />
 
                                 <sf:GridCheckBoxColumn  MappingName="isCastle"
-                                          IsHidden="False"
                                            />
                 <sf:GridCheckBoxColumn  MappingName="isOnWater"
-                                          IsHidden="False"
                                           />
 				<sf:GridTextColumn MappingName="troopsString"
                                              />

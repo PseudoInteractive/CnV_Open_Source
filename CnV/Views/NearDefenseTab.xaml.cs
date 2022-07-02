@@ -8,6 +8,8 @@ namespace CnV.Views
 {
 	using Game;
 
+	using System.ComponentModel;
+
 	public sealed partial class NearDefenseTab:UserTab
 	{
 
@@ -16,9 +18,9 @@ namespace CnV.Views
 		const bool waitReturn = true;
 		public bool sendViaWater { get; set; }
 
-		public static NotifyCollection<City> defendants = new();
+		internal ObservableCollection<CityRef> defendants = new();
 		public static NotifyCollection<Supporter> supporters = new();
-
+		internal IEnumerable<City> validDefendants =>  defendants.Where(i=>i._city.IsValid() ).Select(i=>i._city);
 		public float filterTime = 6;
 		public int filterTSTotal = 10000;
 		public int filterTSHome;
@@ -84,15 +86,16 @@ namespace CnV.Views
 		internal void SetArrived(ServerTime t) {
 			sendAtUI.SetDateTime(t);
 		}
+
 		public async override Task VisibilityChanged(bool visible,bool longTerm) {
 			if(visible) {
 
 				if(defendants.Count == 0) {
 					var focus = Spot.GetFocus();
 					if(focus.isCityOrCastle)
-						defendants.Add(focus,true);
+						AddDefendant(focus);
 					else
-						defendants.Add(City.GetBuild(),true);
+						AddDefendant(City.GetBuild());
 				}
 
 				var viaWater = sendViaWater;// && defendants.Any(d => d.isOnWater);
@@ -120,7 +123,7 @@ namespace CnV.Views
 								continue;
 
 							var travelTime = new TimeSpanS(0);
-							var canTravelViaWater = city.isOnWater && defendants.Any(a => a.isOnWater);
+							var canTravelViaWater = city.isOnWater && validDefendants.Any(a => a.isOnWater);
 
 
 							int validCount = 0;
@@ -130,7 +133,7 @@ namespace CnV.Views
 									continue;
 							}
 							else {
-								validCount = defendants.Count;
+								validCount = validDefendants.Count();
 							}
 
 							// re-use if possible
@@ -188,7 +191,6 @@ namespace CnV.Views
 					else
 						supporters.Set(s.OrderBy(a => a.travel.TotalHours - a.validTargets),true);
 
-					defendants.NotifyReset();
 				}
 
 
@@ -204,12 +206,20 @@ namespace CnV.Views
 			await base.VisibilityChanged(visible,longTerm: longTerm);
 		}
 
+		private void AddDefendant(Spot focus) {
+			defendants.Add(new CityRef(focus,DefenderChanged));
+		}
+
+		private void DefenderChanged(object? sender,PropertyChangedEventArgs e) {
+			refresh.Go();
+		}
+
 		private List<Spot> FindValidDefendants(bool viaWater,bool onlyHome,City city,ref TimeSpanS dt) {
 			if(portal)
-				return defendants.ToList<Spot>();
+				return validDefendants.ToList<Spot>();
 
 			var rv = new List<Spot>();
-			foreach(var d in defendants) {
+			foreach(var d in validDefendants) {
 
 				if(city.ComputeTravelTime(d.cid,onlyHome,Include,viaWater,TimeSpanS.FromHours(filterTime),ref dt)) {
 					rv.Add(d);
@@ -222,7 +232,7 @@ namespace CnV.Views
 			Assert(instance == null);
 			instance = this;
 			this.InitializeComponent();
-			SetupDataGrid(defendantGrid);
+			//SetupDataGrid(defendantGrid);
 
 		}
 
@@ -448,8 +458,75 @@ namespace CnV.Views
 		private void ValChanged(NumberBox sender,NumberBoxValueChangedEventArgs args) {
 			refresh.Go();
 		}
-	}
 
+        private void DefendantsChanged(object sender,Spot e) {
+		
+			refresh.Go();
+        }
+
+		private void RemoveDefendant(object sender,RoutedEventArgs e) {
+			var b = sender as Button;
+			var s = b?.DataContext as CityRef;
+			Assert(s is not null);
+			RemoveDefendant(s);
+			refresh.Go();
+		}
+
+		private void RemoveDefendant(CityRef i) {
+	//		var i = defendants.FirstOrDefault(a => a._city == s);
+			if(i is not null) {
+				i.ClearPropertyChanged();
+				defendants.Remove(i);
+			}
+		}
+
+		private void AddDefendant(object sender,RoutedEventArgs e) {
+			AddDefendant(City.invalid);
+			refresh.Go();
+
+		}
+
+		internal void SetDefendant(Spot me) {
+			while(defendants.Any()) {
+				RemoveDefendant(defendants.First());
+
+			}
+			AddDefendant(me);
+
+		}
+	}
+	internal class CityRef : IANotifyPropertyChanged {
+		internal City _city;
+
+		public CityRef(Spot city, PropertyChangedEventHandler onChange=null) {
+			_city=city;
+			if(onChange!=null)
+				PropertyChanged += onChange;
+		}
+		internal void ClearPropertyChanged() {
+			PropertyChanged = null;
+		}
+		public City city {
+			get {
+				Assert(_city is not null);
+				return _city;
+			}
+			set {
+				if(_city != value) {
+					_city=value;
+					OnPropertyChanged();
+				}
+			}
+		}
+		 public void CallPropertyChanged(string members = null) {
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(members));
+		}
+		public void OnPropertyChanged(string member = null)
+		{
+			if(PropertyChanged is not null) ((IANotifyPropertyChanged)this).IOnPropertyChanged(member);
+		}
+		public event PropertyChangedEventHandler? PropertyChanged;
+	}
 
 
 

@@ -39,12 +39,12 @@ namespace CnV;
 				switch (e.Record)
 				{
 					case Player player: {
-						ChartDialog.ShowPlayerMetric(e.Column.HeaderText,false);
+						ChartDialog.ShowPlayerMetric(e.Column.MappingName,false);
 						return;
 						
 					};
 					case Alliance alliance: {
-						ChartDialog.ShowPlayerMetric(e.Column.HeaderText,true);
+						ChartDialog.ShowPlayerMetric(e.Column.MappingName,true);
 						return;
 
 					};

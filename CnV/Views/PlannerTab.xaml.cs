@@ -57,6 +57,8 @@ namespace CnV.Views
 			if(visible)
 				e.Text = $"{rs:N0}%";
 			var p = e.Parent as FrameworkElement;
+			if(p is null)
+				return false;
 			p = p.Parent as FrameworkElement; // two levels up
 			p.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
 			return visible;
