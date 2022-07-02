@@ -151,7 +151,7 @@ namespace CnV
 						if( (++counter % 2) == 0 )
 						{
 							var t = (float) (Sim.simTime - Sim.serverStartTime)/(Sim.NowToServerSeconds() -  Sim.serverStartTime);
-							ShellPage.WorkUpdate($"Loading {t:P0}");
+							ShellPage.WorkUpdate($"Loading {t.Squared():P0}");
 
 						}
 					}
