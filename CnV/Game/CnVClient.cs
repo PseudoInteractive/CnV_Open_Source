@@ -18,33 +18,29 @@ namespace CnV
 	using Services;
 	using Microsoft.UI.Input;
 
-	internal  static partial class CnVClient
-	{
-	
+	internal static partial class CnVClient {
 
-		
+
+
 		static private int[] lastCln = null;
-		static SortedList<int, int> GetIntArray(JsonElement cln)
-		{
-			var rv = new SortedList<int, int>();
+		static SortedList<int,int> GetIntArray(JsonElement cln) {
+			var rv = new SortedList<int,int>();
 			if(cln.ValueKind == JsonValueKind.Array)
 				foreach(var cn in cln.EnumerateArray())
-					rv.Add(rv.Count, cn.GetAsInt());
+					rv.Add(rv.Count,cn.GetAsInt());
 			else if(cln.ValueKind == JsonValueKind.Object)
 				foreach(var cn in cln.EnumerateObject())
-					rv.Add(int.Parse(cn.Name), cn.Value.GetAsInt());
+					rv.Add(int.Parse(cn.Name),cn.Value.GetAsInt());
 			return rv;
 		}
 
-		public static async void UpdatePPDT(JsonElement jse, PlayerId thisPid, bool pruneCities = false, bool updateBuildCity = false)
-		{
+		public static async void UpdatePPDT(JsonElement jse,PlayerId thisPid,bool pruneCities = false,bool updateBuildCity = false) {
 			// Todo:  should we update our local PPDT to the server?
 
 			var clChanged = 0;
 			// City lists
-			try
-			{
-		
+			try {
+
 
 				var bonusesUpdated = false;
 				// research?
@@ -72,8 +68,7 @@ namespace CnV
 				//	});
 				//}
 
-				if(jse.TryGetProperty("wmo", out var wo))
-				{
+				if(jse.TryGetProperty("wmo",out var wo)) {
 					WorldViewSettings.ownCities.isOn = wo.GetAsInt("0")==1;
 					WorldViewSettings.ownCities.color = wo.GetColor("16");
 
@@ -95,7 +90,7 @@ namespace CnV
 					WorldViewSettings.lawless.isOn = wo.GetAsInt("5") == 1;
 					WorldViewSettings.lawless.color = wo.GetColor("21");
 
-					
+
 
 					WorldViewSettings.citiesWithoutCastles = wo.GetAsInt("7") == 1;
 					WorldViewSettings.citiesWithoutWater = wo.GetAsInt("8") == 1;
@@ -124,27 +119,25 @@ namespace CnV
 
 
 					WorldViewSettings.playerSettings.Clear();
-					if(wo.TryGetProperty("p", out var p) && p.ValueKind == JsonValueKind.Object)
-						foreach(var pset in p.EnumerateObject())
-						{
+					if(wo.TryGetProperty("p",out var p) && p.ValueKind == JsonValueKind.Object)
+						foreach(var pset in p.EnumerateObject()) {
 							var ps = new WorldViewSettings.PlayerSetting();
 							ps.id = pset.Value.GetAsUShort("a");
 							ps.color = pset.Value.GetColor("c");
 							ps.isOn = pset.Value.GetAsByte("d") == 1;
 
-							WorldViewSettings.playerSettings.Add(ps.id, ps);
+							WorldViewSettings.playerSettings.Add(ps.id,ps);
 						}
 					WorldViewSettings.allianceSettings.Clear();
-					if(wo.TryGetProperty("a", out var a))
+					if(wo.TryGetProperty("a",out var a))
 
-						foreach(var pset in a.EnumerateObject())
-						{
+						foreach(var pset in a.EnumerateObject()) {
 							var ps = new WorldViewSettings.AllianceSetting();
 							ps.id = pset.Value.GetAsByte("a");
 							ps.color = pset.Value.GetColor("c");
 							ps.isOn = pset.Value.GetAsInt("d") == 1;
 
-							WorldViewSettings.allianceSettings.Add(ps.id, ps);
+							WorldViewSettings.allianceSettings.Add(ps.id,ps);
 						}
 
 					//	if (World.completed)
@@ -251,8 +244,7 @@ namespace CnV
 				//	});
 			}
 
-			catch(Exception E)
-			{
+			catch(Exception E) {
 				//	Log(E);
 				Log("City lists invalid, maybe you have none");
 			}
@@ -274,7 +266,7 @@ namespace CnV
 			//	{
 			//		// using would lose this otherwise maybe?
 			//		cProp = cProp.Clone();
-					
+
 			//		while(!World.initialized)
 			//			await Task.Delay(1000);
 			//	}
@@ -333,7 +325,7 @@ namespace CnV
 			//	}
 			//	if(citySwitch != 0)
 			//		CitySwitch(citySwitch, true);
-				
+
 
 			//	if(!ppdtInitialized)
 			//	{
@@ -341,7 +333,7 @@ namespace CnV
 			//	// todo:	ppdtInitialized = true;
 
 			//		//Task.Delay(500).ContinueWith( _ => App.DispatchOnUIThreadSneakyLow( MainPage.instance.Refresh));
-					
+
 			//	}
 
 			//	//    Log(City.all.ToString());
@@ -354,56 +346,56 @@ namespace CnV
 
 			// Log(ppdt.ToString());
 		}
-//		class WaitOnCityDataData
-//		{
-//			public int                        cid;
-//			public TaskCompletionSource<bool> t;
+		//		class WaitOnCityDataData
+		//		{
+		//			public int                        cid;
+		//			public TaskCompletionSource<bool> t;
 
-//			public WaitOnCityDataData(int cid)
-//			{
-//				this.cid = cid;
-//				t        = new TaskCompletionSource<bool>();
-//			}
+		//			public WaitOnCityDataData(int cid)
+		//			{
+		//				this.cid = cid;
+		//				t        = new TaskCompletionSource<bool>();
+		//			}
 
-//			public void Done()
-//			{
-//				try
-//				{
-//					cid = 0;
-//					var _t = t;
-//					t = null;
-//					if(_t != null)
-//						_t.SetResult(true);
+		//			public void Done()
+		//			{
+		//				try
+		//				{
+		//					cid = 0;
+		//					var _t = t;
+		//					t = null;
+		//					if(_t != null)
+		//						_t.SetResult(true);
 
-//				}
-//				catch(Exception ex)
-//				{
+		//				}
+		//				catch(Exception ex)
+		//				{
 
-//					LogEx(ex);
-//				}
-//			}
-//			public void Abort()
-//			{
-//				try
-//				{
-//					cid = 0;
-//					var _t = t;
-//					t = null;
-//					if(_t != null)
-//						_t.SetResult(false);
+		//					LogEx(ex);
+		//				}
+		//			}
+		//			public void Abort()
+		//			{
+		//				try
+		//				{
+		//					cid = 0;
+		//					var _t = t;
+		//					t = null;
+		//					if(_t != null)
+		//						_t.SetResult(false);
 
-//				}
-//				catch(Exception ex)
-//				{
+		//				}
+		//				catch(Exception ex)
+		//				{
 
-//					LogEx(ex);
-//				}
-//			}
-//			public bool isDone => t == null;
-//		}
+		//					LogEx(ex);
+		//				}
+		//			}
+		//			public bool isDone => t == null;
+		//		}
 
 
-////		static WaitOnCityDataData[] waitingOnCityData = Array.Empty<WaitOnCityDataData>();
+		////		static WaitOnCityDataData[] waitingOnCityData = Array.Empty<WaitOnCityDataData>();
 
 		//static async Task<bool> ChangeCityJSWait(int cityId)
 		//{
@@ -419,7 +411,19 @@ namespace CnV
 		//		i.Abort();
 		//	return xx;
 		//}
-		public static async Task<bool> CitySwitch(int cid, bool lazyMove = false, bool select = true, bool scrollIntoUI = true, bool isLocked = false, bool waitOnChange = false)
+		public static  Task<bool> CitySwitch(int cid,bool lazyMove=false,bool select = true,bool scrollIntoUI = true,bool isLocked = false,bool waitOnChange = false) {
+			ClickModifiers mod = ClickModifiers.bringIntoWorldView;
+			if(lazyMove) {
+				mod |= ClickModifiers.bringIntoWorldViewLazy;
+			}
+			if(scrollIntoUI)
+				mod |= ClickModifiers.scrollIntoUiView;
+			if(select) {
+				mod |= ClickModifiers.select;
+			}
+			return CitySwitch(cid,mod,isLocked,waitOnChange);
+		}
+		public static async Task<bool> CitySwitch(int cid,ClickModifiers clickMods , bool isLocked = false, bool waitOnChange = false)
 		{
 			// Make sure we don't ignore the exception
 			
@@ -440,7 +444,7 @@ namespace CnV
 					// no longer happens
 					//	Assert(false);
 					//else
-					{
+					
 						var changed = cid != Spot.build;
 						if(changed)
 						{
@@ -491,7 +495,7 @@ namespace CnV
 
 
 						}
-						city.SetFocus(scrollIntoUI,select);
+						CityUI.ProcessClick(cid,clickMods);
 						CityUI.SyncCityBox();
 
 						if(changed)
@@ -510,14 +514,13 @@ namespace CnV
 							//}
 						}
 
-					}
-					if(!lazyMove)
-						cid.BringCidIntoWorldView(lazyMove);
+					
+					
 					return true;
 				}
 				else
 				{
-					CityUI.ShowCity(cid,lazyMove,scrollIntoUI);
+					CityUI.ProcessClick(cid,clickMods);
 					return false;
 				}
 			

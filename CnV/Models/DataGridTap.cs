@@ -62,10 +62,10 @@ namespace CnV;
 						{
 							case nameof(BossReport.bossC):
 						
-								Spot.ProcessCoordClick(br.bossC, false, AppS.keyModifiers, false);
+								Spot.ProcessCoordClick(br.bossC,  AppS.keyModifiers.ClickMods());
 								break;
 							case nameof(BossReport.city):
-								Spot.ProcessCoordClick(br.cityC, false, AppS.keyModifiers, false);
+								Spot.ProcessCoordClick(br.cityC, AppS.keyModifiers.ClickMods() );
 								break;
 
 							case nameof(BossReport.player):
@@ -99,10 +99,10 @@ namespace CnV;
 
 							//}
 								case "dXY":
-									Spot.ProcessCoordClick(i.targetCid, false, AppS.keyModifiers, false);
+									Spot.ProcessCoordClick(i.targetCid, AppS.keyModifiers.ClickMods());
 									break;
 								case "aXY":
-									Spot.ProcessCoordClick(i.sourceCid, false, AppS.keyModifiers, false);
+									Spot.ProcessCoordClick(i.sourceCid,AppS.keyModifiers.ClickMods());
 									break;
 								case "aPlyr":
 									PlayerHelper.Click(i.sPlayer);
@@ -145,11 +145,11 @@ namespace CnV;
 							
 								case nameof(i.tXY):
 								case nameof(i.targetCN):
-									Spot.ProcessCoordClick(i.targetCid, false, AppS.keyModifiers, false);
+									Spot.ProcessCoordClick(i.targetCid,  AppS.keyModifiers.ClickMods());
 									break;
 								case nameof(i.sXY):
 								case nameof(i.sourceCN):
-									Spot.ProcessCoordClick(i.sourceCid, false, AppS.keyModifiers, false);
+									Spot.ProcessCoordClick(i.sourceCid, AppS.keyModifiers.ClickMods());
 									break;
 								case nameof(i.tPlayer):
 									Sim.ShowPlayer(i.tPlayer);
@@ -184,7 +184,7 @@ namespace CnV;
 						switch (e.Column.MappingName)
 						{
 							case nameof(Dungeon.xy):
-								Spot.ProcessCoordClick(cid, false, AppS.keyModifiers, false);
+								Spot.ProcessCoordClick(cid, AppS.keyModifiers.ClickMods());
 								break;
 							case nameof(Dungeon.dispatch):
 							case nameof(Dungeon.plan):

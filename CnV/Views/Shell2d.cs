@@ -480,24 +480,28 @@ namespace CnV.Views
 					// todo: handle differently for city view
 
 					case Windows.System.VirtualKey.Space:
+						++GameClient.drawOverlays;
+						if(GameClient.drawOverlays >= GameClient.DrawOverlays.max)
+							GameClient.drawOverlays=0;
+						break;
 					case Windows.System.VirtualKey.Enter:
-						Spot.ProcessCoordClick(Spot.focus, false, AppS.keyModifiers, true);
+						Spot.ProcessCoordClick(Spot.focus,  AppS.keyModifiers.ClickMods(scrollIntoUi:true) );
 						break;
 
 					case Windows.System.VirtualKey.Left:
-						Spot.SetFocus(Spot.focus.Translate((-1, 0)), true, true, true,lazyMove:false);
+						Spot.SetFocus(Spot.focus.Translate((-1, 0)),  AppS.keyModifiers.ClickMods(scrollIntoUi:true) );
 						break;
 
 					case Windows.System.VirtualKey.Up:
-						Spot.SetFocus(Spot.focus.Translate((0, -1)), true, true, true,lazyMove:false);
+						Spot.SetFocus(Spot.focus.Translate((0, -1)),  AppS.keyModifiers.ClickMods(scrollIntoUi:true) );
 						break;
 
 					case Windows.System.VirtualKey.Right:
-						Spot.SetFocus(Spot.focus.Translate((1, 0)), true, true, true,lazyMove:false);
+						Spot.SetFocus(Spot.focus.Translate((1, 0)),  AppS.keyModifiers.ClickMods(scrollIntoUi:true) );
 						break;
 
 					case Windows.System.VirtualKey.Down:
-						Spot.SetFocus(Spot.focus.Translate((0, 1)), true, true, true,lazyMove:false);
+						Spot.SetFocus(Spot.focus.Translate((0, 1)), AppS.keyModifiers.ClickMods(scrollIntoUi:true) );
 						break;
 				}
 				return false;

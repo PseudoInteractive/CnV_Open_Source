@@ -242,7 +242,7 @@ namespace CnV.Views
 			var image = sender as FrameworkElement;
 
 			var supporter = image.DataContext as Supporter;
-			Spot.ProcessCoordClick(supporter.city.cid,false,AppS.keyModifiers,false);
+			Spot.ProcessCoordClick(supporter.city.cid,AppS.keyModifiers.ClickMods() );
 
 		}
 

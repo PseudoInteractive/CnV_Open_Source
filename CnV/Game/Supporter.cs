@@ -80,7 +80,7 @@ namespace CnV
 			{
 
 				case nameof(xy):
-					Spot.ProcessCoordClick(cid, false, AppS.keyModifiers);
+					Spot.ProcessCoordClick(cid,  AppS.keyModifiers.ClickMods());
 					break;
 			}
 		}

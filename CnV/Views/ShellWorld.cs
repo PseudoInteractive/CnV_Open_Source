@@ -20,8 +20,6 @@ using System.Collections.Concurrent;
 using Windows.System.Threading;
 using CnV.Draw;
 using static CnV.Helpers.AString;
-using Cysharp.Text;
-using EnumsNET;
 using static CnV.GameClient;
 using Microsoft.UI.Input;
 using Microsoft.UI.Dispatching;

@@ -133,7 +133,8 @@
 
 			<Style x:Key="ButtonSmall" TargetType="Button" BasedOn="{StaticResource ButtonRevealStyle}">
 				<Setter Property="Margin" Value="2"/>
-				<Setter Property="VerticalAlignment" Value="Center"/>
+			<Setter Property="Padding" Value="3"/>
+			<Setter Property="VerticalAlignment" Value="Center"/>
 				<Setter Property="HorizontalAlignment" Value="Center"/>
 				<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
 				<Setter Property="FontStretch" Value="Condensed" />
@@ -202,20 +203,16 @@
 			<Style x:Key="SfTextCell" TargetType="sf:GridCell">
 				<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
 				<Setter Property="FontSize" Value="{StaticResource TinyFontSize}" />
-				<Setter Property="FontStretch" Value="Condensed" />
-				
-				<Setter Property="FontWeight" Value="Normal" />
-		<Setter Property="SelectionForeground" Value="#598F0A0B"/>
+		<Setter Property="FontStretch" Value="Condensed" />
 	</Style>
+	
 
 	<Style  TargetType="sf:GridCell" BasedOn="{StaticResource SfTextCell}">
-
 	</Style>
 	
 
 	<Style x:Key="SfGridColumnBase" TargetType="sf:GridColumn">
 				<Setter Property="ShowHeaderToolTip" Value="True"/>
-		
 				
 				
 				
@@ -240,8 +237,7 @@
 	</Style>
 
 
-
-
+	
 	<Style  x:Key="SfLink"
 	        BasedOn="{StaticResource SfTextCell }"
 	        TargetType="sf:GridCell">

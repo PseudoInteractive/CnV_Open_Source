@@ -18,8 +18,11 @@ public static partial class CityUI
 	
 
 
+	public static void ProcessClick(this City c,ClickModifiers clickMods) {
 
-	public static void SetFocus(int cid, bool scrollintoView, bool select = true, bool bringIntoView = true, bool lazyMove = true)
+		ProcessClick(c.cid,clickMods);
+	}
+	public static void ProcessClick(int cid,ClickModifiers clickMods)
 	{
 		if(cid == Spot.cidNone) {
 			Assert(false);
@@ -27,15 +30,22 @@ public static partial class CityUI
 		}
 		var changed = cid != focus;
 		var spot    = Spot.GetOrAdd(cid);
-		if(select)
-			spot.SelectMe(false, AppS.keyModifiers, scrollintoView);
 		if(changed)
 		{
 			focus = (WorldC)cid;
 			AppS.QueueOnUIThread(UpdateFocusText);
 		}
-		if(bringIntoView)
-			cid.BringCidIntoWorldView(lazyMove);
+		if(clickMods.HasFlag( ClickModifiers.bringIntoWorldView) )
+			cid.BringCidIntoWorldView(clickMods.HasFlag( ClickModifiers.bringIntoWorldViewLazy) );
+		
+		SpotTab.AddToGrid(spot);
+		
+		if(clickMods.HasFlag(ClickModifiers.select))
+			ProcessSelection(spot,clickMods);
+		if(clickMods.HasFlag(ClickModifiers.scrollIntoUiView)) {
+			CityUI.ScrollIntoView(cid);
+		}
+		NavStack.Push(cid);
 	}
 
 	

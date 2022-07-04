@@ -27,15 +27,17 @@
 							Grid.Row="3"
 					
 							ItemsSource="{x:Bind game:City.gridCitySource, Mode=OneWay}"
+							SelectedItems="{x:Bind game:City.gridCitySelected, Mode=OneWay}"
 							AutoGenerateColumns="False"
-							SelectionMode="Extended"
-						
+							SelectionMode="Multiple"
+							FrozenColumnsCount="4"
 							SelectionUnit="Row"
 							ShowToolTip="True"
 							FontStretch="Condensed"
 							Loaded="DataGridLoaded"
 							
 					   >
+		
 	
 			<!--<sf:SfDataGrid.Commands>
 				<view:BuildCustomDataBindingCompleteCommand />
@@ -59,7 +61,7 @@
 
 			<sf:SfDataGrid.Columns >
 
-			
+				<sf:GridCheckBoxSelectorColumn MappingName="Sel" Width="46" ColumnWidthMode="None" />
 				<sf:GridImageColumn MappingName="icon"
 				                    AllowFiltering="False"
 									AllowSorting="False"

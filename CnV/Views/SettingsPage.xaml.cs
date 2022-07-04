@@ -790,8 +790,8 @@ namespace CnV
 					var cords = m.Value.FromCoordinate();
 					var s = Spot.GetOrAdd(cords);
 
-
-					SpotTab.TouchSpot(s.cid, Windows.System.VirtualKeyModifiers.Shift, true, true);
+					s.SetPinned(true);
+					SpotTab.AddToGrid(s, false);
 				}
 				Note.Show("Added spots success");
 

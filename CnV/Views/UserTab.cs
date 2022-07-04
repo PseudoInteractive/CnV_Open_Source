@@ -67,8 +67,12 @@ public partial class UserTab:Page, IANotifyPropertyChanged {
 		{
 			try
 			{
-				var sel = grid.SelectedItems;
-				Spot.selected =new HashSet<int>(sel.Select(a => ((Spot)a).cid));
+				
+					
+				var sel = City.gridCitySelected;
+				var prior = Spot.selected;
+				Spot.selected = (sel.Select(a => ((Spot)a).cid)).Concat(prior.Where(a=> !City.gridCitySource.Contains(a.AsCity()) )).ToHashSet();
+				SpotTab.SyncSelectionToUI(syncRecentGrid: true,syncCityGrid: false);
 			}
 			catch(Exception ex)
 			{

@@ -212,7 +212,7 @@ namespace CnV
 				var image = sender as FrameworkElement;
 				var cc = image.FindParent<CityControl>();
 				if(cc.isValid)
-					CityUI.ShowCity(cc.city.cid,false,false,false);
+					CityUI.ShowCity(cc.city.cid,AppS.keyModifiers.ClickMods(scrollIntoUi:true) );
 			}
 			catch(Exception _ex)
 			{
@@ -233,7 +233,7 @@ namespace CnV
 				var image = sender as FrameworkElement;
 				var cc = image.FindParent<CityControl>();
 				if(cc.isValid)
-					Spot.ProcessCoordClick(cc.city.cid,false,AppS.keyModifiers,false);
+					Spot.ProcessCoordClick(cc.city.cid ,AppS.keyModifiers.ClickMods(scrollIntoUi:true) );
 			}
 			catch(Exception _ex)
 			{
@@ -447,7 +447,7 @@ namespace CnV
 			e.Handled=true;
 			if(!isValid)
 				return;
-			city?.Focus();
+			city?.Focus(true);
 		}
 
 		private void RightTappedX(object sender,RightTappedRoutedEventArgs e)
@@ -489,7 +489,7 @@ namespace CnV
 		private void ComboRightTapped(object sender,RightTappedRoutedEventArgs e) {
 			e.Handled=true;
 			var flyout = new MenuFlyout();
-			var sel = City.GetSelectedForContextMenu(City.focus).AsCities().Concat(SpotTab.SpotMRU.Where(a => a.pinned)).Concat(SpotTab.SpotMRU.Take(8.Min(SpotTab.SpotMRU.Count))).
+			var sel = City.GetSelectedForContextMenu(City.focus).AsCities().Concat(SpotTab.spotMRU.Where(a => a.pinned)).Concat(SpotTab.spotMRU.Take(8.Min(SpotTab.spotMRU.Count))).
 				Where(a=> IsValid(a.cid,false)); ;
 			if(allowNone)
 				sel = sel.Prepend(City.invalid);

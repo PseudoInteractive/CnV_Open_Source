@@ -200,7 +200,7 @@ namespace CnV
 
 		private void focus_PropertyChanged(object sender,Spot e) {
 			if(e.isValid) {
-				CityUI.ShowCity(e.cid, false, true, true);
+				CityUI.ShowCity(e.cid);
 			}
 		}
 	}

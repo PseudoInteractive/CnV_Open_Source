@@ -80,14 +80,17 @@ public static partial class ADataGrid
 
 	public static ChangeContextDisposable ChangeContext(this xDataGrid grid) => new ChangeContextDisposable(grid);
 
-	public static void ScrollItemIntoView(this xDataGrid grid, object? o)
+	public static void ScrollItemIntoView(this xDataGrid grid, object? o, bool setCurrent)
 	{
 		if (o is not null)
 		{
 			var rowIndex = grid.ResolveToRowIndex(o);
 			var columnIndex = grid.ResolveToStartColumnIndex();
-			if (rowIndex >= 0)
-				grid.ScrollInView(new RowColumnIndex(rowIndex, columnIndex));
+			if(rowIndex >= 0) {
+				grid.ScrollInView(new RowColumnIndex(rowIndex,columnIndex));
+			}
+			if(setCurrent)
+				grid.CurrentItem = o;
 		}
 	}
 
@@ -286,6 +289,9 @@ public static partial class ADataGrid
 		//	grid.AlternationCount = 2;
 		//	grid.AllowRowHoverHighlighting = true;
 			grid.RowHeight = Settings.shortGridRowHeight;
+			grid.CurrentCellBorderThickness = new(0.5f);
+			
+			grid.CurrentCellBorderBrush = AppS.Brush(Microsoft.UI.Colors.Purple);
 			//	grid.FontSize = Settings.smallFontSize;
 			grid.ElementSoundMode = ElementSoundMode.Off;
 			grid.FontWeight=Microsoft.UI.Text.FontWeights.Normal;
@@ -293,11 +299,12 @@ public static partial class ADataGrid
 			grid.FontStretch = Windows.UI.Text.FontStretch.Condensed;
 			grid.FontFamily=XamlHelper.cnvFont;
 			Assert(grid.FontFamily is not null);
-			grid.SelectionMode = GridSelectionMode.Extended;
+			if(grid.SelectionMode == GridSelectionMode.Single)
+				grid.SelectionMode = GridSelectionMode.Extended;
 		//	grid.GridLinesVisibility = GridLinesVisibility.Both;
 		
 			grid.ShowGroupDropArea=true;
-			grid.AllowResizingHiddenColumns = true;
+		//	grid.AllowResizingHiddenColumns = true;
 			grid.AllowResizingColumns = true;
 		//	grid.CanMaintainScrollPosition=true;
 			//grid.ShowToolTip=true;
@@ -374,9 +381,8 @@ public static partial class ADataGrid
 	public static async Task SetFocus(this xDataGrid grid, object p)
 	{
 		await Task.Delay(500);
-		grid.CurrentItem = p;
+		grid.ScrollItemIntoView(p,true);
 		grid.SelectedItem = p;
-		grid.ScrollItemIntoView(p);
 
 	}
 }

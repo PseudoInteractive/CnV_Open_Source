@@ -23,7 +23,12 @@ public static partial class CityUI
 
 	}
 
-	public static  void ShowCity(int cityId,bool lazyMove,bool select = true,bool scrollToInUI = true)
+	public static void ShowCity(int cityId) {
+		ShowCity(cityId,AppS.keyModifiers.ClickMods());
+	}
+	
+
+	public static  void ShowCity(int cityId,ClickModifiers clickMods)
 	{
 		try
 		{
@@ -33,7 +38,7 @@ public static partial class CityUI
 			// don't change build
 			
 			{
-				CityUI.SetFocus(cityId,scrollToInUI,select,true,lazyMove);
+				CityUI.ProcessClick(cityId,clickMods);
 			}
 
 			// if (CnVServer.IsWorldView())
@@ -212,7 +217,7 @@ public partial class City
 	}
 	internal void Show(object sender,RoutedEventArgs e)
 	{
-		CityUI.ShowCity(cid,false);
+		CityUI.ShowCity(cid);
 	}
 
 	public void ReturnAt(object sender,RoutedEventArgs e)

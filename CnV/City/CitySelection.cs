@@ -11,11 +11,11 @@ using Windows.System;
 
 public static partial class CityUI
 	{
-	public static void ProcessSelection(this City me, VirtualKeyModifiers mod, bool forceSelect = false, bool scrollIntoView = true)
+	public static void ProcessSelection(this City me, ClickModifiers mod)
 	{
 		++SpotTab.silenceSelectionChanges;
 
-		AppS.DispatchOnUIThreadLow(() =>
+		AppS.DispatchOnUIThread(() =>
 		{
 			try
 			{
@@ -26,11 +26,11 @@ public static partial class CityUI
 				var sel = selected;
 				var present = sel.Contains(cid);
 				var wantUISync = false;
-				if(mod.IsShift() || mod.IsControl() || forceSelect)
+				if(mod.IsShift() || mod.IsControl() )
 				{
 					if(present)
 					{
-						if(!forceSelect && !mod.IsShift())
+						if(!mod.IsShift())
 						{
 							selected = new HashSet<int>(sel.Where(a => a != cid));
 							//		sel0.Remove(this);
@@ -76,7 +76,7 @@ public static partial class CityUI
 					}
 					//                   SpotTab.SelectOne(this);
 				}
-				SyncSelectionToUI(scrollIntoView, me);
+				SpotTab.SyncSelectionToUI();
 			}
 			catch(Exception e)
 			{

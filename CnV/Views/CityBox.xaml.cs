@@ -81,7 +81,7 @@ namespace CnV
 			var image = sender as FrameworkElement;
 			var cc = image.FindParent<CityBox>();
 			if(cc?.city != null)
-				CityUI.ShowCity(cc.city.cid,false,false,false);
+				Spot.ProcessCoordClick(cc.city.cid,AppS.keyModifiers.ClickMods(scrollIntoUi:true) );
 
 		}
 
@@ -90,7 +90,7 @@ namespace CnV
 			var image = sender as FrameworkElement;
 			var cc = image.FindParent<CityBox>();
 			if(cc?.city!=null)
-				Spot.ProcessCoordClick(cc.city.cid,false,AppS.keyModifiers,false);
+				Spot.ProcessCoordClick(cc.city.cid,AppS.keyModifiers.ClickMods(scrollIntoUi:true) );
 
 		}
 

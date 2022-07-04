@@ -149,7 +149,7 @@ partial class ShellPage
 			{
 				var spot = Spot.GetOrAdd(wc.cid);
 				if(AppS.IsKeyPressedShiftOrControl())
-					spot.SetFocus(true,true,false);
+					spot.SetFocus(AppS.keyModifiers.ClickMods() );
 				var position = args.Position;
 				AppS.DispatchOnUIThread(action: () =>
 					 spot.ShowContextMenu(canvas,position));
@@ -174,7 +174,7 @@ partial class ShellPage
 			if(!wc.isNan)
 			{
 				// check to see if it needs to go to the webview
-				Spot.ProcessCoordClick(wc.cid,!isBuild,AppS.keyModifiers,true); ;
+				Spot.ProcessCoordClick(wc.cid,AppS.keyModifiers.ClickMods(scrollIntoUi:true,lazy:true)); ;
 			}
 			//e.Handled = true;
 		}

@@ -166,7 +166,7 @@ namespace CnV.Views
 
 				AppS.QueueOnUIThread(() => {
 					
-					PlayerStats.instance.UpdateIncomingText();
+					PlayerStats.instance?.UpdateIncomingText();
 					if(IncomingTab.IsVisible()) {
 						try {
 							var includeInternal = instance.includeInternal;
@@ -186,7 +186,7 @@ namespace CnV.Views
 							var sel = instance.defenderGrid.SelectedItem;
 							if(sel is not null && newItems.Contains(sel)) {
 
-								instance.defenderGrid.ScrollItemIntoView(sel);
+								instance.defenderGrid.ScrollItemIntoView(sel,true);
 
 							}
 							instance.UpdateArmyGrid(true,false);

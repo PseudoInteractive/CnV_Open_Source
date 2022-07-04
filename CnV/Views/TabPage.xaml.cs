@@ -602,7 +602,7 @@ namespace CnV.Views
 				
 			}
 
-			CityUI.SyncSelectionToUI(true);
+	//		CityUI.SyncSelectionToUI(true);
 		}
 
 

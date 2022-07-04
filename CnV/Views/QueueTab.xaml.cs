@@ -17,7 +17,6 @@ using CnV.Views;
 using static CnV.Debug;
 using static CnV.CityBuild;
 using static CnV.Views.ShellPage;
-using EnumsNET;
 using Microsoft.UI.Xaml;
 using CnV;
 using static CnV.City;

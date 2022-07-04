@@ -426,6 +426,43 @@ namespace CnV
 			{
 				//await AppS.StartHost(OnReady:async () =>
 				{
+					try {
+						AppInstance keyInstance = AppInstance.FindOrRegisterForKey("cnv");
+
+
+						// If we successfully registered the file name, we must be the
+						// only instance running that was activated for this file.
+						if(keyInstance.IsCurrent) {
+							// Report successful file name key registration.
+
+
+							// Hook up the Activated event, to allow for this instance of the app
+							// getting reactivated as a result of multi-instance redirection.
+							//   keyInstance.Activated += OnActivated;
+						}
+						else {
+							AppS.appAlreadyRunning=true;
+							var mainInstance = Microsoft.Windows.AppLifecycle.AppInstance.FindOrRegisterForKey("main");
+
+							// If the instance that's executing the OnLaunched handler right now
+							// isn't the "main" instance.
+							if(!mainInstance.IsCurrent) {
+								// Redirect the activation (and args) to the "main" instance, and exit.
+								var activatedEventArgs =
+									Microsoft.Windows.AppLifecycle.AppInstance.GetCurrent().GetActivatedEventArgs();
+								await mainInstance.RedirectActivationToAsync(activatedEventArgs);
+								System.Diagnostics.Process.GetCurrentProcess().Kill();
+								return;
+							}
+
+							//                        isRedirect = true;
+							//                       RedirectActivationTo(args, keyInstance);
+						}
+					}
+					catch(Exception ex) {
+						Trace(ex.ToString());
+					}	
+
 
 					Assert(AppS.state == AppS.State.loading);
 					AppS.SetState(AppS.State.init);
@@ -487,26 +524,7 @@ namespace CnV
 					AppS.appWindow= AppWindow.GetFromWindowId(myWndId);
 					try {
 
-						AppInstance keyInstance = AppInstance.FindOrRegisterForKey("cnv");
-                    
-
-                        // If we successfully registered the file name, we must be the
-                        // only instance running that was activated for this file.
-                        if (keyInstance.IsCurrent)
-                        {
-                            // Report successful file name key registration.
-                        
-
-                            // Hook up the Activated event, to allow for this instance of the app
-                            // getting reactivated as a result of multi-instance redirection.
-                         //   keyInstance.Activated += OnActivated;
-                        }
-                        else
-                        {
-							AppS.appAlreadyRunning=true;
-    //                        isRedirect = true;
-     //                       RedirectActivationTo(args, keyInstance);
-                        }
+						
 
 
 

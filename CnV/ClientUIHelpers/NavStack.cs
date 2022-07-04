@@ -135,7 +135,7 @@ namespace CnV
 			public void Go()
 			{
 				using var __frame = new NavStackFrame();
-				City.ProcessCoordClick(cid,true,AppS.keyModifiers);
+				City.ProcessCoordClick(cid,AppS.keyModifiers.ClickMods(scrollIntoUi:true));
 			}
 		}
 

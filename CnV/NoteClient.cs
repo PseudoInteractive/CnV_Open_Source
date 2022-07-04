@@ -265,7 +265,7 @@ namespace CnV
 							}
 							break;
 						case "c":
-							Spot.ProcessCoordClick(paths[2].FromCoordinate(), false, AppS.keyModifiers, false);
+							Spot.ProcessCoordClick(paths[2].FromCoordinate(),  AppS.keyModifiers.ClickMods(scrollIntoUi:true) );
 							break;
 						case "p": // player
 							Sim.ShowPlayer(paths[2]);

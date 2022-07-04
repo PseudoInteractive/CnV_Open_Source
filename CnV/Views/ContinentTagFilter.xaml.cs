@@ -1,6 +1,5 @@
 ﻿using CnV.Game;
 
-using Cysharp.Text;
 
 using System;
 using System.Collections.Generic;
@@ -45,6 +44,7 @@ namespace CnV.Views
 				if (check == null)
 				{
 					check = new ToggleButton() { Content = tag.s };
+					check.SetToolTip(tag.v.EnumName());
 					instance.tagsPanel.Children.Add(check);
 				}
 				check.IsChecked = actuallyClearPlease ? false : Spot.tagFilter.HasFlag(tag.v);
@@ -54,7 +54,7 @@ namespace CnV.Views
 				for (int id = 0; id < World.continentCount; ++id)
 				{
 					var xy = World.ContinentIdToXY(id);
-					var text = ZString.Format("{0}{1}", xy.y, xy.x);
+					var text = $"{xy.y}{xy.x}";
 					var check = instance.continentsPanel.Children.FirstOrDefault((a) => a is ToggleButton b && b.Content as string == text) as ToggleButton;
 					if (check == null)
 					{
@@ -124,7 +124,7 @@ namespace CnV.Views
 						{
 							// is just one set?
 							var xy = World.ContinentIdToXY(first);
-							var contLabel = ZString.Format("{0}{1}", xy.y, xy.x);
+							var contLabel =$"{xy.y}{xy.x}";
 							if (contCount > 1)
 							{
 								contLabel += $"(+{contCount-1})";

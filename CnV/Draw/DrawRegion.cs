@@ -15,6 +15,14 @@ namespace CnV;
 using static Troops;
 internal partial class GameClient
 {
+	[Flags]
+	public enum DrawOverlays {
+		none=0<<0,
+		alliance=1<<0,
+		palace=1<<1,
+		max= 1<<2,
+	}
+	public static DrawOverlays drawOverlays;
 	public static TextFormat textformatLabel = new TextFormat(TextFormat.HorizontalAlignment.center,TextFormat.VerticalAlignment.center);
 	private TextFormat tipTextFormatCentered = new TextFormat(TextFormat.HorizontalAlignment.center);
 	private TextFormat tipTextFormatCenteredBottom = new TextFormat(TextFormat.HorizontalAlignment.center,TextFormat.VerticalAlignment.bottom);
@@ -1450,7 +1458,8 @@ internal partial class GameClient
 						//DrawFlag(cid, SpriteAnim.flagSelected, Vector2.Zero);
 					}
 					foreach(var cid in Settings.pinned) {
-						DrawFlag(cid,SpriteAnim.flagPinned,new System.Numerics.Vector2(4,-4));
+						DrawAccent(cid,1.12f,pinnedColor);
+//						DrawFlag(cid,SpriteAnim.flagPinned,new System.Numerics.Vector2(4,-4));
 					}
 					if(Spot.focus != 0) {
 						var cid = Spot.focus;
@@ -1483,7 +1492,7 @@ internal partial class GameClient
 
 
 				{
-					if(wantDetails | isControl|isShift) {
+					if(wantDetails | drawOverlays.HasFlag(DrawOverlays.alliance)|drawOverlays.HasFlag(DrawOverlays.palace)) {
 						//
 						// Text names
 						//	using (var batch = ds.CreateSpriteBatch(CanvasSpriteSortMode.Bitmap))
@@ -1519,7 +1528,7 @@ internal partial class GameClient
 										//	drawC = drawC.Project(zLabels);
 										//var layout = GetTextLayout(name,nameTextFormat);
 										var _t = World.GetTint(cid);
-										var color = _t.Modulate(32);
+										var color = _t.Modulate(16);
 										//var color = spot ==null ? nameColorDungeon
 										//	:
 										//	(isMine ?
@@ -1546,10 +1555,10 @@ internal partial class GameClient
 										//										layout.Draw(drawC,
 										//									, Layer.tileText, z,PlanetDepth);
 										if(spot is not null) {
-											if(isControl && (spot.isTemple|spot.isBlessed) ) {
+											if(drawOverlays.HasFlag(DrawOverlays.palace) && (spot.isTemple|spot.isBlessed) ) {
 												DrawRectOutlineShadow(Layer.effects - 1,cid,Color.Cyan,expand:2.0f);
 											}
-											if(isShift && spot.isCityOrCastle) {
+											if(drawOverlays.HasFlag(DrawOverlays.alliance) && spot.isCityOrCastle) {
 												DrawRectOutlineShadow(Layer.effects - 1,cid,_t with { A = 255});
 											}
 										}
@@ -1986,8 +1995,8 @@ internal partial class GameClient
 	}
 	private static void DrawRectOutline(int layer,Vector2 c0,Vector2 c1,Color color,float z,float thickness,float _expand = 0f,double animationOffset = 0,bool includeTop = true) {
 
-		float t = thickness.ScreenToWorld();
-		var expand = _expand.ScreenToWorld();
+		float t = thickness.DipToWorld();
+		var expand = _expand.DipToWorld();
 		const float waveGain = 0.5f;
 		z = z * (0.125f+ ((animationT-animationOffset)*(1.0/3)).Wave() * waveGain);
 		c0 = new(c0.X - expand,c0.Y - expand);
@@ -2008,7 +2017,7 @@ internal partial class GameClient
 		DrawRectOutline(layer,c0,c1,color,zUI*zScale,thickness,expand,animationOffset,includeTop);
 		DrawRectOutline(Layer.tileShadow,c0,c1,color.GetShadowColorDark(),zShadow,thickness,expand,animationOffset,includeTop);
 	}
-	private static void DrawRectOutlineShadow(int layer,int cid,Color col,string label = null,float thickness = 1.5f,float expand = 0,double animationOffset = 0,bool includeTop = true) {
+	private static void DrawRectOutlineShadow(int layer,int cid,Color col,string label = null,float thickness = 1.0f,float expand = 0,double animationOffset = 0,bool includeTop = true) {
 		var wc = cid.CidToWorld();
 		if(IsCulledWC(wc))
 			return;
@@ -2040,7 +2049,7 @@ internal partial class GameClient
 		if(wantParallax)
 			DrawDiamond(shadowMaterial,Layer.tileShadow,c0,c1,color.GetShadowColorDark(),zCities,thickness,expand);
 	}
-	private static void DrawDiamondShadow(int layer,int cid,Color col,string label = null,float thickness = 3,float expand = 0) {
+	private static void DrawDiamondShadow(int layer,int cid,Color col,string label = null,float thickness = 2,float expand = 0) {
 		var wc = cid.CidToWorld();
 		if(IsCulledWC(wc))
 			return;

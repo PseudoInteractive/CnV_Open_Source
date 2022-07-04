@@ -22,8 +22,11 @@
 						  Grid.Row="0"
 						  VerticalAlignment="Center"
 						  >
-			<Button Content="Toggle Selected ⛄" Style="{StaticResource ButtonSmall}" ToolTipService.ToolTip="Toggles on/off pinned status for selected items" Click="Button_Click"/>
-</tk:WrapPanel>	
+			<Button Content="x Selected" Style="{StaticResource ButtonSmall}" ToolTipService.ToolTip="Clears selected spots" Click="ClearSelected"/>
+			<Button Content="x Pinned" Style="{StaticResource ButtonSmall}" ToolTipService.ToolTip="Clears pinned spots" Click="ClearPinned"/>
+			<Button Content="Pinned→Selected" Style="{StaticResource ButtonSmall}" ToolTipService.ToolTip="Selects pinned spots" Click="SelectPinned"/>
+			<Button Content="Selected→Pinned" Style="{StaticResource ButtonSmall}" ToolTipService.ToolTip="Pin each selected item" Click="PinSelected"/>
+		</tk:WrapPanel>	
         <sf:SfDataGrid x:Name="selectedGrid"
 						x:FieldModifier="public"
                         Grid.Row="1"
@@ -34,35 +37,39 @@
 								
 								 
 								 Loaded="DataGridLoaded"
-                       
+                       SelectedItems="{x:Bind selection,Mode=OneWay}"
+					   SelectionChanged="selectedGrid_SelectionChanged"
 				        ItemsSource="{x:Bind view:SpotTab.spotMRU, Mode=OneWay}"
 						IsTabStop="True"
                         RowHeight="{StaticResource MediumGridRowHeight}"
                         
-                        SelectionMode="Extended"
+                        SelectionMode="Multiple"
                         SelectionUnit="Row"
-					   FrozenColumnsCount="1"
+					   FrozenColumnsCount="2"
                         
 						>
 							  
             <sf:SfDataGrid.Columns>
-				<sf:GridCheckBoxSelectorColumn MappingName="Sel" Width="24" />
+				<sf:GridCheckBoxSelectorColumn MappingName="Sel"  Width="45" ColumnWidthMode="None" />
 				<sf:GridImageColumn MappingName="icon"
                                         HeaderText="I"
-
+ColumnWidthMode="None"
                                         Width="32" />
-                <sf:GridTextColumn MappingName="nameAndRemarks"
-                                     
+                <sf:GridTextColumn ValueBinding="{Binding nameAndRemarks, Mode=OneWay}"
+								   HeaderText="Name"
+                                     UseBindingValue="True"
                                        />
                 <sf:GridHyperlinkColumn MappingName="xy"
+										UseBindingValue="True"
                                        />
                <sf:GridCheckBoxColumn  MappingName="pinned"
                                          ToolTipService.ToolTip="Hold down shift to toggle pinned status for all selected spots"
-                                          Width="32" />
+                                          Width="32" ColumnWidthMode="None" />
 
                 <sf:GridNumericColumn MappingName="cont"
                                        TextAlignment="Center"
-                                       Width="34" />
+									  UseBindingValue="True"
+                                       Width="34" ColumnWidthMode="None" />
                 <sf:GridTextColumn MappingName="playerName" HeaderText="Player"
                                      />
 				<sf:GridTextColumn MappingName="allianceName"

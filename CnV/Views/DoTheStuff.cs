@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using CnV.Services;
 using CnV.Views;
 
-using EnumsNET;
 
 using static CnV.Views.QueueTab;
 using static CnV.Views.ShellPage;

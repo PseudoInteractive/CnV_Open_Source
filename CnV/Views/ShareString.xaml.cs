@@ -198,6 +198,8 @@ namespace CnV.Views
 							NameBlade.IsOpen=true;
 
 						var rv = await base.Show(false);
+
+						
 						if(rv) {
 
 							var setTags = TagsBlade.IsOpen;
@@ -361,6 +363,7 @@ namespace CnV.Views
 				var check = tagsPanel.Children.FirstOrDefault((a) => a is ToggleButton b && b.Content as string == tag.s) as ToggleButton;
 				if(check == null) {
 					check = new ToggleButton() { Content = tag.s };
+					check.SetToolTip(tag.v.EnumName());
 					//					check.Checked+= (_,_)=>;
 					tagsPanel.Children.Add(check);
 				}

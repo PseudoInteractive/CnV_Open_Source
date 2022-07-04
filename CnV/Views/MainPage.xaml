@@ -28,11 +28,13 @@
 							Loaded="DataGridLoaded"
 							 					   IsReadOnly="True"
 
-						FrozenColumnsCount="3"
+						FrozenColumnsCount="4"
 							
 							ItemsSource="{x:Bind game:City.gridCitySource, Mode=OneWay}"
+					   							SelectedItems="{x:Bind game:City.gridCitySelected, Mode=OneWay}"
+
 							AutoGenerateColumns="False"
-							SelectionMode="Extended"
+							SelectionMode="Multiple"
 							
 							FontSize="{StaticResource SmallFontSize}"
 							IsTextScaleFactorEnabled="False"
@@ -53,7 +55,8 @@
 																				  ColumnWidthMode="None"
 
 				                        ToolTipService.ToolTip="Tap to expend or collapse dungeons" />
-					<sf:GridImageColumn MappingName="icon"
+				<sf:GridCheckBoxSelectorColumn MappingName="Sel"   Width="46" ColumnWidthMode="None" />
+				<sf:GridImageColumn MappingName="icon"
 											HeaderText="I"
 											Width="32"
 											ToolTipService.ToolTip="Click to switch to this city"
@@ -71,6 +74,7 @@
 										 
 										    />
 					<sf:GridNumericColumn MappingName="cont"
+										   UseBindingValue="True"
 												TextAlignment="Center"
 											Width="42"
 										  ColumnWidthMode="None"

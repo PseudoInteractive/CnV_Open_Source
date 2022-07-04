@@ -13,11 +13,12 @@ namespace CnV.Views
     {
 		public override TabPage defaultPage => TabPage.secondaryTabs;
 
-		public static NotifyCollection<Spot> spotMRU { get; } = new NotifyCollection<Spot>();
+	//	public static ObservableCollection<Spot> spotMRU { get; } = new ObservableCollection<Spot>();
 
-        public static NotifyCollection<Spot> SpotMRU => spotMRU;
+        public static ObservableCollection<Spot> spotMRU = new ObservableCollection<Spot>();
+        public ObservableCollection<object> selection = new ObservableCollection<object>();
         public static int disableSelection;
-	    public static SpotTab instance;
+	    public static SpotTab? instance;
         public SpotTab()
         {
             Assert(instance == null);
@@ -60,18 +61,7 @@ namespace CnV.Views
  
 
 
-        public static Spot TouchSpot(int cid, VirtualKeyModifiers mod,bool updateSelected=false,bool pin=false)
-        {
-            var spot = Spot.GetOrAdd(cid);
-            if(pin)
-            {
-               spot.SetPinned(true);
-            }
-            
-            AddToGrid(spot, mod, updateSelected);
-            
-            return spot;
-        }
+       
         //public static void SelectedToGrid()
         //{
         //    ++silenceChanges;
@@ -150,72 +140,161 @@ namespace CnV.Views
         //}
 
 
-        public static void AddToGrid(Spot spot, VirtualKeyModifiers mod, bool updateSelection = true, bool scrollIntoView=true)
+        public static void AddToGrid(Spot spot, bool moveToFront=true)
         {
 			if(!spot.isValid) {
 				Assert(false);
 				return;
 			}
-            // Toggle Selected
-            if (disableSelection == 0)
-            {
+			AppS.DispatchOnUIThread(() => {
+			
+			
+			if(disableSelection == 0) {
 
-                AppS.QueueOnUIThread(() =>
-           {
-               var id = SpotMRU.c.IndexOf(spot);
-               if (id != 0)
-               {
-                   if (id > 0)
-                   {
-                       SpotMRU.RemoveAt(id,true);
-                   }
-                   else if (SpotMRU.Count >= Settings.mruSize)
-                   {
-                       // not in list
-                       var counter = SpotMRU.Count;
-                       while (--counter >= 0)
-                       {
-                           if (!Spot.selected.Contains(SpotMRU[counter].cid) && SpotMRU[counter].pinned == false)
-                           {
-                               SpotMRU.RemoveAt(counter,true);
-                               break;
-                           }
+				{
+					var id = spotMRU.IndexOf(spot);
+					if(id != 0) {
+						if(id > 0) {
+								if(moveToFront) {
+									if(id > 10) {
+									
+										spotMRU.Move(id,0);
+									}
+									else {
+										if(instance is not null) {
+											instance.selectedGrid.ScrollItemIntoView(spot,true);
+										}
+									}
+								}
+						}
 
-                       }
-                   }
+						else {
+							Assert(id==-1);
+							if(spotMRU.Count >= Settings.mruSize) {
+								// not in list
+								var counter = spotMRU.Count;
+								while(--counter>=0) {
+									if(!Spot.selected.Contains(spotMRU[counter].cid) && spotMRU[counter].pinned == false) {
+										// only removes 1
+										spotMRU.RemoveAt(counter);
+										if(spotMRU.Count < Settings.mruSize)
+											break;
+									}
 
-                   SpotMRU.Insert(0, spot,true);
+								}
+							}
+							spotMRU.Insert(0,spot);
+						}
+					}
 
-               }
 
-               if (updateSelection)
-                   CityUI.ProcessSelection(spot as City,mod,false,scrollIntoView);
-           });
-            }
+					
+				}
+		
+            }	});
 
         }
         
 
-		private void Button_Click(object sender, RoutedEventArgs e)
-		{
-			bool first = true;
-			var pinned = false;
-			foreach (var cid in Spot.GetSelectedForContextMenu(0,false,0,false))
-			{
-				if(first)
-				{
-					pinned = !Spot.GetOrAdd(cid).pinned;
-					first=false;
-				}
-				Spot.GetOrAdd(cid).SetPinned(pinned);
-			}
-		}
+		//private void Button_Click(object sender, RoutedEventArgs e)
+		//{
+		//	bool first = true;
+		//	var pinned = false;
+		//	foreach (var cid in Spot.GetSelectedForContextMenu(0,false,0,false))
+		//	{
+		//		if(first)
+		//		{
+		//			pinned = !Spot.GetOrAdd(cid).pinned;
+		//			first=false;
+		//		}
+		//		Spot.GetOrAdd(cid).SetPinned(pinned);
+		//	}
+		//}
 		public override async Task Closed()
 		{ 
 			await base.Closed();
 			instance = null;
 		}
-	
+		internal static void SyncSelectionToUI(bool syncRecentGrid=true, bool syncCityGrid=true) {
+			
+			++SpotTab.silenceSelectionChanges;
+			try {
+				var i = instance;
+				var selCities = City.selected.Select(a => a.AsCity());
+
+				// Sync spot grid
+				if(i is not null && syncRecentGrid) {
+					// Add any that are missing
+					foreach(var  c in selCities) {
+					if(!spotMRU.Contains(c))
+						SpotTab.AddToGrid(c,false);
+					}
+					selCities.ToHashSet<object>().SyncSet(i.selection);
+				}
+				// Sync selected cities in gridCityGrid
+				if(syncCityGrid)
+					selCities.Where(c => City.gridCitySource.Contains(c)).ToHashSet<object>().SyncSet(City.gridCitySelected);
+			}
+			catch(Exception ex) {
+				LogEx(ex);
+			}
+			finally
+				{
+				--SpotTab.silenceSelectionChanges;
+			}
+		}
+		private void selectedGrid_SelectionChanged(object sender,Syncfusion.UI.Xaml.Grids.GridSelectionChangedEventArgs e) {
+			if(silenceSelectionChanges==0) {
+				++silenceSelectionChanges;
+				try {
+					City.selected = selection.Select(i => (i as City).cid).ToHashSet();
+					SyncSelectionToUI(syncRecentGrid: false,syncCityGrid: true);
+				}
+				catch(Exception ex) 
+				{
+				LogEx(ex);
+				}finally 
+				{
+					--silenceSelectionChanges; 
+				}
+			}
+		}
+
+		private void ClearPinned(object sender,RoutedEventArgs e) {
+			foreach(var p in Settings.pinned) {
+				var c = p.AsCity();
+				Assert(c.pinned);
+				c.pinned=false;
+				c.OnPropertyChanged();
+			}
+			Settings.pinned = Array.Empty<SpotId>();
+		}
+		private async void PinSelected(object sender,RoutedEventArgs e) {
+			var i = await AppS.DoYesNoBox("Replace or Append Pinned","Should current list of pinned spots be replaced or appended to?",yes: "Replace",no: "Append");
+			if(i==-1)
+				return;
+			if(i==1)
+				ClearPinned(default,default);
+
+			foreach(var p in City.selected) {
+				var c = p.AsCity();
+				c.SetPinned(true);
+			}
+		}
+
+		private void SelectPinned(object sender,RoutedEventArgs e) {
+			foreach(var p in Settings.pinned) {
+				City.selected.Add(p);
+				
+			}
+			SyncSelectionToUI();
+		}
+
+		private void ClearSelected(object sender,RoutedEventArgs e) {
+			City.selected.Clear();
+			SyncSelectionToUI();
+		}
+
 		//      public static void ToggleSelected(Spot rv)
 		//      {
 		//          var isSelected = rv.ToggleSelected();

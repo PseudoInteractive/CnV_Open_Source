@@ -308,7 +308,7 @@ namespace CnV.Views
             if (spot.cid != 0)
             {
 
-                City.ProcessCoordClick(spot.cid, false, AppS.keyModifiers,false);
+                City.ProcessCoordClick(spot.cid,AppS.keyModifiers.ClickMods());
             }
         }
         static bool loaded = false;
@@ -531,7 +531,7 @@ namespace CnV.Views
             var i = sender as FrameworkElement;
 
             var spot = i.DataContext as City;
-            City.ProcessCoordClick(spot.cid, false, AppS.keyModifiers,false);
+            City.ProcessCoordClick(spot.cid, AppS.keyModifiers.ClickMods());
             //foreach (var t in attacks)
             //{
             //    // take any one
@@ -1974,7 +1974,7 @@ namespace CnV.Views
 				var city = i.city;
 				if (!sel.Contains(city))
 					sel.Add(city);
-				city.SelectMe(scrollIntoView: false);
+				city.ProcessSelection(ClickModifiers.shiftPressed|ClickModifiers.select);
 			}
 		}
 		private void SelectAttackers(object sender, RoutedEventArgs e)
@@ -1985,7 +1985,7 @@ namespace CnV.Views
 				var city = i.city;
 				if (!sel.Contains(city))
 					sel.Add(city);
-				city.SelectMe(scrollIntoView:false);
+				city.ProcessSelection(ClickModifiers.shiftPressed|ClickModifiers.select);
 			}
 		}
 

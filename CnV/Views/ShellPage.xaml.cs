@@ -1311,26 +1311,26 @@ namespace CnV.Views
 			}
 		}
 
-		private void coords_KeyDown(object sender,KeyRoutedEventArgs e) {
-			try {
-				var str = sender as TextBox;
-				Assert(str != null);
-				if(str != null) {
-					if(e.Key == Windows.System.VirtualKey.Enter) {
-						var cid = str.Text.FromCoordinate();
-						if(cid > 0) {
-							//NavStack.Push(cid);
-							//SpotTab.TouchSpot(cid,AppS.keyModifiers);
-							City.ProcessCoordClick(cid,true,AppS.keyModifiers);
-						}
-					}
-				}
-			}
-			catch(Exception _ex) {
-				LogEx(_ex);
+		//private void coords_KeyDown(object sender,KeyRoutedEventArgs e) {
+		//	try {
+		//		var str = sender as TextBox;
+		//		Assert(str != null);
+		//		if(str != null) {
+		//			if(e.Key == Windows.System.VirtualKey.Enter) {
+		//				var cid = str.Text.FromCoordinate();
+		//				if(cid > 0) {
+		//					//NavStack.Push(cid);
+		//					//SpotTab.TouchSpot(cid,AppS.keyModifiers);
+		//					City.ProcessCoordClick(cid,true,AppS.keyModifiers);
+		//				}
+		//			}
+		//		}
+		//	}
+		//	catch(Exception _ex) {
+		//		LogEx(_ex);
 
-			}
-		}
+		//	}
+		//}
 
 		//private void ContinentFilterTapped(object sender,TappedRoutedEventArgs e)
 		//{
@@ -1422,7 +1422,7 @@ namespace CnV.Views
 					return;
 				}
 
-				Spot.ProcessCoordClick(Spot.focus,false,AppS.keyModifiers,true); // then normal click
+				Spot.ProcessCoordClick(Spot.focus,AppS.keyModifiers.ClickMods(scrollIntoUi:true)); // then normal click
 			}
 			catch(Exception _ex) {
 				LogEx(_ex);
@@ -1447,7 +1447,7 @@ namespace CnV.Views
 					return;
 				}
 
-				Spot.ProcessCoordClick(City.build,false,AppS.keyModifiers,true); // then normal click
+				Spot.ProcessCoordClick(City.build,AppS.keyModifiers.ClickMods(scrollIntoUi:true)); // then normal click
 			}
 			catch(Exception _ex) {
 				LogEx(_ex);

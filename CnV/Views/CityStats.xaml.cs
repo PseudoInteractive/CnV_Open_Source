@@ -27,7 +27,6 @@ using Windows.ApplicationModel.DataTransfer;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 using static CnV.CityStats;
-using EnumsNET;
 using static CnV.BuildQueueItem;
 using static CnV.CnVEventUseArtifacts;
 
@@ -835,7 +834,7 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 			instance = this;
 			City.buildCityChanged+= (_,_) => {
 				Invalidate();
-				DialogG.CitySwitched();
+				
 			};			
 			
 
@@ -1075,7 +1074,7 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 
 			var sel = e;
 			if(sel.IsValid() && sel.cid != City.build && e.CanVisit() ) {
-				City.ProcessCoordClick(sel.cid,false,AppS.keyModifiers);
+				City.ProcessCoordClick(sel.cid,AppS.keyModifiers.ClickMods(scrollIntoUi:true) );
 			}
 		}
 	}
@@ -1288,7 +1287,7 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 		//}
 		internal void TargetClick(object sender,RoutedEventArgs e)
 		{
-			CityUI.ShowCity(isOutgoing ? army.targetCid : army.sourceCid,false);
+			CityUI.ShowCity(isOutgoing ? army.targetCid : army.sourceCid);
 		}
 
 
@@ -1577,7 +1576,7 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 		
 		internal void InfoClick(object sender,RoutedEventArgs e)
 		{
-			CityUI.ShowCity(!isIncoming ? trade.targetCid : trade.sourceCid,false);
+			CityUI.ShowCity(!isIncoming ? trade.targetCid : trade.sourceCid);
 		}
 
 

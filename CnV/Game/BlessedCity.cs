@@ -382,7 +382,7 @@ namespace CnV
 				//	break;
 				case nameof(i.xy):
 				case nameof(i.icon):
-					Spot.ProcessCoordClick(i.cid, false, AppS.keyModifiers);
+					Spot.ProcessCoordClick(i.cid,AppS.keyModifiers.ClickMods());
 					break;
 				//            case nameof(Dungeon.plan):
 				//                Raiding.SendRaids(i);

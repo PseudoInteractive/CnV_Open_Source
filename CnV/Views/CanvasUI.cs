@@ -13,11 +13,9 @@ using static CnV.GameClient;
 
 namespace CnV.Views;
 
-using Cysharp.Text;
 
 using Draw;
 
-using EnumsNET;
 
 using Game;
 

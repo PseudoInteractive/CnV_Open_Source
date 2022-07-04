@@ -289,7 +289,7 @@ public static partial class CityUI
 		//}
 
 		aMisc.AddItem("Distance",       (_, _) => me.ShowDistanceTo());
-		aMisc.AddItem("Select",         (_, _) => me.SelectMe(true, AppS.keyModifiers));
+		aMisc.AddItem("Select",         (_, _) => me.ProcessClick(AppS.keyModifiers.ClickMods(false,false)|ClickModifiers.select));
 		aMisc.AddItem("Coords to Chat", () => CoordsToChat(cid));
 		if(AppS.isTest) {
 			aMisc.AddItem("Fixes",         (_, _) => FixDialog.ShowInstance(me));
@@ -337,10 +337,11 @@ public static partial class CityUI
 									//                      MainPage.CityGrid.SetCurrentItem(this);
 
 									//     MainPage.CityGrid.SetCurrentItem(this,false);
-									if(MainPage.IsVisible())
-										MainPage.CityGrid.ScrollItemIntoView(City.GetOrAdd(cid));
+									if(MainPage.IsVisible()) {
+										MainPage.CityGrid.ScrollItemIntoView(City.GetOrAdd(cid),true);
+									}
 									if(BuildTab.IsVisible())
-										BuildTab.CityGrid.CurrentItem = (City.GetOrAdd(cid));
+										BuildTab.CityGrid.ScrollItemIntoView(City.GetOrAdd(cid),true);
 									// await Task.Delay(200);
 									//MainPage.CityGrid.SelectItem(this);
 									//var id = gridCitySource.IndexOf(this);
@@ -397,11 +398,13 @@ public static partial class CityUI
 
 			loaded              = true;
 			Settings.pinned = Settings.pinned.ArrayRemoveDuplicates();
-
-			foreach(var m in Settings.pinned)
-			{
-				var spot = SpotTab.TouchSpot(m, VirtualKeyModifiers.None, false, true);
-			}
+			AppS.QueueOnUIThread(() => {
+				foreach(var m in Settings.pinned) {
+					var c = m.AsCity();
+					c.SetPinned(true);
+					SpotTab.AddToGrid(c, false);
+				}
+			});
 		}
 	}
 	public static void ShowContextMenu(this City me,UIElement uie, Windows.Foundation.Point position)
@@ -421,114 +424,119 @@ public static partial class CityUI
 	}
 	
 
-	public static void SelectMe(this City me, bool showClick = false, VirtualKeyModifiers mod = VirtualKeyModifiers.Shift, bool scrollIntoView = true)
-	{
-		if(!me.isValid) {
-			Assert(false);
-			return;
-		}
-		var cid = me.cid;
-		if(showClick || scrollIntoView)
-			NavStack.Push(cid);
-		SpotTab.AddToGrid(me, mod, true, scrollIntoView);
-		if(showClick)
-		{
-			CityUI.ShowCity(cid, true);
-		}
-	}
-	public static void SyncSelectionToUI(bool scrollIntoView, Spot focusSpot = null)
-	{
-		++SpotTab.silenceSelectionChanges;
-		try
-		{
-			foreach(var tab in UserTab.userTabs)
-			{
-				if(!tab.isFocused)
-					continue;
-				foreach(var grid in tab.dataGrids)
-				{
+	//public static void SelectMe(this City me, ClickModifiers clickMods)
+	//{
+	//	if(!me.isValid) {
+	//		Assert(false);
+	//		return;
+	//	}
+	//	Assert(clickMods.HasFlag(ClickModifiers.select));
+	//	var cid = me.cid;
+	//	if(showClick || scrollIntoView)
+	//		NavStack.Push(cid);
+	//	SpotTab.AddToGrid(me, mod, scrollIntoView);
 
-					//			var grid = gridX.Key;
+	//	CityUI.ProcessSelection(me, clickMods);
 
-					//		if(!gridX.Value?.isFocused == true)
-					//		continue;
+	//	if(showClick)
+	//	{
+	//		CityUI.ShowCity(cid, true,select:false);
+	//	}
+	//}
+	//public static void SyncSelectionToUI(bool scrollIntoView, Spot focusSpot = null)
+	//{
+	//	++SpotTab.silenceSelectionChanges;
+	//	try
+	//	{
+	//		SpotTab.SyncSelectionToUI();
+	//		foreach(var tab in UserTab.userTabs)
+	//		{
+	//			if(!tab.isFocused)
+	//				continue;
+	//			foreach(var grid in tab.dataGrids)
+	//			{
 
-					if(grid.IsCityGrid())
-					{
-						var uiInSync = false;
-						var sel1 = grid.SelectedItems;
-						if(selected.Count == sel1.Count)
-						{
-							uiInSync = true;
-							foreach(var i in sel1)
-							{
-								if(!selected.Contains((i as City).cid))
-								{
-									uiInSync = false;
-									break;
-								}
-							}
-						}
+	//				//			var grid = gridX.Key;
 
-						if(!uiInSync)
-						{
-							selected.SyncList(sel1,(cid,spot) => cid == ((Spot)spot).cid,
-								(cid) => City.Get(cid));
-						}
+	//				//		if(!gridX.Value?.isFocused == true)
+	//				//		continue;
 
-						if((scrollIntoView) && (sel1.Any() || focusSpot != null))
-						{
-							var current = focusSpot ?? (City.GetBuild().isSelected ? City.GetBuild() : null);
-							if(current != null)
-							{
-								grid.CurrentItem = current;
-							}
+	//				if(grid.IsCityGrid())
+	//				{
+	//					var uiInSync = false;
+	//					var sel1 = grid.SelectedItems;
+	//					if(selected.Count == sel1.Count)
+	//					{
+	//						uiInSync = true;
+	//						foreach(var i in sel1)
+	//						{
+	//							if(!selected.Contains((i as City).cid))
+	//							{
+	//								uiInSync = false;
+	//								break;
+	//							}
+	//						}
+	//					}
 
-							var any = current ?? sel1.First();
-							{
-								var rowIndex = grid.ResolveToRowIndex(any);
-								var columnIndex = grid.ResolveToStartColumnIndex();
-								if(rowIndex >= 0)
-									grid.ScrollInView(new RowColumnIndex(rowIndex,columnIndex));
-							}
-						}
+	//					if(!uiInSync)
+	//					{
+	//						selected.SyncList(sel1,(cid,spot) => cid == ((Spot)spot).cid,
+	//							(cid) => City.Get(cid));
+	//					}
 
-						if(AttackTab.IsVisible() && focusSpot != null)
-						{
-							try
-							{
-								if(AttackTab.attacks.Contains(focusSpot.cid)
-									 && !AttackTab.instance.attackGrid.SelectedItems.Contains(focusSpot))
-								{
-									AttackTab.instance.attackGrid.SelectedItem = focusSpot as City;
-									AttackTab.instance.attackGrid.ScrollIntoView(focusSpot,null);
-								}
+	//					//if((scrollIntoView) && (sel1.Any() || focusSpot != null))
+	//					//{
+	//					//	var current = focusSpot ?? (City.GetBuild().isSelected ? City.GetBuild() : null);
+	//					//	if(current != null)
+	//					//	{
+	//					//		grid.CurrentItem = current;
+	//					//	}
 
-								if(AttackTab.targets.Contains(focusSpot.cid)
-									&& !AttackTab.instance.targetGrid.SelectedItems.Contains(focusSpot))
-								{
-									AttackTab.instance.targetGrid.SelectedItem = focusSpot as City;
-									AttackTab.instance.targetGrid.ScrollIntoView(focusSpot,null);
-								}
-							}
-							catch
-							{
-							}
-						}
-					}
-				}
-			}
-		}
-		catch(Exception ex)
-		{
-			LogEx(ex);
-		}
-		finally
-		{
-			--SpotTab.silenceSelectionChanges;
-		}
+	//					//	var any = current ?? sel1.First();
+	//					//	{
+	//					//		var rowIndex = grid.ResolveToRowIndex(any);
+	//					//		var columnIndex = grid.ResolveToStartColumnIndex();
+	//					//		if(rowIndex >= 0)
+	//					//			grid.ScrollInView(new RowColumnIndex(rowIndex,columnIndex));
+	//					//	}
+	//					//}
 
-	}
+	//					//if(AttackTab.IsVisible() && focusSpot != null)
+	//					//{
+	//					//	try
+	//					//	{
+	//					//		if(AttackTab.attacks.Contains(focusSpot.cid)
+	//					//			 && !AttackTab.instance.attackGrid.SelectedItems.Contains(focusSpot))
+	//					//		{
+	//					//			AttackTab.instance.attackGrid.SelectedItem = focusSpot as City;
+	//					//			AttackTab.instance.attackGrid.ScrollIntoView(focusSpot,null);
+	//					//		}
+
+	//					//		if(AttackTab.targets.Contains(focusSpot.cid)
+	//					//			&& !AttackTab.instance.targetGrid.SelectedItems.Contains(focusSpot))
+	//					//		{
+	//					//			AttackTab.instance.targetGrid.SelectedItem = focusSpot as City;
+	//					//			AttackTab.instance.targetGrid.ScrollIntoView(focusSpot,null);
+	//					//		}
+	//					//	}
+	//					//	catch
+	//					//	{
+	//					//	}
+	//					//}
+	//				}
+	//			}
+	//		}
+	//	}
+	//	catch(Exception ex)
+	//	{
+	//		LogEx(ex);
+	//	}
+	//	finally
+	//	{
+	//		--SpotTab.silenceSelectionChanges;
+	//	}
+
+	//}
 	
 	public static bool OnKeyDown(object _spot, VirtualKey key)
 	{
@@ -536,7 +544,7 @@ public static partial class CityUI
 		switch(key)
 		{
 			case VirtualKey.Enter:
-				spot.SetFocus(false);
+				spot.SetFocus(AppS.keyModifiers.ClickMods());
 				return true;
 				break;
 			case VirtualKey.Space:
@@ -544,7 +552,7 @@ public static partial class CityUI
 				if(spot.isSubOrMine)
 					spot.ShowDungeons();
 				else
-					spot.SetFocus(false);
+					spot.SetFocus(AppS.keyModifiers.ClickMods());
 				return true;
 			}
 
@@ -557,15 +565,15 @@ public static partial class CityUI
 	
 	public static async void SetupClick(int _intialCid, SetupFlags flags)
 	{
-		var cids =Spot.GetSelectedForContextMenu(_intialCid);
-		foreach(var cid in cids)
-		{
-			var _cid = cid;
-			await ShareString.Show(_cid,flags);
-			{
-				break;
-			}
-		}
+		//var cids =Spot.GetSelectedForContextMenu(_intialCid);
+		//foreach(var cid in cids)
+		//{
+		//	var _cid = cid;
+			await ShareString.Show(_intialCid,flags);
+		//	{
+		//		break;
+		//	}
+		//}
 	}
 	
 	public static async void DefendMe(this Spot me)
@@ -651,15 +659,18 @@ public partial class City
 {
 	
 
-	public void SetFocus(bool scrollIntoView, bool select = true, bool bringIntoWorldView = true, bool lazyMove = true)
+	public void SetFocus(ClickModifiers clickMods)
 	{
-		SetFocus(cid, scrollIntoView, select, bringIntoWorldView, lazyMove);
+		SetFocus(cid, clickMods);
+	}
+	public void SetFocus()
+	{
+		SetFocus(cid);
 	}
 
-	public static async 
-	Task ProcessCoordClick(int cid, bool lazyMove, VirtualKeyModifiers mod, bool scrollIntoUI = false)
+	public static async Task ProcessCoordClick(int cid, ClickModifiers clickMods)
 	{
-		mod.UpdateKeyModifiers();
+		//mod.UpdateKeyModifiers();
 
 		//if(mod.IsShiftAndControl() && AttackTab.IsVisible() && City.Get(cid).isCastle)
 		//{
@@ -690,7 +701,11 @@ public partial class City
 		//	AttackTab.WaitAndSaveAttacks();
 		//}
 		//else
-		if( ((City.CanVisit(cid) && cid==focus) || Player.active.IsMyCity(cid) ) && !mod.IsShiftOrControl())
+		//if(mod.IsShift())
+		//	clickMods |= ClickModifiers.select;
+		//clickMods |= mod.ClickMods(); // combine
+
+		if( ((City.CanVisit(cid) && cid==focus) || Player.active.IsMyCity(cid) ) && !(clickMods.HasFlag(ClickModifiers.shiftPressed)|clickMods.HasFlag(ClickModifiers.controlPresed)) )
 		{
 			if(City.IsBuild(cid))
 			{
@@ -698,7 +713,7 @@ public partial class City
 					View.SetViewMode(View.viewMode.GetNext());// toggle between city/region view
 			//	if(scrollIntoUI)
 				{
-					CityUI.ShowCity(cid, lazyMove, true, scrollIntoUI);
+					CityUI.ProcessClick(cid, clickMods);
 				}
 			//	else
 			//	{
@@ -708,23 +723,22 @@ public partial class City
 			else
 			{
 				if( Player.IsSubOrMe(cid.CidToPid() ) || (await AppS.DoYesNoBox("Sub", $"Switch to sub {cid.AsCity().player.name}?" )==1) ) {
-					await CnVClient.CitySwitch(cid, false, false, scrollIntoUI); // keep current view, switch to city
+					await CnVClient.CitySwitch(cid, clickMods); // keep current view, switch to city
 																			   //	View.SetViewMode(ShellPage.viewMode.GetNextUnowned());// toggle between city/region view
 				}
 				else {
-					CityUI.ShowCity(cid, lazyMove, true, scrollIntoUI);
+					CityUI.ProcessClick(cid,clickMods);
 				}
 			}
-			NavStack.Push(cid);
+			
 
 		}
 		else
 		{
-			CityUI.ShowCity(cid, lazyMove, true, scrollIntoUI);
-			NavStack.Push(cid);
+			CityUI.ProcessClick(cid,clickMods);
 		}
 		//Spot.GetOrAdd(cid).SelectMe(false,mod);
-		SpotTab.TouchSpot(cid, mod, false);
+		
 
 
 	}
@@ -750,7 +764,7 @@ public partial class City
 	public void CityRowClick(GridCellTappedEventArgs e)
 	{
 		var modifiers  = AppS.keyModifiers;
-		var wantSelect = true;
+		//var wantSelect = true;
 		switch(e.Column.MappingName)
 		{
 
@@ -759,30 +773,20 @@ public partial class City
 			case nameof(bStage):
 				DoTheStuff();
 				break;
-			case nameof(tsHome):
-			case nameof(tsRaid):
-				if(City.CanVisit(cid))
-				{
-					Raiding.UpdateTS(true, true);
-				}
-				break;
+		
 			case nameof(City.autobuild):
 				autobuild  = !autobuild;
-				wantSelect = false;
 
 				return;
 			case nameof(City.AutoWalls):
 				AutoWalls  = !autoWalls;
-				wantSelect = false;
 
 				return;
 			case nameof(City.AutoTowers):
 				AutoTowers = !autoTowers;
-				wantSelect = false;
 				return;
 			case nameof(City.ministersOn):
 				SetMinistersOn(!ministersOn);
-				wantSelect = false;
 				return;
 			case nameof(City.raidCarry):
 				if(City.CanVisit(cid))
@@ -795,32 +799,24 @@ public partial class City
 			case nameof(nameAndRemarks):
 				// first click selects
 				// second acts as coord click
-				if(IsSelected(cid))
-				{
-					ProcessCoordClick(cid, false, modifiers, false);
-					wantSelect = false;
-				}
+//				if(IsSelected(cid))
+//				{
+					ProcessCoordClick(cid, modifiers.ClickMods());
+			//	} else {	}
 
 
 				break;
 			case nameof(xy):
-				ProcessCoordClick(cid, false, modifiers, false);
-				wantSelect = false;
+				ProcessCoordClick(cid, modifiers.ClickMods());
+			
 				break;
 			
 			case nameof(City.dungeonsToggle):
 			{
 				ShowDungeons();
-				wantSelect = false;
 				break;
 			}
-			case nameof(City.tsTotal):
-				if(City.CanVisit(cid))
-				{
-					Raiding.UpdateTS(true, true);
-				}
-
-				break;
+			
 			case nameof(City.raidReturn):
 				if(City.CanVisit(cid))
 				{
@@ -832,13 +828,12 @@ public partial class City
 				var newSetting = !pinned;
 
 				SetPinned(newSetting);
-				wantSelect = false;
 			}
 				return;
 
 		}
-		if(wantSelect)
-			SetFocus(false, true, true, false);
+		//if(wantSelect)
+		//	SetFocus(false, true, true, false);
 		NavStack.Push(cid);
 
 	}

@@ -139,7 +139,7 @@ namespace CnV
 		TaskCompletionSource<bool> showTask;
 
 		static internal void CitySwitched() {
-			AppS.QueueOnUIThread(() => {
+			AppS.DispatchOnUIThread(() => {
 				lock(all) {
 					foreach(var d in all) {
 						if(d.closeOnCitySwitch)
