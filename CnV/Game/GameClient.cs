@@ -303,7 +303,7 @@ namespace CnV
 		internal static int RoundUpTo4(int v) => (v+3)&(~3);
 		internal static int RoundDownTo4(int v) => (v)&(~3);
 		internal static bool IsMultipleOf4(int w,int h) => ((h&3)|(w&3)) ==0;//(v+3)&(~3);
-		public static Texture2D CreateFromDDS(string fileName,bool wantSRGB) {
+		public static Texture2D CreateFromDDS(string fileName,bool wantSRGB=true) {
 			try {
 
 				using var scratch = DirectXTexNet.TexHelper.Instance.LoadFromDDSFile(fileName,DDS_FLAGS.NONE);// DDS_FLAGS.BAD_DXTN_TAILS|DDS_FLAGS.FORCE_DX10_EXT_MISC2|DDS_FLAGS.FORCE_DX10_EXT);
@@ -411,19 +411,17 @@ namespace CnV
 		}
 
 
-		public static Texture2D LoadTexture(string filename) {
-			return instance.Content.Load<Texture2D>(filename);
-		}
+		//public static Texture2D LoadTexture(string filename) {
+		//	return instance.Content.Load<Texture2D>(filename);
+		//}
 
-		public static Material LoadMaterial(string filename) {
-			var rv = instance.Content.Load<Texture2D>(filename);
-			Assert(rv!=null);
-			return new Material(rv);
-		}
+		//public static Material LoadMaterial(string filename) {
+		//	var rv = instance.Content.Load<Texture2D>(filename);
+		//	Assert(rv!=null);
+		//	return new Material(rv);
+		//}
 		public static Material LoadMaterialAdditive(string filename) {
-			var rv = instance.Content.Load<Texture2D>(filename);
-			Assert(rv!=null);
-			return new Material(rv,alphaAddEffect);
+			return new Material(CreateFromDDS(AppS.AppFileName(filename)),alphaAddEffect);
 		}
 
 		//		public static MouseState mouseState;
@@ -433,10 +431,7 @@ namespace CnV
 
 
 
-		public static void LoadWorldBackground() {
-			//worldBackground = LoadMaterial($"Art/world{(CnVServer.worldId>=26 ? 26 : ((CnVServer.worldId&1) switch { 1 => "23", _ => "22" }))}");
-
-		}
+	
 
 
 		protected override void LoadContent() {

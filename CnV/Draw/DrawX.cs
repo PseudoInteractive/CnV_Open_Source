@@ -23,87 +23,89 @@ using static GameClient;
 
 static partial class View
 
-{
+{ 
+	static internal Material LoadMaterial(string filename) {
+		return new Material(CreateFromDDS(AppS.AppFileName(filename)));
+	}
 	public static async void LoadContent()
 	{ 
-	try
-			{
-				contentStage = ContentStage.loading;
-				
-				var Content = instance.Content;
+	try {
+			contentStage = ContentStage.loading;
 
-				avaEffect              = Content.Load<Effect>("Effects/Ava");
-				Audio.UpdateMusic();
-				defaultEffect = EffectPass("AlphaBlend");
-				alphaAddEffect         = EffectPass("AlphaAdd");
-				fontEffect             = EffectPass("FontLight");
-				darkFontEffect         = EffectPass("FontDark");
-				Material.litCityEffect              = EffectPass("LitCity");
-				Material.unlitCityEffect   = EffectPass("UnlitCity");
+			var Content = instance.Content;
 
-				Material.litCityOpaqueEffect = EffectPassOpaque(Material.litCityEffect, blendAlphaAdd,true);
-				Material.unlitCityOpaqueEffect = EffectPassOpaque(Material.unlitCityEffect, blendAlphaAdd,true);
-		
-				Material.litRegionEffect              = EffectPassOpaque("LitRegion", blendAlphaAdd,false);
-				Material.unlitRegionEffect   = EffectPassOpaque("UnlitRegion", blendAlphaAdd,false);
-				Material.litRegionOpaqueEffect = EffectPassOpaque(Material.litRegionEffect,blendAlphaAdd,true);
-				Material.unlitRegionOpaqueEffect = EffectPassOpaque(Material.unlitRegionEffect,blendAlphaAdd,true);
-				
-				Material.litAnimatedEffect              = EffectPass("LitAnimated");
-				Material.unlitAnimatedEffect              = EffectPass("UnlitAnimated");
-				Material.shadowAnimatedEffect              = EffectPass("ShadowAnimated");
-				
-				Material.shadowEffect   = EffectPass("Shadow");
-				World.tileEffect =EffectPassOpaque("LitTile", blendReplace,false);
+			avaEffect              = Content.Load<Effect>("Effects/Ava");
+			Audio.UpdateMusic();
+			defaultEffect = EffectPass("AlphaBlend");
+			alphaAddEffect         = EffectPass("AlphaAdd");
+			fontEffect             = EffectPass("FontLight");
+			darkFontEffect         = EffectPass("FontDark");
+			Material.litCityEffect              = EffectPass("LitCity");
+			Material.unlitCityEffect   = EffectPass("UnlitCity");
+
+			Material.litCityOpaqueEffect = EffectPassOpaque(Material.litCityEffect,blendAlphaAdd,true);
+			Material.unlitCityOpaqueEffect = EffectPassOpaque(Material.unlitCityEffect,blendAlphaAdd,true);
+
+			Material.litRegionEffect              = EffectPassOpaque("LitRegion",blendAlphaAdd,false);
+			Material.unlitRegionEffect   = EffectPassOpaque("UnlitRegion",blendAlphaAdd,false);
+			Material.litRegionOpaqueEffect = EffectPassOpaque(Material.litRegionEffect,blendAlphaAdd,true);
+			Material.unlitRegionOpaqueEffect = EffectPassOpaque(Material.unlitRegionEffect,blendAlphaAdd,true);
+
+			Material.litAnimatedEffect              = EffectPass("LitAnimated");
+			Material.unlitAnimatedEffect              = EffectPass("UnlitAnimated");
+			Material.shadowAnimatedEffect              = EffectPass("ShadowAnimated");
+
+			Material.shadowEffect   = EffectPass("Shadow");
+			World.tileEffect =EffectPassOpaque("LitTile",blendReplace,false);
 			//	World.tileWorldEffect =EffectPassOpaque("LitTileWorld", blendReplace,false);
-				World.unlitTileEffect =EffectPassOpaque("UnLitTile",blendReplace,false);
+			World.unlitTileEffect =EffectPassOpaque("UnLitTile",blendReplace,false);
 			//	animatedSpriteEffect   = EffectPass("SpriteAnim");
-				sdfEffect              = EffectPass("SDF");
-				noTextureEffect        = EffectPass("NoTexture");
+			sdfEffect              = EffectPass("SDF");
+			noTextureEffect        = EffectPass("NoTexture");
 			//	worldSpaceEffect       = EffectPass("WorldSpace");
-				noTextureShadowEffect = EffectPass("NoTextureShadow");
-		
-				var imageLoad =  TileData.LoadImages(); // start loading here
-			
+			noTextureShadowEffect = EffectPass("NoTextureShadow");
 
-				using var srgb = new SRGBLoadScope();
+			var imageLoad = TileData.LoadImages(); // start loading here
 
-				worldMatrixParameter = avaEffect.Parameters["WorldViewProjection"];
-				//worldMatrixParameter = avaEffect.Parameters["WorldViewProjection"];
+
+			using var srgb = new SRGBLoadScope();
+
+			worldMatrixParameter = avaEffect.Parameters["WorldViewProjection"];
+			//worldMatrixParameter = avaEffect.Parameters["WorldViewProjection"];
 
 
 			//	lightPositionParameter = avaEffect.Parameters["lightPosition"];
-				lightCCParam = avaEffect.Parameters["lightCC"];
-				lightCWParam = avaEffect.Parameters["lightCW"];
-				tileGains= avaEffect.Parameters["tileGains"];
-				//planetGainsParamater = avaEffect.Parameters["planetGains"];
-				//lightGainsParameter = avaEffect.Parameters["lightGains"];
-				lightColorParameter = avaEffect.Parameters["lightColor"];
-				lightSpecularParameter = avaEffect.Parameters["lightSpecular"];
-				lightAmbientParameter = avaEffect.Parameters["lightAmbient"];
+			lightCCParam = avaEffect.Parameters["lightCC"];
+			lightCWParam = avaEffect.Parameters["lightCW"];
+			tileGains= avaEffect.Parameters["tileGains"];
+			//planetGainsParamater = avaEffect.Parameters["planetGains"];
+			//lightGainsParameter = avaEffect.Parameters["lightGains"];
+			lightColorParameter = avaEffect.Parameters["lightColor"];
+			lightSpecularParameter = avaEffect.Parameters["lightSpecular"];
+			lightAmbientParameter = avaEffect.Parameters["lightAmbient"];
 			//	cameraReferencePositionParameter = avaEffect.Parameters["cameraReferencePosition"];
-				viewCWParam = avaEffect.Parameters["viewCW"];
+			viewCWParam = avaEffect.Parameters["viewCW"];
 			//pixelScaleParameter = avaEffect.Parameters["pixelScale"];
 
-				fontTexture = CreateFromDDS(AppS.AppFileName("runtime/font.dds"),false);
+			fontTexture = CreateFromDDS(AppS.AppFileName("runtime/font.dds"),false);
 			blessedMaterials = new Material[VirtueHelper.count];
 			for(int i = 0;i<blessedMaterials.Length;i++) {
-				blessedMaterials[i] = new Material(CreateFromDDS(AppS.AppFileName($"runtime/region/shrinemarker{i}.dds"),true),defaultEffect);
+				blessedMaterials[i] =LoadMaterial($"runtime/region/shrinemarker{i}.dds");
 			}
-				fontMaterial = new Material(fontTexture,fontEffect);
+			fontMaterial = new Material(fontTexture,fontEffect);
 			//	darkFontMaterial = new Material(fontTexture, darkFontEffect);
 
 
-				fontMaterial.effect = fontEffect;
+			fontMaterial.effect = fontEffect;
 
-				bfont = new BitmapFont.BitmapFont();
+			bfont = new BitmapFont.BitmapFont();
 
-				var a = AppS.GetAppString("Content/Fonts/tra.fnt");
-				//	using (System.IO.TextReader stream = new System.IO.StreamReader(a))
-				{
+			var a = AppS.GetAppString("Content/Fonts/tra.fnt");
+			//	using (System.IO.TextReader stream = new System.IO.StreamReader(a))
+			{
 
-					bfont.LoadXml(a);
-				}
+				bfont.LoadXml(a);
+			}
 
 			//	tesselatedWorldVB = new VertexBuffer(device, VertexPositionTexture.VertexDeclaration, ((World.span + 1) * (World.span + 1)), BufferUsage.None);
 			//	{
@@ -148,109 +150,110 @@ static partial class View
 
 
 
-				SpriteAnim.flagHome.Load();
-				SpriteAnim.flagSelected.Load();
-				SpriteAnim.flagRed.Load();
-				SpriteAnim.flagPinned.Load();
-				SpriteAnim.flagGrey.Load();
+			SpriteAnim.flagHome.Load();
+			SpriteAnim.flagSelected.Load();
+			SpriteAnim.flagRed.Load();
+			SpriteAnim.flagPinned.Load();
+			SpriteAnim.flagGrey.Load();
 
-				draw = new CnV.Draw.SpriteBatch(instance.GraphicsDevice);
-				// worldBackgroundDark = new TintEffect() { BufferPrecision = CanvasBufferPrecision.Precision8UIntNormalizedSrgb, Source = worldBackground, Color = new Color() { A = 255, R = 128, G = 128, B = 128 } };
+			draw = new CnV.Draw.SpriteBatch(instance.GraphicsDevice);
+			// worldBackgroundDark = new TintEffect() { BufferPrecision = CanvasBufferPrecision.Precision8UIntNormalizedSrgb, Source = worldBackground, Color = new Color() { A = 255, R = 128, G = 128, B = 128 } };
 
 
 
-				lineDraw = LoadMaterial("Art/linedraw2");
-				lineDraw.effect = alphaAddEffect;
-				//lineDraw2 = new PixelShaderEffect(
-				//sky = LoadMaterial("Art/sky");
-				//				roundedRect = new Material(Content.Load<Texture2D>("Art/Icons/roundRect"),alphaAddEffect);
-				//				quadTexture = new Material(Content.Load<Texture2D>("Art/quad"), sdfEffect);
-				quadTexture = new Material(null, sdfEffect);
+			lineDraw = LoadMaterial("runtime/art/linedraw2.dds");
+			lineDraw.effect = alphaAddEffect;
+			//lineDraw2 = new PixelShaderEffect(
+			//sky = LoadMaterial("Art/sky");
+			//				roundedRect = new Material(Content.Load<Texture2D>("Art/Icons/roundRect"),alphaAddEffect);
+			//				quadTexture = new Material(Content.Load<Texture2D>("Art/quad"), sdfEffect);
+			quadTexture = new Material(null,sdfEffect);
 			whiteMaterial =  new Material(null,noTextureEffect);// new Material(Content.Load<Texture2D>("Art/quad"),defaultEffect); //Content.Load<Texture2D>("Art/quad")
-																								  //quadTexture = whiteMaterial;
-				shadowMaterial =whiteMaterial;// new Material(whiteMaterial.texture,noTextureEffect); // todo
-			for(int i = 0; i < CnV.Troops.ttCount; ++i)
-				{
+																//quadTexture = whiteMaterial;
+			shadowMaterial =whiteMaterial;// new Material(whiteMaterial.texture,noTextureEffect); // todo
+			for(int i = 0;i < CnV.Troops.ttCount;++i) {
 
-					troopImages[i] = LoadMaterial($"Art/icons/troops{i}");
-					//if(i == 0)
-					//{
-					//	troopImageOriginOffset.X = (float)troopImages[i].Width * 0.5f;
-					//	troopImageOriginOffset.Y = (float)troopImages[i].Height * 0.5f;
-					//}
-				}
-				for(int i = 0;i < tradeImages.Length;++i)
-				{
-					tradeImages[i] = LoadMaterial($"Art/icons/trade{i}");
-				}
-				attack0Material =  LoadMaterial($"Art/Region/UI/icon_player_alliance_attack");
-				attack1Material =  LoadMaterial($"Art/Region/UI/icon_player_own_attack");
-				attack2Material =  LoadMaterial($"Art/Region/UI/icon_player_selfunder_attack");
-
-				siege0Material =  LoadMaterial($"Art/Region/UI/icon_player_alliance_siege");
-				siege1Material =  LoadMaterial($"Art/Region/UI/icon_player_selfunder_siege");
-
-
-				settleMaterial =  LoadMaterial($"Art/Region/UI/icon_player_own_settlement");
-				defenseMaterial =  LoadMaterial($"Art/Region/UI/icon_player_own_support_inc");
-				returnMaterial =  LoadMaterial($"Art/Region/UI/icon_player_own_troops_ret");
-
-				returnMaterial =  LoadMaterial($"Art/Region/UI/icon_player_own_troops_ret");
-
-				//// create a full screen rendertarget
-				//RemakeRenderTarget();
-
-				//tipBackgroundBrush = new CanvasLinearGradientBrush(canvas, new CanvasGradientStop[]
-				//	   {
-				//				new CanvasGradientStop() { Position = 0.0f, Color = new Color(){A=255,R=128,G=64,B=64 } },
-				//				new CanvasGradientStop() { Position = 1.0f, Color = Color.Black } }, CanvasEdgeBehavior.Clamp, CanvasAlphaMode.Premultiplied)
-				//{ Opacity = 0.675f };
-				//tipTextBrush = new CanvasLinearGradientBrush(canvas, new CanvasGradientStop[]
+				troopImages[i] = LoadMaterial($"runtime/art/icons/troops{i}.dds");
+				//if(i == 0)
 				//{
-				//				new CanvasGradientStop() { Position = 0.0f, Color = Color.White },
-				//				new CanvasGradientStop() { Position = 1.0f, Color = Color.Blue }
-				//}, CanvasEdgeBehavior.Clamp, CanvasAlphaMode.Premultiplied);
-				//;
-
-				//if (args.Reason != Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesReason.FirstTime)
-				{
-					//	TileData.Ctor(true);
-				}
-
-
-				//var lightEffectBytes = await App.GetContent("shader/light.bin");
-				//	var lightEffect = new Effect(instance.GraphicsDevice, lightEffectBytes)
-				//{
-
-				//	//Source2 = sky,
-				//	//Source2Mapping = SamplerCoordinateMapping.Unknown,
-				//	//Source2Interpolation = CanvasImageInterpolation.Linear,
-				//	//Source2BorderMode = EffectBorderMode.Soft,
-				//	//CacheOutput = false,
-				//	//Source1BorderMode = EffectBorderMode.Soft,
-				//	//Source1Mapping = SamplerCoordinateMapping.Offset,
-				//	//MaxSamplerOffset = 4,
-				//	Name = "SSLighting"
-
-				//	//    Source2 = await CanvasBitmap.LoadAsync(sender, "Shaders/SketchTexture.jpg"),
-				//	//   Source2Mapping = SamplerCoordinateMapping.Unknown
-				//};
-				LoadWorldBackground();
-				CityView.LoadContent();
-
-				await imageLoad;
-				
-
-
-				contentStage = ContentStage.loaded;
-
-
+				//	troopImageOriginOffset.X = (float)troopImages[i].Width * 0.5f;
+				//	troopImageOriginOffset.Y = (float)troopImages[i].Height * 0.5f;
+				//}
 			}
-			catch(Exception ex)
+			for(int i = 0;i < tradeImages.Length;++i) {
+				tradeImages[i] =LoadMaterial($"runtime/art/icons/trade{i}.dds");
+			}
+			attack0Material = LoadMaterial("runtime/art/Region/UI/icon_player_alliance_attack.dds");
+			attack1Material = LoadMaterial("runtime/art/Region/UI/icon_player_own_attack.dds");
+			attack2Material = LoadMaterial("runtime/art/Region/UI/icon_player_selfunder_attack.dds");
+
+			siege0Material = LoadMaterial("runtime/art/Region/UI/icon_player_alliance_siege.dds");
+			siege1Material = LoadMaterial("runtime/art/Region/UI/icon_player_selfunder_siege.dds");
+
+
+			settleMaterial = LoadMaterial("runtime/art/Region/UI/icon_player_own_settlement.dds");
+			defenseMaterial = LoadMaterial("runtime/art/Region/UI/icon_player_own_support_inc.dds");
+			returnMaterial = LoadMaterial("runtime/art/Region/UI/icon_player_own_troops_ret.dds");
+
+			returnMaterial = LoadMaterial("runtime/art/Region/UI/icon_player_own_troops_ret.dds");
+
+			//// create a full screen rendertarget
+			//RemakeRenderTarget();
+
+			//tipBackgroundBrush = new CanvasLinearGradientBrush(canvas, new CanvasGradientStop[]
+			//	   {
+			//				new CanvasGradientStop() { Position = 0.0f, Color = new Color(){A=255,R=128,G=64,B=64 } },
+			//				new CanvasGradientStop() { Position = 1.0f, Color = Color.Black } }, CanvasEdgeBehavior.Clamp, CanvasAlphaMode.Premultiplied)
+			//{ Opacity = 0.675f };
+			//tipTextBrush = new CanvasLinearGradientBrush(canvas, new CanvasGradientStop[]
+			//{
+			//				new CanvasGradientStop() { Position = 0.0f, Color = Color.White },
+			//				new CanvasGradientStop() { Position = 1.0f, Color = Color.Blue }
+			//}, CanvasEdgeBehavior.Clamp, CanvasAlphaMode.Premultiplied);
+			//;
+
+			//if (args.Reason != Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesReason.FirstTime)
+			{
+				//	TileData.Ctor(true);
+			}
+
+
+			//var lightEffectBytes = await App.GetContent("shader/light.bin");
+			//	var lightEffect = new Effect(instance.GraphicsDevice, lightEffectBytes)
+			//{
+
+			//	//Source2 = sky,
+			//	//Source2Mapping = SamplerCoordinateMapping.Unknown,
+			//	//Source2Interpolation = CanvasImageInterpolation.Linear,
+			//	//Source2BorderMode = EffectBorderMode.Soft,
+			//	//CacheOutput = false,
+			//	//Source1BorderMode = EffectBorderMode.Soft,
+			//	//Source1Mapping = SamplerCoordinateMapping.Offset,
+			//	//MaxSamplerOffset = 4,
+			//	Name = "SSLighting"
+
+			//	//    Source2 = await CanvasBitmap.LoadAsync(sender, "Shaders/SketchTexture.jpg"),
+			//	//   Source2Mapping = SamplerCoordinateMapping.Unknown
+			//};
+
+			CityView.LoadContent();
+
+			await imageLoad;
+
+
+
+			contentStage = ContentStage.loaded;
+
+
+		}
+		catch(Exception ex)
 			{
 				LogEx(ex);
 			}
+
 }
+
+	
 
 	internal static DepthStencilState depthWrite = new() { DepthBufferEnable=false, DepthBufferFunction=CompareFunction.Always };
 	internal static DepthStencilState depthRead = new() { DepthBufferEnable=true,DepthBufferFunction=CompareFunction.LessEqual,DepthBufferWriteEnable=false  };
@@ -279,3 +282,5 @@ static partial class View
 		public static EffectPass EffectPass(string name) =>EffectPassAlpha(name);
 	
 }
+
+

@@ -85,7 +85,10 @@ namespace CnV
 		public static Material cityWallsWater;
 		public static Material cityNoWallsLand;
 		public static Material cityNoWallsWater;
-		public static Material cityWater;
+
+		public static Material flagAnim0;
+		public static Material flagAnim1;
+		public static Material flagAnim2;
 		// See CityViewS for more
 		
 		public static Vector2 half2 = new Vector2(0.5f, 0.5f);
@@ -746,12 +749,12 @@ namespace CnV
 		public static void LoadContent()
 		{
 			LoadTheme();
-			decalBuildingInvalid       = LoadMaterialAdditive("Art/City/decal_building_invalid");
-			decalBuildBuilding         = LoadMaterialAdditive("Art/City/decal_building_valid");
-			decalBuildBuildingMulti    = LoadMaterialAdditive("Art/City/decal_building_valid_multi");
-			decalMoveBuilding          = LoadMaterialAdditive("Art/City/decal_move_building");
-			decalSelectBuilding        = LoadMaterialAdditive("Art/City/decal_select_building");
-			decalSelectGloss           = LoadMaterialAdditive("Art/City/build_details_gloss_overlay");
+			decalBuildingInvalid       = LoadMaterialAdditive("runtime/art/City/decal_building_invalid.dds");
+			decalBuildBuilding         = LoadMaterialAdditive("runtime/art/City/decal_building_valid.dds");
+			decalBuildBuildingMulti    = LoadMaterialAdditive("runtime/art/City/decal_building_valid_multi.dds");
+			decalMoveBuilding          = LoadMaterialAdditive("runtime/art/City/decal_move_building.dds");
+			decalSelectBuilding        = LoadMaterialAdditive("runtime/art/City/decal_select_building.dds");
+			decalSelectGloss           = LoadMaterialAdditive("runtime/art/City/build_details_gloss_overlay.dds");
 		}
 
 		internal  struct MaterialShadowPair
@@ -844,6 +847,18 @@ namespace CnV
 			}
 			///	cityWallsLand = LoadLitMaterial(cityBase + "baseland");
 			if(!GameClient.TryLoadLitMaterialFromDDS($"runtime\\city\\CityNoWallsWater",out cityNoWallsWater,out _,wantShadow: false,unlit: false,city:false,opaque:true))
+			{
+				Assert(false);
+			}
+			if(!GameClient.TryLoadLitMaterialFromDDS($"runtime\\city\\animseq_citywatch_flag_01",out flagAnim0,out _,wantShadow: false,unlit: false, city:true))
+			{
+				Assert(false);
+			}
+			if(!GameClient.TryLoadLitMaterialFromDDS($"runtime\\city\\animseq_gatehouse_flag_01",out flagAnim1,out _,wantShadow: false,unlit: false, city:true))
+			{
+				Assert(false);
+			}
+			if(!GameClient.TryLoadLitMaterialFromDDS($"runtime\\city\\animseq_gatehouse_flag_03",out flagAnim2,out _,wantShadow: false,unlit: false, city:true))
 			{
 				Assert(false);
 			}

@@ -1474,7 +1474,7 @@ internal partial class GameClient
 						if(Player.TryGetValue(Player.viewHover,out var p)) {
 							try {
 								foreach(var cid in p.cities) {
-									DrawFlag(cid,SpriteAnim.flagGrey,new System.Numerics.Vector2(-4,4));
+									DrawFlag(cid,CityView.flagAnim0,new System.Numerics.Vector2(-4,4),2.0f);
 								}
 							}
 							catch(Exception ex) {
@@ -1800,40 +1800,45 @@ internal partial class GameClient
 	}
 	//	static Vector2 _uv0;
 	//	static Vector2 _uv1;
-	private static void DrawFlag(int cid,SpriteAnim sprite,Vector2 offset) {
-		//return;
-		//var wc = cid.CidToWorld();
-		//if(IsCulledWC(wc))
-		//	return;
+	private static void DrawFlag(int cid,Material sprite,Vector2 offset, float animationDuration) {
+		var wc = cid.CidToWorld();
+		if(IsCulledWC(wc))
+			return;
 
-		//var c = wc.ToVector() + offset.DipToWorldOffset();
-		//var dv = (shapeSizeGain * 48 * 4 * Settings.flagScale);
-		//float z = zEffects;
+		var c = wc.ToVector() + offset.DipToWorldOffset();
+		var dv = (shapeSizeGain * 48 * 4 * Settings.flagScale);
+		float z = zEffects;
+		if(World.GetTile(wc).isCastle)
+			c.Y -= 0.125f;
+		c.Y -= 0.25f;
+		// hover flags
+		if(TryGetViewHover(cid,out var dz)) {
+			c.Y -= dz * (3.0f * shapeSizeGain); // 8 pixels up regardless of scale
+			z += dz * viewHoverZGain;
+		}
+		var c0 = new Vector2(c.X,c.Y - dv * 0.2f * 1);
+		var c1 = new Vector2(c.X + dv * 0.5f * 1f,c.Y + dv * 0.2f * 1);
 
-		//// hover flags
-		//if(TryGetViewHover(cid,out var dz))
-		//{
-		//	c.Y -= dz * (5.0f * shapeSizeGain); // 8 pixels up regardless of scale
-		//	z += dz * viewHoverZGain;
-		//}
-		//double frameCount = sprite.frameCount;
-		//double frameTotal = ((animationT + cid.CidToRandom() * 15.0) * 12.0);
-		//var frameWrap = frameTotal % frameCount;
+		var frames = sprite.GetFrameCount();
+		var dt = ((-animationT)/(animationDuration)).Frac()*(frames);
+					//				var duFX = (int)(255*255*du);
+					int frame8 = (int)(dt*256);
+					int frame = frame8 >> 8;
+					var blend =  (frame8 - (frame<<8)).AsByte();
+					var f0 = (frame*4).AsByte();
+					var f1 = (frame+1) >= frames ? (byte)0 : ((frame+1)*4).AsByte();
+					
+						byte alpha = 255;
+					draw.AddQuad(Layer.effects,sprite,c0,c1,
+						new Vector2(0,0),
+						new Vector2(1,1),
+						new Color(blend,f0,f1,alpha),
+						
 
-		//var frameI = Math.Floor(frameWrap);
-		//var frameMod = (frameWrap - frameI) * 255.0 + 0.325;
-		//Assert(frameMod >= 0);
-		//Assert(frameMod < 256.0f);
-		//var blend = (int)(frameMod);
-		////	_blend = blend;
-		//var c0 = new Vector2(c.X,c.Y - dv * 0.435f * 0.75f);
-		//Vector2 c1 = new Vector2(c.X + dv * 0.5f * 0.75f,c.Y - dv * 0.035f * 0.75f);
-		//var du = 1.0/frameCount;
-
-		//var uv0 = new Vector2((float)(frameI / frameCount),0.0f);
-		//var uv1 = new Vector2((float)((frameI + 1.0f) / frameCount),1.0f);
-		////	_uv0 = uv0;
-		////	_uv1 = uv1;
+						depth: zBase);
+				
+		//	_uv0 = uv0;
+		//	_uv1 = uv1;
 		//var material = sprite.material;
 		//byte alpha = 255;
 		//draw.AddQuad(Layer.effects,material,c0,c1,
@@ -1844,10 +1849,10 @@ internal partial class GameClient
 		//				new(blend,byte.MaxValue,byte.MaxValue,alpha),
 		//				new(blend,byte.MaxValue,byte.MaxValue,alpha),
 		//				depth: z);
-		////draw.AddQuad(Layer.effects, sprite.material, c0.CameraToWorldPosition(), c1.CameraToWorldPosition(),
-		////	uv0,
-		////	uv1,
-		////	new Color(blend, sprite.frameDeltaG, sprite.frameDeltaB, 255), depth:z );
+		//draw.AddQuad(Layer.effects, sprite.material, c0.CameraToWorldPosition(), c1.CameraToWorldPosition(),
+		//	uv0,
+		//	uv1,
+		//	new Color(blend, sprite.frameDeltaG, sprite.frameDeltaB, 255), depth:z );
 	}
 
 
