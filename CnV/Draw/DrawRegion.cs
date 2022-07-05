@@ -1474,7 +1474,7 @@ internal partial class GameClient
 						if(Player.TryGetValue(Player.viewHover,out var p)) {
 							try {
 								foreach(var cid in p.cities) {
-									DrawFlag(cid,CityView.flagAnim0,new System.Numerics.Vector2(-4,4),2.0f);
+									DrawFlag(cid,CityView.flagAnim0,new System.Numerics.Vector2(-4,4));
 								}
 							}
 							catch(Exception ex) {
@@ -1800,7 +1800,7 @@ internal partial class GameClient
 	}
 	//	static Vector2 _uv0;
 	//	static Vector2 _uv1;
-	private static void DrawFlag(int cid,Material sprite,Vector2 offset, float animationDuration) {
+	private static void DrawFlag(int cid,Material sprite,Vector2 offset, float animationDuration=flagAnimDuration) {
 		var wc = cid.CidToWorld();
 		if(IsCulledWC(wc))
 			return;
@@ -1818,25 +1818,8 @@ internal partial class GameClient
 		}
 		var c0 = new Vector2(c.X,c.Y - dv * 0.2f * 1);
 		var c1 = new Vector2(c.X + dv * 0.5f * 1f,c.Y + dv * 0.2f * 1);
+		DrawAnimatedSprite(sprite,animationDuration, c0, c1, cid.CidToRandom());
 
-		var frames = sprite.GetFrameCount();
-		var dt = ((-animationT)/(animationDuration)).Frac()*(frames);
-					//				var duFX = (int)(255*255*du);
-					int frame8 = (int)(dt*256);
-					int frame = frame8 >> 8;
-					var blend =  (frame8 - (frame<<8)).AsByte();
-					var f0 = (frame*4).AsByte();
-					var f1 = (frame+1) >= frames ? (byte)0 : ((frame+1)*4).AsByte();
-					
-						byte alpha = 255;
-					draw.AddQuad(Layer.effects,sprite,c0,c1,
-						new Vector2(0,0),
-						new Vector2(1,1),
-						new Color(blend,f0,f1,alpha),
-						
-
-						depth: zBase);
-				
 		//	_uv0 = uv0;
 		//	_uv1 = uv1;
 		//var material = sprite.material;
@@ -1853,6 +1836,26 @@ internal partial class GameClient
 		//	uv0,
 		//	uv1,
 		//	new Color(blend, sprite.frameDeltaG, sprite.frameDeltaB, 255), depth:z );
+	}
+
+	internal static void DrawAnimatedSprite(Material sprite,float animationDuration,in Vector2 c0,in Vector2 c1, float offset) {
+		var frames = sprite.GetFrameCount();
+		var dt = ((-animationT)/(animationDuration)+offset).Frac()*(frames);
+		//				var duFX = (int)(255*255*du);
+		int frame8 = (int)(dt*256);
+		int frame = frame8 >> 8;
+		var blend = (frame8 - (frame<<8)).AsByte();
+		var f0 = (frame*4).AsByte();
+		var f1 = (frame+1) >= frames ? (byte)0 : ((frame+1)*4).AsByte();
+
+		byte alpha = 255;
+		draw.AddQuad(Layer.effects,sprite,c0,c1,
+			new Vector2(0,0),
+			new Vector2(1,1),
+			new Color(blend,f0,f1,alpha),
+
+
+			depth: zBase);
 	}
 
 
