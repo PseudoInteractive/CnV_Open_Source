@@ -22,8 +22,29 @@
 
 
     <Grid x:Name="_rootGrid" Canvas.ZIndex="33" Background="{x:Null}" >
-    
-		<Grid  Margin="0" x:Name="grid"  x:FieldModifier="public"  ColumnSpacing="0" RowSpacing="0" >
+		<Grid.RowDefinitions>
+			<RowDefinition Height="24" />
+			<RowDefinition Height="*" />
+		</Grid.RowDefinitions>
+		<Grid x:Name="AppTitleBar"
+			  Background ="{StaticResource SystemAccentColorDark1}"
+              IsHitTestVisible="True"
+              VerticalAlignment="Top">
+			<Image x:Name="AppIcon" x:FieldModifier="internal"
+				   Source="/Assets/cnv.png" 
+                   HorizontalAlignment="Left"
+				   VerticalAlignment="Center"
+				   Margin="2,1,1,0"
+                   Stretch="Uniform" />
+			<TextBlock x:Name="AppTitleBarText" x:FieldModifier="internal"
+                       VerticalAlignment="Center"
+                       TextWrapping="NoWrap"
+                       Style="{StaticResource TextBlockSmall}"
+                       Margin="70,0,0,0"/>
+		</Grid>
+		
+
+		<Grid  x:Name="grid" Grid.Row="1" x:FieldModifier="public"  ColumnSpacing="0" RowSpacing="0" Margin="0,0,0,0" >
 			<Grid.Resources>
 				<Style x:Key="TimeFlyoutStyle"
                TargetType="FlyoutPresenter">

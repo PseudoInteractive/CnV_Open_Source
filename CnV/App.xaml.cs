@@ -47,7 +47,7 @@ using DecimalFormatter = Windows.Globalization.NumberFormatting.DecimalFormatter
 
 namespace CnV
 {
-	using CnV;
+
 
 	using Microsoft.UI.Windowing;
 	using Microsoft.Windows.ApplicationModel.WindowsAppRuntime;
@@ -70,13 +70,13 @@ namespace CnV
 		//		static IConfigurationRoot configuration;
 
 
-		private Lazy<ActivationService> _activationService;
-//		public static bool processingTasksStarted;
+//		private Lazy<ActivationService> _activationService;
+////		public static bool processingTasksStarted;
 
-		private ActivationService ActivationService
-		{
-			get { return _activationService.Value; }
-		}
+//		private ActivationService ActivationService
+//		{
+//			get { return _activationService.Value; }
+//		}
 		internal static void FilterNans(NumberBox sender,NumberBoxValueChangedEventArgs args)
 		{
 			if(Double.IsNaN(sender.Value) || Double.IsNaN(args.NewValue))
@@ -101,200 +101,6 @@ namespace CnV
 			}
 		}
 
-
-		public static App instance;
-		public static string appLink = "cnv";
-
-		public static void InitAppCenter()
-		{
-#if APPCENTER
-			if(AAnalytics.initialized)
-				return;
-			//if(AppCenter.Configured)
-			//{
-			//	return;
-			//}
-			//AppCenter.SetMaxStorageSizeAsync(16 * 1024 * 1024).ContinueWith((storageTask) => {
-			//	// The storageTask.Result is false when the size cannot be honored.
-			//});
-#if DEBUG
-			//AppCenter.LogLevel = LogLevel.Verbose;
-#endif
-//			AppCenter.Configure("windowsdesktop=0b4c4039-3680-41bf-b7d7-685eb68e21d2");
-			AppCenter.Start("0b4c4039-3680-41bf-b7d7-685eb68e21d2",typeof(Analytics)
-					   ,typeof(Crashes));
-			//	AppCenter.LogLevel = System.Diagnostics.Debugger.IsAttached ? Microsoft.AppCenter.LogLevel.Warn : Microsoft.AppCenter.LogLevel.None;
-		
-		
-			AAnalytics.initialized = true;
-		//	var args = AppInstance.GetCurrent().GetActivatedEventArgs();
-			//AAnalytics.Track("Activate",new Dictionary<string,string> { { "kind",args.Kind.ToString() },
-				
-			//	{"args" ,appArgs } });
-			//await Task.WhenAll(
-//			Analytics.SetEnabledAsync(true);
-	//		Crashes.SetEnabledAsync(true);
-
-								
-
-#endif
-
-
-			//try
-			//{
-			//	var str = CoreWebView2Environment.GetAvailableBrowserVersionString();
-			//	Log(str);
-			//	//			createWebEnvironmentTask =  CoreWebView2Environment.CreateAsync();
-			//	AAnalytics.Track("WebView",
-			//					new Dictionary<string, string>(new []
-			//					{
-			//							new KeyValuePair<string, string>("Version", str)
-			//					} ));
-			//}
-			//catch (Exception ex)
-			//{
-			//	await Windows.System.Launcher.LaunchUriAsync(new("https://go.microsoft.com/fwlink/p/?LinkId=2124703",
-			//													UriKind.Absolute));
-			//	LogEx(ex);
-			//}
-			//#if CRASHES
-			//			bool didAppCrash = await Crashes.HasCrashedInLastSessionAsync();
-			//			if (didAppCrash)
-			//			{
-			//				ErrorReport crashReport = await Crashes.GetLastSessionCrashReportAsync();
-			//				Log(crashReport);
-			//			}
-			//#endif
-		}
-
-
-		public App()
-		{
-
-
-			//			services = ConfigureServices();
-			RequestedTheme = ApplicationTheme.Dark;
-			InitializeComponent();
-	//		UnhandledException += App_UnhandledException;
-			//try
-			//{
-			//    {
-
-			// ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Maximized;
-			//    }
-			//}
-			//catch (Exception e)
-			//{
-			//    Log(e);
-			//}
-
-			//	ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => { Log(certificate.ToString()); return true; };
-			//	InitializeComponent();
-			instance = this;
-
-			UnhandledException += OnAppUnhandledException;
-			//Microsoft.Extensions.Hosting.Host.Cre
-			TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
-
-			// TODO WTS: Add your app in the app center and set your secret here. More at https://docs.microsoft.com/appcenter/sdk/getting-started/uwp
-
-
-			// Deferred execution until used. Check https://msdn.microsoft.com/library/dd642331(v=vs.110).aspx for further info on Lazy<T> class.
-			_activationService = new Lazy<ActivationService>(CreateActivationService);
-			//	UserAgent.SetUserAgent(CnVServer.userAgent);  // set webview useragent
-			//	Ioc.Default.ConfigureServices(ConfigureServices());
-
-
-		}
-		//private System.IServiceProvider ConfigureServices()
-		//{
-		// Host.CreateDefaultBuilder().Build();
-		//         // TODO WTS: Register your services, viewmodels and pages here
-		//         var services = new ServiceCollection();
-		//services.AddLogging();
-
-		//         return services.BuildServiceProvider();
-		//     }
-
-		//private void App_UnhandledException(object sender,Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
-		//{
-		//	e.Handled = true;
-		//	System.Diagnostics.Debug.WriteLine($"Unhandled Exception: " + e.Message);
-		//	System.Diagnostics.Debug.WriteLine(e.Exception.StackTrace);
-
-		//}
-
-		private void TaskScheduler_UnobservedTaskException(object sender,UnobservedTaskExceptionEventArgs e)
-		{
-			e.SetObserved();
-			LogEx(e.Exception);
-		}
-
-		//		public static Windows.Foundation.IAsyncOperation<CoreWebView2Environment> createWebEnvironmentTask;
-
-		private static async Task SwitchToBackground()
-		{
-			try
-			{
-				Log($"Switch to Background (was foreground: {isForeground})");
-				if(state >= State.closed)
-				{
-					Assert(false);
-					return;
-				}
-				while(AppS.windowState == AppS.WindowState.switching)
-				{
-					await Task.Delay(100);
-				}
-				if(state >= State.closed)
-				{
-					Assert(false);
-					return;
-				}
-				if(AppS.windowState == AppS.WindowState.foreground)
-				{
-					AppS.windowState = AppS.WindowState.switching;
-
-					//TODO: Save application state and stop any background activity
-					try
-					{
-
-						var t0 = SaveState();
-
-						var t = DateTimeOffset.UtcNow;
-						var dt = t - activeStart;
-						activeStart = t;
-						//	Trace("Finished!1");
-
-						try {
-							AAnalytics.Track("Background",
-											new Dictionary<string,string>
-													{ { "time", dt.TotalSeconds.RoundToInt().ToString() } });
-							SystemInformation.Instance.AddToAppUptime(dt);
-						}
-						catch(Exception ex) { }
-						await t0;
-						AppS.windowState = AppS.WindowState.background;
-						Log("Finished!");
-					}
-					catch(Exception)
-					{
-					}
-				}
-			}
-			catch(Exception ex)
-			{
-				LogEx(ex);
-			}
-		}
-
-		private static Task SaveState()
-		{
-			var t0 = BuildQueue.SaveAll(true,false);
-			var t1 = AttackTab.SaveAttacksBlock();
-			var t2 = Settings.SaveAll();
-			return Task.WhenAll(t0,t1,t2);
-		}
 
 
 		// can only be called from UI thread
@@ -338,63 +144,6 @@ namespace CnV
 		//}
 
 
-		private static async void SwitchToForeground()
-		{
-			Log("Foreground");
-			while(AppS.windowState == AppS.WindowState.switching)
-			{
-				await Task.Delay(100);
-			}
-			if(AppS.windowState == AppS.WindowState.background)
-			{
-				AppS.windowState = AppS.WindowState.foreground;
-				var t = DateTimeOffset.UtcNow;
-				var dt = t - activeStart;
-				activeStart = t;
-				AAnalytics.Track("Foreground",
-								new Dictionary<string,string> { { "time",dt.TotalSeconds.RoundToInt().ToString() } });
-				//	CnVServer.ResumeWebView();
-
-			}
-			//if (ShellPage.canvas != null)
-			//    ShellPage.canvas.Paused = false;
-		}
-
-		static public int storageFull = 0;
-
-		private void OnAppUnhandledException(object sender,Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
-		{
-			e.Handled = true;
-			try
-			{
-#if DEBUG
-				System.Diagnostics.Debug.WriteLine($"Unhandled Exception: " + e.Message);
-				System.Diagnostics.Debug.WriteLine(e.Exception.StackTrace);
-#endif
-
-
-
-				if(AppS.RegisterException(e.Message))
-				{
-#if APPCENTER
-					if(AAnalytics.initialized)
-						Crashes.TrackError(e.Exception);
-#endif
-					AAnalytics.Track("UnhandledException",
-									new Dictionary<string,string> { { "message",e.Message.Truncate(64) } });
-				}
-
-			}
-			catch(Exception)
-			{
-
-				//LogEx(ex2);
-				//					RegisterException(ex2.Message);
-
-
-			}
-		}
-
 
 
 
@@ -420,159 +169,7 @@ namespace CnV
 		//	return builder.Build();
 		//}
 		//public static FontFamily CnVFont;
-		protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
-		{
-			try
-			{
-				//await AppS.StartHost(OnReady:async () =>
-				{
-					try {
-						AppInstance keyInstance = AppInstance.FindOrRegisterForKey("cnv");
 
-
-						// If we successfully registered the file name, we must be the
-						// only instance running that was activated for this file.
-						if(keyInstance.IsCurrent) {
-							// Report successful file name key registration.
-
-
-							// Hook up the Activated event, to allow for this instance of the app
-							// getting reactivated as a result of multi-instance redirection.
-							//   keyInstance.Activated += OnActivated;
-						}
-						else {
-							AppS.appAlreadyRunning=true;
-							var mainInstance = Microsoft.Windows.AppLifecycle.AppInstance.FindOrRegisterForKey("main");
-
-							// If the instance that's executing the OnLaunched handler right now
-							// isn't the "main" instance.
-							if(!mainInstance.IsCurrent) {
-								// Redirect the activation (and args) to the "main" instance, and exit.
-								var activatedEventArgs =
-									Microsoft.Windows.AppLifecycle.AppInstance.GetCurrent().GetActivatedEventArgs();
-								await mainInstance.RedirectActivationToAsync(activatedEventArgs);
-								System.Diagnostics.Process.GetCurrentProcess().Kill();
-								return;
-							}
-
-							//                        isRedirect = true;
-							//                       RedirectActivationTo(args, keyInstance);
-						}
-					}
-					catch(Exception ex) {
-						Trace(ex.ToString());
-					}	
-
-
-					Assert(AppS.state == AppS.State.loading);
-					AppS.SetState(AppS.State.init);
-
-					//	CnVFont = new FontFamily("{StaticResource CnvIcons}");
-
-					//	Windows.UI.ViewManagement.ApplicationView.PreferredLaunchWindowingMode =Windows.UI.ViewManagement.ApplicationViewWindowingMode.Maximized;// new Size(bounds.Width, bounds.Height);
-					//				Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TryEnterViewModeAsync(Windows.UI.ViewManagement.ApplicationViewMode.CompactOverlay);
-
-				//	FocusVisualKind = FocusVisualKind.Reveal;
-
-					window = new();
-					AppS.globalQueue = window.DispatcherQueue;
-					//	window.
-
-
-
-
-					//var view = DisplayInformation.GetForCurrentView();
-					//var uwpArgs = AppInstance.GetCurrent().GetActivatedEventArgs(); //args.UWPLaunchActivatedEventArgs;
-					//if(uwpArgs.Kind == ExtendedActivationKind.Protocol)
-					//{
-					//	var eventArgs = uwpArgs;
-					//	Log("Args!! " + eventArgs.Uri);
-					//	var s = System.Web.HttpUtility.ParseQueryString(eventArgs.Uri.Query);
-
-					//	Debug.Log(s);
-					//	// format $"cnv:launch?w={world}&s=1&n=1"
-					//	// are / chars inserted?
-					//	//  if (s.Length >= 3)
-					//	{
-					//		//if (AMath.TryParseInt(s["s"], out int _s))
-					//		//	CnVServer.subId = _s;
-
-					//		////var n = s["p"];
-					//		////if (n != null)
-					//		////	Player.subOwner = n;
-
-					//		//if (AMath.TryParseInt(s["w"], out int _w))
-					//		//	CnVServer.world = _w;
-
-					//		//						if(AMath.TryParseInt(s["n"],out int _n)) // new instance
-					//		//							key = "cotgaMulti" + DateTimeOffset.UtcNow.UtcTicks;
-
-					//	}
-					//}
-
-					//// Get the screen resolution (APIs available from 14393 onward).
-					//var resolution = new Size(view.ScreenWidthInRawPixels, view.ScreenHeightInRawPixels);
-					//// Calculate the screen size in effective pixels. 
-					//// Note the height of the Windows Taskbar is ignored here since the app will only be given the maxium available size.
-					//var scale = view.ResolutionScale == ResolutionScale.Invalid ? 1 : view.RawPixelsPerViewPixel;
-					//var bounds = new Size(resolution.Width / scale, resolution.Height / scale);
-
-					
-					IntPtr hWnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
-					WindowId myWndId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
-
-					AppS.appWindow= AppWindow.GetFromWindowId(myWndId);
-					try {
-
-						
-
-
-
-					
-
-						AppS.appWindow.Title = $"Conquest and Virtue Alpha sign in to Discord (version {AppS.currentVersion})";
-						AppS.appWindow.SetIcon("assets\\cnv.ico");
-					}
-					catch (Exception ex) {
-						Log(ex);
-					}
-					//				
-					//				window.SetTitleBar
-					//ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
-					//		window.ExtendsContentIntoTitleBar = true;
-					//	window.ExtendsContentIntoTitleBar = true;
-					//App.globalDispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
-
-					//	keyQueue = globalQueue.CreateTimer();
-					//CoreApplication.EnablePrelaunch(false);
-					//if (uwpArgs.Kind == Windows.ApplicationModel.Activation.ActivationKind.Launch)
-					//{
-					//	// do this asynchronously
-
-					//}
-
-
-					
-					// if (!args.PrelaunchActivated)
-					
-					await OnLaunchedOrActivated(args);
-				//	InitAppCenter();
-//					var w2 = new Window();
-//w2.Content = new TextBlock() { Text = "Hello" };
-//w2.Activate();
-
-					//if(uwpArgs.Kind == Windows.ApplicationModel.Activation.ActivationKind.Launch)
-					Services.StoreHelper.instance.DownloadAndInstallAllUpdatesAsync(hWnd);
-				}
-				//);
-
-			}
-			catch(Exception e)
-			{
-				Log(e);
-			}
-		
-		}
 
 		//private bool Window_Closing() //object sender,WindowClosingEventArgs e)
 		//{
@@ -658,333 +255,6 @@ namespace CnV
 		}
 
 
-		private async Task OnLaunchedOrActivated(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
-		{
-
-			
-				try {
-				var status = DeploymentManager.GetStatus();
-					//Trace($"{DeploymentManager.GetStatus().Status}");
-					if(status.Status != DeploymentStatus.Ok) {
-						//	// Initialize does a status check, and if the status is not Ok it will attempt to get
-						//	// the WindowsAppRuntime into a good state by deploying packages. Unlike a simple
-						//	// status check, Initialize can sometimes take several seconds to deploy the packages.
-						//	// These should be run on a separate thread so as not to hang your app while the
-						// packages deploy. 
-					//	Trace("init start");
-						await Task.Run(() => DeploymentManager.Initialize(new DeploymentInitializeOptions() { ForceDeployment=true}));
-						//Trace("init end");
-
-					}
-
-				}
-				catch(Exception _ex) {
-					Log(_ex);
-
-				}
-
-			try {
-
-#if DEBUG
-				//				this.DebugSettings.FailFastOnErrors = false;
-				//this.DebugSettings.FailFastOnErrors                      = true;
-				this.DebugSettings.EnableFrameRateCounter                = false;
-				this.DebugSettings.IsTextPerformanceVisualizationEnabled = false;
-				//this.DebugSettings.FailFastOnErrors = false;
-				this.DebugSettings.IsBindingTracingEnabled = true;
-				this.DebugSettings.BindingFailed+=DebugSettings_BindingFailed1;
-
-#endif
-				var wasRunning = false;// args.PreviousExecutionState   == ApplicationExecutionState.Running
-						//		|| args.PreviousExecutionState == ApplicationExecutionState.Suspended;
-				Assert(!wasRunning);
-				if(!wasRunning)
-				{
-					//	var window = Window.Current;
-					window.VisibilityChanged += Window_VisibilityChanged;
-				
-					AppS.appWindow.Closing+=AppWindow_Closing;
-					AppS.appWindow.Destroying+=AppWindow_Destroying; ;
-					//		window.WantClose+=Window_Closing;
-					//window.Activated+=Window_Activated;
-				}
-		//		SystemInformation.Instance.TrackAppUse(args.UWPLaunchActivatedEventArgs);
-				// can this be async?
-				//typeof(Telerik.UI.Xaml.Controls.RadDataForm).Assembly.GetType("Telerik.UI.Xaml.Controls.TelerikLicense").GetField("messageDisplayed",BindingFlags.NonPublic|BindingFlags.Static).SetValue(null,true,BindingFlags.Static|BindingFlags.NonPublic,null,null);
-
-			//	typeof(Syncfusion.Licensing.SyncfusionLicenseProvider).Assembly.GetType("SyncfusionLicenseProvider").GetMember("ValidateLicense",BindingFlags.Public|BindingFlags.Static)=(null,true,BindingFlags.Static|BindingFlags.Public,null,null);
-			//Log("here");
-				Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("NjY1MzMyQDMyMzAyZTMyMmUzMGc1ZnZYYzZGTWh3emQzVFZQWjZGbi9IRWx5Mk96dDQ3TTFSL1luNUtlaVU9");
-
-				if(!wasRunning)
-				{
-					Log("load");
-					await Sim.LoadJsons();
-				}
-				const bool isInteractive = true;
-
-				//if(IsInteractive(activationArgs))
-				{
-					// Initialize services that you need before app activation
-					// take into account that the splash screen is shown while this code runs.
-					//    UserDataService.Initialize();
-					//              await IdentityService.InitializeWithAadAndPersonalMsAccounts();
-
-					// Do not repeat app initialization when the Window already has content,
-					// just ensure that the window is active
-					if(AppS.window.Content is null)
-					{
-						// Create a Shell or Frame to act as the navigation context
-						//	App.instance.Resources["TabViewBackground"] = new SolidColorBrush();
-						//	App.instance.Resources["TabViewButtonBackground"] = new SolidColorBrush();
-						//	App.instance.Resources["TabViewButtonForeground"] = new SolidColorBrush();
-						//	App.instance.Resources["OverlayCornerRadius"] = 1.0;
-						//	App.instance.Resources["TopCornerRadiusFilterConverter"] = new object();
-
-						AppS.window.Content = new ShellPage();
-
-					}
-					
-				}
-			
-
-				// Depending on activationArgs one of ActivationHandlers or DefaultActivationHandler
-				// will navigate to the first page
-				//	await HandleActivationAsync(activationArgs);
-				//  _lastActivationArgs = activationArgs;
-				
-	//				("NTUwMDAxQDMxMzkyZTM0MmUzMFJnano4Uk4veXEvQmczQ2M5eWZQQ1JUT0UyVVJwamhxcEZjRWEvL3V4ZkE9;NTUwMDAyQDMxMzkyZTM0MmUzMENITkt6cXZtZ2oxZkFTa09HMmkxRXlFaVRhQjRUN1dUQzc2VHNDeXU4TWc9");
-				if(isInteractive)
-				{
-					var activation = args;
-					//if(activation.PreviousExecutionState == ApplicationExecutionState.Terminated)
-					//{
-					//	//        await Singleton<SuspendAndResumeService>.Instance.RestoreSuspendAndResumeData();
-					//}
-
-					var title = AppS.appWindow.TitleBar;
-					if(title is not null)
-					{
-						var c = Windows.UI.Color.FromArgb(0xFF,0x34,0x0B,0x0B);
-						title.BackgroundColor = c;
-						title.ButtonBackgroundColor = Windows.UI.Color.FromArgb(0xFF,0x24,0x0B,0x0B); ;
-					}
-					// Ensure the current window is active
-					//await Task.Delay(500);
-					Log("Activate!");
-					AppS.appWindow.Show(true);
-						
-					AppS.presenter.Maximize();
-					//await Task.Delay(500);
-					Log("Max");
-					//if(Program.appAlreadyRunning) {
-					//	await AppS.QueueOnUIThreadTask(async void () => {
-					//		try {
-					//			var dialog = new ContentDialog() {
-
-					//				Title = "Conquest and Virtue already running",
-					//				Content = "Please close all game windows, of if you see none, restart computer",
-					//				PrimaryButtonText = "Close",
-					//				SecondaryButtonText = "Ignore",
-					//				IsSecondaryButtonEnabled = true,
-					//				IsPrimaryButtonEnabled = true,
-
-
-
-					//			};
-					//			//	dialog.XamlRoot = AppS.window.Content.XamlRoot;
-					//			//dialog.Hide();
-
-
-					//			var hr = await dialog.ShowAsync2().ConfigureAwait(false);
-					//			if(hr != ContentDialogResult.Secondary) {
-					//				Application.Current.Exit();
-					//				await Task.Delay(-1).ConfigureAwait(false);
-					//			}
-					//		}
-
-					//		catch(Exception _ex) {
-					//			LogEx(_ex);
-
-					//		}
-						
-					//	});
-						
-					//}
-					//				App.window.Maximize();
-					//				_ = PInvoke.User32.ShowWindow(WinRT.Interop.WindowNative.GetWindowHandle(App.window), PInvoke.User32.WindowShowStyle.SW_MAXIMIZE);
-					//User32.WINDOWPLACEMENT placement = new()
-					//{
-					//	length = Unsafe.SizeOf<User32.WINDOWPLACEMENT>(),
-					//	flags = User32.WindowPlacementFlags.WPF_RESTORETOMAXIMIZED
-					//	        | User32.WindowPlacementFlags.WPF_ASYNCWINDOWPLACEMENT,
-					//	showCmd = User32.WindowShowStyle.SW_SHOWMAXIMIZED
-					//};
-					//	_ = PInvoke.User32.SetWindowPlacement(WinRT.Interop.WindowNative.GetWindowHandle(App.window), placement);
-					;
-
-				}
-
-
-				if(wasRunning)
-					return;
-				window.Content.PreviewKeyUp   += Content_PreviewKeyUp;
-				window.Content.PreviewKeyDown += Content_PreviewKeyDown;
-				;
-				//			window.KeyDown+=Window_KeyDown;
-
-				//			CoreApplication.MainView.HostedViewClosing+=MainView_HostedViewClosing; ;
-				//	CoreApplication.MainView.CoreWindow.Closed+=CoreWindow_Closed;
-				//if(args!=null)
-				//	SystemInformation.TrackAppUse(args);
-
-
-
-#if DEBUG
-				//			var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
-				//			coreTitleBar.ExtendViewIntoTitleBar = false;
-				//			var titleBar = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TitleBar;
-
-
-				//		var color = Windows.UI.Color.FromArgb(0xFF, 0x20, 0x0, 0x35);
-				//		var colorInactive = Windows.UI.Color.FromArgb(0xFF, 0x00, 0x0, 0x35);
-				//		titleBar.BackgroundColor = color;
-				//titleBar.ForegroundColor = color;
-				//titleBar.ButtonForegroundColor = color;
-				//			titleBar.ButtonBackgroundColor = color;
-				//			titleBar.InactiveBackgroundColor = titleBar.ButtonInactiveBackgroundColor = colorInactive;
-				//				titleBar.InactiveForegroundColor =  titleBar.ButtonInactiveForegroundColor = colorInactive;
-				//titleBar.ButtonInactiveBackgroundColor = Windows.UI.Colors.Transparent;
-				//  UpdateTitleBarLayout(coreTitleBar);
-#endif
-
-				await Task.Delay(5000);
-				AppS.QueueOnUIThread( InitAppCenter );
-				// Set XAML element as a draggable region.
-				//          Window.Current.SetTitleBar(ShellPage.instance.AppTitleBar);
-			}
-			catch(Exception e)
-			{
-				Log(e);
-			}
-		}
-
-		private static void AppWindow_Destroying(AppWindow sender,object args) {
-			Log("Destroying");
-		}
-
-
-#if DEBUG
-		private void DebugSettings_BindingFailed1(object sender,BindingFailedEventArgs e)
-		{
-			try
-			{
-				var txt = $"BindingFailed: {e.Message}, from {sender.GetType()},{sender}";
-
-				Log(txt);
-				Note.Show(txt);
-			}
-			catch(Exception ex)
-			{
-				LogEx(ex);
-			}
-		}
-#endif
-
-		internal async static void AppWindow_Closing(AppWindow sender,AppWindowClosingEventArgs args)
-		{
-			try
-			{
-				sender.Closing -= AppWindow_Closing;
-				Log($"Closing!!: {AppS.state}  {AppS.windowState}");
-
-				if(AppS.state <  AppS.State.closing)
-				{
-					AppS.SetState(AppS.State.closing);
-
-					Microsoft.Xna.Framework.GamePlatform.isExiting=true;
-					
-					window.VisibilityChanged -= Window_VisibilityChanged;
-					if(args is not null)
-						args.Cancel = true;
-
-					if(City.GetBuild().SaveLayout()) {
-						Thread.Sleep(500);
-					}
-
-					// Cancel sim thread
-					Sim.simCancelTokenSource.Cancel();
-					SocketClient.ShutDown();
-					if(CnVDiscord.CnVChatClient.initialized)
-						Note.Show("Shutting down chat");
-					var t1 = CnVDiscord.CnVChatClient.ShutDown(true);
-					var t0 = BackgroundTask.dispatcherQueueController.ShutdownQueueAsync();
-
-					await SwitchToBackground();
-//					window.VisibilityChanged -= Window_VisibilityChanged;
-//					window.Closed -= Window_Closed;
-					Assert(AppS.state == AppS.State.closing);
-					AppS.SetState(AppS.State.closed);
-					var t2 = AAnalytics.Flush();
-					await t0;
-					await t1;
-					await t2;
-					// Wait for sim thread to save
-					Log($"Await Sim");
-					while(Sim.isSimRunning)
-					{
-						await Task.Delay(500);
-					}
-					if(Sim.simThread is not null)
-						Sim.simThread.Join();
-					Log($"Destroyed");
-					//		args.Cancel=false;
-					//				window.Close();
-					App.instance.Exit();
-
-				}
-			}
-			catch(Exception ex)
-			{
-				// Todo
-				LogEx(ex);
-			}
-			finally
-			{
-			}
-		}
-
-
-
-		//private void Window_Activated(object sender,WindowActivatedEventArgs args)
-		//{
-		//	Trace("Activated");
-		////	SwitchToForeground();
-		//}
-
-		private static async void Window_VisibilityChanged(object sender,WindowVisibilityChangedEventArgs args)
-
-		{
-			if(state >= State.closed)
-			{
-				Assert(false);
-				return;
-			}
-
-			Log($"Visibility!!: {args.Visible}  {AppS.windowState}");
-			AppS.windowState = AppS.WindowState.background;
-			if(!args.Visible)
-			{
-				await SwitchToBackground();
-			}
-			else
-			{
-				SwitchToForeground();
-			}
-
-
-			//			throw new NotImplementedException();
-		}
 
 		//private void CoreWindow_Closed(CoreWindow sender,CoreWindowEventArgs args)
 		//{
@@ -1175,27 +445,27 @@ namespace CnV
 		//	throttledTasks.Enqueue(a);
 		//}
 
-		public static bool OnPointerPressed(PointerUpdateKind prop)
-		{
-			var rv = false;
-			switch(prop)
-			{
-				case PointerUpdateKind.XButton1Pressed:
-					NavStack.Back(true);
+		//public static bool OnPointerPressed(PointerUpdateKind prop)
+		//{
+		//	var rv = false;
+		//	switch(prop)
+		//	{
+		//		case PointerUpdateKind.XButton1Pressed:
+		//			NavStack.Back(true);
 
-					Log("XButton1");
-					rv = true;
-					break;
-				case PointerUpdateKind.XButton2Pressed:
-					NavStack.Forward(true);
-					Log("XButton2");
-					rv = true;
-					break;
-			}
+		//			Log("XButton1");
+		//			rv = true;
+		//			break;
+		//		case PointerUpdateKind.XButton2Pressed:
+		//			NavStack.Forward(true);
+		//			Log("XButton2");
+		//			rv = true;
+		//			break;
+		//	}
 
-			InputRecieved();
-			return rv;
-		}
+		//	InputRecieved();
+		//	return rv;
+		//}
 
 		public static void InputRecieved() => AppS.InputRecieved();
 
@@ -1211,10 +481,10 @@ namespace CnV
 		//}
 
 
-		private ActivationService CreateActivationService()
-		{
-			return new ActivationService(); //this, null, new Lazy<UIElement>(()=> new Views.ShellPage()));
-		}
+		//private ActivationService CreateActivationService()
+		//{
+		//	return new ActivationService(); //this, null, new Lazy<UIElement>(()=> new Views.ShellPage()));
+		//}
 
 		//public static Task EnqueueAsync(DispatcherQueue dispatcher,Func<Task> function,DispatcherQueuePriority priority = 0)
 		//{

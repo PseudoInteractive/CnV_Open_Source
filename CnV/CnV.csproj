@@ -67,7 +67,7 @@
 		<PackageReference Include="DirectXTexNet" Version="1.0.3" />
 		<PackageReference Include="DSharpPlus" Version="4.2.0" />
 		<PackageReference Include="FastEnum" Version="1.8.0" />
-		<PackageReference Include="Grpc.Net.Client" Version="2.46.0" />
+		<PackageReference Include="Grpc.Net.Client" Version="2.47.0" />
 		<PackageReference Include="MagicOnion.Client" Version="4.5.1" />
 		<PackageReference Include="MessagePackAnalyzer" Version="2.4.35">
 		  <PrivateAssets>all</PrivateAssets>
@@ -75,6 +75,8 @@
 		</PackageReference>
 		<PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.5.0" />
 		<PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.5.0" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0-preview.5.22301.12" />
+		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0-preview.5.22301.12" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0-preview.5.22301.12" />
 		<PackageReference Include="Microsoft.Extensions.ObjectPool" Version="7.0.0-preview.5.22303.8" />
 		<PackageReference Include="Microsoft.Extensions.Primitives" Version="7.0.0-preview.5.22301.12" />
@@ -111,6 +113,7 @@
 	<ItemGroup>
 		<Compile Include="Activation\ProtocolActivation.cs" />
 		<Compile Include="Activation\ActivationHandler.cs" />
+		<Compile Include="AppWindow.cs" />
 		<Compile Include="Draw\CameraView.cs" />
 		<Compile Include="Draw\DrawX.cs" />
 		<Compile Include="Draw\StatsView.cs" />
@@ -149,6 +152,7 @@
 		<Compile Include="Program.cs" />
 		<Compile Include="Services\CnVSignin.cs" />
 		<Compile Include="Services\HostBuilder.cs" />
+		<Compile Include="Setup.cs" />
 		<Compile Include="Views\AllianceTab.xaml.cs" />
 		<Compile Include="Views\CanvasMouse.cs" />
 		<Compile Include="Views\CanvasUI.cs" />

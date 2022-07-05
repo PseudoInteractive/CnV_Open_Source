@@ -256,7 +256,10 @@ namespace CnV.Views
 			//			instance = this;
 			InitializeComponent();
 			//		RequestedTheme = ElementTheme.Dark; // default theme
-
+			AppS.window.ExtendsContentIntoTitleBar = true;
+	        AppS.window.SetTitleBar(AppTitleBar);
+			instance = this;
+			App.UpdateAppTitleUI();
 		}
 		//		public static bool rightTabsVisible => Settings.layout>=Layout.c;
 		//		public static bool htmlVisible => Settings.layout is not (Layout.l1 or  Layout.r2 or Layout.r1);
@@ -276,9 +279,12 @@ namespace CnV.Views
 
 		private async void OnLoaded(object sender,RoutedEventArgs e) {
 			try {
+				
+
+
 				gameUIFrame = _gameUIFrame;
 				rootGrid = _rootGrid;
-				instance = this;
+			//	instance = this;
 				View.dipToNative = XamlRoot.RasterizationScale;
 				//var ps = new PlayerStats();
 				//Header = ps;
@@ -555,7 +561,7 @@ namespace CnV.Views
 
 				//AppS.QueueOnUIThread(() =>
 				//{
-				AppS.UpdateAppTitle();
+				App.UpdateAppTitle();
 
 
 				//	//							AppS.appWindow.SetIcon(new IconId(0));
