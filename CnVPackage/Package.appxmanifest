@@ -15,7 +15,7 @@
   <Identity
     Name="33626dsw.15864FAB9E7D2"
     Publisher="CN=BE72B2C5-14F0-4AD5-84D4-EAA91D8D0812"
-    Version="2022.502.2279.0" />
+    Version="2022.502.2280.0" />
 
 
   <Properties>
@@ -25,6 +25,7 @@
   </Properties>
 
   <Dependencies>
+    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.19041.0" MaxVersionTested="10.0.22000.0" />
     <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.19041.0" MaxVersionTested="10.0.22000.0" />
   </Dependencies>
 

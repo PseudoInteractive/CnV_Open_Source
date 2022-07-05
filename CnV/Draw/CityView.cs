@@ -288,8 +288,7 @@ namespace CnV
 							//				overlay = city.postQueueBuildings[id];
 						}
 
-						if(cur.id!=0 || next.id!=0)
-						{
+						if(cur.id!=0 || next.id!=0) {
 							// this is to show the demo symbol?
 							//if(bspot == bspotWall)
 							//{
@@ -307,21 +306,16 @@ namespace CnV
 							// ZBase is on initial action placement
 							var bumpOffset = 1f;
 
-							if(dtF < 0.5f )
-							{
+							if(dtF < 0.5f) {
 								var prior = priorBuildings[bspot];
-								if(prior == bidNone)
-								{
+								if(prior == bidNone) {
 									// drop in
-								//	bumpOffset = dtF.SCurve(0f,1f);
+									//	bumpOffset = dtF.SCurve(0f,1f);
 								}
-								else
-								{
-									if(next.id == bidNone)
-									{
+								else {
+									if(next.id == bidNone) {
 									}
-									else
-									{
+									else {
 
 										// bump
 										var t0 = (2*dt).Wave().Lerp(1.0f,0.95f);
@@ -337,28 +331,24 @@ namespace CnV
 							var wantDemoImage = false;
 
 							// Is building changing
-							if(cur.id==next.id || ((next.bl==cur.bl)&&(!cur.isRes)))
-							{
+							if(cur.id==next.id || ((next.bl==cur.bl)&&(!cur.isRes))) {
 								// No change
 								bid = next.id;
 
 								// upgrade of downgrade. same building
-								if(next.bl != cur.bl)
-								{
+								if(next.bl != cur.bl) {
 									//float blendOp = 0;
 									var blendT = (dt*(1.0f/3.0f)).Frac();
 									var blendT4 = blendT*4;
-									if(blendT < 0.25f)
-									{
+									if(blendT < 0.25f) {
 										var t = (blendT4);
 										bl = cur.bl; // fade next number
 										fontAlpha *= t.Bezier(0f,1f,1f);
-									//	blendOp = 0;//.SCurve(0,1);
+										//	blendOp = 0;//.SCurve(0,1);
 									}
-									else if(blendT < 0.5f)
-									{
+									else if(blendT < 0.5f) {
 										var t = (blendT4 - 1);
-									//	blendOp = 0;
+										//	blendOp = 0;
 										// fade out number
 										bl = cur.bl; // fade next number
 										fontAlpha*= t.Bezier(1,1,0);
@@ -367,17 +357,16 @@ namespace CnV
 									else if(blendT < 0.75f) // fade out hammer
 									{
 										var t = (blendT4 -2); // fade in new number
-									//	blendOp = t.SCurve(0,1);
-										// fade in last number
+															  //	blendOp = t.SCurve(0,1);
+															  // fade in last number
 										bl = next.bl;
 										fontAlpha*= t.Bezier(0,1,1);
 									}
-									else
-									{
+									else {
 										// fade in number
 										var t = (blendT4 - 3); // fade in new number
 															   // fade out number
-									//	blendOp =t.SCurve(1,0);
+															   //	blendOp =t.SCurve(1,0);
 										bl = next.bl;
 										fontAlpha *= t.Bezier(1,1,0);// prior number out	
 									}
@@ -390,24 +379,21 @@ namespace CnV
 									//	draw.AddQuad(Layer.cityBuildEffect,decalSelectGloss,cs.c0,cs.c1,new Color(iAlpha,iAlpha,iAlpha,iAlpha / 2).Scale(blendOp*0.5f),depth: z1);
 									//}
 								}
-								else
-								{
+								else {
 									bl = next.bl;
 								}
 
 							}
-							else
-							{
+							else {
 								// build or destroy
 
 								//	float blendOp;
 								//	Material blendMat;
 								// destroy
 								// building going out
-								if(next.id == 0)
-								{
+								if(next.id == 0) {
 									// Draw an X
-								//	wantDemoImage = true;
+									//	wantDemoImage = true;
 
 
 									bid = cur.bid;
@@ -416,18 +402,15 @@ namespace CnV
 
 
 									//float z1 = zCityOverlay*bumpOffset;
-									if(bspot != buildOp.c)
-									{
+									if(bspot != buildOp.c) {
 										bl = cur.bl;
 
 									}
-									else
-									{
+									else {
 										bl=0;
 									}
 								}
-								else
-								{
+								else {
 									//blendMat = decalSelectBuilding;
 									bid = next.bid;
 									if(next.bl == 1)
@@ -436,32 +419,28 @@ namespace CnV
 										bl = next.bl;
 									alpha *= (dtF.Saturate().Bezier(0f,0.4375f,0.4375f)); // building coming in
 								}
-								if(bspot != buildOp.c)
-								{
-									if(cur.id != 0)
-									{
+								if(bspot != buildOp.c) {
+									if(cur.id != 0) {
 										// demo only
-										if(next.id == 0)
-										{
+										if(next.id == 0) {
 											var blendMat = decalBuildingInvalid;
 											float blendOp = (dt*(1.0f/3.0f)).Wave().Lerp(0.3125f,0.625f);
 											var cs = CityPointToQuad(bspot,1.2f);
 											draw.AddQuad(bspot.LayerEffect(),blendMat,cs.c0,cs.c1,(new Color(iAlpha,iAlpha,iAlpha,iAlpha)).Scale(blendOp),depth: 0);
 										}
 										// build new
-										else
-										{
+										else {
 											if(cur.isRes)
-												DrawBuilding(cur.bid,iAlpha,zBase: 0,layer: bspot.LayerBuilding()-1,buildC: bspot,wantDemo:true);
+												DrawBuilding(cur.bid,iAlpha,zBase: 0,layer: bspot.LayerBuilding()-1,buildC: bspot,wantDemo: true);
 										}
-										
+
 										//var blendMat = decalBuildingInvalid;
 										//float blendOp = (dt*(1.0f/3.0f)).Wave().Lerp(0.3125f,0.625f);
 										//var cs = CityPointToQuad(bspot,1.2f);
 										//draw.AddQuad(bspot.LayerEffect(),blendMat,cs.c0,cs.c1,(new Color(iAlpha,iAlpha,iAlpha,iAlpha)).Scale(blendOp),depth: 0);
 									}
 								}
-							
+
 
 								// Don't draw the build overlay is this is a construction as the crane is drawing
 								//if(next.id == 0 || bspot != constructionSpot)
@@ -473,79 +452,68 @@ namespace CnV
 								//		float z1 = (1-bumpOffset)*(1.0f/64.0f);
 								//		draw.AddQuad(Layer.cityBuildEffect,blendMat,cs.c0.WorldToCamera(),cs.c1.WorldToCamera(),(new Color(iAlpha,iAlpha,iAlpha,iAlpha)).Scale(blendOp),depth: z1);
 								//	}
-							//	}
-								
+								//	}
+
 
 							}
-							if(bspot == buildOp.c)
-								{
-									
-									var buildEnd = city.buildItemEndsAt.EarliestSeconds; // should this be earliest?
-									var startT = currentBuildStartTime;
-									var required = buildEnd-startT;
-										var gain = ((buildEnd - simTime)/required).SaturateToFloat();
+							if(bspot == buildOp.c) {
+
+								var buildEnd = city.buildItemEndsAt.EarliestSeconds; // should this be earliest?
+								var startT = currentBuildStartTime;
+								var required = buildEnd-startT;
+								var gain = ((buildEnd - simTime)/required).SaturateToFloat();
 								//	Assert(buildEnd >= simTime - 1.0f);
-									Assert(buildEnd - simTime <= required + 1.0f);
-									if(buildOp.isBuild|buildOp.isDemo)
-									{
-										if(buildOp.isBuild)
-										{
-											alpha = gain.Lerp(1,alpha);
-										}
-										else
-										{
-											alpha = gain.Lerp(0,alpha);
+								Assert(buildEnd - simTime <= required + 1.0f);
+								if(buildOp.isBuild|buildOp.isDemo) {
+									if(buildOp.isBuild) {
+										alpha = gain.Lerp(1,alpha);
+									}
+									else {
+										alpha = gain.Lerp(0,alpha);
 
-										}
-										if(bspot == bspotWall)
-										{
-											var fade = 1-gain;
+									}
+									if(bspot == bspotWall) {
+										var fade = 1-gain;
 
-											draw.AddQuad(Layer.tileCityBaseFade,
-												city.isOnWater ?buildOp.isBuild? cityWallsWater : cityNoWallsWater 
-												: buildOp.isBuild ? cityWallsLand : cityNoWallsLand,
-												cityWall0,cityWall1,new Color(byte.MaxValue,byte.MaxValue,byte.MaxValue,fade.UNormToByte()),depth: 0.0f/1024f);
-				
-										}
+										draw.AddQuad(Layer.tileCityBaseFade,
+											city.isOnWater ? buildOp.isBuild ? cityWallsWater : cityNoWallsWater
+											: buildOp.isBuild ? cityWallsLand : cityNoWallsLand,
+											cityWall0,cityWall1,new Color(byte.MaxValue,byte.MaxValue,byte.MaxValue,fade.UNormToByte()),depth: 0.0f/1024f);
+
+									}
 
 									//	alpha *= (gain);
-									}
-									if(!buildOp.isMove)
-									{
-										var dT = ((simTime -currentBuildStartTime)*2.0f).SaturateToFloat();
-										var fade = (dT).UNormToByte();
-
-										float v0, v1;
-										if(buildOp.isDemo || buildOp.isDowngrade)
-										{
-											v0 = (1-gain); v1 = 1;
-										}
-										else
-										{
-											v0 = 0; v1 = gain;
-										}	
-										var cs = CityPointToQuad(bspot,1.2f);
-										draw.AddQuad(bspot.LayerEffect(),decalSelectGloss,
-											new(cs.c0.X, v0.Lerp(cs.c0.Y,cs.c1.Y)),
-											new(cs.c1.X, v1.Lerp(cs.c0.Y,cs.c1.Y)),
-											new(0f,v0),new(1.0f,v1),
-											fade.AlphaToAll(), depth:zCityOverlay );
-									}
 								}
+								if(!buildOp.isMove) {
+									var dT = ((simTime -currentBuildStartTime)*2.0f).SaturateToFloat();
+									var fade = (dT).UNormToByte();
+
+									float v0, v1;
+									if(buildOp.isDemo || buildOp.isDowngrade) {
+										v0 = (1-gain); v1 = 1;
+									}
+									else {
+										v0 = 0; v1 = gain;
+									}
+									var cs = CityPointToQuad(bspot,1.2f);
+									draw.AddQuad(bspot.LayerEffect(),decalSelectGloss,
+										new(cs.c0.X,v0.Lerp(cs.c0.Y,cs.c1.Y)),
+										new(cs.c1.X,v1.Lerp(cs.c0.Y,cs.c1.Y)),
+										new(0f,v0),new(1.0f,v1),
+										fade.AlphaToAll(),depth: zCityOverlay);
+								}
+							}
 
 							DrawBuilding(bid,iAlpha: alpha.UNormToByte(),zBase: 0,layer: bspot.LayerBuilding(),buildC: bspot,fontScale: cityFontScale,fontAlpha: fontAlpha.UNormToByte(),buildingLevel: bl,
-								wantDemo:wantDemoImage, lerpC: IsBidTower(bid) ? (0f,-0.25f,1f,0.75f) : (0f,0f,1f,1f)  );
-							if(selectedBuildingIds.Contains(bid))
-							{
+								wantDemo: wantDemoImage,lerpC: IsBidTower(bid) ? (0f, -0.25f, 1f, 0.75f) : (0f, 0f, 1f, 1f));
+							if(selectedBuildingIds.Contains(bid)) {
 								//var t = ((animationT - selectedBuildingIdsChangeTime)*2).Saturate().Wave()*2.0f;
-								CityView.DrawHoverMarker(bspot,new Color(255, 64, 0, 255));
+								CityView.DrawHoverMarker(bspot,new Color(255,64,0,255));
 							}
 							// farm fields
-							if(next.bid == bidFarm)
-							{
+							if(next.bid == bidFarm) {
 
-								foreach(var delta in Octant.deltas)
-								{
+								foreach(var delta in Octant.deltas) {
 									var c1 = bspot + delta;
 									if(!IsBuildingSpot(c1,city))
 										continue;
@@ -556,15 +524,22 @@ namespace CnV
 								}
 							}
 							else if(next.bid == bidMarket) {
-								DrawAnimatedSprite(marketFountain,1.0f,bspot,2f,(-1.0f/16.0f, -0.0f),2.0f,bspot.LayerEffect());
+								DrawAnimatedSprite(marketFountain,1.0f,bspot,2f,(-1.6f/64f, -1.0f/32.0f),(float)-animationOffsets[bspot],bspot.LayerEffect());
+
+							} else if(next.bid == bidTownHall) {
+								DrawAnimatedSprite(marketFountain,1.0f,bspot,2f,(-0.37f, +0.385f),(float)-animationOffsets[bspot],bspot.LayerEffect());
+
+
+							} else if(next.bid is bidIronMine  ) {
+								DrawAnimatedSprite(dustCloud,3.0f,bspot,1.0f,(-0.0f, +0.25f),(float)-animationOffsets[bspot],bspot.LayerEffect());
 
 							}
 							else if(next.bid == bidSmelter) {
-								DrawAnimatedSprite(smelterSmoke,3.0f,bspot,1f,(.125f, -0.35f),0.25f,bspot.LayerEffect());
+								DrawAnimatedSprite(smelterSmoke,2.0f,bspot,1f,(.18f, -0.45f),(float)-animationOffsets[bspot],bspot.LayerEffect());
 
 							}
 							else if (next.bid ==bidBlacksmith) {
-								DrawAnimatedSprite(genericSmoke,3.0f,bspot,1f,(-0.25f+1.0f/32.0f, -0.5f),0.25f,bspot.LayerEffect());
+								DrawAnimatedSprite(genericSmoke,3.0f,bspot,1f,(-0.25f+1.0f/32.0f, -0.65f),(float)-animationOffsets[bspot],bspot.LayerEffect());
 
 							}
 
