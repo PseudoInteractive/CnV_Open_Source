@@ -90,6 +90,10 @@ namespace CnV
 		public static Material flagAnim0;
 		public static Material flagAnim1;
 		public static Material flagAnim2;
+		public static Material marketFountain;
+		public static Material smelterSmoke;
+		public static Material genericSmoke;
+		public static Material dustCloud;
 		// See CityViewS for more
 		
 		public static Vector2 half2 = new Vector2(0.5f, 0.5f);
@@ -132,6 +136,29 @@ namespace CnV
 			
 
 		}
+		internal static (Vector2 c0, Vector2 c1) CityPointToQuad(BuildC bc, Material m, float scale,(float x, float y) lerpC )
+		{
+
+			var c = CityPointToWC(bc,lerpC );
+
+			// There is no aspect ratio scaling for Y
+			var baseScale = (0.5f * cityTileGainX );
+			var mxScale = m.texture2d.width/128.0f;
+			var myScale = m.texture2d.height/128.0f;
+			var xScale = mxScale*scale;// * (lerpC.x1-lerpC.x0);
+			var yScale = myScale*scale;// * (lerpC.y1-lerpC.y0);
+			
+			var dc = new Vector2( baseScale*xScale, baseScale* yScale);
+			return (c-dc, c+dc);
+			
+
+		}
+		internal static void DrawAnimatedSprite(Material sprite,float animationDuration,BuildC bc,float scale, (float x, float y) lerpC ,float offset,int layer) {
+			var cs = CityPointToQuad(bc,sprite,scale,lerpC);
+			GameClient.DrawAnimatedSprite(sprite,animationDuration,cs.c0,cs.c1,offset,layer); 
+	
+		}
+
 		public static double[] baseAnimationOffsets = new double[citySpotCount];
 		public static float animationRate = 0.25f;
 		
@@ -185,59 +212,58 @@ namespace CnV
 				var cityWall0 = cityWallOrigin - cityWallSpan;
 				var cityWall1 = cityWallOrigin + cityWallSpan;
 				{
-				
-					
+
+
 					{
 						var hasWall = buildings[bspotWall].bl > 0;
-						draw.AddQuad(iAlpha >= 255 ? Layer.tileCityBaseOpaque:
+						draw.AddQuad(iAlpha >= 255 ? Layer.tileCityBaseOpaque :
 													Layer.tileCityBaseAlpha,
-													city.isOnWater ? !hasWall ? cityNoWallsWater: cityWallsWater :!hasWall ? cityNoWallsLand: cityWallsLand,
+													city.isOnWater ? !hasWall ? cityNoWallsWater : cityWallsWater : !hasWall ? cityNoWallsLand : cityWallsLand,
 													cityWall0,cityWall1,
-													color:new(byte.MaxValue,byte.MaxValue,byte.MaxValue,(byte)iAlpha),depth: 0.0f/1024f);
-					}
-					if(hasWall) {
-						//				var u1 = 1940.0f/2944f;
-						//				var v1 = 1190f/1840f;
-						var dUab = 61.0f/2944;
-						var dVab = 34/1840f;
-						var du = 0.01875f;
-						var dv = 0.01875f;
-						var u1a = 1934f/2944f;
-						var v1a = 1175f/1840f;
-						var u1b = u1a + dUab;// 1996f/2944f;
-						var v1b = v1a - dVab;
+													color: new(byte.MaxValue,byte.MaxValue,byte.MaxValue,(byte)iAlpha),depth: 0.0f/1024f);
 
-						var u2a = 930/2944f;
-						var v2a = 517f/1840f;
-						var u2b = u2a + dUab;// 992f/2944f;
-						var v2b = v2a - dVab;
-						var diagDv = 1.0f/1840f;
-						var diagDu = 4.0f/2944f;
+						if(hasWall) {
+							//				var u1 = 1940.0f/2944f;
+							//				var v1 = 1190f/1840f;
+							var dUab = 61.0f/2944;
+							var dVab = 34/1840f;
+							var du = 0.01875f;
+							var dv = 0.01875f;
+							var u1a = 1934f/2944f;
+							var v1a = 1175f/1840f;
+							var u1b = u1a + dUab;// 1996f/2944f;
+							var v1b = v1a - dVab;
 
-						GameClient.DrawAnimatedSprite(flagAnim1,flagAnimDuration,(u1a, v1a).Lerp(cityWall0,cityWall1),(u1a+du, v1a+dv).Lerp(cityWall0,cityWall1),.1f);
-						GameClient.DrawAnimatedSprite(flagAnim1,flagAnimDuration,(u1b, v1b).Lerp(cityWall0,cityWall1),(u1b+du, v1b+dv).Lerp(cityWall0,cityWall1),.7f);
+							var u2a = 930/2944f;
+							var v2a = 517f/1840f;
+							var u2b = u2a + dUab;// 992f/2944f;
+							var v2b = v2a - dVab;
+							var diagDv = 1.0f/1840f;
+							var diagDu = 4.0f/2944f;
 
-						// top right
-						GameClient.DrawAnimatedSprite(flagAnim1,flagAnimDuration,(u1a+7.0f/2944f+diagDu, v2b+2f/1840f+diagDv).Lerp(cityWall0,cityWall1),(u1a+7.0f/2944f+diagDu+du, v2b+2f/1840f+diagDv+dv).Lerp(cityWall0,cityWall1),0.82f);
-						GameClient.DrawAnimatedSprite(flagAnim1,flagAnimDuration,(u1b+diagDu, v2a-3f/1840f+diagDv).Lerp(cityWall0,cityWall1),(u1b+diagDu+du, v2a-3f/1840f+diagDv+dv).Lerp(cityWall0,cityWall1),0.485f);
+							GameClient.DrawAnimatedSprite(flagAnim1,flagAnimDuration,(u1a, v1a).Lerp(cityWall0,cityWall1),(u1a+du, v1a+dv).Lerp(cityWall0,cityWall1),.1f);
+							GameClient.DrawAnimatedSprite(flagAnim1,flagAnimDuration,(u1b, v1b).Lerp(cityWall0,cityWall1),(u1b+du, v1b+dv).Lerp(cityWall0,cityWall1),.7f);
 
-						GameClient.DrawAnimatedSprite(flagAnim1,flagAnimDuration,(u2a, v2a).Lerp(cityWall0,cityWall1),(u2a+du, v2a+dv).Lerp(cityWall0,cityWall1),0.7f);
-						GameClient.DrawAnimatedSprite(flagAnim1,flagAnimDuration,(u2b, v2b+2f/1840f).Lerp(cityWall0,cityWall1),(u2b+du, v2b+2f/1840f+dv).Lerp(cityWall0,cityWall1),0.1f);
+							// top right
+							GameClient.DrawAnimatedSprite(flagAnim1,flagAnimDuration,(u1a+7.0f/2944f+diagDu, v2b+2f/1840f+diagDv).Lerp(cityWall0,cityWall1),(u1a+7.0f/2944f+diagDu+du, v2b+2f/1840f+diagDv+dv).Lerp(cityWall0,cityWall1),0.82f);
+							GameClient.DrawAnimatedSprite(flagAnim1,flagAnimDuration,(u1b+diagDu, v2a-3f/1840f+diagDv).Lerp(cityWall0,cityWall1),(u1b+diagDu+du, v2a-3f/1840f+diagDv+dv).Lerp(cityWall0,cityWall1),0.485f);
 
-						GameClient.DrawAnimatedSprite(flagAnim1,flagAnimDuration,(u2a+6.0f/2944f+diagDu, v1b+2/1840f+diagDv).Lerp(cityWall0,cityWall1),(u2a+6.0f/2944f+diagDu+du, v1b+2/1840f+diagDv+dv).Lerp(cityWall0,cityWall1),0.5f);
-						GameClient.DrawAnimatedSprite(flagAnim1,flagAnimDuration,(u2b+7.0f/2944f+diagDu, v1a+2/1840f+diagDv).Lerp(cityWall0,cityWall1),(u2b+7.0f/2944f+diagDu+du, v1a+2/1840f+diagDv+dv).Lerp(cityWall0,cityWall1),0.9f);
+							GameClient.DrawAnimatedSprite(flagAnim1,flagAnimDuration,(u2a, v2a).Lerp(cityWall0,cityWall1),(u2a+du, v2a+dv).Lerp(cityWall0,cityWall1),0.7f);
+							GameClient.DrawAnimatedSprite(flagAnim1,flagAnimDuration,(u2b, v2b+2f/1840f).Lerp(cityWall0,cityWall1),(u2b+du, v2b+2f/1840f+dv).Lerp(cityWall0,cityWall1),0.1f);
 
-						float[,] fcs = new float[,] { { 292,116 },{352,86}, { 2590,88 }, {2642,112 },
+							GameClient.DrawAnimatedSprite(flagAnim1,flagAnimDuration,(u2a+6.0f/2944f+diagDu, v1b+2/1840f+diagDv).Lerp(cityWall0,cityWall1),(u2a+6.0f/2944f+diagDu+du, v1b+2/1840f+diagDv+dv).Lerp(cityWall0,cityWall1),0.5f);
+							GameClient.DrawAnimatedSprite(flagAnim1,flagAnimDuration,(u2b+7.0f/2944f+diagDu, v1a+2/1840f+diagDv).Lerp(cityWall0,cityWall1),(u2b+7.0f/2944f+diagDu+du, v1a+2/1840f+diagDv+dv).Lerp(cityWall0,cityWall1),0.9f);
+
+							float[,] fcs = new float[,] { { 292,116 },{352,86}, { 2590,88 }, {2642,112 },
 					{ 305,1544 },{366,1577 } };
-						for(int i = 0;i< fcs.GetLength(0);++i) {
-							var u = fcs[i,0]*(1.0f/2944f);
-							var v = fcs[i,1]*(1.0f/1840f);
-							GameClient.DrawAnimatedSprite(flagAnim1,1.0f,(u, v).Lerp(cityWall0,cityWall1),(u+du, v+dv).Lerp(cityWall0,cityWall1),(i*0.43f));
+							for(int i = 0;i< fcs.GetLength(0);++i) {
+								var u = fcs[i,0]*(1.0f/2944f);
+								var v = fcs[i,1]*(1.0f/1840f);
+								GameClient.DrawAnimatedSprite(flagAnim1,1.0f,(u, v).Lerp(cityWall0,cityWall1),(u+du, v+dv).Lerp(cityWall0,cityWall1),(i*0.43f));
 
+							}
 						}
 					}
-//					GameClient.DrawAnimatedSprite(flagAnim1,flagAnimDuration,(0.24f,0.75f).Lerp(cityWall0,cityWall1),(0.25f,0.76f).Lerp(cityWall0,cityWall1) ) ;
-//					GameClient.DrawAnimatedSprite(flagAnim2,flagAnimDuration,(0.77f,0.27f).Lerp(cityWall0,cityWall1),(0.79f,0.29f).Lerp(cityWall0,cityWall1) ) ;
 				}
 
 				var cityFontScale = MathF.Sqrt(6.0f / viewW.Z.Clamp(0.5f,6.0f)) *Settings.buildingLabelScale* baseFontScale; // perspective attenuation with distance
@@ -529,6 +555,19 @@ namespace CnV
 									DrawBuilding(bidFarmField,alpha.UNormToByte(),zBase: 0,layer: bspot.LayerBuilding(),buildC: c1);
 								}
 							}
+							else if(next.bid == bidMarket) {
+								DrawAnimatedSprite(marketFountain,1.0f,bspot,2f,(-1.0f/16.0f, -0.0f),2.0f,bspot.LayerEffect());
+
+							}
+							else if(next.bid == bidSmelter) {
+								DrawAnimatedSprite(smelterSmoke,3.0f,bspot,1f,(.125f, -0.35f),0.25f,bspot.LayerEffect());
+
+							}
+							else if (next.bid ==bidBlacksmith) {
+								DrawAnimatedSprite(genericSmoke,3.0f,bspot,1f,(-0.25f+1.0f/32.0f, -0.5f),0.25f,bspot.LayerEffect());
+
+							}
+
 						} // if any building is there
 
 						// draw overlays
@@ -898,14 +937,13 @@ namespace CnV
 			{
 				Assert(false);
 			}
-			if(!GameClient.TryLoadLitMaterialFromDDS($"runtime\\city\\animseq_gatehouse_flag_01",out flagAnim1,out _,wantShadow: false,unlit: false, city:true))
-			{
-				Assert(false);
-			}
-			if(!GameClient.TryLoadLitMaterialFromDDS($"runtime\\city\\animseq_gatehouse_flag_03",out flagAnim2,out _,wantShadow: false,unlit: false, city:true))
-			{
-				Assert(false);
-			}
+			GameClient.TryLoadLitMaterialFromDDS($"runtime\\city\\animseq_gatehouse_flag_01",out flagAnim1,out _,wantShadow: false,unlit: false,city: true);
+			GameClient.TryLoadLitMaterialFromDDS($"runtime\\city\\animseq_gatehouse_flag_03",out flagAnim2,out _,wantShadow: false,unlit: false,city: true);
+			GameClient.TryLoadLitMaterialFromDDS($"runtime\\city\\animseq_smoke_generic_01",out genericSmoke,out _,wantShadow: false,unlit: false,city: true);
+				GameClient.TryLoadLitMaterialFromDDS($"runtime\\city\\animseq_smoke_furnace",out smelterSmoke,out _,wantShadow: false,unlit: false,city: true);
+				GameClient.TryLoadLitMaterialFromDDS($"runtime\\city\\animseq_dustcloud_01",out dustCloud,out _,wantShadow: false,unlit: false,city: true);
+				GameClient.TryLoadLitMaterialFromDDS($"runtime\\city\\animseq_marketplace_fountain",out marketFountain,out _,wantShadow: false,unlit: false,city: true);
+
 			foreach(var build in BuildingDef.all)
 			{
 				if(build==null  || build.dimg == null || build.dimg.Length ==0 )

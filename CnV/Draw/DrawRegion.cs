@@ -1800,7 +1800,7 @@ internal partial class GameClient
 	}
 	//	static Vector2 _uv0;
 	//	static Vector2 _uv1;
-	private static void DrawFlag(int cid,Material sprite,Vector2 offset, float animationDuration=flagAnimDuration) {
+	private static void DrawFlag(int cid,Material sprite,Vector2 offset, float animationDuration=CityView.flagAnimDuration) {
 		var wc = cid.CidToWorld();
 		if(IsCulledWC(wc))
 			return;
@@ -1838,7 +1838,7 @@ internal partial class GameClient
 		//	new Color(blend, sprite.frameDeltaG, sprite.frameDeltaB, 255), depth:z );
 	}
 
-	internal static void DrawAnimatedSprite(Material sprite,float animationDuration,in Vector2 c0,in Vector2 c1, float offset) {
+	internal static void DrawAnimatedSprite(Material sprite,float animationDuration,in Vector2 c0,in Vector2 c1, float offset,int layer =Layer.effects ) {
 		var frames = sprite.GetFrameCount();
 		var dt = ((-animationT)/(animationDuration)+offset).Frac()*(frames);
 		//				var duFX = (int)(255*255*du);
@@ -1849,7 +1849,7 @@ internal partial class GameClient
 		var f1 = (frame+1) >= frames ? (byte)0 : ((frame+1)*4).AsByte();
 
 		byte alpha = 255;
-		draw.AddQuad(Layer.effects,sprite,c0,c1,
+		draw.AddQuad(layer,sprite,c0,c1,
 			new Vector2(0,0),
 			new Vector2(1,1),
 			new Color(blend,f0,f1,alpha),
@@ -1857,7 +1857,7 @@ internal partial class GameClient
 
 			depth: zBase);
 	}
-
+	
 
 
 	//private static Color GetAttackColor(Army attack)
