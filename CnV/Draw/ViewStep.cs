@@ -73,7 +73,7 @@ using static GameClient;
 			var dt = (float)timeSinceLastFrame.Min(1.0f/8.0f);// ((float)(timerT - animationT)).Min(0.25f);// (float)gameTime.ElapsedGameTime.TotalSeconds; // max delta is 1s
 			{                                                      //	lastDrawTime = _serverNow;
 				if(Player.viewHover != Player.maxId)
-					Player.viewHoverFade = (Player.viewHover + dt).Min(1.0f);
+					Player.viewHoverFade = (Player.viewHoverFade + dt*2).Min(1.0f);
 				Player.priorViewHoverFade = (Player.priorViewHoverFade - dt).Max(0.0f);
 
 				var hover = lastCanvasC;

@@ -240,7 +240,6 @@ namespace CnV.Draw
 							}
 							foreach (var mesh in list.meshes)
 							{
-								_device.SetVertexBuffers(null );
 								if(mesh.ib is not null)
 									_device.SetIndexBuffer(mesh.ib);
 								Assert(mesh.vb is not null);
@@ -251,7 +250,6 @@ namespace CnV.Draw
 								
 								_device.DrawPrimitives(PrimitiveType.PointList,mesh.baseVertex, mesh.primitiveCount);
 
-								_device.SetVertexBuffers(null );
 							}
 
 							list.Release();
