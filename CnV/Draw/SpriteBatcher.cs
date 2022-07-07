@@ -249,6 +249,8 @@ namespace CnV.Draw
 									_device.SetVertexBuffer(mesh.vb);
 								
 								_device.DrawPrimitives(PrimitiveType.PointList,mesh.baseVertex, mesh.primitiveCount);
+
+								_device.SetVertexBuffer(null);
 							}
 
 							list.Release();

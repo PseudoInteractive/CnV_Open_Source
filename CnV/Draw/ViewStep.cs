@@ -9,7 +9,7 @@ using static GameClient;
 	internal const float viewHoverZGain = 0.5f / 64.0f;
 	
 	internal const float viewHoverZDamping = 0.75f;
-	internal const float viewHoverElevationFreq = 12.0f;
+	internal const float viewHoverElevationFreq = 20.0f;
 
 	internal const float cameraControlFrequencyTight = 30.0f;
 	internal const float cameraControlFrequencyNormal = 8.0f;
@@ -70,9 +70,14 @@ using static GameClient;
 		{
 
 			//		var _serverNow = CnVServer.serverTime;
-			var dt = (float)timeSinceLastFrame.Min(1.0f/16.0f);// ((float)(timerT - animationT)).Min(0.25f);// (float)gameTime.ElapsedGameTime.TotalSeconds; // max delta is 1s
+			var dt = (float)timeSinceLastFrame.Min(1.0f/8.0f);// ((float)(timerT - animationT)).Min(0.25f);// (float)gameTime.ElapsedGameTime.TotalSeconds; // max delta is 1s
 			{                                                      //	lastDrawTime = _serverNow;
+				if(Player.viewHover != Player.maxId)
+					Player.viewHoverFade = (Player.viewHover + dt).Min(1.0f);
+				Player.priorViewHoverFade = (Player.priorViewHoverFade - dt).Max(0.0f);
+
 				var hover = lastCanvasC;
+
 				if(hover != 0 && World.GetTile(hover.CidToWorldC()).type != 0)
 				{
 					if(!viewHovers.Exists(a => a.cid == lastCanvasC))

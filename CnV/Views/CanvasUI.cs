@@ -78,7 +78,7 @@ using Game;
 							//var d = b.def;
 							//	contToolTip = $"({cc.x},{cc.y})\n{d.Bn} {b.bl}";
 							Spot.viewHover = default;
-							Player.viewHover = PlayerId.MaxValue;
+							Player.SetViewHover( PlayerId.MaxValue );
 							//ToolTips.spotToolTip = null;
 							CityView.hovered = cc;
 							CityBuild.PreviewBuildAction();
@@ -104,9 +104,9 @@ using Game;
 						{
 
 							//Spot.viewHover = default;
-							Player.viewHover = PlayerId.MaxValue;
+							var newViewHover = PlayerId.MaxValue;
 							ref string toolTip = ref ToolTips.spotToolTip;
-						toolTip = null;
+							toolTip = null;
 
 							lastCanvasC = cid;
 							var packedId = World.GetWorldId(c);
@@ -127,7 +127,7 @@ using Game;
 											}
 											else
 											{
-												Player.viewHover = data.player;
+												newViewHover = data.player;
 												
 											}
 										}
@@ -149,6 +149,7 @@ using Game;
 								}
 								break;
 							}
+							Player.SetViewHover(newViewHover);
 
 							if(World.rawPrior0 != null)
 							{
@@ -242,7 +243,7 @@ using Game;
 							//	toolTip = sb.ToString();
 							//}
 							ToolTipWindow.TipChanged();
-						World.UpdateTintData( );
+							World.UpdateTintData( );
 						}
 					}
 				}

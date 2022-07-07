@@ -287,7 +287,7 @@ public partial class UserTab:Page, IANotifyPropertyChanged {
 			}
 			
 		dataGrids.Clear();
-		System.GC.Collect(2,GCCollectionMode.Default,true,true);
+//		System.GC.Collect(2,GCCollectionMode.Default,true,true);
 	}
 
 	// Callback
@@ -303,7 +303,7 @@ public partial class UserTab:Page, IANotifyPropertyChanged {
 	internal static Task ShowOrAdd(TabInfo ti,bool selectMe = true,bool onlyIfClosed = false,TabPage page=null,UserTab tab=null)
 
 	{
-		System.GC.Collect(2,GCCollectionMode.Default,true,true);
+	//	System.GC.Collect(2,GCCollectionMode.Default,true,true);
 		return AppS.DispatchOnUIThreadTask(() =>
 	{
 	

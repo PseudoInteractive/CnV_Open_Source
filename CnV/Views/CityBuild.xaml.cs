@@ -1248,7 +1248,10 @@ namespace CnV
 		private async void Abandon_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs _args)
 		{
 		//	Assert(object.ReferenceEquals(args.Parameter, City.GetBuild()));
-
+			Assert(Sim.isInteractive);
+			if(!Sim.isInteractive) {
+				return;
+			}
 
 			buildFlyout.Hide();
 			var cid = City.build;
@@ -1259,8 +1262,11 @@ namespace CnV
 				var p = city.player;
 				//city.pid = 0; //
 				if(p.cities.Length > 1) {
+					// Switch to another city please
 					var closest = p.myCities.Min<City,(float d, City c)>(a => (a == city ? float.MaxValue : cid.DistanceTo(a.cid), a));
-					await CnVClient.CitySwitch(closest.c.cid,false);
+					
+					
+						await CnVClient.CitySwitch(closest.c.cid,false);
 				}
 				else {
 					// attempt to abandom first city

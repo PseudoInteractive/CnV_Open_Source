@@ -766,7 +766,7 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 
 		internal static void Invalidate()
 		{
-			if(Sim.isPastWarmup && instance != null) {
+			if(Sim.isInteractiveOrHistoric && instance != null) {
 				nextTextUpdateTick=0;
 				AppS.QueueOnUIThread(BuildCityChanged);
 			}

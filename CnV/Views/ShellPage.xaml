@@ -21,26 +21,199 @@
 
 
 
-    <Grid x:Name="_rootGrid" Canvas.ZIndex="33" Background="{x:Null}" >
+    <Grid x:Name="_rootGrid" Canvas.ZIndex="33" Background="{x:Null}" 
+		                IsHitTestVisible="True" >
 		<Grid.RowDefinitions>
-			<RowDefinition Height="24" />
+			<RowDefinition Height="auto" />
 			<RowDefinition Height="*" />
 		</Grid.RowDefinitions>
-		<Grid x:Name="AppTitleBar"
+		<Grid x:Name="AppTitleBar" x:FieldModifier="internal"
 			  Background ="{StaticResource SystemAccentColorDark1}"
               IsHitTestVisible="True"
+			  HorizontalAlignment="Stretch"
               VerticalAlignment="Top">
-			<Image x:Name="AppIcon" x:FieldModifier="internal"
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition x:Name="LeftPaddingColumn" Width="0" x:FieldModifier="internal" />
+				<!-- 0 HTML column -->
+				<ColumnDefinition Width="auto" x:Name="IconColumn" x:FieldModifier="internal" />
+				<!-- 0 HTML column -->
+				<ColumnDefinition Width="auto"  x:Name="TitleColumn" x:FieldModifier="internal"  />
+				<!-- 1 black space for popups -->
+				<ColumnDefinition Width="auto"  x:Name="PlayerButtonsColumn" x:FieldModifier="internal"  />
+				<!-- 3 Tab View -->
+				<ColumnDefinition Width="*"  x:Name="CommandColumn" x:FieldModifier="internal"  />
+				<ColumnDefinition x:Name="RightDragColumn" Width="32" x:FieldModifier="internal" />
+				<ColumnDefinition x:Name="RightPaddingColumn" Width="0" x:FieldModifier="internal" />
+			</Grid.ColumnDefinitions>
+			
+			<Image x:Name="AppIcon" x:FieldModifier="internal" Grid.Column="1"
 				   Source="/Assets/cnv.png" 
                    HorizontalAlignment="Left"
 				   VerticalAlignment="Center"
-				   Margin="2,1,1,0"
+					Height="40"
+				   Margin="2,0,0,0"
                    Stretch="Uniform" />
-			<TextBlock x:Name="AppTitleBarText" x:FieldModifier="internal"
+			<TextBlock Grid.Column ="2" x:Name="AppTitleBarText" x:FieldModifier="internal"
                        VerticalAlignment="Center"
                        TextWrapping="NoWrap"
                        Style="{StaticResource TextBlockSmall}"
-                       Margin="70,0,0,0"/>
+                       Margin="4,0,0,0"/>
+			<cnv:PlayerStats 
+				Grid.Column ="3"
+				x:Name="playerStats"
+				VerticalAlignment="Center"
+				x:Load="False"
+				Margin="0"
+				Padding="0"	/>
+
+			<CommandBar  Grid.Column ="4"  IsHitTestVisible="True"  DefaultLabelPosition="Collapsed" IsSticky="True" IsTabStop="True" Padding="0" MinHeight="20" Height="40"  
+						x:Name="commandBar" x:FieldModifier="public"  >
+
+
+
+				<!--<StackPanel Orientation="Horizontal" Spacing="4">
+
+				<ProgressRing x:Name="progress" IsActive="False" />
+			<TextBlock  x:Name="work" x:FieldModifier="public" Margin="6,0,6,0" VerticalAlignment="Center" Width="255" />
+				<TextBox  x:Name="coords" Margin="4,0,4,0" Width="100" TextAlignment="Center"  Text="000:000" HorizontalAlignment="Center" x:FieldModifier="public" KeyDown="coords_KeyDown"/>
+				<ComboBox x:Name="windowLayout" SelectedIndex="{x:Bind layout, Mode=TwoWay}"  VerticalAlignment="Center" Margin="4,0,4,0"
+						          ToolTipService.ToolTip="Select a view layout"  ItemsSource="{x:Bind layoutOptions}"  />
+
+
+
+
+
+				<ComboBox x:Name="cityListBox" x:FieldModifier="public"
+                     IsEditable="True"
+					TextSubmitted="CityListSubmitted"
+                      Width="120"
+                      SelectedValuePath="id"
+                      DisplayMemberPath="name"
+                      ItemsSource="{x:Bind game:CityList.selections, Mode=OneTime}"
+                      VerticalAlignment="Center" ToolTipService.ToolTip="Active City List"
+							  
+                      Margin="4,0,4,0" />
+				
+				</StackPanel>-->
+
+				<CommandBar.PrimaryCommands  >
+					<AppBarElementContainer x:Name="progressContainer" VerticalAlignment="Center">
+						<ProgressBar x:Name="progress" IsIndeterminate="True" Width="32" IsEnabled="True" Minimum="0" Maximum="1" />
+					</AppBarElementContainer>
+					<AppBarElementContainer  x:Name="workContainer" VerticalAlignment="Center"  >
+						<TextBlock  x:Name="work" x:FieldModifier="public" Margin="6,0,6,0" VerticalAlignment="Center" Width="255" />
+					</AppBarElementContainer>
+
+					<AppBarElementContainer VerticalAlignment="Center" AllowFocusOnInteraction="True" IsTabStop="True">
+						<ComboBox x:Name="windowLayout"  SelectedIndex="{x:Bind layout, Mode=TwoWay}"  VerticalAlignment="Center" Margin="4,0,4,0"
+						          ToolTipService.ToolTip="Select a view layout"  ItemsSource="{x:Bind layoutOptions}"  />
+					</AppBarElementContainer>
+
+					<AppBarButton x:Name="ContinentFilter"  x:FieldModifier="public"
+					              Content="Cont/Tags"
+					             VerticalAlignment="Center" 
+					              FontSize="{StaticResource MediumFontSize}"
+					              FontFamily="{StaticResource CnvIcons}"
+					              RightTapped="FilterRightTapped"
+					              Click="{x:Bind views:ShellPage.ContinentFilterClick}"
+					              AccessKey="F"
+					              ToolTipService.ToolTip="Yet another Continent filter.  Uncheck all to show everything"  />
+
+					<AppBarButton x:Name="HomeButton" Click="{x:Bind views:ShellPage.BuildHomeClick}" 
+								  RightTapped="{x:Bind views:ShellPage.BuildHomeRightTapped}" 
+								  VerticalAlignment="Center" 
+					              ToolTipService.ToolTip="&#x0a;Click to switch between region view and city view&#x0a;Right clck for menu"
+					              AccessKey="H" Icon="Home" />
+
+
+
+					<AppBarButton Click="PriorCityClick"  
+								  VerticalAlignment="Center" 
+					              ToolTipService.ToolTip="Switch to prior city in the current city list"
+					              AccessKey="Left" Icon="Previous"/>
+					<AppBarButton Click="NextCityClick"  
+VerticalAlignment="Center" 
+					              ToolTipService.ToolTip="Switch to next city in the current city list" 
+							             AccessKey="Right" Icon="Next"/>
+					<AppBarButton x:Name="focus" Margin="4,0,4,0" Width="140"  VerticalAlignment="Center" x:FieldModifier="public"
+                            Click="FocusClick" RightTapped="{x:Bind views:ShellPage.CityRightTapped}" 
+								
+                            ToolTipService.ToolTip="Spot with Focus.&#x0a;Click to re-center or swith to this city&#x0a;Right clck for menu" Visibility="Collapsed"/>
+
+
+
+
+
+					<AppBarButton Click="{x:Bind cnv:NavStack.BackClick}"  Icon="Back" Label="Back" RightTapped="BackRightTapped" 
+								  VerticalAlignment="Center" 
+                          ToolTipService.ToolTip="Switch to most recently visited city&#x0a;Right click to view history"  AccessKey=","/>
+
+
+					<AppBarButton Click="{x:Bind cnv:NavStack.ForwardClick}" Icon="Forward" Label="Forward"  RightTapped="ForwardRightTapped" 
+								  VerticalAlignment="Center" 
+                           ToolTipService.ToolTip="Move forward in city history&#x0a;This is only useful after you have pressed 'Back'&#x0a;Right click to view forward history" AccessKey="." />
+
+
+					<AppBarButton x:Name="Fresh"
+                              Label="Refresh"
+                              Click="Refresh"
+                          RightTapped="RefreshX"
+                      VerticalAlignment="Center" 
+                               ToolTipService.ToolTip="When in doubt, refresh - Right click to refresh world data"
+								  AccessKey="F5"
+                              Icon="RepeatAll">
+
+						<!--<AppBarButton.Resources>
+						<TeachingTip x:Key="RefreshTip"
+                                IsLightDismissEnabled="True" 
+                                Title="Refresh"
+	                          x:FieldModifier="public"
+                                
+                                Subtitle="If something is not updated or missing, try this button, use right click to refresh many things">
+							<TextBlock Text="Right click will refresh all World data (castles, cities, bosses etc)" />
+						</TeachingTip>
+					</AppBarButton.Resources>-->
+					</AppBarButton>
+					<AppBarSeparator/>
+
+					<AppBarButton 
+					             Icon="Send"
+					             VerticalAlignment="Center" 
+					              Click="SendError"
+					              ToolTipService.ToolTip="Send an error Report"  />
+
+					<AppBarButton Label="Settings"  VerticalAlignment="Center"  Click="ShowSettings" Icon="Setting" />
+
+
+				</CommandBar.PrimaryCommands>
+				<CommandBar.SecondaryCommands>
+					<AppBarButton 
+					             Icon="Save"
+					             Label="Save timeline.."
+					              Click="SaveTimeline"
+					              ToolTipService.ToolTip="Backs up event timeline"  />
+					<AppBarButton 
+					             Icon="OpenFile"
+					             
+					              Click="LoadTimeline"
+						 Label="Load timeline.."
+					              ToolTipService.ToolTip="Restores a saved timeline"  />
+					<AppBarButton 
+					             Icon="Admin"
+					             
+					              Click="FormAlliance"
+						 Label="Form Alliance.." />
+					<AppBarButton 
+					             Icon="Comment"
+					             
+					              Click="ShowAllianceInvites"
+						 Label="Alliance Invites.." />
+
+				</CommandBar.SecondaryCommands>
+			</CommandBar>
+
+
+			
 		</Grid>
 		
 
@@ -76,155 +249,6 @@
 			<Canvas x:Name="toolTipHolder" Grid.Column="2" Width="140" IsHitTestVisible="False" IsTabStop="False" Background="{x:Null}" 
 		HorizontalAlignment="Right" x:FieldModifier="public" VerticalAlignment="Stretch" />
 
-			<CommandBar Grid.ColumnSpan="3"   DefaultLabelPosition="Collapsed" IsSticky="True" IsTabStop="True" Margin="0" Padding="0" MinHeight="20" Height="40"  
-						x:Name="commandBar" x:FieldModifier="public"  >
-		<CommandBar.Content >
-					<cnv:PlayerStats 
-				x:Name="playerStats"
-				VerticalAlignment="Center"
-				x:Load="False"
-				Margin="0"
-				Padding="0"	/>
-				
-				</CommandBar.Content>
-				
-			
-
-					<!--<StackPanel Orientation="Horizontal" Spacing="4">
-
-				<ProgressRing x:Name="progress" IsActive="False" />
-			<TextBlock  x:Name="work" x:FieldModifier="public" Margin="6,0,6,0" VerticalAlignment="Center" Width="255" />
-				<TextBox  x:Name="coords" Margin="4,0,4,0" Width="100" TextAlignment="Center"  Text="000:000" HorizontalAlignment="Center" x:FieldModifier="public" KeyDown="coords_KeyDown"/>
-				<ComboBox x:Name="windowLayout" SelectedIndex="{x:Bind layout, Mode=TwoWay}"  VerticalAlignment="Center" Margin="4,0,4,0"
-						          ToolTipService.ToolTip="Select a view layout"  ItemsSource="{x:Bind layoutOptions}"  />
-
-
-
-
-
-				<ComboBox x:Name="cityListBox" x:FieldModifier="public"
-                     IsEditable="True"
-					TextSubmitted="CityListSubmitted"
-                      Width="120"
-                      SelectedValuePath="id"
-                      DisplayMemberPath="name"
-                      ItemsSource="{x:Bind game:CityList.selections, Mode=OneTime}"
-                      VerticalAlignment="Center" ToolTipService.ToolTip="Active City List"
-							  
-                      Margin="4,0,4,0" />
-				
-				</StackPanel>-->
-	
-		<CommandBar.PrimaryCommands  >
-					<AppBarElementContainer x:Name="progressContainer" Visibility="Collapsed" VerticalAlignment="Center">
-						<ProgressRing x:Name="progress" IsActive="False" />
-					</AppBarElementContainer>
-					<AppBarElementContainer Visibility="Collapsed" x:Name="workContainer" >
-						<TextBlock  x:Name="work" x:FieldModifier="public" Margin="6,0,6,0" VerticalAlignment="Center" Width="255" />
-					</AppBarElementContainer>
-					
-					<AppBarElementContainer VerticalAlignment="Center" AllowFocusOnInteraction="True" IsTabStop="True">
-				<ComboBox x:Name="windowLayout"  SelectedIndex="{x:Bind layout, Mode=TwoWay}"  VerticalAlignment="Center" Margin="4,0,4,0"
-						          ToolTipService.ToolTip="Select a view layout"  ItemsSource="{x:Bind layoutOptions}"  />
-					</AppBarElementContainer>
-
-					<AppBarButton x:Name="ContinentFilter"  x:FieldModifier="public"
-					              Content="Cont/Tags"
-					             
-					              FontSize="{StaticResource MediumFontSize}"
-					              FontFamily="{StaticResource CnvIcons}"
-					              RightTapped="FilterRightTapped"
-					              Click="{x:Bind views:ShellPage.ContinentFilterClick}"
-					              AccessKey="F"
-					              ToolTipService.ToolTip="Yet another Continent filter.  Uncheck all to show everything"  />
-
-					<AppBarButton x:Name="HomeButton" Click="{x:Bind views:ShellPage.BuildHomeClick}" 
-								  RightTapped="{x:Bind views:ShellPage.BuildHomeRightTapped}" 
-					              ToolTipService.ToolTip="&#x0a;Click to switch between region view and city view&#x0a;Right clck for menu"
-					              AccessKey="H" Icon="Home" />
-				
-			
-			
-					<AppBarButton Click="PriorCityClick"  
-					              ToolTipService.ToolTip="Switch to prior city in the current city list"
-					              AccessKey="Left" Icon="Previous"/>
-					<AppBarButton Click="NextCityClick"  
-
-					              ToolTipService.ToolTip="Switch to next city in the current city list" 
-							             AccessKey="Right" Icon="Next"/>
-					<AppBarButton x:Name="focus" Margin="4,0,4,0" Width="140"  VerticalAlignment="Center" x:FieldModifier="public"
-                            Click="FocusClick" RightTapped="{x:Bind views:ShellPage.CityRightTapped}" 
-                            ToolTipService.ToolTip="Spot with Focus.&#x0a;Click to re-center or swith to this city&#x0a;Right clck for menu" Visibility="Collapsed"/>
-
-
-
-
-
-			<AppBarButton Click="{x:Bind cnv:NavStack.BackClick}"  Icon="Back" Label="Back" RightTapped="BackRightTapped" 
-                          ToolTipService.ToolTip="Switch to most recently visited city&#x0a;Right click to view history"  AccessKey=","/>
-
-
-				<AppBarButton Click="{x:Bind cnv:NavStack.ForwardClick}" Icon="Forward" Label="Forward"  RightTapped="ForwardRightTapped" 
-                           ToolTipService.ToolTip="Move forward in city history&#x0a;This is only useful after you have pressed 'Back'&#x0a;Right click to view forward history" AccessKey="." />
-
-
-			<AppBarButton x:Name="Fresh"
-                              Label="Refresh"
-                              Click="Refresh"
-                          RightTapped="RefreshX"
-                      
-                               ToolTipService.ToolTip="When in doubt, refresh - Right click to refresh world data"
-								  AccessKey="F5"
-                              Icon="RepeatAll">
-
-					<!--<AppBarButton.Resources>
-						<TeachingTip x:Key="RefreshTip"
-                                IsLightDismissEnabled="True" 
-                                Title="Refresh"
-	                          x:FieldModifier="public"
-                                
-                                Subtitle="If something is not updated or missing, try this button, use right click to refresh many things">
-							<TextBlock Text="Right click will refresh all World data (castles, cities, bosses etc)" />
-						</TeachingTip>
-					</AppBarButton.Resources>-->
-				</AppBarButton>
-			<AppBarSeparator/>
-
-					<AppBarButton 
-					             Icon="Send"
-					             
-					              Click="SendError"
-					              ToolTipService.ToolTip="Send an error Report"  />
-
-					<AppBarButton Label="Settings"   Click="ShowSettings" Icon="Setting" />
-
-
-				</CommandBar.PrimaryCommands>
-		<CommandBar.SecondaryCommands>
-					<AppBarButton 
-					             Icon="Save"
-					             Label="Save timeline.."
-					              Click="SaveTimeline"
-					              ToolTipService.ToolTip="Backs up event timeline"  />
-					<AppBarButton 
-					             Icon="OpenFile"
-					             
-					              Click="LoadTimeline"
-						 Label="Load timeline.."
-					              ToolTipService.ToolTip="Restores a saved timeline"  />
-					<AppBarButton 
-					             Icon="Admin"
-					             
-					              Click="FormAlliance"
-						 Label="Form Alliance.." />
-					<AppBarButton 
-					             Icon="Comment"
-					             
-					              Click="ShowAllianceInvites"
-						 Label="Alliance Invites.." />
-				
-				</CommandBar.SecondaryCommands>
-	</CommandBar>
 
 
 

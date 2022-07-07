@@ -205,7 +205,7 @@ internal partial class GameClient
 #endif
 
 		//parallaxZ0 = 1024 * 64.0f / cameraZoomLag;
-		var isFocused = Sim.isInitialized&&AppS.isForeground;
+		//var isFocused = Sim.isInitialized&&AppS.isForeground;
 
 		try {
 			var elapsed = timer.Elapsed;
@@ -536,6 +536,7 @@ internal partial class GameClient
 					device.SetConstantBuffer(ShaderStage.Pixel,0,cb);
 					device.SetConstantBuffer(ShaderStage.Vertex,0,cb);
 					device.SetConstantBuffer(ShaderStage.Geometry,0,cb);
+					device.UpdateAllConstantBuffers();
 
 				}
 			}
@@ -667,7 +668,8 @@ internal partial class GameClient
 			//			shadowColor = new Color() { A = 128 };
 
 
-			if(hideSceneCounter <= 0) {
+//			if(hideSceneCounter <= 0)
+				{
 
 				//Assert(City.build != 0);
 				//	if(false)
@@ -1469,18 +1471,20 @@ internal partial class GameClient
 						var cid = Spot.viewHover;
 						DrawAccent(cid.cid,1.25f,hoverColor);
 					}
-
-					if(Player.viewHover != PlayerId.MaxValue) {
-						if(Player.TryGetValue(Player.viewHover,out var p)) {
-							try {
-								foreach(var cid in p.cities) {
-									DrawFlag(cid,CityView.flagAnim0,new System.Numerics.Vector2(-4,4));
+					for(int j = 0;j<2;++j) {
+						(var h, var fade) = j==0 ? (Player.viewHover, Player.viewHoverFade) : (Player.priorViewHover, Player.priorViewHoverFade);
+						if(h != PlayerId.MaxValue) {
+							if(Player.TryGetValue(h,out var p)) {
+								try {
+									foreach(var cid in p.cities) {
+										DrawFlag(cid,CityView.flagAnim0,new System.Numerics.Vector2(-4,4),(fade.SCurve()*255f).RoundToUInt().AsByte());
+									}
 								}
-							}
-							catch(Exception ex) {
-								//LogEx(ex); // collection might change, if this happens just about this render, its 
-							}
+								catch(Exception ex) {
+									//LogEx(ex); // collection might change, if this happens just about this render, its 
+								}
 
+							}
 						}
 					}
 
@@ -1800,7 +1804,7 @@ internal partial class GameClient
 	}
 	//	static Vector2 _uv0;
 	//	static Vector2 _uv1;
-	private static void DrawFlag(int cid,Material sprite,Vector2 offset, float animationDuration=CityView.flagAnimDuration) {
+	private static void DrawFlag(int cid,Material sprite,Vector2 offset,byte alpha, float animationDuration=CityView.flagAnimDuration) {
 		var wc = cid.CidToWorld();
 		if(IsCulledWC(wc))
 			return;
@@ -1818,7 +1822,7 @@ internal partial class GameClient
 		}
 		var c0 = new Vector2(c.X,c.Y - dv * 0.2f * 1);
 		var c1 = new Vector2(c.X + dv * 0.5f * 1f,c.Y + dv * 0.2f * 1);
-		DrawAnimatedSprite(sprite,animationDuration, c0, c1, cid.CidToRandom());
+		DrawAnimatedSprite(sprite,animationDuration, c0, c1, cid.CidToRandom(),Layer.effects, alpha);
 
 		//	_uv0 = uv0;
 		//	_uv1 = uv1;
@@ -1838,7 +1842,7 @@ internal partial class GameClient
 		//	new Color(blend, sprite.frameDeltaG, sprite.frameDeltaB, 255), depth:z );
 	}
 
-	internal static void DrawAnimatedSprite(Material sprite,float animationDuration,in Vector2 c0,in Vector2 c1, float offset,int layer =Layer.effects ) {
+	internal static void DrawAnimatedSprite(Material sprite,float animationDuration,in Vector2 c0,in Vector2 c1, float offset,int layer =Layer.effects, byte alpha = 255 ) {
 		var frames = sprite.GetFrameCount();
 		var dt = ((-animationT)/(animationDuration)+offset).Frac()*(frames);
 		//				var duFX = (int)(255*255*du);
@@ -1848,7 +1852,7 @@ internal partial class GameClient
 		var f0 = (frame*4).AsByte();
 		var f1 = (frame+1) >= frames ? (byte)0 : ((frame+1)*4).AsByte();
 
-		byte alpha = 255;
+		
 		draw.AddQuad(layer,sprite,c0,c1,
 			new Vector2(0,0),
 			new Vector2(1,1),
@@ -2394,8 +2398,8 @@ internal partial class GameClient
 	protected override bool BeginDraw() {
 		if(!AppS.isForeground)
 			return false;
-		if(!Sim.isInitialized)
-			return false;
+	//	if(!Sim.isInitialized)
+	//		return false;
 		if(faulted)
 			return false;
 		if(!AGame.contentLoadingComplete)
@@ -2403,7 +2407,7 @@ internal partial class GameClient
 		if(!AppS.isStateActive)
 			return false;
 
-		if(Sim.isWarmup)
+		if(!Sim.isWarmupOrInteractive)
 			return false;
 		if(TilesReady())
 			World.UpdateTileDatas();

@@ -161,7 +161,7 @@ namespace CnV.Views
 
 			//					lastSelected = sel;
 
-			if(!Sim.isPastWarmup && PlayerStats.instance is not null)
+			if(!Sim.isInteractiveOrHistoric && PlayerStats.instance is not null)
 				return;
 
 				AppS.QueueOnUIThread(() => {

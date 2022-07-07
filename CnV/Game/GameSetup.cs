@@ -148,12 +148,12 @@ namespace CnV
 					int counter = 0;
 					while(!Sim.isPastWarmup) {
 						await Task.Delay(1000).ConfigureAwait(false);
-						if( (++counter % 2) == 0 )
-						{
-							var t = (float) (Sim.simTime - Sim.serverStartTime)/(Sim.NowToServerSeconds() -  Sim.serverStartTime);
-							ShellPage.WorkUpdate($"Loading {t.Squared():P0}");
+						//if( (++counter % 2) == 0 )
+						//{
+						//	var t = (float)((double) (Sim.simTime - Sim.serverStartTime)/(Sim.NowToServerSeconds() -  Sim.serverStartTime));
+						//	ShellPage.WorkUpdate($"Loading {t.Squared():P0}", t.Squared() );
 
-						}
+						//}
 					}
 				}
 				Assert(Sim.isPastWarmup);
@@ -239,14 +239,15 @@ namespace CnV
 				}
 
 				//UpdatePPDT();
-				var cid = City.myCities.First().cid;
+				Assert(City.build != 0);
+//				var cid = City.myCities.First().cid;
 
 		//		Assert( CnVServer.worldId != 0);
 				
-				await CitySwitch(cid);
-				View.SetViewTargetInstant(cid.CidToWorldV());
-				ShellPage.SetViewModeRegion();
-				Assert(Spot.build ==cid && Spot.focus == cid);
+	//			await CitySwitch(cid);
+			//	View.SetViewTargetInstant(cid.CidToWorldV());
+				//ShellPage.SetViewModeRegion();
+		//		Assert(Spot.build ==cid && Spot.focus == cid);
 			//	Spot.build = Spot.focus = cid;
 				//NavStack.Push(cid);
 				//AGame.CameraC = cid.CidToWorldV();
@@ -309,7 +310,7 @@ namespace CnV
 		}
 		finally
 		{
-			Interlocked.Decrement(ref View.hideSceneCounter);
+		//	Interlocked.Decrement(ref View.hideSceneCounter);
 		}
 		}
 	

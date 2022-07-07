@@ -188,12 +188,14 @@ namespace CnV.Views
 
 		//	protected override void OnKeyDown(KeyRoutedEventArgs e) => Trace($"Key: {e.Key} {e.OriginalKey} {e.OriginalSource.ToString()}");
 		//		protected override void OnPreviewKeyDown(KeyRoutedEventArgs e) => Trace($"KeyP: {e.Key} {e.OriginalKey} {e.OriginalSource.ToString()}");
-		public static void WorkStart(string desc) {
+		public static void WorkStart(string desc, bool isDeterminate=false) {
 			AppS.DispatchOnUIThreadLow(() => {
 				if(!workQueue.Any()) {
-					(instance.progressContainer).Visibility = Visibility.Visible;
-					(instance.workContainer).Visibility = Visibility.Visible;
-					instance.progress.IsActive = true;
+					instance.workContainer.Visibility = Visibility.Visible;
+					instance.progressContainer.Visibility=Visibility.Visible;
+					instance.progress.IsIndeterminate = !isDeterminate;
+
+//					instance.progress.Value=0.25f;
 					// FIX
 					workStarted              = DateTime.UtcNow;
 					instance.work.Text       = desc;
@@ -204,9 +206,27 @@ namespace CnV.Views
 		}
 
 		// Todo:  Queue updates with tasks
-		public static void WorkUpdate(string desc) {
+		public static void WorkUpdate(string desc, float? completion=null) {
 
-			AppS.DispatchOnUIThreadLow(() => { instance.work.Text = desc; });
+			AppS.DispatchOnUIThreadLow(() => 
+			{
+				instance.work.Text = desc;
+				if(instance.workContainer.Visibility == Visibility.Collapsed) {
+					instance.workContainer.Visibility = Visibility.Visible;
+					instance.progressContainer.Visibility=Visibility.Visible;
+
+				}
+				if(completion != null) {
+					instance.progress.IsIndeterminate=false;
+					instance.progress.Value = completion.Value;
+				}
+				else {
+					instance.progress.IsIndeterminate=true;
+
+				}
+
+			}
+			);
 		}
 
 		public static void WorkEnd(string desc = null) {
@@ -228,13 +248,16 @@ namespace CnV.Views
 				}
 
 				if(!workQueue.Any()) {
-					instance.progress.IsActive = false;
+					//instance.progress.IsActive = false;
+					instance.workContainer.Visibility = Visibility.Collapsed;
+					instance.progressContainer.Visibility=Visibility.Collapsed;
 
-					(instance.progressContainer).Visibility = Visibility.Collapsed;
-					(instance.workContainer).Visibility = Visibility.Collapsed;
 
 				}
 				else {
+					instance.progress.IsIndeterminate=true;
+					instance.progress.Value=0.5f;
+				
 					workStarted        = DateTime.UtcNow;
 					instance.work.Text = workQueue.First();
 				}
@@ -256,9 +279,10 @@ namespace CnV.Views
 			//			instance = this;
 			InitializeComponent();
 			//		RequestedTheme = ElementTheme.Dark; // default theme
-			AppS.window.ExtendsContentIntoTitleBar = true;
-	        AppS.window.SetTitleBar(AppTitleBar);
 			instance = this;
+			App.SetupTitleBar();
+			//AppS.window.ExtendsContentIntoTitleBar = true;
+	        //AppS.window.SetTitleBar(AppTitleBar);
 			App.UpdateAppTitleUI();
 		}
 		//		public static bool rightTabsVisible => Settings.layout>=Layout.c;
@@ -332,11 +356,9 @@ namespace CnV.Views
 				CityUI.Init();
 				NavStack.Init();
 				// hook up delegates
-				WorkScope.Start  = WorkStart;
-				WorkScope.End    = WorkEnd;
-				WorkScope.Update = WorkUpdate;
+	
 
-				WorkStart("Sign in");
+				WorkStart("Sign in",true);
 
 				//		SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += App.App_CloseRequested; ;
 				//typeof(Telerik.UI.Xaml.Controls.RadDataForm).Assembly.GetType("Telerik.UI.Xaml.Controls.TelerikLicense").GetField("messageDisplayed",BindingFlags.NonPublic|BindingFlags.Static).SetValue(null,true,BindingFlags.Static|BindingFlags.NonPublic,null,null);
@@ -632,6 +654,7 @@ namespace CnV.Views
 				await ShellPage.RefreshX();
 				TabPage.ShowTabs();
 
+				HistoricModeUIUpdate(); // Disable buttons
 				AppS.DispatchOnUIThread(ShellPage.SetupNonCoreInput);
 				AppS.QueueIdleTask(DailyDialog.DailyRewardTask);
 				{
@@ -1699,7 +1722,7 @@ namespace CnV.Views
 		//}
 
 		public static void CityListNotifyChange(bool itemsChanged) {
-			if(!Sim.isPastWarmup)
+			if(!Sim.isInteractiveOrHistoric)
 				return;
 			AppS.QueueOnUIThread(() => {
 				//               Log("CityListChange");

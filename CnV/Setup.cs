@@ -14,6 +14,8 @@ using Microsoft.Windows.AppLifecycle;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
+using WinRT.Interop;
+
 namespace CnV;
 
 using static AppS;
@@ -569,10 +571,18 @@ partial class App {
 	internal static void UpdateAppTitleUI()
      {
 		
-		ShellPage.instance.AppTitleBarText.Text= (Player.activeId!=0)?
-				(Sim.isPastWarmup ? 	$"Conquest and Virtue Alpha, W{World.id} - {Player.active.shortName}, {Player.active.Title}, {Player.active.allianceTitleS} of {Player.active.alliance}  (version {AppS.currentVersion})"
+		var title =  (Player.activeId!=0)?
+				(Sim.isPastWarmup ? 	$"CnV - {Player.active.shortName}"
 				:	$"Conquest and Virtue Alpha, W{World.id} - {Player.active.shortName}  (version {AppS.currentVersion})")
 				:	$"Conquest and Virtue Alpha, W{World.id} Sign in to Discord (version {AppS.currentVersion})";
+
+		if(AppWindowTitleBar.IsCustomizationSupported()) {
+			ShellPage.instance.AppTitleBarText.Text = title;
+		}
+		else 
+		{
+			appWindow.Title = title;
+		}
 
             //    Application.Current.Resources["WindowCaptionForeground"] = theme switch
             //    {
@@ -620,8 +630,17 @@ partial class App {
 		//				title.BackgroundColor = c;
 		//				title.ButtonBackgroundColor = Windows.UI.Color.FromArgb(0xFF,0x24,0x0B,0x0B); ;
 
-            Application.Current.Resources["WindowCaptionBackground"] = new SolidColorBrush(Colors.Transparent);
-            Application.Current.Resources["WindowCaptionBackgroundDisabled"] = new SolidColorBrush(Colors.Transparent);
+			appWindow.TitleBar.ButtonBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(0x80,0x40,0x20,0x20); 
+//			appWindow.TitleBar.ButtonForegroundColor = Microsoft.UI.ColorHelper.FromArgb(0xff,0x80,0x40,0x60); 
+		//	appWindow.TitleBar.ButtonHoverBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(0x66,0x40,0x20,0x44); 
+		//	appWindow.TitleBar.ButtonPressedBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(0xff,0xff,0xff,0xff); 
+  //          Application.Current.Resources["WindowCaptionBackground"] = new SolidColorBrush(Colors.Transparent);
+  //          Application.Current.Resources["WindowCaptionBackgroundDisabled"] = new SolidColorBrush(Colors.Transparent);
+		//Application.Current.Resources["WindowCaptionButtonBackgroundPressed"] =  AppS.Brush(0x66,0x40,0x20,0x20);
+		//Application.Current.Resources["WindowCaptionButtonBackgroundPointerOver"] =  AppS.Brush(0x66,0x40,0x40,0x40);
+		//Application.Current.Resources["WindowCaptionForeground"] =  AppS.Brush(0x66,0x40,0x40,0x90);
+		//Application.Current.Resources["WindowCaptionBackgroundDisabled"] = new SolidColorBrush(Colors.Transparent);
+		//Application.Current.Resources["WindowCaptionBackgroundDisabled"] = new SolidColorBrush(Colors.Transparent);
 
             var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(AppS.window);
             if (hwnd == GetActiveWindow())
@@ -635,5 +654,126 @@ partial class App {
                 SendMessage(hwnd, WMACTIVATE, WAINACTIVE, IntPtr.Zero);
             }
  	}
+	internal static void SetupTitleBar() 
+	{ 
 
+    // Check to see if customization is supported.
+    // Currently only supported on Windows 11.
+    if (AppWindowTitleBar.IsCustomizationSupported())
+    {
+        var titleBar = appWindow.TitleBar;
+        titleBar.ExtendsContentIntoTitleBar = true;
+        ShellPage.instance.AppTitleBar.Loaded += AppTitleBar_Loaded;
+       ShellPage.instance.AppTitleBar.SizeChanged += AppTitleBar_SizeChanged;
+    }
+    else
+    {
+        // Title bar customization using these APIs is currently
+        // supported only on Windows 11. In other cases, hide
+        // the custom title bar element.
+        ShellPage.instance.AppTitleBarText.Visibility = Visibility.Collapsed; // don't draw text here
+		AppS.appWindow.SetIcon("assets\\cnv.ico");
+
+        // Show alternative UI for any functionality in
+        // the title bar, such as search.
+    }
+
+}
+
+ static void AppTitleBar_Loaded(object sender, RoutedEventArgs e)
+{
+    // Check to see if customization is supported.
+    // Currently only supported on Windows 11.
+    if (AppWindowTitleBar.IsCustomizationSupported())
+    {
+        SetDragRegionForCustomTitleBar(appWindow);
+    }
+}
+
+private static void AppTitleBar_SizeChanged(object sender, SizeChangedEventArgs e)
+{
+    // Check to see if customization is supported.
+    // Currently only supported on Windows 11.
+    if (AppWindowTitleBar.IsCustomizationSupported()
+        && appWindow.TitleBar.ExtendsContentIntoTitleBar)
+    {
+        // Update drag region if the size of the title bar changes.
+        SetDragRegionForCustomTitleBar(appWindow);
+    }
+}
+
+private static AppWindow GetAppWindowForCurrentWindow()
+{
+    IntPtr hWnd = WindowNative.GetWindowHandle(window);
+    WindowId wndId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
+    return AppWindow.GetFromWindowId(wndId);
+}
+
+[DllImport("Shcore.dll", SetLastError = true)]
+internal static extern int GetDpiForMonitor(IntPtr hmonitor, Monitor_DPI_Type dpiType, out uint dpiX, out uint dpiY);
+
+internal enum Monitor_DPI_Type : int
+{
+    MDT_Effective_DPI = 0,
+    MDT_Angular_DPI = 1,
+    MDT_Raw_DPI = 2,
+    MDT_Default = MDT_Effective_DPI
+}
+
+private static double GetScaleAdjustment()
+{
+    IntPtr hWnd = WindowNative.GetWindowHandle(window);
+    WindowId wndId = Win32Interop.GetWindowIdFromWindow(hWnd);
+    DisplayArea displayArea = DisplayArea.GetFromWindowId(wndId, DisplayAreaFallback.Primary);
+    IntPtr hMonitor = Win32Interop.GetMonitorFromDisplayId(displayArea.DisplayId);
+
+    // Get DPI.
+    int result = GetDpiForMonitor(hMonitor, Monitor_DPI_Type.MDT_Default, out uint dpiX, out uint _);
+    if (result != 0)
+    {
+        throw new Exception("Could not get DPI for monitor.");
+    }
+
+    uint scaleFactorPercent = (uint)(((long)dpiX * 100 + (96 >> 1)) / 96);
+    return scaleFactorPercent / 100.0;
+}
+
+private static void SetDragRegionForCustomTitleBar(AppWindow appWindow)
+{
+    // Check to see if customization is supported.
+    // Currently only supported on Windows 11.
+    if (AppWindowTitleBar.IsCustomizationSupported()
+        && appWindow.TitleBar.ExtendsContentIntoTitleBar)
+    {
+		var i = ShellPage.instance;
+        double scaleAdjustment = GetScaleAdjustment();
+
+        i.RightPaddingColumn.Width = new GridLength(appWindow.TitleBar.RightInset / scaleAdjustment);
+        i.LeftPaddingColumn.Width = new GridLength(appWindow.TitleBar.LeftInset / scaleAdjustment);
+
+        List<Windows.Graphics.RectInt32> dragRectsList = new();
+
+        Windows.Graphics.RectInt32 dragRectL;
+        dragRectL.X = (int)((i.LeftPaddingColumn.ActualWidth) * scaleAdjustment);
+        dragRectL.Y = 0;
+        dragRectL.Height = (int)(i.AppTitleBar.ActualHeight * scaleAdjustment);
+        dragRectL.Width = (int)((i.IconColumn.ActualWidth
+                                +i.TitleColumn.ActualWidth
+                                ) * scaleAdjustment);
+        dragRectsList.Add(dragRectL);
+
+        Windows.Graphics.RectInt32 dragRectR;
+        dragRectR.X = (int)(dragRectL.Width +dragRectL.X + 
+							(+i.PlayerButtonsColumn.ActualWidth
+								+i.CommandColumn.ActualWidth) * scaleAdjustment);
+        dragRectR.Y = 0;
+        dragRectR.Height = (int)(i.AppTitleBar.ActualHeight * scaleAdjustment);
+        dragRectR.Width = (int)(i.RightDragColumn.ActualWidth * scaleAdjustment);
+        dragRectsList.Add(dragRectR);
+
+        Windows.Graphics.RectInt32[] dragRects = dragRectsList.ToArray();
+
+        appWindow.TitleBar.SetDragRectangles(dragRects);
+    }
+}
 }

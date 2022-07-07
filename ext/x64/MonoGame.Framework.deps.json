@@ -10,7 +10,7 @@
         "dependencies": {
           "Microsoft.Windows.CsWinRT": "1.6.4",
           "Microsoft.Windows.SDK.BuildTools": "10.0.22621.1",
-          "Microsoft.WindowsAppSDK": "1.1.1",
+          "Microsoft.WindowsAppSDK": "1.1.2",
           "SharpDX": "4.2.0",
           "SharpDX.DXGI": "4.2.0",
           "SharpDX.Direct3D11": "4.2.0",
@@ -56,14 +56,14 @@
         }
       },
       "Microsoft.Windows.SDK.BuildTools/10.0.22621.1": {},
-      "Microsoft.WindowsAppSDK/1.1.1": {
+      "Microsoft.WindowsAppSDK/1.1.2": {
         "dependencies": {
           "Microsoft.Windows.SDK.BuildTools": "10.0.22621.1"
         },
         "runtime": {
           "lib/net5.0-windows10.0.18362.0/Microsoft.InteractiveExperiences.Projection.dll": {
             "assemblyVersion": "10.0.0.0",
-            "fileVersion": "10.0.22621.1002"
+            "fileVersion": "10.0.22621.1003"
           },
           "lib/net5.0-windows10.0.18362.0/Microsoft.WinUI.dll": {
             "assemblyVersion": "3.0.0.0",
@@ -937,12 +937,12 @@
       "path": "microsoft.windows.sdk.buildtools/10.0.22621.1",
       "hashPath": "microsoft.windows.sdk.buildtools.10.0.22621.1.nupkg.sha512"
     },
-    "Microsoft.WindowsAppSDK/1.1.1": {
+    "Microsoft.WindowsAppSDK/1.1.2": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-ZkdwAqYT1Ob8fHsACMsOhsIcBJd7dUUbs36M0EX3xb5HmX46AXBkkSxtIHLHUNBT3V1ZsZYLL16GCvHvqqVOgw==",
-      "path": "microsoft.windowsappsdk/1.1.1",
-      "hashPath": "microsoft.windowsappsdk.1.1.1.nupkg.sha512"
+      "sha512": "sha512-fE9hgOXTTCJcQ92ItilQ7a2cw6Hg6t8igFOEKuNw640k3/fXKBZ+R9vrFPna/z7PscJ6M/ceqkymlipF4uJ45w==",
+      "path": "microsoft.windowsappsdk/1.1.2",
+      "hashPath": "microsoft.windowsappsdk.1.1.2.nupkg.sha512"
     },
     "NETStandard.Library/1.6.1": {
       "type": "package",

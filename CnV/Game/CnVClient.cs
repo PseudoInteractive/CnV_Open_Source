@@ -411,7 +411,7 @@ namespace CnV
 		//		i.Abort();
 		//	return xx;
 		//}
-		public static  Task<bool> CitySwitch(int cid,bool lazyMove=false,bool select = true,bool scrollIntoUI = true,bool isLocked = false,bool waitOnChange = false) {
+		public static  Task<bool> CitySwitch(int cid,bool lazyMove=false,bool select = false,bool scrollIntoUI = true,bool isLocked = false,bool waitOnChange = false) {
 			ClickModifiers mod = ClickModifiers.bringIntoWorldView;
 			if(lazyMove) {
 				mod |= ClickModifiers.bringIntoWorldViewLazy;
@@ -426,7 +426,7 @@ namespace CnV
 		public static async Task<bool> CitySwitch(int cid,ClickModifiers clickMods , bool isLocked = false, bool waitOnChange = false)
 		{
 			// Make sure we don't ignore the exception
-			
+				Assert(CanVisit(cid));
 				// is it my city?
 				if(CanVisit(cid))
 				{

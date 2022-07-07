@@ -152,7 +152,7 @@ namespace CnV
   "Label",
   typeof(string),
   typeof(CityControl),
-  new PropertyMetadata(null)
+  new PropertyMetadata(" ꁝ")
 );
 		public static readonly DependencyProperty cityProperty = DependencyProperty.Register(
   "city",

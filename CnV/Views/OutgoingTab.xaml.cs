@@ -83,7 +83,7 @@ namespace CnV.Views
 
 		public static void NotifyOutgoingUpdated()
         {
-			if(!Sim.isPastWarmup)
+			if(!Sim.isInteractiveOrHistoric)
 				return;
 
 				AppS.QueueOnUIThread(() => {
