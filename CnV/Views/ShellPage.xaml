@@ -189,15 +189,10 @@ VerticalAlignment="Center"
 				<CommandBar.SecondaryCommands>
 					<AppBarButton 
 					             Icon="Save"
-					             Label="Save timeline.."
+					             Label="Save World.."
 					              Click="SaveTimeline"
-					              ToolTipService.ToolTip="Backs up event timeline"  />
-					<AppBarButton 
-					             Icon="OpenFile"
-					             
-					              Click="LoadTimeline"
-						 Label="Load timeline.."
-					              ToolTipService.ToolTip="Restores a saved timeline"  />
+					              ToolTipService.ToolTip="Backs up world"  />
+					
 					<AppBarButton 
 					             Icon="Admin"
 					             

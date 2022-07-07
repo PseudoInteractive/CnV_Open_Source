@@ -86,6 +86,39 @@ namespace CnV
 				
 				AppS.SetState( AppS.State.active );
 
+				{
+					var sp = await AppS.DoYesNoBox("Play Online?",null,"Online","Single Player",null);
+					AppS.isSinglePlayer = sp == 0;
+					if(AppS.isSinglePlayer) {
+						retry:
+						var exists = Sim.eventDataFileInfo.Exists();
+						var load = await AppS.DoYesNoBox("World",exists ?"Continue last world?":"Load or New?",yes: "Start New",no: "Load other..",cancel:(exists?  "Continue" : null) ) ;
+						if(load != -1 && exists) {
+							var a = await AppS.DoYesNoBox("Replace","This will replace your existing world, would you like to save it first?",yes: "Just Replace",no: "Save current..");
+							if(a == -1)
+								goto retry;
+							if(a == 0) {
+								if(!await ShellPage.SaveWorld(true))
+									goto retry;
+							}
+						}
+						if(load ==  1) {
+							// start new
+							Sim.eventDataFileInfo.Delete();
+						}
+						else if(load == 0) {
+							// load
+							if(!await ShellPage.LoadWorld()) {
+								goto retry;
+							}
+						}
+						else {
+							// load whats there 
+						}
+			
+					}
+				}
+
 				ShellPage.WorkUpdate("Connect to server");
 				if(AppS.isSinglePlayer)
 				{

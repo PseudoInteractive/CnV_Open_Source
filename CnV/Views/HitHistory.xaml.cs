@@ -48,7 +48,7 @@ namespace CnV.Views
 				//if(OutgoingTab.IsVisible()) {
 				//	OutgoingTab.NotifyOutgoingUpdated();
 				//}
-				historyGrid.ResetAutoColumns(true);
+				historyGrid.ResetAutoColumns();
 			}
 
 		}

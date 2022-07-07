@@ -179,7 +179,7 @@ namespace CnV.Views
 							//++SpotTab.silenceSelectionChanges;
 
 							if( newItems.SyncList(instance.citiesWithIncoming) ) {
-								instance.defenderGrid.ResetAutoColumns(true);
+								instance.defenderGrid.ResetAutoColumns();
 
 							}
 

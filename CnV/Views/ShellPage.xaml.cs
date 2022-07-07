@@ -1783,12 +1783,17 @@ namespace CnV.Views
 			ErrorReport();
 		}
 
-		private async void SaveTimeline(object sender,RoutedEventArgs e) {
+		private void SaveTimeline(object sender,RoutedEventArgs e) {
+			SaveWorld(false);
+		}
+
+		internal static async Task<bool> SaveWorld(bool useCurrentSave) {
 			try {
 				FileSavePicker savePicker = new FileSavePicker();
 				savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+				savePicker.CommitButtonText="Export World";
 				// Dropdown of file types the user can save the file as
-				savePicker.FileTypeChoices.Add("CnV server timeline",new List<string>() { ".mpk" });
+				savePicker.FileTypeChoices.Add("CnV World Timeline",new List<string>() { ".mpk" });
 				// Default file name if the user does not type one in or select a file to replace
 				savePicker.SuggestedFileName = "timeline";
 
@@ -1797,8 +1802,14 @@ namespace CnV.Views
 				if(file != null) {
 					// Prevent updates to the remote version of the file until we finish making changes and call CompleteUpdatesAsync.
 					var path = file.Path;
-					DataFiles.SaveBinary(path,Sim.PersistEvents());
-					Note.Show("Saved timeline");
+					if(useCurrentSave) {
+						File.Copy(Sim.eventDataFileInfo.fileName,path,true);
+					}
+					else {
+						DataFiles.SaveBinary(path,Sim.PersistEvents());
+					}
+					Note.Show("Exported timeline");
+					return true;
 				}
 				else {
 				}
@@ -1807,16 +1818,21 @@ namespace CnV.Views
 				LogEx(_ex);
 
 			}
+			return false;
+		}
+		private void LoadTimeline(object sender,RoutedEventArgs e) {
+			LoadWorld();
 		}
 
-		private async void LoadTimeline(object sender,RoutedEventArgs e) {
+		internal static async Task<bool> LoadWorld() {
 			try {
 				if(!AppS.isSinglePlayer) {
 					AppS.MessageBox("Only works in single player mode");
-					return;
+					return false;
 				}
 
 				FileOpenPicker savePicker = new FileOpenPicker();
+				savePicker.CommitButtonText = "Load World";
 				savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
 				// Dropdown of file types the user can save the file as
 				savePicker.FileTypeFilter.Add(".mpk");
@@ -1829,7 +1845,9 @@ namespace CnV.Views
 					var path = file.Path;
 
 					Note.Show("Load timeline");
-					Sim.ResetSim(eventStream: DataFiles.LoadBinary(path));
+					//	Sim.ResetSim(eventStream: DataFiles.LoadBinary(path));
+					File.Copy(path,Sim.eventDataFileInfo.fileName,true);
+					return true;
 				}
 				else {
 				}
@@ -1838,6 +1856,7 @@ namespace CnV.Views
 				LogEx(_ex);
 
 			}
+			return false;
 		}
 
 		private void FormAlliance(object sender,RoutedEventArgs e) {

@@ -61,21 +61,21 @@ public static partial class ADataGrid
 			}
 		}
 	}
-	internal static void ResetAutoColumns(this xDataGrid grid, bool reset=true) {
 
-		//Task.Delay(1000).ContinueWith((_) =>
-		Debounce.Q(runOnUIThread: true, debounceT:1000, action: () => {
-			if(grid.ItemsSource is null)
+	static void ResetAutoColumnsI(this xDataGrid grid) {
+		if(grid.ItemsSource is null)
 				return;
 			if(!grid.IsLoaded)
 				return;
-			if(reset)
-				grid.ColumnSizer.ResetAutoCalculationforAllColumns();
-			grid.ColumnSizer.Refresh();
-		//	Note.Show("Reset Columns");
+		
+		grid.ColumnSizer.ResetAutoCalculationforAllColumns();
+	}
 
-		});//)
-			//);
+	internal static void ResetAutoColumns(this xDataGrid grid) {
+
+		//Task.Delay(1000).ContinueWith((_) =>
+		Debounce.Q(runOnUIThread: true,debounceT: 1000,action:grid.ResetAutoColumnsI);
+		
 	}
 
 	public static ChangeContextDisposable ChangeContext(this xDataGrid grid) => new ChangeContextDisposable(grid);
