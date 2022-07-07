@@ -14,6 +14,7 @@ using Views;
 using Microsoft.UI.Xaml;
 using Windows.UI.Text;
 using Syncfusion.UI.Xaml.DataGrid.Serialization;
+using System.Collections;
 
 /// <summary>
 /// Tag is used to save/load the dataGrid
@@ -54,10 +55,11 @@ public static partial class ADataGrid
 		{
 			if (grid is not null)
 			{
-				grid.Columns.Resume();
-				grid.ResumeNotifyListener();
 				if (grid.View != null)
 					grid.View.EndInit();
+				grid.Columns.Resume();
+				grid.ResumeNotifyListener();
+				
 			}
 		}
 	}
@@ -270,13 +272,16 @@ public static partial class ADataGrid
 	//}
 
 	public static ADataGrid.ChangeContextDisposable SetupDataGrid(this UserTab? tab, xDataGrid grid,
-		bool wantChangeContext = false, Type? sourceType = null)
+		bool wantChangeContext = true, Type? sourceType = null, IEnumerable source=null )
 	{
 
 		if (Register(tab, grid))
 		{
 			
 			 var _lock0 = new ADataGrid.ChangeContextDisposable(wantChangeContext ? grid : null);
+			grid.ColumnWidthMode = Syncfusion.UI.Xaml.Grids.ColumnWidthMode.SizeToCells;
+
+
 			//	grid.FontFamily = App.CnVFont;
 			//grid.FilterRowPosition=FilterRowPosition.FixedTop;
 				grid.ColumnSizer.FontStretch = Windows.UI.Text.FontStretch.Condensed;
@@ -288,7 +293,7 @@ public static partial class ADataGrid
 		//	grid.FontSize = Settings.smallFontSize;
 		//	grid.AlternationCount = 2;
 		//	grid.AllowRowHoverHighlighting = true;
-			grid.RowHeight = Settings.shortGridRowHeight;
+//			grid.RowHeight = Settings.shortGridRowHeight;
 			grid.CurrentCellBorderThickness = new(0.5f);
 			
 			grid.CurrentCellBorderBrush = AppS.Brush(Microsoft.UI.Colors.Purple);
@@ -340,11 +345,10 @@ public static partial class ADataGrid
 		
 //			grid.CellToolTipOpening
 			//				grid.AllowFrozenGroupHeaders = false;
-			grid.ColumnWidthMode = Syncfusion.UI.Xaml.Grids.ColumnWidthMode.SizeToCells;
 //			grid.ColumnWidthMode = Syncfusion.UI.Xaml.Grids.ColumnWidthMode.SizeToCells;
 			grid.CellToolTipOpening += UserTab.CellToolTipOpening;
-			//if(sourceType is not null) //  || grid.ItemsSource is not null)
-		//		grid.SourceType = sourceType;// ?? UserTab.GetContainerType(grid.ItemsSource);
+			if(sourceType is not null) //  || grid.ItemsSource is not null)
+				grid.SourceType = sourceType;// ?? UserTab.GetContainerType(grid.ItemsSource);
 			//grid.UseSystemFocusVisuals = true;
 			grid.ShowSortNumbers = true;
 			//foreach(var c in 			grid.Columns ) {
@@ -353,10 +357,12 @@ public static partial class ADataGrid
 
 			//	//	c.CellStyle = App.instance.Resources["SfTextCell"] as Style;
 			//	//c.
-				
+
 			//}
 			//	if(tab is not null)
 			//		grid.DetailsViewExpanded += tab.DetailsViewUpdateColumnWidths;
+			if(source is not null)
+				grid.ItemsSource = source;
 			grid.ResetAutoColumns();
 //			grid.LoadDataGrid();
 		//	grid.ColumnSizer.Refresh();

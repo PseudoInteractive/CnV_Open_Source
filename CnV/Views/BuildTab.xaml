@@ -9,6 +9,7 @@
 			  xmlns:view="using:CnV.Views"
 			  mc:Ignorable="d"
 			  Tag="Build"
+			  Loaded="OnLoaded"
 			  FontStretch="Condensed"		             
 			  FontFamily="{StaticResource CnvIcons}">
 	<Grid x:Name="cityBaseGrid">
@@ -20,21 +21,23 @@
 		</Grid.RowDefinitions>
 
 		<sf:SfDataGrid x:Name="cityGrid"
+					   
 							x:FieldModifier="public"
 							AllowFiltering="True"
+					 
 					   ShowGroupDropArea="True"
 					   IsReadOnly="True"
 							Grid.Row="3"
-					
-							ItemsSource="{x:Bind game:City.gridCitySource, Mode=OneWay}"
+							ColumnWidthMode="SizeToHeader"
+						
 							SelectedItems="{x:Bind game:City.gridCitySelected, Mode=OneWay}"
 							AutoGenerateColumns="False"
 							SelectionMode="Multiple"
-							FrozenColumnsCount="4"
+							
 							SelectionUnit="Row"
 							ShowToolTip="True"
 							FontStretch="Condensed"
-							Loaded="DataGridLoaded"
+							
 							
 					   >
 		

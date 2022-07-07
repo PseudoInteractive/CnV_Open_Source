@@ -11,6 +11,7 @@
     xmlns:cnv="using:CnV"
       Background="{x:Null}"
         Tag="Recent"
+	Loaded="OnLoaded"
     mc:Ignorable="d">
 
     <Grid  >
@@ -32,16 +33,17 @@
                         Grid.Row="1"
 						IsReadOnly="True"
 						AutoGenerateColumns="False"
-                        
+            							ColumnWidthMode="SizeToCells"
+
 
 								
 								 
-								 Loaded="DataGridLoaded"
+								
                        SelectedItems="{x:Bind selection,Mode=OneWay}"
 					   SelectionChanged="selectedGrid_SelectionChanged"
-				        ItemsSource="{x:Bind view:SpotTab.spotMRU, Mode=OneWay}"
+				       
 						IsTabStop="True"
-                        RowHeight="{StaticResource MediumGridRowHeight}"
+                   
                         
                         SelectionMode="Multiple"
                         SelectionUnit="Row"

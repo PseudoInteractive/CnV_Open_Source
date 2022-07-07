@@ -13,6 +13,7 @@ using Windows.Foundation;
 namespace CnV.Views;
 
 using System;
+using System.Collections;
 using System.Collections.ObjectModel;
 
 using Syncfusion.UI.Xaml.Grids;
@@ -133,12 +134,12 @@ public partial class UserTab:Page, IANotifyPropertyChanged {
 	protected void DataGridLoaded(object sender,RoutedEventArgs e)
 	{
 		var dataGrid = (xDataGrid)sender;
-		using var __ = ADataGrid.SetupDataGrid(this,dataGrid,false);
+		using var __ = ADataGrid.SetupDataGrid(this,dataGrid,true);
 	}
 	
-	protected ADataGrid.ChangeContextDisposable SetupDataGrid(xDataGrid grid,bool wantChangeContext = false,Type? sourceType = null)
+	protected ADataGrid.ChangeContextDisposable SetupDataGrid(xDataGrid grid,bool wantChangeContext = false,Type? sourceType = null,IEnumerable source=null)
 	{
-		return ADataGrid.SetupDataGrid(this,grid,wantChangeContext,sourceType);
+		return ADataGrid.SetupDataGrid(this,grid,wantChangeContext,sourceType,source);
 
 	}
 	public Task VisibilityMaybeChanged()
@@ -303,7 +304,7 @@ public partial class UserTab:Page, IANotifyPropertyChanged {
 	internal static Task ShowOrAdd(TabInfo ti,bool selectMe = true,bool onlyIfClosed = false,TabPage page=null,UserTab tab=null)
 
 	{
-	//	System.GC.Collect(2,GCCollectionMode.Default,true,true);
+		System.GC.Collect(2,GCCollectionMode.Default,true,true);
 		return AppS.DispatchOnUIThreadTask(() =>
 	{
 	

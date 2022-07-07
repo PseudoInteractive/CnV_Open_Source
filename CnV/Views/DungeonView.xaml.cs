@@ -41,7 +41,7 @@ namespace CnV.Views
 		{
 			Dungeon.Initialize();
 			instance = new();
-				using var __ = ADataGrid.SetupDataGrid(null, instance.dungeonGrid, false,typeof(Dungeon));
+				using var __ = ADataGrid.SetupDataGrid(null, instance.dungeonGrid, true,typeof(Dungeon));
 		
 		}
 		static void AddStep()

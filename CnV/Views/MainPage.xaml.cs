@@ -619,55 +619,59 @@ namespace CnV.Views
 			DungeonView.Show(null, null);
 		}
 
-		//private async void ReturnRaidsForOutgoing(object sender, RoutedEventArgs e)
-		//{
-		//	using var work = new WorkScope("Return For Outgoing..");
-		//	var counter = OutgoingOverview.outgoingCounter+1;
-		//	OutgoingOverview.OutgoingUpdateDebounce.Go();
+        private void OnLoaded(object sender,RoutedEventArgs e) {
+				base.SetupDataGrid(cityGrid,true,typeof(City),City.gridCitySource);
+        }
 
-		//	do
-		//	{
-		//		await Task.Delay(500);
-		//	} while (counter > OutgoingOverview.outgoingCounter);
-					
-		//	int cities = 0;
-		//	foreach(var city in Spot.subCities)
-		//	{
-		//		if(city.hasOutgoingAttacks)
-		//		{
-		//			await city.ShowReturnAt(false);
-		//			await Task.Delay(200);
-		//			++cities;
-		//		}
-		//	}
-		//	Note.Show($"{cities} returned cities with outgoing");
+        //private async void ReturnRaidsForOutgoing(object sender, RoutedEventArgs e)
+        //{
+        //	using var work = new WorkScope("Return For Outgoing..");
+        //	var counter = OutgoingOverview.outgoingCounter+1;
+        //	OutgoingOverview.OutgoingUpdateDebounce.Go();
 
-		//}
+        //	do
+        //	{
+        //		await Task.Delay(500);
+        //	} while (counter > OutgoingOverview.outgoingCounter);
 
-		
+        //	int cities = 0;
+        //	foreach(var city in Spot.subCities)
+        //	{
+        //		if(city.hasOutgoingAttacks)
+        //		{
+        //			await city.ShowReturnAt(false);
+        //			await Task.Delay(200);
+        //			++cities;
+        //		}
+        //	}
+        //	Note.Show($"{cities} returned cities with outgoing");
+
+        //}
 
 
 
 
 
-		//      static Dungeon lastTooltip;
-		//private void DungeonPointerMoved(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
-		//{
-		//          var physicalPoint = e.GetCurrentPoint(sender as SfDataGrid);
-		//          var point = new Point { X = physicalPoint.Position.X, Y = physicalPoint.Position.Y };
-		//          var row = (sender as SfDataGrid).HitTestService.RowItemFromPoint(point);
-		//          var cell = (sender as SfDataGrid).HitTestService.CellInfoFromPoint(point);
-		//          var hit = cell?.Item as Dungeon;
-		//          if(hit!=lastTooltip)
-		//	{
-		//              lastTooltip = hit;
-		//              if (hit != null)
-		//                  ToolTipService.SetToolTip(tip, hit.ToString());
-		//              else
-		//                  ToolTipService.SetToolTip(tip,"None");
-		//	}
-		//      }
-	}
+
+
+        //      static Dungeon lastTooltip;
+        //private void DungeonPointerMoved(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+        //{
+        //          var physicalPoint = e.GetCurrentPoint(sender as SfDataGrid);
+        //          var point = new Point { X = physicalPoint.Position.X, Y = physicalPoint.Position.Y };
+        //          var row = (sender as SfDataGrid).HitTestService.RowItemFromPoint(point);
+        //          var cell = (sender as SfDataGrid).HitTestService.CellInfoFromPoint(point);
+        //          var hit = cell?.Item as Dungeon;
+        //          if(hit!=lastTooltip)
+        //	{
+        //              lastTooltip = hit;
+        //              if (hit != null)
+        //                  ToolTipService.SetToolTip(tip, hit.ToString());
+        //              else
+        //                  ToolTipService.SetToolTip(tip,"None");
+        //	}
+        //      }
+    }
 
 	//public class CustomDataBindingCompleteCommand : DataGridCommand
  //   {

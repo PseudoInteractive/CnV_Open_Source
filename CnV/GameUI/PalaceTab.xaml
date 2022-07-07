@@ -23,7 +23,7 @@
 							
 					   Grid.Row="3"
 							
-							ColumnWidthMode="SizeToCells"
+							
 							AutoGenerateColumns="False"
 							SelectionMode="Extended"
 							SelectionUnit="Any"

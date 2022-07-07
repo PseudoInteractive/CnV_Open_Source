@@ -321,7 +321,7 @@ namespace CnV
 
 				//	CnVDiscord.Discord.Initialize();
 
-				//  System.GC.Collect(2,GCCollectionMode.Default,true);
+				 System.GC.Collect(2,GCCollectionMode.Default,true);
 
 				// give some time for initial pressure to come down
 

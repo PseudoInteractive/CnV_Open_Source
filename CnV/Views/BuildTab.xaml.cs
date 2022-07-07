@@ -339,26 +339,30 @@ namespace CnV.Views
 
 		}
 
-	
+        private void OnLoaded(object sender,RoutedEventArgs e) {
+			base.SetupDataGrid(cityGrid,true,typeof(City),City.gridCitySource);
+        }
 
-		//      static Dungeon lastTooltip;
-		//private void DungeonPointerMoved(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
-		//{
-		//          var physicalPoint = e.GetCurrentPoint(sender as SfDataGrid);
-		//          var point = new Point { X = physicalPoint.Position.X, Y = physicalPoint.Position.Y };
-		//          var row = (sender as SfDataGrid).HitTestService.RowItemFromPoint(point);
-		//          var cell = (sender as SfDataGrid).HitTestService.CellInfoFromPoint(point);
-		//          var hit = cell?.Item as Dungeon;
-		//          if(hit!=lastTooltip)
-		//	{
-		//              lastTooltip = hit;
-		//              if (hit != null)
-		//                  ToolTipService.SetToolTip(tip, hit.ToString());
-		//              else
-		//                  ToolTipService.SetToolTip(tip,"None");
-		//	}
-		//      }
-	}
+
+
+        //      static Dungeon lastTooltip;
+        //private void DungeonPointerMoved(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+        //{
+        //          var physicalPoint = e.GetCurrentPoint(sender as SfDataGrid);
+        //          var point = new Point { X = physicalPoint.Position.X, Y = physicalPoint.Position.Y };
+        //          var row = (sender as SfDataGrid).HitTestService.RowItemFromPoint(point);
+        //          var cell = (sender as SfDataGrid).HitTestService.CellInfoFromPoint(point);
+        //          var hit = cell?.Item as Dungeon;
+        //          if(hit!=lastTooltip)
+        //	{
+        //              lastTooltip = hit;
+        //              if (hit != null)
+        //                  ToolTipService.SetToolTip(tip, hit.ToString());
+        //              else
+        //                  ToolTipService.SetToolTip(tip,"None");
+        //	}
+        //      }
+    }
 
 	//public class BuildCustomDataBindingCompleteCommand : DataGridCommand
 	//{

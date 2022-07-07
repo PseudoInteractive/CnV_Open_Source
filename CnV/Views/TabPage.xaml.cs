@@ -248,12 +248,12 @@ namespace CnV.Views
 
 		public static void ShowTabs()
 		{
-			AppS.DispatchOnUIThreadIdle(()=>
+			AppS.DispatchOnUIThreadIdle( async ()=>
 			{
-				BuildTab.ShowOrAdd<BuildTab>(true);
-				SpotTab.ShowOrAdd<SpotTab>(true);
+				await BuildTab.ShowOrAdd<BuildTab>(true);
+				await SpotTab.ShowOrAdd<SpotTab>(true);
 			//	PlayerTab.instance.ShowOrAdd(false);
-				MainPage.ShowOrAdd<MainPage>(false);
+			await	MainPage.ShowOrAdd<MainPage>(false);
 				
 			//	ChatTab.tabPage.AddChatTabs();
 			});

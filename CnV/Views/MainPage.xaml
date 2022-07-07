@@ -10,6 +10,7 @@
 			  xmlns:views="using:CnV.Views"
 			  mc:Ignorable="d"
 			  Tag="Raid"
+				   Loaded="OnLoaded"
 			  FontFamily="{StaticResource CnvIcons}">
 
 	<Grid x:Name="cityBaseGrid"  >
@@ -25,22 +26,17 @@
 		<sf:SfDataGrid x:Name="cityGrid"
 		              	x:FieldModifier="public"
 							Grid.Row="3"
-							Loaded="DataGridLoaded"
 							 					   IsReadOnly="True"
+							ColumnWidthMode="SizeToCells"
 
-						FrozenColumnsCount="4"
 							
-							ItemsSource="{x:Bind game:City.gridCitySource, Mode=OneWay}"
 					   							SelectedItems="{x:Bind game:City.gridCitySelected, Mode=OneWay}"
 
-							AutoGenerateColumns="False"
 							SelectionMode="Multiple"
 							
 							FontSize="{StaticResource SmallFontSize}"
-							IsTextScaleFactorEnabled="False"
 							SelectionUnit="Row"
 							Tag="Raid"
-							FontStretch="Condensed"
 					   ShowGroupDropArea="True"
 							
 					   
@@ -77,7 +73,6 @@
 										   UseBindingValue="True"
 												TextAlignment="Center"
 											Width="42"
-										  ColumnWidthMode="None"
 									/>
 				<sf:GridNumericColumn ValueBinding="{Binding tsTotal, Mode=OneWay}"
 									  UseBindingValue="True"

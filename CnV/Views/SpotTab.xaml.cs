@@ -295,12 +295,16 @@ namespace CnV.Views
 			SyncSelectionToUI();
 		}
 
-		//      public static void ToggleSelected(Spot rv)
-		//      {
-		//          var isSelected = rv.ToggleSelected();
-		////          SelectSilent(rv, isSelected);
-		//      }
+        private void OnLoaded(object sender,RoutedEventArgs e) {
+			base.SetupDataGrid(selectedGrid,true,typeof(City),spotMRU);
+        }
+
+        //      public static void ToggleSelected(Spot rv)
+        //      {
+        //          var isSelected = rv.ToggleSelected();
+        ////          SelectSilent(rv, isSelected);
+        //      }
 
 
-	}
+    }
 }
