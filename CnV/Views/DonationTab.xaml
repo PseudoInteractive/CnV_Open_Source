@@ -78,7 +78,7 @@
 			<sf:SfDataGrid.Columns>
 				<sf:GridImageColumn MappingName="icon"
                                         HeaderText="I"
-										ColumnWidthMode="None"
+										
                                         Width="32"
                                          />
 				<sf:GridTextColumn MappingName="nameAndRemarks"
@@ -340,7 +340,7 @@
                                         />
                 <sf:GridImageColumn MappingName="icon"
                                     HeaderText="I"
-                                    ColumnWidthMode="None"
+                                    
                                     Width="32"
                 />
 

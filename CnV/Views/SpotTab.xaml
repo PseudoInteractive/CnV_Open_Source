@@ -50,10 +50,10 @@
 						>
 							  
             <sf:SfDataGrid.Columns>
-				<sf:GridCheckBoxSelectorColumn MappingName="Sel"  Width="45" ColumnWidthMode="None" />
+				<sf:GridCheckBoxSelectorColumn MappingName="Sel"  Width="45" />
 				<sf:GridImageColumn MappingName="icon"
                                         HeaderText="I"
-ColumnWidthMode="None"
+
                                         Width="32" />
                 <sf:GridTextColumn ValueBinding="{Binding nameAndRemarks, Mode=OneWay}"
 								   HeaderText="Name"
@@ -64,12 +64,12 @@ ColumnWidthMode="None"
                                        />
                <sf:GridCheckBoxColumn  MappingName="pinned"
                                          ToolTipService.ToolTip="Hold down shift to toggle pinned status for all selected spots"
-                                          Width="32" ColumnWidthMode="None" />
+                                          Width="32" />
 
                 <sf:GridNumericColumn MappingName="cont"
                                        TextAlignment="Center"
 									  UseBindingValue="True"
-                                       Width="34" ColumnWidthMode="None" />
+                                       Width="34" />
                 <sf:GridTextColumn MappingName="playerName" HeaderText="Player"
                                      />
 				<sf:GridTextColumn MappingName="allianceName"

@@ -47,7 +47,7 @@
 			<sf:SfDataGrid.Columns>
 				<sf:GridImageColumn MappingName="icon"
                                         HeaderText="I"
-                                        ColumnWidthMode="None" 
+                                        
                                         Width="32" />
 				<sf:GridTextColumn MappingName="nameAndRemarks"
                                       HeaderText="City"
@@ -148,7 +148,7 @@
 
 								<sf:GridImageColumn MappingName="sourceIcon"
                                         HeaderText="I"
-                                        ColumnWidthMode="None" 
+                                        
                                         Width="32" />
 								<sf:GridHyperlinkColumn MappingName="sXY"
 
@@ -159,7 +159,7 @@
                                                    TextAlignment="Left" />
 								<sf:GridTextColumn MappingName="troopS"
 												HeaderText="Troops"
-                                                   ColumnWidthMode="Auto" 
+                                                   
                                                    TextAlignment="Left" />
 								
 								<sf:GridNumericColumn MappingName="dist"
@@ -170,7 +170,7 @@
 								<sf:GridTextColumn MappingName="sourceCN"
                                                    HeaderText="City"
 
-                                                   ColumnWidthMode="Auto" 
+                                                  
                                                    TextAlignment="Left" />
 
 
@@ -201,7 +201,7 @@
 
 								<sf:GridImageColumn MappingName="targetIcon"
                                         HeaderText="O"
-                                        ColumnWidthMode="None" 
+                                        
                                         Width="32" />
 								<sf:GridHyperlinkColumn MappingName="tXY"
 
@@ -212,7 +212,7 @@
                                                    TextAlignment="Left" />
 								<sf:GridTextColumn MappingName="troopS"
 												HeaderText="Troops"
-                                                   ColumnWidthMode="Auto" 
+                                                  
                                                    TextAlignment="Left" />
 
 								<sf:GridNumericColumn MappingName="dist"
@@ -223,7 +223,7 @@
 								<sf:GridTextColumn MappingName="targetCN"
                                                    HeaderText="City"
 
-                                                   ColumnWidthMode="Auto" 
+                                                 
                                                    TextAlignment="Left" />
 
 

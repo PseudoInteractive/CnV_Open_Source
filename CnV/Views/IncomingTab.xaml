@@ -53,7 +53,7 @@
 			<sf:SfDataGrid.Columns>
 				<sf:GridImageColumn MappingName="icon"
                                         HeaderText="I"
-                                        ColumnWidthMode="None" 
+                                        
                                         Width="32" />
 				<sf:GridNumericColumn MappingName="uiClaim"
 									  HeaderText="claim"
@@ -169,11 +169,11 @@
                                                       TextAlignment="Center" />
 				<sf:GridTextColumn MappingName="troopS"
 												HeaderText="Troops"
-                                                   ColumnWidthMode="Auto" 
+                                                   
                                                    TextAlignment="Left" />
 				<sf:GridTextColumn MappingName="defenseAtArrivalS"
 													HeaderText="defense on arrival"
-                                                   ColumnWidthMode="Auto" 
+                                                   
                                                    TextAlignment="Left" />
 				<sf:GridNumericColumn MappingName="dist"
 
@@ -183,7 +183,7 @@
 				<sf:GridTextColumn MappingName="sourceCN"
                                                    HeaderText="City"
 
-                                                   ColumnWidthMode="Auto" 
+                                                  
                                                    TextAlignment="Left" />
 				<sf:GridTimeColumn
                                                    MappingName="spotted"
