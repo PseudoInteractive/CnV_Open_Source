@@ -652,10 +652,14 @@ namespace CnV.Views
 
 				await Task.Delay(500);
 				await ShellPage.RefreshX();
+
+				System.GC.Collect(2,GCCollectionMode.Default,true,true);
+
 				TabPage.ShowTabs();
 
+
 				HistoricModeUIUpdate(); // Disable buttons
-				AppS.DispatchOnUIThread(ShellPage.SetupNonCoreInput);
+				
 				AppS.QueueIdleTask(DailyDialog.DailyRewardTask);
 				{
 					var p = Player.me;

@@ -142,8 +142,12 @@ namespace CnV
 				// todo: utf
 				//		AddPlayer(true, true, Player.myId, Player.myName, token, raidSecret, cookies);//, s, ppdt.ToString());
 
-
-
+				while(City.build == 0) {
+						await Task.Delay(500).ConfigureAwait(false);
+				
+				}
+				
+				AppS.QueueOnUIThread(ShellPage.SetupNonCoreInput);
 				{
 					int counter = 0;
 					while(!Sim.isPastWarmup) {
@@ -295,7 +299,6 @@ namespace CnV
 
 				//	await Task.Delay(1000);
 
-				System.GC.Collect(2,GCCollectionMode.Default,true,true);
 
 			//		GCSettings.LatencyMode = GCLatencyMode.SustainedLowLatency;
 			//	reinforcementsTask = new(interval:64.0f,()=> ReinforcementsOverview.instance.Post(),initialDelay:4.0f );

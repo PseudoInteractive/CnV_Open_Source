@@ -107,9 +107,10 @@ namespace CnV
 				//	PreferredBackBufferFormat   = SurfaceFormat.Rgba1010102,
 				PreferMultiSampling         = false,
 				PreferredDepthStencilFormat = DepthFormat.Depth16,
+				PreferredBackBufferHeight = (int)canvas.ActualHeight,
+				PreferredBackBufferWidth = (int)canvas.ActualWidth,
 
-
-				GraphicsProfile =  GraphicsProfile.HiDef
+			//	GraphicsProfile =  GraphicsProfile.HiDef
 			};
 
 
@@ -147,6 +148,12 @@ namespace CnV
 
 		}
 
+		
+		static void Canvas_SizeInit() {
+			canvasSizeDip = new((float)canvas.ActualWidth,(float)canvas.ActualHeight);
+			UpdateClientSpan();
+		}
+		
 		public static int resolutionDirtyCounter;
 
 		static public void Create(CnVSwapChainPanel swapChainPanel) {
@@ -174,6 +181,8 @@ namespace CnV
 			instance.GraphicsDevice.DeviceResetting+=GraphicsDevice_DeviceResetting; ;
 			canvas.SizeChanged += Canvas_SizeChanged;
 			instance.IsFixedTimeStep                   =  false;
+
+			Canvas_SizeInit();
 
 		}
 

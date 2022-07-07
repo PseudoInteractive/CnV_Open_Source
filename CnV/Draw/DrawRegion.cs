@@ -186,6 +186,10 @@ internal partial class GameClient
 			return;
 		if(!AppS.isForeground)
 			return;
+
+		if(TilesReady())
+			World.UpdateTileDatas();
+
 		++renderFrame;
 		var priorUnderMouse = underMouse;
 		underMouse = null;
@@ -1473,17 +1477,19 @@ internal partial class GameClient
 					}
 					for(int j = 0;j<2;++j) {
 						(var h, var fade) = j==0 ? (Player.viewHover, Player.viewHoverFade) : (Player.priorViewHover, Player.priorViewHoverFade);
-						if(h != PlayerId.MaxValue) {
-							if(Player.TryGetValue(h,out var p)) {
-								try {
-									foreach(var cid in p.cities) {
-										DrawFlag(cid,CityView.flagAnim0,new System.Numerics.Vector2(-4,4),(fade.SCurve()*255f).RoundToUInt().AsByte());
+						if(fade > 0) {
+							if(h != PlayerId.MaxValue) {
+								if(Player.TryGetValue(h,out var p)) {
+									try {
+										foreach(var cid in p.cities) {
+											DrawFlag(cid,CityView.flagAnim0,new System.Numerics.Vector2(-4,4),(fade.SCurve()*255f).RoundToUInt().AsByte());
+										}
 									}
-								}
-								catch(Exception ex) {
-									//LogEx(ex); // collection might change, if this happens just about this render, its 
-								}
+									catch(Exception ex) {
+										//LogEx(ex); // collection might change, if this happens just about this render, its 
+									}
 
+								}
 							}
 						}
 					}
@@ -2409,8 +2415,7 @@ internal partial class GameClient
 
 		if(!Sim.isWarmupOrInteractive)
 			return false;
-		if(TilesReady())
-			World.UpdateTileDatas();
+		
 		return base.BeginDraw();
 	}
 
