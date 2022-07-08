@@ -286,19 +286,20 @@ internal partial class GameClient
 
 			//                ds.Blend = ( (int)(serverNow.Second / 15) switch { 0 => CanvasBlend.Add, 1 => CanvasBlend.Copy, 2 => CanvasBlend.Add, _ => CanvasBlend.SourceOver } );
 
+			var sizeDipX = clientSpan.X;// GraphicsDevice.Viewport.Width/(dipToNative*resolutionScale);
+			var sizeDipY = clientSpan.Y;// GraphicsDevice.Viewport.Height/(dipToNative*resolutionScale);
 
-
-			float xyScale = 1.0f;
-			var xyGain = xyScale;
-			float projectionOffsetGainX = xyGain/canvasSizeDip.X;
-			float projectionOffsetGainY = xyGain/canvasSizeDip.Y;
+	//		float xyScale = 1.0f;
+	//		var xyGain = xyScale;
+		//	float projectionOffsetGainX = (float)(xyGain/sizeDipX);
+			double projectionOffsetGainY = (1.0/sizeDipY);
 
 			//ds.TextRenderingParameters = new CanvasTextRenderingParameters(!AppS.IsKeyPressedControl() ? CanvasTextRenderingMode.Outline : CanvasTextRenderingMode.Default, CanvasTextGridFit.Default);
 
 			//              ds.TextRenderingParameters = new CanvasTextRenderingParameters(CanvasTextRenderingMode.Default, CanvasTextGridFit.Disable);
 			// var scale = ShellPage.canvas.ConvertPixelsToDips(1);
-			pixelScaleInverse = 1.0f*projectionOffsetGainY*viewW.Z;
-			pixelScale       = 1.0f/pixelScaleInverse;
+			pixelScaleInverse =(viewW.Z/sizeDipY);
+			pixelScale       = (sizeDipY/viewW.Z);
 
 			dipScaleInverse = (float)(pixelScaleInverse*dipToNative*Settings.dpiAdjust);
 			//	dipScale       = 1.0f/dipScaleInverse;
@@ -413,11 +414,13 @@ internal partial class GameClient
 				var nearGain = nearZ*projectionOffsetGainY;
 
 				var m1 = Matrix.CreatePerspectiveOffCenter(
-							  (-projectionC.X)*nearGain,
-							  (canvasSizeDip.X-projectionC.X)*nearGain,
+							  (float)(-projectionC.X*nearGain),
+							  (float)((sizeDipX-projectionC.X)*nearGain),
 
-							  (canvasSizeDip.Y-projectionC.Y)*nearGain,
-							   -projectionC.Y*nearGain,
+							//  (float)(sizeDipY-projectionC.Y)*nearGain,
+							//   -projectionC.Y*nearGain,
+							  (float)(0.5f)*nearZ,
+							   -0.5f*nearZ,
 
 							   nearZ,farZ);
 
@@ -2172,7 +2175,7 @@ internal partial class GameClient
 
 
 	public static void UpdateRenderQuality(float renderQuality) {
-		UpdateClientSpan();
+		UpdateClientSpan.Go();
 	}
 
 
@@ -2197,7 +2200,7 @@ internal partial class GameClient
 
 
 			if(clientSpan.X > 0 && clientSpan.Y > 0 && AppS.isForeground) {
-				if(resolutionDirtyCounter > 0 && !faulted) {
+				if(resolutionDirtyCounter > 0 && !faulted ) {
 					if(--resolutionDirtyCounter == 0) {
 						wantFastRefresh = false;
 						//	AppS.DispatchOnUIThread(() =>
@@ -2206,7 +2209,7 @@ internal partial class GameClient
 							//								_graphics.PreferredBackBufferWidth = (int)clientSpan.X;
 							//					_graphics.ApplyChanges();
 							//_graphics.PreferredBackBufferFormat = GetBackBufferFormat();
-							var pre = GameClient.instance.GraphicsDevice.PresentationParameters;
+							var pre = GraphicsDevice.PresentationParameters;
 
 							{
 								pre.BackBufferFormat =  GetBackBufferFormat();
@@ -2217,9 +2220,9 @@ internal partial class GameClient
 							};
 
 							if(!wantDeviceReset)
-								GameClient.instance.GraphicsDevice.OnPresentationChanged();
+								GraphicsDevice.OnPresentationChanged();
 							else
-								GameClient.instance.GraphicsDevice.Reset();
+								GraphicsDevice.Reset();
 
 							wantDeviceReset = false;
 						}

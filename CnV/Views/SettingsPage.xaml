@@ -38,7 +38,7 @@
 			<wct:WrapPanel Orientation="Horizontal"
 						   Margin="4">
 
-				<Slider Height="128" Header="Quality" Value="{x:Bind RenderQuality, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.0625" SmallChange="0.0625" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Render Quality vs Performance, lower is faster (if your video card is weak), requires restart" />
+				<Slider Height="128" Header="Quality" Value="{x:Bind RenderQuality, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.125" SmallChange="0.125" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Render Quality vs Performance, lower is faster (if your video card is weak), requires restart" />
 				<RadioButtons 
                    SelectedIndex="{x:Bind DynamicRange,Mode=TwoWay}" Header="Dynamic Range" >
 					<RadioButtons.Items>

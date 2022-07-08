@@ -41,7 +41,7 @@
 			<cnv:CityControl x:Name="cityBox" Label=" ꁝ "  HorizontalAlignment="Stretch"  Margin= "0" x:FieldModifier="internal" 
 					allowNone="false"
 									cityChanged="CityBox_SelectionChanged"
-					                 ToolTipService.ToolTip="Right tap for menu"
+					                 ToolTipService.ToolTip="The active city, this is the city currently being built or set up"
 					               
 					
 					   Background="{StaticResource ExpanderBrushHeader}"

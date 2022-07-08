@@ -108,8 +108,8 @@ namespace CnV
 				//	PreferredBackBufferFormat   = SurfaceFormat.Rgba1010102,
 				PreferMultiSampling         = false,
 				PreferredDepthStencilFormat = DepthFormat.Depth16,
-				PreferredBackBufferHeight = (int)canvas.ActualHeight,
-				PreferredBackBufferWidth = (int)canvas.ActualWidth,
+				PreferredBackBufferHeight = (int)(canvas.ActualHeight*View.dipToNative*resolutionScale),
+				PreferredBackBufferWidth = (int)(canvas.ActualWidth*View.dipToNative*resolutionScale),
 
 			//	GraphicsProfile =  GraphicsProfile.HiDef
 			};
@@ -138,7 +138,7 @@ namespace CnV
 		static void Canvas_SizeChanged(object sender,SizeChangedEventArgs e) {
 			//	ShellPage.updateHtmlOffsets.SizeChanged();
 			canvasSizeDip = new((float)e.NewSize.Width,(float)e.NewSize.Height);
-			UpdateClientSpan();
+			UpdateClientSpan.Go();
 			//clientCScreen = canvas.TransformToVisual(Helper.CoreContent)
 			//	.TransformPoint(new UWindows.Foundation.Point(0, 0)).ToVector2();
 			//	canvas.RunOnGameLoopThreadAsync(RemakeRenderTarget);
@@ -152,7 +152,7 @@ namespace CnV
 		
 		static void Canvas_SizeInit() {
 			canvasSizeDip = new((float)canvas.ActualWidth,(float)canvas.ActualHeight);
-			UpdateClientSpan();
+			UpdateClientSpan.Go();
 		}
 		
 		public static int resolutionDirtyCounter;
@@ -242,18 +242,19 @@ namespace CnV
 
 
 		public static void UpdateDevice() {
-			resolutionDirtyCounter = wantFastRefresh ? 2 : 10;
+			resolutionDirtyCounter =1;
 		}
 
 		// dx, dy are logical pixels
 		// dipToNative is 1 for 100% scaling 1.5 for 150% etc
 		// For hiDPI devices we should probably render at lower res
-		public static void UpdateClientSpan() {
-			if(instance is not null) {
+		internal static DebounceA UpdateClientSpan = new(UpdateClientSpanI) { debounceDelay=300 };
+		internal static void UpdateClientSpanI() {
+			//if(instance is not null) {
 
 				UpdateDevice();
 
-			}
+		//	}
 
 			//clientSpan.X = MathF.Round( (float)((dx* dipToNative+3) / 4))*4.0f;
 			//clientSpan.Y = MathF.Round((float)((dy* dipToNative+3) /4))*4.0f;
@@ -261,10 +262,10 @@ namespace CnV
 			// bug:  Not using Dip
 			clientSpan.X  = (float)(canvasSizeDip.X);
 			clientSpan.Y  = (float)(canvasSizeDip.Y);
-			virtualSpan.X = clientSpan.X        + View.popupLeftMargin;
-			virtualSpan.Y = clientSpan.Y        + View.popupTopMargin;
-			projectionC.X = clientSpan.X * 0.5f - View.popupLeftMargin * 0.5f;
-			projectionC.Y = clientSpan.Y * 0.5f - View.popupTopMargin  * 0.5f;
+			virtualSpan.X = clientSpan.X;//        + View.popupLeftMargin;
+			virtualSpan.Y = clientSpan.Y;//        + View.popupTopMargin;
+			projectionC.X = clientSpan.X * 0.5f;// - View.popupLeftMargin * 0.5f;
+			projectionC.Y = clientSpan.Y * 0.5f;// - View.popupTopMargin  * 0.5f;
 
 			clip.c0 = default;
 			clip.c1 = clientSpan;

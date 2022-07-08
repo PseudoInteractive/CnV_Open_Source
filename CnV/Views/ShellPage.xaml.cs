@@ -281,10 +281,16 @@ namespace CnV.Views
 			InitializeComponent();
 			//		RequestedTheme = ElementTheme.Dark; // default theme
 			instance = this;
-			App.SetupTitleBar();
-			//AppS.window.ExtendsContentIntoTitleBar = true;
-	        //AppS.window.SetTitleBar(AppTitleBar);
-			App.UpdateAppTitleUI();
+			try {
+				App.SetupTitleBar();
+				//AppS.window.ExtendsContentIntoTitleBar = true;
+				//AppS.window.SetTitleBar(AppTitleBar);
+				App.UpdateAppTitleUI();
+			}
+			catch(Exception _ex) {
+				LogEx(_ex);
+
+			}
 		}
 		//		public static bool rightTabsVisible => Settings.layout>=Layout.c;
 		//		public static bool htmlVisible => Settings.layout is not (Layout.l1 or  Layout.r2 or Layout.r1);
@@ -525,7 +531,8 @@ namespace CnV.Views
 						//	CustomProperties properties = new CustomProperties();
 						//	properties.Set("alliance",Alliance.myId).Set("allianceName",Alliance.my.name).Set("world",CnVServer.world).Set("sub",CnVServer.isSub).Set("playerId",Player.myId).Set("UserId",Player.myName);
 						//	AppCenter.SetCustomProperties(properties);
-						AAnalytics.Track("GotCreds",new Dictionary<string,string>() { { "World",World.id.ToString() },{ "UserId",CnVSignin.name } });
+						AAnalytics.defaultProperties = ImmutableDictionary<string,string>.Empty.Add("UserId",CnVSignin.name).Add("Version",AppS.currentVersion.ToString() ) ;
+						AAnalytics.Track("GotCreds");
 						//ShellPage.UpdateFocus();
 					}
 #endif

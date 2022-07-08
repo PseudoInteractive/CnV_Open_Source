@@ -174,10 +174,18 @@ namespace CnV
 
 				// todo: utf
 				//		AddPlayer(true, true, Player.myId, Player.myName, token, raidSecret, cookies);//, s, ppdt.ToString());
-
-				while(City.build == 0) {
+				{
+					int counter = 0; ;
+					while(City.build == 0) {
 						await Task.Delay(500).ConfigureAwait(false);
-				
+						//	World.InvalidateCities();
+						if( ++counter > 10) {
+							World.InvalidateCities();
+							if(City.myCities.Any()) {
+								CitySwitch(City.myCities.First().cid);
+							}
+						}
+					}
 				}
 				
 				AppS.QueueOnUIThread(ShellPage.SetupNonCoreInput);
@@ -196,6 +204,7 @@ namespace CnV
 				Assert(Sim.isPastWarmup);
 				while(!City.myCities.Any()) {
 					await Task.Delay(500).ConfigureAwait(false);
+					World.InvalidateCities();
 				}
 				ShellPage.WorkEnd();
 

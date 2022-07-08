@@ -75,17 +75,13 @@
 		</PackageReference>
 		<PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.5.0" />
 		<PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.5.0" />
-		<PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0-preview.5.22301.12" />
-		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0-preview.5.22301.12" />
-		<PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0-preview.5.22301.12" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0-preview.5.22301.12" />
 		<PackageReference Include="Microsoft.Extensions.ObjectPool" Version="7.0.0-preview.5.22303.8" />
 		<PackageReference Include="Microsoft.Extensions.Primitives" Version="7.0.0-preview.5.22301.12" />
 		<PackageReference Include="Microsoft.Identity.Client" Version="4.45.0">
 			<TreatAsUsed>true</TreatAsUsed>
 		</PackageReference>
 		<PackageReference Include="Azure.Data.Tables" Version="12.6.1" />
-		<PackageReference Include="Azure.Storage.Blobs" Version="12.13.0-beta.1" />
+		<PackageReference Include="Azure.Storage.Blobs" Version="12.13.0" />
 		<PackageReference Include="MessagePack" Version="2.4.35" />
 		<PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="2.22.0" />
 		<PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="6.21.0" />

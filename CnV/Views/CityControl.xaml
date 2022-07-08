@@ -18,8 +18,8 @@
 			<ColumnDefinition Width="Auto" />
 		</Grid.ColumnDefinitions>
 
-		<TextBlock Text="{x:Bind Label, Mode=OneWay}" Style="{StaticResource TextBlockSmall}"  
-				   Width="{x:Bind LabelWidth}" VerticalAlignment="Center"  RightTapped="ComboRightTapped" Tapped="CityIconTapped"  />
+		<Button Content="{x:Bind Label, Mode=OneWay}" Style="{StaticResource ButtonSmall}" Padding="2" Margin="0" Background="Transparent" 
+				   Width="{x:Bind LabelWidth}" VerticalAlignment="Center"  Click="LabelTapped"   IsRightTapEnabled= "True" RightTapped="RightTappedX" />
 
 
 
@@ -35,7 +35,7 @@
 				  SelectionChangedTrigger="Committed"
 				  DropDownClosed="ComboBoxDropdownClosed"
 				  SelectionChanged="ComboBoxSelectionChnaged"
-					 ToolTipService.ToolTip="Right click to select a recent spot"
+					
 					   
 					   >
 		<ComboBox.ItemTemplate>

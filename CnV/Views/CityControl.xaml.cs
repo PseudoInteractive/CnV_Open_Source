@@ -58,17 +58,19 @@ namespace CnV
 		}
 		public void SetCity(City value, bool triggerCityChanged=true) {
 			Assert(value is not null);
-			if(city != value) {
+			if(city != value) 
 			{
 				if(!SetCityI(value))
 					return;
 				CallPropertyChanged(nameof(this.city));
+	
+				if(triggerCityChanged)
+					cityChanged?.Invoke(this,value);
+				
+			
 			}
 
-			if(triggerCityChanged)
-				cityChanged?.Invoke(this,value);
-				
-			}
+			
 		}
 		
 
@@ -245,7 +247,7 @@ namespace CnV
 
 		private void Image_RightTapped(object sender, RightTappedRoutedEventArgs e)
 		{
-						e.Handled=true;
+			e.Handled=true;
 
 			try
 			{
@@ -486,23 +488,10 @@ namespace CnV
 			l.SyncList(citySelections);
 		}
 
-		private void ComboRightTapped(object sender,RightTappedRoutedEventArgs e) {
-			e.Handled=true;
-			var flyout = new MenuFlyout();
-			var sel = City.GetSelectedForContextMenu(City.focus).AsCities().Concat(SpotTab.spotMRU.Where(a => a.pinned)).Concat(SpotTab.spotMRU.Take(8.Min(SpotTab.spotMRU.Count))).
-				Where(a=> IsValid(a.cid,false)); ;
-			if(allowNone)
-				sel = sel.Prepend(City.invalid);
-			sel = sel.Distinct();
-
-			foreach(var c in sel) {
-				flyout.AddItem(c.nameAndRemarks,() => SetCity(c));
-			}
-			flyout.SetXamlRoot(cityBox);
-
-		//   flyout.XamlRoot = uie.XamlRoot;
-			flyout.ShowAt(cityBox);
-		}
+		//private void ComboRightTapped(object sender,RightTappedRoutedEventArgs e) {
+		//	e.Handled=true;
+			
+		//}
 
 		private void ComboBoxDropdownClosed(object sender,object e) {
 				cityChanged?.Invoke(this,_city);
@@ -514,6 +503,48 @@ namespace CnV
 				cityChanged?.Invoke(this,_city);
 			}
 		}
+
+		void Add(MenuFlyout f,City c) => f.AddItem(c.nameAndRemarks,() => SetCity(c));
+		private void LabelTapped(object sender,RoutedEventArgs e) {
+			
+			var label = sender as FrameworkElement;
+			var flyout = new MenuFlyout();
+			flyout.SetXamlRoot(cityBox);
+			var selected = City.GetSelectedForContextMenu(cid:City.focus,false,ignoreCid:0,onlyCities:false).AsCities().Where(c => IsValid(c.cid,false)).ToArray();
+			var pinned = SpotTab.spotMRU.Where(c => c.pinned && !selected.Contains(c) && IsValid(c.cid,false) ).ToArray();
+			var recent = SpotTab.spotMRU.Where(c => !c.pinned && !selected.Contains(c) && IsValid(c.cid,false) ).Take(8).ToArray();
+			//	var recent = City.GetSelectedForContextMenu(City.focus).AsCities().Where(c => isValid(c.cid,false)).ToArray();
+			//		var sel = City.GetSelectedForContextMenu(City.focus).AsCities().Concat(SpotTab.spotMRU.Where(a => a.pinned)).Concat(SpotTab.spotMRU.Take(8.Min(SpotTab.spotMRU.Count))).
+			//		Where(a=> IsValid(a.cid,false)); ;
+			if(allowNone) {
+				Add( flyout,City.invalid);
+			}
+			if(selected.Length > 0) {
+				flyout.AddItem("\tSelected",null);
+				foreach(var c in selected)
+					Add(flyout,c);
+			}
+
+			if(pinned.Length > 0) {
+				flyout.AddItem("\tPinned",null);
+
+				foreach(var c in pinned)
+					Add(flyout,c);
+			}
+			if(recent.Length > 0) {
+				flyout.AddItem("\tRecent",null);
+
+				foreach(var c in recent)
+					Add(flyout,c);
+
+			}
+			
+
+		//   flyout.XamlRoot = uie.XamlRoot;
+			flyout.ShowAt(label);
+		}
+
+		
 
 
 		//private void AutoSuggestBox_CharacterReceived(UIElement sender,CharacterReceivedRoutedEventArgs args)

@@ -66,9 +66,10 @@ namespace CnV
 			set
 			{
 				
-				if ( !renderQuality.AlmostEquals(value,1.0f/1024.0f)  )
+				if ( !renderQuality.AlmostEquals(value,1.0f/16.0f)  )
 				{
 					renderQuality = value;
+					GameClient.wantFastRefresh=true;
 					GameClient.UpdateRenderQuality(renderQuality);
 					Note.Show("Some changes require restart");
 				}
@@ -323,7 +324,7 @@ namespace CnV
 					Settings.hdrMode = value;
 					Microsoft.Xna.Framework.SharpDXHelper.SetHDR(Settings.hdrMode,Settings.gammaProfile);
 					GameClient.wantDeviceReset =true;
-					GameClient.UpdateClientSpan();
+					GameClient.UpdateClientSpan.Go();
 				}
 			}
 		}
@@ -336,7 +337,7 @@ namespace CnV
 					Settings.gammaProfile = value;
 					Microsoft.Xna.Framework.SharpDXHelper.SetHDR(Settings.hdrMode,Settings.gammaProfile);
 					GameClient.wantDeviceReset =true;
-					GameClient.UpdateClientSpan();
+					GameClient.UpdateClientSpan.Go();
 				}
 			}
 		}

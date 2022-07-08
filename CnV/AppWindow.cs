@@ -133,9 +133,7 @@ partial class App
 						//	Trace("Finished!1");
 
 						try {
-							AAnalytics.Track("Background",
-											new Dictionary<string,string>
-													{ { "time", dt.TotalSeconds.RoundToInt().ToString() } });
+							AAnalytics.Track("Background",AAnalytics.defaultProperties.Add( "time", ((dt.TotalMinutes/15).RoundToInt()*15).ToString()  ));
 							SystemInformation.Instance.AddToAppUptime(dt);
 						}
 						catch(Exception ex) { }
@@ -168,7 +166,7 @@ partial class App
 				var dt = t - activeStart;
 				activeStart = t;
 				AAnalytics.Track("Foreground",
-								new Dictionary<string,string> { { "time",dt.TotalSeconds.RoundToInt().ToString() } });
+							AAnalytics.defaultProperties.Add( "time",((dt.TotalMinutes/15).RoundToInt()*15).ToString()  ) );
 				//	CnVServer.ResumeWebView();
 
 			}
