@@ -95,6 +95,7 @@ namespace CnV
 		public static Material defenseMaterial;
 		public static Material settleMaterial;
 		public static Material returnMaterial;
+		public static Material regionAttackMaterial;
 
 		public GameClient() {
 

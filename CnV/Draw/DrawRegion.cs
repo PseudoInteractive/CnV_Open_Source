@@ -170,9 +170,10 @@ internal partial class GameClient
 			nameColorIncomingHover, nameColorSiegedHover, myNameColorIncoming, myNameColorSieged,
 		nameColorDungeon;
 	//static float specularGain = 0.5f;
-	static long ticksAtDraw;
+	//static long ticksAtDraw;
 	public static Matrix projection;
 	internal static double timeSinceLastFrame;
+	internal static double timePerFrameSmoothed;
 	internal const float targetStepsPerSecond = 128;
 	public static int drawCounter;
 	public static float fadeCounter = 1;
@@ -180,7 +181,9 @@ internal partial class GameClient
 	internal static HashSet<int> drawArmyHash = new();
 	internal static HashSet<int> targetOpponents = new();
 	internal static Dictionary<SpotId,int> cityVisitorCounts = new();
-
+	internal static double lastSimT; // approximate
+	internal static double nextSimTGuess; // approximate
+	internal static double lastAnimtionT; // in seconds relative to GameTime
 	protected override void Draw(GameTime gameTime) {
 		if(faulted)
 			return;
@@ -195,7 +198,11 @@ internal partial class GameClient
 		underMouse = null;
 		bestUnderMouseScore = 0.125f;
 		++drawCounter;
-		simT = Sim.NowToServerSeconds(); ;
+		lastSimT = simT;
+		simT = Sim.NowToServerSecondsClamped();
+		simTimePerFrameGuess = (simT - lastSimT).Min(60f*60f);
+		simTimePerFrameSmoothed = 0.25.Lerp(simTimePerFrameSmoothed,simTimePerFrameGuess);
+		nextSimTGuess = simT + simTimePerFrameSmoothed; // Min 1 hour
 #if DEBUG
 		if(gameTime.IsRunningSlowly) {
 			if(ToolTips.debugTip is null)
@@ -212,29 +219,32 @@ internal partial class GameClient
 		//var isFocused = Sim.isInitialized&&AppS.isForeground;
 
 		try {
-			var elapsed = timer.Elapsed;
-			var timerT = elapsed.TotalSeconds;
-			var priorTicks = ticksAtDraw;
-			ticksAtDraw = elapsed.Ticks;
-			timeSinceLastFrame = (ticksAtDraw-priorTicks)/(double)TimeSpan.TicksPerSecond;
-
+			lastAnimtionT = animationT;
+			animationT = timer.Elapsed.TotalSeconds;// ((uint)Environment.TickCount % 0xffffff) * (1.0f / 1000.0f);
+		//	var elapsed = timer.Elapsed;
+		//	var timerT = ;
+		//	var priorTicks = ticksAtDraw;
+			//ticksAtDraw = elapsed.Ticks;
+			timeSinceLastFrame = (animationT-lastAnimtionT);
+			
 			if(timeSinceLastFrame > 0.25) {
 #if DEBUG
 				///		Note.Show($"\nVery Slow {timeSinceLastFrame}");
 #endif
 				timeSinceLastFrame  = 0.25;
 			}
+			timePerFrameSmoothed = 0.25.Lerp(timePerFrameSmoothed,timeSinceLastFrame);
 			View.StepViewToPresent();
 			//cameraZoomLag += (cameraZoom - cameraZoomLag) * gain;
 			//cameraLightC = (ShellPage.mousePositionC);
 			//                cameraZoomLag += (cameraZoom
 			// smooth ease towards target
 
-			var serverNow = Sim.simTime + TimeSpanS.FromMinutes(eventTimeOffsetLag);
+		//var serverNow = Sim.simTime + TimeSpanS.FromMinutes(eventTimeOffsetLag);
 
 			// not too high or we lose float precision
 			// not too low or people will see when when wraps
-			animationT = timerT;// ((uint)Environment.TickCount % 0xffffff) * (1.0f / 1000.0f);
+			
 			wantParallax = Settings.parallax > 0.1f;
 
 			//{
@@ -263,7 +273,7 @@ internal partial class GameClient
 			//		device.Textures[4] = TileData.topLevelTileset.material.texture;
 			//		device.Textures[5] = TileData.topLevelTileset.material.texture1;
 			//				float accentAngle = animT * MathF.PI * 2;
-			var tick = (elapsed.TotalSeconds);
+		//	var tick = (elapsed.TotalSeconds);
 			var animTLoop = (animationT*(1.0/3.0)).Wave();
 			int cx0 = 0, cy0 = 0, cx1 = 0, cy1 = 0;
 			var rectSpan = animTLoop.Lerp(rectSpanMin,rectSpanMax);
@@ -911,7 +921,7 @@ internal partial class GameClient
 					cityVisitorCounts.Clear();
 
 					var incomingVisible = Settings.incomingAlwaysVisible != false;
-					var outgoingVisible = Settings.attacksAlwaysVisible != false;
+					var outgoingVisible = Settings.outgoingAlwaysVisible != false;
 					{
 
 						if(AttackTab.IsVisible()) {
@@ -942,7 +952,7 @@ internal partial class GameClient
 										var c0 = real.CidToWorldV();
 										foreach(var a in cluster.attacks) {
 											//	var t = (tick + a.CidToRandom()).Wave(1.5f / 512.0f + 0.25f,1.75f / 512f + 0.25f);
-											var t = (tick * a.CidToRandom().Lerp(1.0f,1.25f));
+											var t = (animationT * a.CidToRandom().Lerp(1.0f,1.25f));
 											var r = t.Ramp();
 											var c1 = a.CidToWorldV();
 											var spot = Spot.GetOrAdd(a);
@@ -1022,7 +1032,7 @@ internal partial class GameClient
 								var raidsVisble = Settings.raidVisible != false;
 								var list = City.alliedCities; //defenders ? Spot.defendersI : Spot.defendersO;
 								//bool noneIsAll = list.Length <= Settings.showAttacksLimit;
-								bool showAll =(isIncoming ? Settings.incomingAlwaysVisible==true : Settings.attacksAlwaysVisible==true);
+								bool showAll =(isIncoming ? Settings.incomingAlwaysVisible==true : Settings.outgoingAlwaysVisible==true);
 								foreach(var city in list) {
 									if(!city.testContinentFilter)
 										continue;
@@ -1094,7 +1104,7 @@ internal partial class GameClient
 												}
 
 												else if(i.isDefense) {
-													c = i.arrival <= serverNow ? defenseArrivedColor : defenseColor;
+													c = i.arrived ? defenseArrivedColor : defenseColor;
 													if(isIncoming)
 														++incDef;
 												}
@@ -1134,7 +1144,7 @@ internal partial class GameClient
 											// don't double draw
 											var hash = i.GetHashCode();
 											if(drawArmyHash.Add(hash)) {
-												var t = (tick  * ((hash&0xffff)/65536f).Lerp(0.375f,0.5f));
+												var t = (animationT  * ((hash&0xffff)/65536f).Lerp(0.375f,0.5f));
 												//	var t = (tick +i.sourceCid.CidToRandom()).Wave(1.5f / 512.0f+0.25f,2.0f / 512f+ 0.25f) ;
 												var r = t.Ramp();
 												var alpha = 1.0f;
@@ -1161,11 +1171,22 @@ internal partial class GameClient
 													_c0 = c1; _c1 = c0;
 												}
 
-
-												DrawAction(i.TimeToArrival(serverNow),i.journeyTime,r,
+												var ttA = (float)i.TimeToArrival(simT);
+												DrawAction(ttA,i.journeyTime,r,
 													_c0.ToVector(),
 												_c1.ToVector(),c,ttype != ttInvalid ?troopImages[ttype] : null,
 												true,i,alpha: alpha,lineThickness: lineThickness,highlight: sel);
+												if( i.isAttack & !i.isReturn & ttA*timePerFrameSmoothed < simTimePerFrameSmoothed*0.5f ) {
+													// 32 is too high
+													float spriteSize = spriteSizeGain*2;
+
+													var mid = _c1.ToVector();
+													mid.Y -=0.25f;
+													var xGain = regionAttackMaterial.Width/(float)regionAttackMaterial.Height;
+													var sc0 = new Vector2(mid.X - spriteSize*xGain,mid.Y - spriteSize);
+													var sc1 = new Vector2(mid.X + spriteSize*xGain,mid.Y + spriteSize);
+													draw.AddQuad(Layer.statusOverlay, regionAttackMaterial, sc0,sc1, Color.White);
+												}
 											}
 										}
 										if(isIncoming) {
@@ -1324,7 +1345,7 @@ internal partial class GameClient
 												}
 												// don't double up
 												if(drawTradesHash.Add(i.GetHashCode())) {
-													var t = (tick * i.sourceCid.CidToRandom().Lerp(1.0f,1.375f));
+													var t = (animationT * i.sourceCid.CidToRandom().Lerp(1.0f,1.375f));
 													//var t = (tick + i.sourceCid.CidToRandom()).Wave(1.5f / 512.0f+0.25f,2.0f / 512f+0.25f);
 													var r = t.Ramp();
 													(int x, int y) _c0, _c1;
@@ -1963,10 +1984,10 @@ internal partial class GameClient
 		if(highlight)
 			lineThickness *= 1.25f;
 		var shadowColor = ShadowColor(alpha,highlight);
-		if(wantShadow)
-			DrawLine(Layer.effectShadow,c0,c1,GetLineUs(c0,c1,lineThickness,lineRate,animWave),shadowColor,zEffectShadow,thickness: lineThickness);
-
-		DrawLine(Layer.lineOverlay,c0,c1,GetLineUs(c0,c1,lineThickness,lineRate,animWave),color,zEffects,thickness: lineThickness);
+	//	if(wantShadow)
+	//		DrawLine(Layer.effectShadow,c0,c1,GetLineUs(c0,c1,lineThickness,lineRate,animWave),shadowColor,zEffectShadow,thickness: lineThickness);
+		if(Settings.linesVisible != false)
+			DrawLine(Layer.lineOverlay,c0,c1,GetLineUs(c0,c1,GameClient.lineThickness,lineRate,animWave),color,zEffects,thickness: lineThickness);
 		//if(applyStopDistance)
 		//{
 		//	DrawSquare(Layer.action + 3,c0,color,zEffects);
@@ -2082,12 +2103,31 @@ internal partial class GameClient
 
 	static (float u, float v) GetLineUs(Vector2 c0,Vector2 c1,float thickness,float animationSpeed,bool wave) {
 		var offset = wave ? (animationSpeed * animationT).Wave() : (animationSpeed * animationT).Wrap01();
-		return (offset, offset-(c0 - c1).Length()* lineWToUs/thickness);
+		var du = (c0 - c1).Length()* lineWToUs/thickness;
+	//	var duHalf = MathF.Truncate(du*0.5f);
+	//	offset -= duHalf;
+		return (offset, offset-du);
 
 	}
-	private static void DrawLine(int layer,Vector2 c0,Vector2 c1,(float u, float v) uv,Color color,float zBias,float thickness = lineThickness) {
+	private static void DrawLine(int layer,Vector2 c0,Vector2 c1,(float u0, float u1) us,Color color,float zBias,float thickness = lineThickness) {
+		var ts = cullWCF.ClipSegment(c0,c1);
+		if(ts.t0 >= ts.t1)
+			return;
+	//	if(ts.t0 > 0 | ts.t1 < 1) 
+			{
+			var dc = c1-c0;
+			c1 = c0 + ts.t1*dc; 
+			c0 = c0 + ts.t0*dc;  // Reuse!
+			float du = us.u1-us.u0;
+			var _u0 = us.u0+ts.t0*du;
+			var _u1 = us.u0+ts.t1*du;
+			// recenter
+			float offSet = MathF.Truncate( (_u0+_u1)*0.5f );
+			us = (_u0 - offSet, _u1-offSet);
+		}
+
 		//	draw.AddLine(layer,lineDraw, c0, c1, lineThickness, , color,(c0.CToDepth()+ zBias, c1.CToDepth()+ zBias) );
-		draw.AddLine(layer,lineDraw,c0,c1,thickness,uv.u,uv.v,color,(c0.CToDepth(zBias), c1.CToDepth(zBias)));
+		draw.AddLine(layer,lineDraw,c0,c1,thickness,us.u0,us.u1,color,(c0.CToDepth(zBias), c1.CToDepth(zBias)));
 	}
 
 

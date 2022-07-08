@@ -86,7 +86,7 @@ static partial class View
 			//	cameraReferencePositionParameter = avaEffect.Parameters["cameraReferencePosition"];
 			viewCWParam = avaEffect.Parameters["viewCW"];
 			//pixelScaleParameter = avaEffect.Parameters["pixelScale"];
-
+			regionAttackMaterial = LoadMaterial("runtime/region/marker_attack_town.dds");
 			fontTexture = CreateFromDDS(AppS.AppFileName("runtime/font.dds"),false);
 			blessedMaterials = new Material[VirtueHelper.count];
 			for(int i = 0;i<blessedMaterials.Length;i++) {

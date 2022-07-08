@@ -53,7 +53,7 @@ namespace CnV.Views
 			public int id { get; set; }
 
 		}
-		const float minTimeScale = 0.125f;
+		const float minTimeScale = 0.25f;
 		const float maxTimeScale = 1024.0f;
 
 		static float RoundNicely(float d) {
@@ -68,9 +68,9 @@ namespace CnV.Views
 			else
 				return MathF.Round(d/1000)*1000;
 		}
-		// slider ranges from or 0..10, 2^(x-2) 1/4 .. 256
+		// slider ranges from or 0..12, 2^(x-2) 1/4 .. 1024
 		static double SliderToTimeScale(double v) => v<= 0 ? 0 : Math.Pow(2,v-2);
-		static double TimeScaleToSlider(double v) => v <= 0 ? 0 : (Math.Log2(v) + 2).Clamp(0,10);
+		static double TimeScaleToSlider(double v) => v <= 0 ? 0 : (Math.Log2(v) + 2).Clamp(0,12);
 
 		static internal Grid rootGrid;
 
@@ -132,9 +132,10 @@ namespace CnV.Views
 		internal static void HistoricModeUIUpdate() {
 			AppS.QueueOnUIThread(() => {
 				instance.timePlay.IsEnabled = Sim.isHistoric;
-				instance.timeForward.IsEnabled = Sim.isHistoric;
-				instance.timeScaleSlider.IsEnabled = Sim.isHistoric;
-				instance.timeScaleNumberBox.IsEnabled = Sim.isHistoric;
+				instance.timeForward.IsEnabled = Sim.isHistoric | AppS.isSinglePlayer;
+				instance.timeScaleSlider.IsEnabled = Sim.isHistoric| AppS.isSinglePlayer;
+				instance.timeScaleNumberBox.IsEnabled = Sim.isHistoric| AppS.isSinglePlayer;
+				
 			});
 		}
 		//internal void TimeScaleValueChanged(NumberBox sender,NumberBoxValueChangedEventArgs e)
@@ -578,7 +579,7 @@ namespace CnV.Views
 				}
 
 				WorkUpdate("Init");
-				await Task.Run(CnVClient.InitializeGame);
+				await CnVClient.InitializeGame();
 				//		Player.activePlayerChanged += (p0,p1) => AppS.UpdateAppTitle();
 
 				//AppS.QueueOnUIThread(() =>
@@ -1661,7 +1662,7 @@ namespace CnV.Views
 			Sim.GotoTime(Sim.serverStartTime);
 		}
 
-		private async void TimeForwardClick(object sender,RoutedEventArgs e) {
+		private void TimeForwardClick(object sender,RoutedEventArgs e) {
 			var dt = TimeSpanS.FromHours(gotoTimeOffset.Value);
 
 			//if(!AppS.isSinglePlayer) {

@@ -35,7 +35,7 @@
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition x:Name="LeftPaddingColumn" Width="0" x:FieldModifier="internal" />
 				<!-- 0 HTML column -->
-				<ColumnDefinition Width="auto" x:Name="IconColumn" x:FieldModifier="internal" />
+				<ColumnDefinition Width="64" x:Name="IconColumn" x:FieldModifier="internal" />
 				<!-- 0 HTML column -->
 				<ColumnDefinition Width="auto"  x:Name="TitleColumn" x:FieldModifier="internal"  />
 				<!-- 1 black space for popups -->
@@ -48,16 +48,19 @@
 			
 			<Image x:Name="AppIcon" x:FieldModifier="internal" Grid.Column="1"
 				   Source="/Assets/cnv.png" 
-                   HorizontalAlignment="Left"
+                   HorizontalAlignment="Center"
 				   VerticalAlignment="Center"
 					Height="40"
-				   Margin="2,0,0,0"
+				   Width="60"
+				   Margin="2,0,2,0"
                    Stretch="Uniform" />
 			<TextBlock Grid.Column ="2" x:Name="AppTitleBarText" x:FieldModifier="internal"
                        VerticalAlignment="Center"
-                       TextWrapping="NoWrap"
+                       TextWrapping="Wrap"
+					   MaxLines="3"
+					   MinWidth="60" 
                        Style="{StaticResource TextBlockSmall}"
-                       Margin="4,0,0,0"/>
+                       Margin="6,0,0,0"/>
 			<cnv:PlayerStats 
 				Grid.Column ="3"
 				x:Name="playerStats"
@@ -444,13 +447,13 @@ VerticalAlignment="Center"
 								ToolTipService.ToolTip="Speeds up or slows down the server clock rate [for test]"
 								Minimum="0.0"  
 								
-						Maximum="256" >
+						Maximum="1024" >
 						
 						</NumberBox>
-					<Slider x:Name="timeScaleSlider" ThumbToolTipValueConverter="{x:Bind timeScaleToolTipConverter}"  Value="2" 
+					<Slider x:Name="timeScaleSlider" ThumbToolTipValueConverter="{x:Bind timeScaleToolTipConverter}"  Value="1" 
 							ValueChanged="TimeScalueSliderValueChanged"
 							HorizontalAlignment="Stretch"
-							 Orientation="Horizontal" Minimum="0" Maximum="10" SmallChange="1" 
+							 Orientation="Horizontal" Minimum="0" Maximum="12" SmallChange="1" 
 							 StepFrequency="1"  Margin="2,4"  />
 					
 					<!--<tk:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" HorizontalSpacing="3" VerticalAlignment="3" Margin="2"  >

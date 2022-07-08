@@ -174,7 +174,7 @@
 				<CheckBox  Content="Outgoing Visible"
 							 IsThreeState="True"
 							   Margin="4"
-							   IsChecked="{x:Bind cnv:Settings.attacksAlwaysVisible, Mode=TwoWay}"
+							   IsChecked="{x:Bind cnv:Settings.outgoingAlwaysVisible, Mode=TwoWay}"
 							  
 							   ToolTipService.ToolTip="On:  Show all outgoing overlays (potentialy slower and more confusing), Off: don't show, Maybe: Only show if source or target is hovered or selected"
 							   />
@@ -192,6 +192,12 @@
 							   Margin="4"
 						     ToolTipService.ToolTip="If checked, trades are shown on the map, if neutral they are only show when a trade window is open"
 							   />
+				<CheckBox  Content="Lines Visible" IsThreeState="True" IsChecked="{x:Bind cnv:Settings.linesVisible, Mode=TwoWay}" 
+							   Margin="4"
+						     ToolTipService.ToolTip="If off, lines in region view are hidden"   />
+				<CheckBox  Content="Popups Visible" IsThreeState="True" IsChecked="{x:Bind cnv:Settings.popupsVisible, Mode=TwoWay}" 
+							   Margin="4"
+						     ToolTipService.ToolTip="If off, popups are hidden"   />
 				<NumberBox Header="Reset Raids Carry %"
 									 Value="{x:Bind cnv:Settings.resetRaidsCarry,Mode=TwoWay}"
 									 SmallChange="1" ToolTipService.ToolTip="When resetting raids, if [Min(carry%)] &lt;= [Reset Raids Carry %] raids are reset"

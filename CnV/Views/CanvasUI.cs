@@ -117,7 +117,7 @@ using Game;
 								case World.TileType.typeCity:
 									{
 										
-										var city = City.GetOrAddCity(cid);
+										City.TryGet(cid, out var city);
 										
 										if(city != null)
 										{

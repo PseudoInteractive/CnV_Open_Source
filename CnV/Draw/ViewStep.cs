@@ -22,6 +22,8 @@ using static GameClient;
 	// Velocity
 	// public static Vector3 viewVW = default;
 	internal static double simT;
+	internal static double simTimePerFrameGuess;
+	internal static double simTimePerFrameSmoothed;
 
 	internal static void StepViewToPresent()
 	{

@@ -81,8 +81,8 @@ namespace CnV
 				//BuildQueue.Initialize();
 
 				// World cannot load until tiles are loaded
-				
-				await Task.WhenAll( t2,t3,t1).ConfigureAwait(false); ; // city custom can end here
+
+				await Task.WhenAll(t2,t3,t1).ConfigureAwait(false); ; // city custom can end here
 				
 				AppS.SetState( AppS.State.active );
 

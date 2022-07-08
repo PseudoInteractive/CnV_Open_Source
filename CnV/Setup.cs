@@ -26,40 +26,40 @@ partial class App {
 		public static App instance;
 		public static string appLink = "cnv";
 
-	private static readonly IHost _host = Host
-        .CreateDefaultBuilder()
-        .ConfigureServices((context, services) =>
-        {
-            // Default Activation Handler
-  //          services.AddTransient<ActivationHandler<LaunchActivatedEventArgs>, DefaultActivationHandler>();
+	//private static readonly IHost _host = Host
+ //       .CreateDefaultBuilder()
+ //       .ConfigureServices((context, services) =>
+ //       {
+ //           // Default Activation Handler
+ // //          services.AddTransient<ActivationHandler<LaunchActivatedEventArgs>, DefaultActivationHandler>();
 
-            // Other Activation Handlers
+ //           // Other Activation Handlers
 
-            // Services
-    //        services.AddSingleton<ILocalSettingsService, LocalSettingsServicePackaged>();
-     //       services.AddSingleton<IThemeSelectorService, ThemeSelectorService>();
-      //      services.AddTransient<INavigationViewService, NavigationViewService>();
+ //           // Services
+ //   //        services.AddSingleton<ILocalSettingsService, LocalSettingsServicePackaged>();
+ //    //       services.AddSingleton<IThemeSelectorService, ThemeSelectorService>();
+ //     //      services.AddTransient<INavigationViewService, NavigationViewService>();
 
-       //     services.AddSingleton<IActivationService, ActivationService>();
-        //    services.AddSingleton<IPageService, PageService>();
-         //   services.AddSingleton<INavigationService, NavigationService>();
+ //      //     services.AddSingleton<IActivationService, ActivationService>();
+ //       //    services.AddSingleton<IPageService, PageService>();
+ //        //   services.AddSingleton<INavigationService, NavigationService>();
 
-            // Core Services
-         //   services.AddSingleton<IFileService, FileService>();
+ //           // Core Services
+ //        //   services.AddSingleton<IFileService, FileService>();
 
-            // Views and ViewModels
-           // services.AddTransient<SettingsViewModel>();
-           // services.AddTransient<SettingsPage>();
-            // Configuration
-  //          services.Configure<LocalSettingsOptions>(context.Configuration.GetSection(nameof(LocalSettingsOptions)));
-        })
-        .Build();
+ //           // Views and ViewModels
+ //          // services.AddTransient<SettingsViewModel>();
+ //          // services.AddTransient<SettingsPage>();
+ //           // Configuration
+ // //          services.Configure<LocalSettingsOptions>(context.Configuration.GetSection(nameof(LocalSettingsOptions)));
+ //       })
+ //       .Build();
 
-    public static T GetService<T>()
-        where T : class
-    {
-        return _host.Services.GetService(typeof(T)) as T;
-    }
+    //public static T GetService<T>()
+    //    where T : class
+    //{
+    //    return _host.Services.GetService(typeof(T)) as T;
+    //}
 
 		public static void InitAppCenter()
 		{
@@ -208,18 +208,18 @@ partial class App {
 						}
 						else {
 							AppS.appAlreadyRunning=true;
-							var mainInstance = Microsoft.Windows.AppLifecycle.AppInstance.FindOrRegisterForKey("main");
+							//var mainInstance = Microsoft.Windows.AppLifecycle.AppInstance.FindOrRegisterForKey("main");
 
 							// If the instance that's executing the OnLaunched handler right now
 							// isn't the "main" instance.
-							if(!mainInstance.IsCurrent) {
+							//if(!mainInstance.IsCurrent) {
 								// Redirect the activation (and args) to the "main" instance, and exit.
 								var activatedEventArgs =
 									Microsoft.Windows.AppLifecycle.AppInstance.GetCurrent().GetActivatedEventArgs();
-								await mainInstance.RedirectActivationToAsync(activatedEventArgs);
+								await keyInstance.RedirectActivationToAsync(activatedEventArgs);
 								System.Diagnostics.Process.GetCurrentProcess().Kill();
 								return;
-							}
+							//}
 
 							//                        isRedirect = true;
 							//                       RedirectActivationTo(args, keyInstance);
@@ -572,9 +572,9 @@ partial class App {
      {
 		
 		var title =  (Player.activeId!=0)?
-				(Sim.isPastWarmup ? 	$"CnV - {Player.active.shortName}"
-				:	$"Conquest and Virtue Alpha, W{World.id} - {Player.active.shortName}  (version {AppS.currentVersion})")
-				:	$"Conquest and Virtue Alpha, W{World.id} Sign in to Discord (version {AppS.currentVersion})";
+				(Sim.isPastWarmup ? 	Player.active.shortName
+				:	$"Conquest and Virtue Alpha\nW{World.id} - {Player.active.shortName}\nVersion: {AppS.currentVersion}")
+				:	$"Conquest and Virtue Alpha\nW{World.id} Sign in to Discord\nVersion: {AppS.currentVersion}";
 
 		if(AppWindowTitleBar.IsCustomizationSupported()) {
 			ShellPage.instance.AppTitleBarText.Text = title;
@@ -754,12 +754,12 @@ private static void SetDragRegionForCustomTitleBar(AppWindow appWindow)
         List<Windows.Graphics.RectInt32> dragRectsList = new();
 
         Windows.Graphics.RectInt32 dragRectL;
-        dragRectL.X = (int)((i.LeftPaddingColumn.ActualWidth) * scaleAdjustment);
+		var x0 = (int)((i.LeftPaddingColumn.ActualWidth) * scaleAdjustment);
+			const int leftStuff = 60+60+6;
+        dragRectL.X = 0;
         dragRectL.Y = 0;
         dragRectL.Height = (int)(i.AppTitleBar.ActualHeight * scaleAdjustment);
-        dragRectL.Width = (int)((i.IconColumn.ActualWidth
-                                +i.TitleColumn.ActualWidth
-                                ) * scaleAdjustment);
+        dragRectL.Width = x0+(int)(leftStuff * scaleAdjustment);
         dragRectsList.Add(dragRectL);
 
         Windows.Graphics.RectInt32 dragRectR;
