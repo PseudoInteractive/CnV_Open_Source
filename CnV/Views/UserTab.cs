@@ -16,6 +16,8 @@ using System;
 using System.Collections;
 using System.Collections.ObjectModel;
 
+using CommunityToolkit.WinUI.UI.Controls;
+
 using Syncfusion.UI.Xaml.Grids;
 
 using Windows.Storage;
@@ -263,7 +265,7 @@ public partial class UserTab:Page, IANotifyPropertyChanged {
 	public Task Close()
 	{
 		if(!isOpen) {
-			Assert(false);
+		//	Assert(false);
 			return Task.CompletedTask;
 		}
 		return TabPage.Close(this);
@@ -378,8 +380,9 @@ public partial class UserTab:Page, IANotifyPropertyChanged {
 		{
 			if(e.Record is Player player)
 			{
-				if(e.Column.MappingName is ( nameof(Player.avatarImage)  ) )
-					e.ToolTip.Content = new Image { Source = player.avatarImage };
+			//	if(e.Column.MappingName is (nameof(Player.avatarImage)))
+					e.ToolTip.Content = XamlHelper.MakeMarkdown( player.toolTipMd );
+				
 
 			}
 			else if(e.Record is City city)

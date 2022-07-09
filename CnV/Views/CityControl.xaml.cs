@@ -54,6 +54,7 @@ namespace CnV
 			if(value is not null && !citySelections.Contains(value))
 				citySelections.Add(value);
 			SetValue(cityProperty,value); // thhis should trigger effecst to update the UPI
+			CallPropertyChanged();
 			return true;
 		}
 		public void SetCity(City value, bool triggerCityChanged=true) {
@@ -62,7 +63,6 @@ namespace CnV
 			{
 				if(!SetCityI(value))
 					return;
-				CallPropertyChanged(nameof(this.city));
 	
 				if(triggerCityChanged)
 					cityChanged?.Invoke(this,value);
@@ -72,8 +72,8 @@ namespace CnV
 
 			
 		}
-		
 
+		internal string comboToolTip => _city.toolTip;
 		internal bool IsValid( SpotId cid, bool verbose) {
 			if(cid == City.cidNone) {
 				if(!allowNone) {

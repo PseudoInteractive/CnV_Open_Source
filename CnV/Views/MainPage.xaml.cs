@@ -173,8 +173,8 @@ namespace CnV.Views
 		{
 
 			ResourcesAndGold raidIncome = new(); // per hour
-			var tsTotal = 0u;
-			var tsHome = 0u;
+			var tsTotal = 0;
+			var tsHome = 0;
 			var onWater = 0;
 			var castles = 0;
 												 //		if (jsd.RootElement.ValueKind == JsonValueKind.Object)

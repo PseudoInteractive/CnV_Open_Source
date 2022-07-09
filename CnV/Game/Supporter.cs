@@ -18,14 +18,14 @@ namespace CnV
         public Microsoft.UI.Xaml.Media.Imaging.BitmapImage icon => city.icon;
         public int cid => city.cid;
         public string raidReturn => city.raidReturn;
-        public uint tsHome =>  city.troopsHome.TS(NearDefenseTab.Include);
-        public uint tsTotal => city.troopsOwned.TS(NearDefenseTab.Include);
+        public int tsHome =>  city.troopsHome.TS(NearDefenseTab.Include);
+        public int tsTotal => city.troopsOwned.TS(NearDefenseTab.Include);
 		public string sendTroopsS => tSend.Format();
 		public TimeSpanS travel;
 		public int validTargets { get; set; }
 		public string travelTime => travel.MulRoundUp((NearDefenseTab.instance?.useHorns).Switch(1.0f,0.5f,1.0f)).Format();
 		public TroopTypeCounts tSend = new();
-		public uint tsSend
+		public int tsSend
         {
             get => tSend.TS();
         }

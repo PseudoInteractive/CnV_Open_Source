@@ -76,7 +76,7 @@ public partial class City
 			else if(isPortal)
 				return "Moongate";
 			else if(isDungeonOrBoss)
-				return Cavern.Get(cid).ToString();
+				return Cavern.Get(cid).Format('\n');
 			//if (spot is City city)
 			{
 				using var psb = new PooledStringBuilder();
@@ -86,7 +86,7 @@ public partial class City
 					.AppendLinePre(city.nameAndRemarks)
 				.AppendFormat("\npts:{0:N0}",city.points);
 
-				
+
 				// Todo: avatars
 
 				if(player.allianceId!= 0)
@@ -106,17 +106,20 @@ public partial class City
 					sb.AppendLinePre(city.notes.AsSpan().Wrap(20));
 
 				//if(city.senatorInfo.Length != 0)
-				if(share)
-				{
+				if(share) {
 					city.GetSenatorInfo(sb);
 				}
 				sb.Append($"\n{c.y / 100}{c.x / 100} ({c.x}:{c.y})");
-				if(share)
-				{
-					city.GetTroopsString(sb, "\n");
+				if(share) {
+					city.GetTroopsString(sb,"\n");
 				}
+				var hasIncoming = city.hasIncomingAttacks;
 				var wantDef = false;
-				if(city.hasIncomingAttacks )
+				if(share && (IsLowOnFood(out var food)) ) {
+					sb.Append($"\nꁃ { food.Format()}");
+				}
+
+				if(hasIncoming)
 				{
 					sb.AppendFormat("\nꁑ{0} incoming",city.incomingAttackCount );
 

@@ -25,6 +25,7 @@
 	
 		<sf:SfDataGrid x:Name="cityGrid"
 		              	x:FieldModifier="public"
+					   AutoGenerateColumns="False"
 							Grid.Row="3"
 							 					   IsReadOnly="True"
 							ColumnWidthMode="SizeToCells"
@@ -47,7 +48,7 @@
 
 				<sf:GridHyperlinkColumn HeaderText= "+" 
 				                        MappingName="dungeonsToggle"
-				                        Width="20"
+				                        Width="20" AllowResizing="False" 
 																				  ColumnWidthMode="None"
 
 				                        ToolTipService.ToolTip="Tap to expend or collapse dungeons" />
@@ -55,6 +56,7 @@
 				<sf:GridImageColumn MappingName="icon"
 											HeaderText="I"
 											Width="32"
+									AllowResizing="False"
 											ToolTipService.ToolTip="Click to switch to this city"
 																				  ColumnWidthMode="None"
 
@@ -67,12 +69,16 @@
 										    />
 					<sf:GridHyperlinkColumn MappingName="xy"
 										   ToolTipService.ToolTip="Click to view this city"
-										 
+										 AllowResizing="False"
+											Width="60"
+											ColumnWidthMode="None"
 										    />
 					<sf:GridNumericColumn MappingName="cont"
 										   UseBindingValue="True"
 												TextAlignment="Center"
 											Width="42"
+										  AllowResizing="False"
+										  ColumnWidthMode="None"
 									/>
 				<sf:GridNumericColumn ValueBinding="{Binding tsTotal, Mode=OneWay}"
 									  UseBindingValue="True"

@@ -107,7 +107,7 @@ namespace CnV
 		private void SetMax2(object sender,RoutedEventArgs e) => SetMax(2);
 		private void SetMax3(object sender,RoutedEventArgs e) => SetMax(3);
 		internal string cartRequirments { get {
-				var sb = new PooledStringBuilder();
+				using var sb = new PooledStringBuilder();
 				sb.s.Append("Will use: ");
 				TradeOrder.FormatTransport(sb.s,viaLand ? res.sum.DivideRoundUp(1_000) : 0,!viaLand ? res.sum.DivideRoundUp(10_000) : 0);
 				return sb.s.ToString();

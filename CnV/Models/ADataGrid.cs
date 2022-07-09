@@ -71,6 +71,7 @@ public static partial class ADataGrid
 				return;
 		
 		grid.ColumnSizer.ResetAutoCalculationforAllColumns();
+		grid.ColumnSizer.Refresh();
 	}
 
 	internal static void ResetAutoColumns(this xDataGrid grid) {
@@ -281,7 +282,7 @@ public static partial class ADataGrid
 			 var _lock0 = new ADataGrid.ChangeContextDisposable(wantChangeContext ? grid : null);
 			grid.ColumnWidthMode = Syncfusion.UI.Xaml.Grids.ColumnWidthMode.SizeToCells;
 
-
+			//grid.ColumnSizer.Suspend();
 			//	grid.FontFamily = App.CnVFont;
 			//grid.FilterRowPosition=FilterRowPosition.FixedTop;
 				grid.ColumnSizer.FontStretch = Windows.UI.Text.FontStretch.Condensed;

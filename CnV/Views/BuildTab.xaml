@@ -70,8 +70,10 @@
 									AllowSorting="False"
 											HeaderText="I"
 											Width="32"
-									
-											ToolTipService.ToolTip="Click to switch to this city"
+									AllowResizing="False"
+									ColumnWidthMode="None"
+
+									ToolTipService.ToolTip="Click to switch to this city"
 											 />
 				<sf:GridTextColumn MappingName="nameAndRemarks"
 										   HeaderText="Name"
@@ -85,14 +87,16 @@
 										    />
 				<sf:GridHyperlinkColumn MappingName="xy"
 				                        TextAlignment="Center"
-				                        Width="56"
-										
+				                        Width="60"
+										AllowResizing="False"
+									ColumnWidthMode="None"
 
 				/>
 				<sf:GridNumericColumn MappingName="cont"
 				                      TextAlignment="Center"
 											Width="42"
-									  
+									  AllowResizing="False"
+									ColumnWidthMode="None"
 												 />
 				
 
@@ -102,6 +106,8 @@
 										   TextAlignment="Center"
 									  
 										  Width="32"
+									   AllowResizing="False"
+									ColumnWidthMode="None"
 									   
 										    />
 				<sf:GridCheckBoxColumn MappingName="stalled"
@@ -109,40 +115,46 @@
 											ToolTipService.ToolTip="True building is stalled on resources or rougue build ops (i.e. towers but no wall, too many buildings)"
 										   TextAlignment="Center"
 										  Width="32"
-									   
+									   AllowResizing="False"
+									ColumnWidthMode="None"
 										    />
 				<sf:GridCheckBoxColumn MappingName="autobuild"
 										   ShowHeaderToolTip="True"
 											ToolTipService.ToolTip="Whether or not anything is set to autobuild"
 										   TextAlignment="Center"
 										  Width="32"
-									   
+									   AllowResizing="False"
+									ColumnWidthMode="None"
 										    />
 				<sf:GridCheckBoxColumn MappingName="AutoTowers"
 									    ShowHeaderToolTip="True"
 										   ToolTipService.ToolTip="Towers are set to autobuild?"
 										  Width="32"
-									   
+									   AllowResizing="False"
+									ColumnWidthMode="None"
 										    />
 				<sf:GridCheckBoxColumn MappingName="AutoWalls"
 									    ShowHeaderToolTip="True"
 										   ToolTipService.ToolTip="Walls are set to autobuild?"
 										  Width="32"
-									   
+									   AllowResizing="False"
+									ColumnWidthMode="None"
 										    />
 				
 				<sf:GridNumericColumn MappingName="Bldgs"
 										   ToolTipService.ToolTip="May or may not include queued buildings"
 										   TextAlignment="Right"
 											Width="48"
-									  
+									  AllowResizing="False"
+									ColumnWidthMode="None"
 										    />
 				<sf:GridNumericColumn MappingName="points"
 												ToolTipService.ToolTip="City score"
 											Width="64"
 												DisplayNumberFormat="N0"
 												TextAlignment="Right"
-									  
+									  AllowResizing="False"
+									ColumnWidthMode="None"
 												 />
 				<sf:GridNumericColumn ValueBinding="{Binding constructionSpeed, Mode=OneWay}"
 											HeaderText="cs"
@@ -150,7 +162,8 @@
 									  UseBindingValue="True"
 												TextAlignment="Right"
 											DisplayNumberFormat="N0"
-									  
+									  AllowResizing="False"
+									ColumnWidthMode="None"
 												 />
 				<sf:GridNumericColumn MappingName="tsTotal"
 												TextAlignment="Right"
@@ -168,12 +181,16 @@
 				<sf:GridNumericColumn MappingName="bcTowers"
 										  ToolTipService.ToolTip="Towers count"
 									  
-									    Width="32"
+									    Width="48"
+									  AllowResizing="False"
+									ColumnWidthMode="None"
 											HeaderText="twr" />
 				<sf:GridCheckBoxColumn MappingName="ministersOn"
 										  ToolTipService.ToolTip="Whether Ministers are on or temporarily disabled"
 										   
 									     Width="32"
+									   AllowResizing="False"
+									ColumnWidthMode="None"
 											HeaderText="mOn" />
 			</sf:SfDataGrid.Columns>
 			

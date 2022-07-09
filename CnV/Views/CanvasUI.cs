@@ -145,7 +145,7 @@ using Game;
 								if(data.isDungeonOrBoss)
 								{
 									var cavern = Cavern.Get(cid);
-									toolTip = cavern.ToString(); // \ntype:{data >> 4}";
+									toolTip = cavern.Format(); // \ntype:{data >> 4}";
 								}
 								break;
 							}

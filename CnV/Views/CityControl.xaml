@@ -35,6 +35,7 @@
 				  SelectionChangedTrigger="Committed"
 				  DropDownClosed="ComboBoxDropdownClosed"
 				  SelectionChanged="ComboBoxSelectionChnaged"
+				  ToolTipService.ToolTip="{x:Bind comboToolTip, Mode=OneWay}"
 					
 					   
 					   >
@@ -48,8 +49,6 @@
 			</DataTemplate>
 		</ComboBox.ItemTemplate>
 		</ComboBox>
-		<CheckBox Grid.Column="2" x:Name="onlyMineCheckbox" Content="Only Mine"
-				  Visibility="Collapsed"
-				  ToolTipService.ToolTip="if unchecked, includes all cities, to specify someone else's city add the '- [playerName]' to the end, note this may be slow"  IsChecked="True" />
+		
 	</Grid>
 </UserControl>

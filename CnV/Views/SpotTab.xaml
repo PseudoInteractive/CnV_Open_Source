@@ -55,7 +55,8 @@
 				<sf:GridCheckBoxSelectorColumn MappingName="Sel"  Width="45" />
 				<sf:GridImageColumn MappingName="icon"
                                         HeaderText="I"
-
+									AllowResizing="False"
+									ColumnWidthMode="None"
                                         Width="32" />
                 <sf:GridTextColumn ValueBinding="{Binding nameAndRemarks, Mode=OneWay}"
 								   HeaderText="Name"
@@ -63,15 +64,24 @@
                                        />
                 <sf:GridHyperlinkColumn MappingName="xy"
 										UseBindingValue="True"
+										AllowResizing="False"
+									ColumnWidthMode="None"
+										Width="60"
                                        />
                <sf:GridCheckBoxColumn  MappingName="pinned"
                                          ToolTipService.ToolTip="Hold down shift to toggle pinned status for all selected spots"
-                                          Width="32" />
+                                          Width="32" 
+									   AllowResizing="False"
+									ColumnWidthMode="None"
+									   />
 
                 <sf:GridNumericColumn MappingName="cont"
                                        TextAlignment="Center"
 									  UseBindingValue="True"
-                                       Width="34" />
+                                       Width="48"
+									  AllowResizing="False"
+									ColumnWidthMode="None"
+									  />
                 <sf:GridTextColumn MappingName="playerName" HeaderText="Player"
                                      />
 				<sf:GridTextColumn MappingName="allianceName"
@@ -81,10 +91,7 @@
                                      
                                       />
 
-                                <sf:GridCheckBoxColumn  MappingName="isCastle"
-                                           />
-                <sf:GridCheckBoxColumn  MappingName="isOnWater"
-                                          />
+                                
 				<sf:GridTextColumn MappingName="troopsString"
                                              />
             </sf:SfDataGrid.Columns>

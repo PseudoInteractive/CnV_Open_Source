@@ -177,9 +177,9 @@ namespace CnV
 				{
 					int counter = 0; ;
 					while(City.build == 0) {
-						await Task.Delay(500).ConfigureAwait(false);
+						await Task.Delay(1000).ConfigureAwait(false);
 						//	World.InvalidateCities();
-						if( ++counter > 10) {
+						if( ++counter > 5) {
 							World.InvalidateCities();
 							if(City.myCities.Any()) {
 								CitySwitch(City.myCities.First().cid);
