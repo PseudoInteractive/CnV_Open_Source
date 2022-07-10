@@ -115,6 +115,7 @@ public sealed partial class TradeSettingsControl:UserControl, INotifyPropertyCha
 		stoneReq.IntValue(),
 		ironReq.IntValue(),
 		foodReq.IntValue());
+		mo.resSend = mo.resSend.MaxIfSameSign(mo.resRequest);
 		mo.RemoveTradesTo(city.cid);
 		var newHash = mo.tradeHashCode;
 		Note.Show($"Trade settings changed: {newHash != priorHash}");

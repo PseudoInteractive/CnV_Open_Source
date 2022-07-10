@@ -11,7 +11,7 @@
     mc:Ignorable="d">
 	<Grid>
 		<Grid.RowDefinitions>
-			<RowDefinition  />
+			<RowDefinition Height="auto"  />
 			<RowDefinition Height="auto" />
 			<RowDefinition Height="auto" />
 		</Grid.RowDefinitions>
@@ -22,33 +22,39 @@
 			</Button.Content>
 		</Button>
 		<TextBlock Grid.Row="2" x:Name="travelInfo" Text="{x:Bind travelInfoS, Mode=OneWay}" Margin="4,2,70,2" TextWrapping="Wrap"  />
-		
-		<tk:WrapPanel Grid.Row="1" Orientation="Horizontal" Padding="4">
-			<Button Style="{StaticResource ButtonMedium}" Content="Total" Click="MaxClick" Margin="0,2,8,2" />
-			<Button Style="{StaticResource ButtonMedium}" Content="Home" Click="HomeClick" Margin="8,2" />
-			<Button Style="{StaticResource ButtonMedium}" Content="Zero" Click="ClearClick" Margin="8,2"  />
-			<ComboBox SelectedIndex="{x:Bind uiArmyType, Mode=TwoWay}" ItemsSource="{x:Bind cnv:Army.attackTypeStrings}" x:Name="armyTypeCombo" Visibility="Collapsed"/>
-			<ToggleSwitch IsOn="{x:Bind ViaWater, Mode=TwoWay}" OnContent="Water" OffContent="Land" />
-			<CheckBox x:Name="notSameAlliance" IsChecked="True" Content="Cancel if ally"  Visibility="Collapsed" Margin="4,2" ToolTipService.ToolTip="If set, attack will be cancelled if the target is allied at the time of arrival" />
-			<CheckBox x:Name="useHornsCheckbox" Content="Horns" IsChecked="{x:Bind UseHorns, Mode=TwoWay}"  Margin="4,2" ToolTipService.ToolTip="If set, horns will be used to speed up defense arrival as needed" />
-			<CheckBox x:Name="waitReturnCheckbox" Content="Wait Return" IsChecked="{x:Bind WaitReturn, Mode=TwoWay}"  Margin="4,2" ToolTipService.ToolTip="If set, departure will be occur once sufficient troops return"  />
-			<!--<TextBox   VerticalAlignment="Center" Text="{x:Bind arrival,Mode=TwoWay,Converter={StaticResource SmallTimeConverter}}"
-               Description="arrival" PlaceholderText="ASAP"    ToolTipService.ToolTip="Time of arrival, leave blank to send as soon as possible" />-->
 
-		
-			<StackPanel Orientation="Horizontal" Padding="0" x:Name="raidPanel" >
-				<TextBlock Text="Splits" Margin="6,2,0,2" VerticalAlignment="Center" />
-				<ComboBox x:Name="splitsCombo" ItemsSource="{x:Bind splitsItems}" SelectedIndex="0" Margin="6,2" VerticalAlignment="Center" />
-				<CheckBox x:Name="repeatCheckBox" Content="Repeat" IsChecked="True" Margin="6,2" />
-				<TextBlock Text="{x:Bind RaidCarry(), Mode=OneWay}" Margin="6,2,0,2" VerticalAlignment="Center" />
-			</StackPanel>
-			<cnv:DateTimeBox Label="arrival" x:Name="arrivalUI" ToolTipService.ToolTip="Clear both boxes to send immediately" />
+		<Pivot  x:Name="timingPivot" SelectedIndex="{x:Bind timingSelection, Mode=TwoWay}" 
+				HeaderFocusVisualPlacement="SelectedItemHeader" Height="128" >
 			
-			<NumberBox Description="Min TS" Value="{x:Bind city.minTS,Mode=OneWay}" IsEnabled="false" />
-			<TextBlock x:Name="attackStrength"  Text="{x:Bind AttackStrength(),Mode=OneWay}" TextWrapping="Wrap" />
-		</tk:WrapPanel>
+			<PivotItem x:Name="timingNow"  Header="Now"   Content="As soon as possible" />
 
-		<GridView x:Name="troopList"  Grid.Row="0" VerticalAlignment="Stretch"  ItemsSource="{x:Bind troopItems,Mode=OneWay}" >
+			<PivotItem x:Name="timingOnReturn"  Header="Wait Troops" Content="Depart when enough troops come home to send&#x0a;I.e.:  Returning raids, attacks and defense" />
+
+			<PivotItem x:Name="timingDepartureTimed"    ToolTipService.ToolTip="Depart at the specified time"  >
+			<PivotItem.Content>
+					<StackPanel Orientation="Horizontal">
+						<cnv:DateTimeBox  x:Name="departureUI"/>
+						<CheckBox Content="Wait Return" IsChecked="{x:Bind WaitReturn, Mode=TwoWay}"  Margin="4,2" ToolTipService.ToolTip="If set, troops will not leave until sufficient troops have returned"  />
+					</StackPanel>
+				</PivotItem.Content>
+			</PivotItem>
+
+			<PivotItem x:Name="timingArrivalTimed"   ToolTipService.ToolTip="Arrive at the specified time" FontSize="16" >
+				<PivotItem.Content>
+					<StackPanel Orientation="Horizontal">
+						<cnv:DateTimeBox  x:Name="arrivalUI"   />
+						<CheckBox Content="Wait Return" IsChecked="{x:Bind WaitReturn, Mode=TwoWay}"  Margin="4,2" ToolTipService.ToolTip="If set, troops will not leave until sufficient troops have returned"  />
+					</StackPanel>
+				</PivotItem.Content>
+			</PivotItem>
+
+		</Pivot>
+
+
+		
+
+		<StackPanel Grid.Row="1" BorderThickness="1" BorderBrush="Indigo" Margin="4" Padding="4" >
+		<GridView x:Name="troopList"   VerticalAlignment="Stretch"  ItemsSource="{x:Bind troopItems,Mode=OneWay}" >
 			
 			<GridView.ItemTemplate >
 			<DataTemplate  x:DataType="cnv:SendTroopItem" >
@@ -86,5 +92,30 @@
 		</GridView.ItemTemplate>
 
 	</GridView>
+			<tk:WrapPanel  Orientation="Horizontal" Padding="4">
+				<Button Style="{StaticResource ButtonMedium}" Content="Total" Click="MaxClick" Margin="0,2,8,2" />
+				<Button Style="{StaticResource ButtonMedium}" Content="Home" Click="HomeClick" Margin="8,2" />
+				<Button Style="{StaticResource ButtonMedium}" Content="Zero" Click="ClearClick" Margin="8,2"  />
+				<ComboBox SelectedIndex="{x:Bind uiArmyType, Mode=TwoWay}" ItemsSource="{x:Bind cnv:Army.attackTypeStrings}" x:Name="armyTypeCombo" Visibility="Collapsed"/>
+				<CheckBox IsChecked="{x:Bind ViaWater, Mode=TwoWay}" IsThreeState="True" 
+					  Content="Via Water" ToolTipService.ToolTip="If not checked, troops are sent via land.  If indeterminent, troops are sent via water if there is navy and the source and target are on water"  />
+				<CheckBox x:Name="notSameAlliance" IsChecked="True" Content="Cancel if ally"  Visibility="Collapsed" Margin="4,2" ToolTipService.ToolTip="If set, attack will be cancelled if the target is allied at the time of arrival" />
+				<CheckBox x:Name="useHornsCheckbox" Content="Horns" IsChecked="{x:Bind UseHorns, Mode=TwoWay}"  Margin="4,2" ToolTipService.ToolTip="If set, horns will be used to speed up defense arrival as needed" />
+				<!--<TextBox   VerticalAlignment="Center" Text="{x:Bind arrival,Mode=TwoWay,Converter={StaticResource SmallTimeConverter}}"
+               Description="arrival" PlaceholderText="ASAP"    ToolTipService.ToolTip="Time of arrival, leave blank to send as soon as possible" />-->
+
+
+				<StackPanel Orientation="Horizontal" Padding="0" x:Name="raidPanel" BorderThickness="1" BorderBrush="Indigo">
+					<TextBlock Text="Splits" Margin="6,2,0,2" VerticalAlignment="Center" />
+					<ComboBox x:Name="splitsCombo" ItemsSource="{x:Bind splitsItems}" SelectedIndex="0" Margin="6,2" VerticalAlignment="Center" SelectionChanged="splitsChanged" />
+					<CheckBox x:Name="repeatCheckBox" Content="Repeat" IsChecked="True" Margin="6,2" />
+					<TextBlock Text="{x:Bind RaidCarry(), Mode=OneWay}" Margin="6,2,0,2" VerticalAlignment="Center" />
+				</StackPanel>
+
+
+				<NumberBox Description="Min TS" Value="{x:Bind city.minTS,Mode=OneWay}" IsEnabled="false" />
+				<TextBlock x:Name="attackStrength"  Text="{x:Bind AttackStrength(),Mode=OneWay}" TextWrapping="Wrap" />
+			</tk:WrapPanel>
+		</StackPanel>
 	</Grid>
 </cnv:DialogG>

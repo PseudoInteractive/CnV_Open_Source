@@ -59,6 +59,7 @@ namespace CnV
 			//Effects.SetShadow(this,shadow);
 			MaxHeight = Settings.canvasHeight;
 			var grid = new Grid() {Padding=new(),Margin=new()  };
+			AttachedDropShadow.
 			TitleGrid = grid.Children;
 			grid.ColumnDefinitions.Add(new() { Width=GridLength.Auto } );
 			grid.ColumnDefinitions.Add(new() {  Width=new(1,GridUnitType.Star)});

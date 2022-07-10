@@ -408,7 +408,7 @@ public sealed partial class AttackSender:DialogG, INotifyPropertyChanged
 			//	arrival = departure + travelTimeWithHorms;
 			foreach(var t in validTargets) {
 				var _t = t;
-				await SendTroops.ShowInstance(city,t.target,false,viaWater,t.isReal ? realType : fakeType,null,t.isReal ? troops.reals : troops.fakes,arrival,false,waitReturn,notSameAlliance: notSameAlliance.IsChecked);
+				await SendTroops.ShowInstance(city,t.target,false,_viaWater:viaWater,t.isReal ? realType : fakeType,null,t.isReal ? troops.reals : troops.fakes,TimingSetting.arrival, arrival,false,waitReturn,notSameAlliance: notSameAlliance.IsChecked);
 			}
 			AppS.MessageBox("Attacks Sent! (hopefully)","");
 			//	Done();

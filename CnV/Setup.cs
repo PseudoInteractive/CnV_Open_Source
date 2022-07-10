@@ -566,12 +566,19 @@ partial class App
 		try {
 			if(AppWindowTitleBar.IsCustomizationSupported()) {
 				ShellPage.instance.AppTitleBarText.Text = title;
-				return;
+				var tb = appWindow.TitleBar;
+				 var c = Windows.UI.Color.FromArgb(0xFF,0x34,0x0B,0x0B);
+						tb.BackgroundColor = c;
+						tb.ButtonBackgroundColor = Windows.UI.Color.FromArgb(0xFF,0x24,0x0B,0x0B); ;
+
+			}
+			else {
+				appWindow.Title = title;
 			}
 
 		}
 		catch(Exception ex) {
-			appWindow.Title = title;
+			LogEx(ex);
 		}
 
 		//    Application.Current.Resources["WindowCaptionForeground"] = theme switch
@@ -616,10 +623,7 @@ partial class App
 		//        _ => new SolidColorBrush(Colors.Transparent)
 		//    };
 		//}
-		/// var c = Windows.UI.Color.FromArgb(0xFF,0x34,0x0B,0x0B);
-		//				title.BackgroundColor = c;
-		//				title.ButtonBackgroundColor = Windows.UI.Color.FromArgb(0xFF,0x24,0x0B,0x0B); ;
-
+		
 		//	appWindow.TitleBar.ButtonBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(0x80,0x40,0x20,0x20); 
 		//			appWindow.TitleBar.ButtonForegroundColor = Microsoft.UI.ColorHelper.FromArgb(0xff,0x80,0x40,0x60); 
 		//	appWindow.TitleBar.ButtonHoverBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(0x66,0x40,0x20,0x44); 

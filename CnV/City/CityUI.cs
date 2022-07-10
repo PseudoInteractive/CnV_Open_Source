@@ -156,9 +156,9 @@ public static partial class CityUI
 			{
 				var sel = Spot.GetSelectedForContextMenu(cid,false);
 				{
-					aWar.AddItem("Assault..",(_,_) => SendTroops.ShowInstance(GetBuild(),City.Get(cid),isSettle: false,viaWater: false,type: ArmyType.assault));
-					aWar.AddItem("Siege..",(_,_) => SendTroops.ShowInstance(GetBuild(),City.Get(cid),isSettle: false,viaWater: false,type: ArmyType.siege));
-					aWar.AddItem("Scout..",(_,_) => SendTroops.ShowInstance(GetBuild(),City.Get(cid),isSettle: false,viaWater: false,type: ArmyType.scout));
+					aWar.AddItem("Assault..",(_,_) => SendTroops.ShowInstance(GetBuild(),City.Get(cid),isSettle: false,type: ArmyType.assault));
+					aWar.AddItem("Siege..",(_,_) => SendTroops.ShowInstance(GetBuild(),City.Get(cid),isSettle: false,type: ArmyType.siege));
+					aWar.AddItem("Scout..",(_,_) => SendTroops.ShowInstance(GetBuild(),City.Get(cid),isSettle: false,type: ArmyType.scout));
 					aWar.AddItem("Attack Targets",(_,_) => AttackSender.ShowInstance(GetBuild(),City.Get(cid)));
 					var multiString = sel.Count > 1 ? $" _x {sel.Count} selected" : "";
 					//	aWar.AddItem("Cancel Attacks..", me.CancelAttacks);
@@ -745,15 +745,15 @@ public partial class City
 
 	internal void Settle(WorldC worldC)
 	{
-		SendTroops.ShowInstance(this,City.Get(worldC), isSettle:true,viaWater:cont != worldC.continentDigits,type:ArmyType.defense );
+		SendTroops.ShowInstance(this,City.Get(worldC), isSettle:true,type:ArmyType.defense );
 	}
 	internal void Raid(WorldC worldC)
 	{
-		SendTroops.ShowInstance(this,City.Get(worldC),isSettle: false,viaWater:cont != worldC.continentDigits, type:ArmyType.raid) ;
+		SendTroops.ShowInstance(this,City.Get(worldC),isSettle: false, type:ArmyType.raid) ;
 	}
 	internal void SendDefence(WorldC worldC)
 	{
-		SendTroops.ShowInstance(this,City.Get(worldC),isSettle: false,viaWater:cont != worldC.continentDigits, type:ArmyType.defense) ;
+		SendTroops.ShowInstance(this,City.Get(worldC),isSettle: false, type:ArmyType.defense) ;
 	}
 }
 

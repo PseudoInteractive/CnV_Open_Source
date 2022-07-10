@@ -38,8 +38,8 @@ namespace CnV
 			get { return (string)GetValue(LabelProperty); }
 			set { SetValue(LabelProperty,value); }
 		}
-		internal string labelTime => $"{Label} time";
-		internal string labelDate => $"{Label} date";
+//		internal string labelTime => $"{Label} time";
+//		internal string labelDate => $"{Label} date";
 
 		internal static DateTime? TranslateTime(ServerTime t) => t.isZero ? null :  t.dateTimeDT;
 		internal void SetDateTime(ServerTime t)
@@ -76,20 +76,26 @@ namespace CnV
 			}
 		}
 
-		internal static ObservableCollection<ServerTime> recent = new( new[] { ServerTime.zero } );
-
+		internal static List<ServerTime> recent = new();
+		
 		public ServerTime dateTime
 		{
 			get {
 				if(AppS.isShuttingDown)
 					return default;
 				var rv = ServerTime.CombineDateTime(date.SelectedDate,time.SelectedTime);
-				if(!recent.Contains(rv))
+				if( rv.isNotZero && !recent.Contains(rv)) {
+
 					recent.Add(rv);
+					recent.Sort();
+					if(recent.Count > 8)
+						recent.RemoveAt(0); // remove oldest
+				}
+
 				return rv;
 			}
 		}
-		internal void ResetRecentTimesComboBox() => recentTimesCombo.SelectedItem = null;
+//		internal void ResetRecentTimesComboBox() => recentTimesCombo.SelectedItem = null;
 
 		private void RecentChanged(object sender,SelectionChangedEventArgs e)
 		{
@@ -138,5 +144,17 @@ namespace CnV
 		private void TimeChanged(object sender,Syncfusion.UI.Xaml.Editors.SelectedDateTimeChangedEventArgs e) {
 			Note.Show("Time changed");
 		}
-	}
+
+        private void ContextRequested(UIElement sender,ContextRequestedEventArgs args) {
+			args.Handled    = true;
+			var flyout = new MenuFlyout();
+			flyout.AddItem("Clear",Symbol.Undo,Clear);
+			flyout.AddSeparator();
+			foreach(var i in recent) {
+				var _i = i;
+				flyout.AddItem(_i.Format(),() => SetDateTime(_i));
+			}
+			flyout.ShowContext(sender,args); 
+	    }
+    }
 }

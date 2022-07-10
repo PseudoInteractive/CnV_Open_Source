@@ -845,6 +845,7 @@ namespace CnV
 		public static MenuFlyoutItem AddItem(this MenuFlyout menu,string text,Symbol symbol,UIColor iconColor,Action command) => AddItem(menu,text,new SymbolIcon(symbol) { Foreground=AppS.Brush(iconColor) },command);
 		public static MenuFlyoutItem AddItem(this MenuFlyout menu,string text,string glyph,Action command) => AddItem(menu,text,new FontIcon() { Glyph=glyph },command);
 		public static MenuFlyoutItem AddItem(this MenuFlyout menu,string text,Action command) => AddItem(menu,text,icon: null,command: command);
+		public static void AddSeparator(this MenuFlyout menu) => menu.Items.Add( new MenuFlyoutSeparator() );
 
 		public static MenuFlyoutItem AddItem(this MenuFlyoutSubItem menu,string text,Action command)
 		{

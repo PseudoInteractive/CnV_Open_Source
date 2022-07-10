@@ -1271,7 +1271,7 @@ namespace CnV
 				else {
 					// attempt to abandom first city
 					static bool Inner() {
-						using var __lock = Sim.eventQLock.EnterSafe;
+						using var __lock = Sim.eventQLock.LockSafe;
 						var lastDay = Sim.simTime - ServerTime.secondsPerDay/2;
 						var recent = Sim.retired.Count(ev => ev.T >= lastDay && ev is CnVEventAbandon newCity && newCity.playerId == Player.activeId && newCity.isReset );
 						if(recent > 2 )

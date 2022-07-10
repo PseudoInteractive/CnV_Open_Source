@@ -373,7 +373,9 @@ namespace CnV.Views
 				var ts = supporter.tSend /  (def.Count);
 				var cid = d.cid;
 					var _d = d;
-					success &= await SendTroops.ShowInstance(City.Get(supporter.cid),_d,false,sendViaWater,ArmyType.defense,null,ts,_arriveAt,useHorns:useHorns,waitReturn:waitReturn);
+					success &= await SendTroops.ShowInstance(City.Get(supporter.cid),_d,false,sendViaWater,ArmyType.defense,null,ts,
+						_arriveAt.isNotZero ? TimingSetting.arrival : waitReturn ? TimingSetting.onReturn : TimingSetting.now,
+						_arriveAt,useHorns:useHorns,waitReturn:waitReturn);
 			//	Assert(success);
 				Log($"Sent {ts} from {supporter.cid.AsCity()} to {cid.AsCity()} @{_arriveAt.ToString()}");
 				//	await Task.Delay(500);

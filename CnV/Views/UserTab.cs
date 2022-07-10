@@ -51,10 +51,6 @@ public partial class UserTab:Page, IANotifyPropertyChanged {
 	}
 	
 
-
-
-	
-
 	public static void InitUserTabs()
 	{
 

@@ -64,6 +64,7 @@
 		<PackageReference Include="CommunityToolkit.WinUI.UI.Controls.DataGrid" Version="7.1.2" />
 		<PackageReference Include="CommunityToolkit.WinUI.UI.Controls.Layout" Version="7.1.2" />
 		<PackageReference Include="CommunityToolkit.WinUI.UI.Controls.Markdown" Version="7.1.2" />
+		<PackageReference Include="CommunityToolkit.WinUI.UI.Media" Version="7.1.2" />
 		<PackageReference Include="DirectXTexNet" Version="1.0.3" />
 		<PackageReference Include="DSharpPlus" Version="4.2.0" />
 		<PackageReference Include="FastEnum" Version="1.8.0" />
@@ -77,6 +78,7 @@
 		<PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.5.0" />
 		<PackageReference Include="Microsoft.Extensions.ObjectPool" Version="7.0.0-preview.5.22303.8" />
 		<PackageReference Include="Microsoft.Extensions.Primitives" Version="7.0.0-preview.5.22301.12" />
+		<PackageReference Include="Microsoft.Graphics.Win2D" Version="1.0.3.1" />
 		<PackageReference Include="Microsoft.Identity.Client" Version="4.45.0">
 			<TreatAsUsed>true</TreatAsUsed>
 		</PackageReference>
