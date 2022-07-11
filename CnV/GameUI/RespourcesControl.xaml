@@ -11,8 +11,8 @@
 
 	<Grid BorderThickness="1" 
 		  VerticalAlignment="Stretch" Margin="3" Padding="1"
-		  CornerRadius="3"
-						  BorderBrush="Gray"    >
+		 
+						  BorderBrush="Indigo"    >
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="*"/>
 

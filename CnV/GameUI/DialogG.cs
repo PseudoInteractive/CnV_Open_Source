@@ -12,6 +12,7 @@ using CommunityToolkit.WinUI.UI.Controls;
 using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Data;
+using CommunityToolkit.WinUI.UI.Media;
 
 namespace CnV
 {
@@ -19,7 +20,16 @@ namespace CnV
 	{
 		protected virtual string title => "Title";
 		internal virtual bool closeOnCitySwitch => true;
-		
+
+		static AttachedCardShadow shadow;
+
+	//		<ui:Effects.Shadow>
+	//	<tkmedia:AttachedCardShadow CornerRadius="0"
+	//									BlurRadius="24"
+	//									Color="MidnightBlue"
+ //                                   Offset="24,24"/>
+	//</ui:Effects.Shadow>
+
 		protected TextBlock titleText;
 		protected Button closeButton;
 		public UIElementCollection TitleGrid
@@ -49,6 +59,9 @@ namespace CnV
 		internal static List<DialogG> all = new();
 		public DialogG()
 		{
+			CornerRadius=new();
+			Margin = new();
+			Padding = new();	
 			IsTabStop=true;
 		//	ManipulationMode = ManipulationModes.TranslateX|ManipulationModes.TranslateY;
 			IsExpanded=true;
@@ -59,7 +72,7 @@ namespace CnV
 			//Effects.SetShadow(this,shadow);
 			MaxHeight = Settings.canvasHeight;
 			var grid = new Grid() {Padding=new(),Margin=new()  };
-			AttachedDropShadow.
+			
 			TitleGrid = grid.Children;
 			grid.ColumnDefinitions.Add(new() { Width=GridLength.Auto } );
 			grid.ColumnDefinitions.Add(new() {  Width=new(1,GridUnitType.Star)});
@@ -108,6 +121,16 @@ namespace CnV
 
 				all.Add(this);
 			}
+			SetupShadow(this);
+
+		}
+		internal static void SetupShadow(FrameworkElement me) {
+			if(Settings.menuShadows != false) {
+				if(shadow is null)
+					shadow = new AttachedCardShadow() { Offset="4,4",BlurRadius=6.0f, Color=Microsoft.UI.ColorHelper.FromArgb(255,16,0,48) };
+				Effects.SetShadow(me,shadow);
+			}
+
 		}
 
 
@@ -156,7 +179,12 @@ namespace CnV
 		{
 			try
 			{
-				
+				// Might have changed on the fly
+				if(Settings.menuShadows == false && shadow is not null) {
+					shadow.Opacity = 0;
+					shadow = null;
+
+					}
 
 				var was = Hide(false);
 
@@ -167,12 +195,12 @@ namespace CnV
 					titleText.Text = title;
 					showTask = new TaskCompletionSource<bool>();
 					ShellPage.gameUIFrame.Children.Add(this);
-					var focusItem = closeButton; 
+					//var focusItem = closeButton; 
 					
-					if(focusItem is not null)
-					{
-						FocusManager.TryFocusAsync(focusItem,FocusState.Programmatic);
-					}
+					//if(focusItem is not null)
+					//{
+					//	FocusManager.TryFocusAsync(focusItem,FocusState.Programmatic);
+					//}
 					return showTask.Task;
 				}
 			}

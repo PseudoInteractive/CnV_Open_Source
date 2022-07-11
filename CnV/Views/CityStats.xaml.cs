@@ -285,7 +285,7 @@ namespace CnV
 		private static bool SyncLists<TR, TX>(IList<TR> rtQ,ObservableCollection<TX> xQ,Func<TR,City,TX> factory,Func<TR,TX,bool> equals) {
 			var city = instance.city;
 			var lg = rtQ.Count;
-			var anyRemoved = false;
+			var anyChanged = false;
 
 			// first remove
 			//{
@@ -313,11 +313,12 @@ namespace CnV
 				if(cur == -1) {
 					var bi = factory(op,city);
 					xQ.Insert(i,bi);
+					anyChanged= true;
 				}
 				else {
 					if(cur != i) {
 						xQ.Move(cur,i);
-
+						anyChanged=true;
 					}
 
 				}
@@ -327,7 +328,7 @@ namespace CnV
 			for(int r = xQ.Count;--r >= lg;)
 			{
 				xQ.RemoveAt(r);
-				anyRemoved=true;
+				anyChanged=true;
 			}
 			
 			Assert(xQ.Count == rtQ.Count);
@@ -335,7 +336,7 @@ namespace CnV
 			//for(int i = 0;i<lg;++i) {
 			//	Assert(equals(rtQ[i],xQ[i]));
 			//}
-			return anyRemoved;
+			return anyChanged;
 		}
 
 		static void UpdateCommandItems() {
@@ -351,7 +352,7 @@ namespace CnV
 					var bq = instance.commandItems;
 
 					var anyRemoved = SyncLists(displayQueue,bq,(rt,city) => new CommandItem(rt),(a,b) => a == b.army);
-					if(commandsDirty) {
+					if(commandsDirty||anyRemoved) {
 						foreach(var i in bq) {
 							//i.UpdateAction();
 							i.OnPropertyChanged();
@@ -766,6 +767,7 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 
 		internal static void Invalidate()
 		{
+			commandsDirty =true;
 			if(Sim.isInteractiveOrHistoric && instance != null) {
 				nextTextUpdateTick=0;
 				AppS.QueueOnUIThread(BuildCityChanged);
@@ -1077,6 +1079,10 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 				City.ProcessCoordClick(sel.cid,AppS.keyModifiers.ClickMods(scrollIntoUi:true) );
 			}
 		}
+
+		private void CommandItemsClick(object sender,RoutedEventArgs e) {
+
+		}
 	}
 	public class BuildingCountAndBrush:INotifyPropertyChanged
 	{
@@ -1279,7 +1285,7 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 		internal bool isOutgoing => army.sourceCid == City.build;
 	//	public string sourceCoords=> army.sourceCity.nameAndRemarksAndPlayer;
 	//	public string targetCoords=> army.targetCity.nameAndRemarksAndPlayer;
-		public string info => $"{army.NextStopTimeString(' ')} {army.splitsS}{(army.isReturn^isOutgoing ? "to" : "from" )} {(isOutgoing ? army.targetCity: army.sourceCity)}";
+		public string info => $"{army.NextStopTimeString(' ')} {army.splitsS}{(army.isReturn^isOutgoing ? "" : "" )} {(isOutgoing ? army.targetCity: army.sourceCity)}";
 
 		//internal void SourceClick(object sender,RoutedEventArgs e)
 		//{
@@ -1303,9 +1309,7 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 
 	public BitmapImage action =>
 			  ImageHelper.Get(  
-								army.isSchedueledNotSent ? "UI/Icons/icon_cmmnds_raid_datetime.png"  :
 								army.isRaid ? (
-												army.isScheduledToReturn ? "UI/Icons/icon_cmmnds_raid_datetime.png" :
 												army.isRepeating ? "UI/Icons/icon_cmmnds_raid_loop.png" : 
 												"UI/Icons/icon_cmmnds_raid_once.png" ):
 								army.isReturn? "Region/UI/icon_player_own_troops_ret.png"  : 
@@ -1322,12 +1326,13 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 
 			if(army.isRaid) {
 				if(army.isRepeating) {
-					flyout.AddItem("Return immediately",Symbol.Undo,() =>
+					flyout.AddItem( "Return at..",glyph:(char)0xF738 ,command:() =>SendTroops.ShowInstance(prior: army,timing:TimingSetting.arrival) );
+					flyout.AddItem(army.isReturn ? "Stop repeating once returned" :  "Abort raid and return",Symbol.Undo,() =>
 					{
 						CnVEventReturnTroops.TryReturn(army,default,false,isResume:false,isSlow:false);
 					});
 					if(!army.isReturn) {
-						flyout.AddItem("Return when raid complete",Symbol.Undo,() => {
+						flyout.AddItem("Stop repeating raid",glyph:(char)0xE1CC, () => {
 							CnVEventReturnTroops.TryReturn(army,default,false,isResume:false,isSlow:true);
 						});
 					}
@@ -1369,7 +1374,7 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 			{
 				foreach(var i in army.sourceCity.outgoing) {
 					if(!i.canReturn) {
-						AppS.MessageBox("Too late to return outgoing attack");
+						AppS.MessageBox("One or more armies cannot be returned automatically (outgoing attack?)");
 						return;
 					}
 				}
@@ -1587,7 +1592,8 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 		{
 			this.trade = army;
 			
-			action =  ImageHelper.Get( trade.isReturning ?  "Region/UI/icon_player_own_troops_ret.png" : 
+			action =  ImageHelper.Get( trade.isTempleTrade ?  "UI/icons/icon_playerinfo_townicon_palace_land.png":
+				trade.isReturning ?  "Region/UI/icon_player_own_troops_ret.png" : 
 				isIncoming ?  "Region/UI/icon_player_resource_inc.png" : "Region/UI/icon_player_resource_outgoing.png"  );
 			
 		}

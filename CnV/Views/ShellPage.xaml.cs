@@ -1018,7 +1018,9 @@ namespace CnV.Views
 				//	var t = RefreshWorldData();
 				World.InvalidateCities();
 				ShellPage.CityListNotifyChange(true);
-			
+
+				World.RefreshTileDataForCurrentContinent();
+
 				NotifyCollectionBase.ResetAll(true);
 				CityUI.Refresh();
 				RefreshTabs.Go();
@@ -1792,7 +1794,12 @@ namespace CnV.Views
 		}
 
 		private void SaveTimeline(object sender,RoutedEventArgs e) {
-			SaveWorld(false);
+			if(AppS.isTest || AppS.isHost) {
+				SaveWorld(false);
+			}
+			else {
+				Note.Show("Cannot save in multiplayer");
+			}
 		}
 
 		internal static async Task<bool> SaveWorld(bool useCurrentSave) {

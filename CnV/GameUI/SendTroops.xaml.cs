@@ -39,7 +39,7 @@ namespace CnV
 		internal bool isSettle;
 		bool _useHorns;
 		public bool UseHorns {
-			get => ((isDefense)||(prior is not null&&prior.isDefense)) ?  _useHorns : false;
+			get => ((isDefense)||(prior is not null&&(prior.isDefense||prior.isRaid))) ?  _useHorns : false;
 			set {
 				if(value!=_useHorns) {
 					_useHorns=value;
@@ -56,11 +56,20 @@ namespace CnV
 				}
 			}
 		}
-
+		bool returnAllRaids;
+		public bool ReturnAllRaids {
+			get => returnAllRaids & isRaid & isReturn;
+			set {
+				if(value!=returnAllRaids) {
+					returnAllRaids=value;
+					OnPropertyChanged();
+				}
+			}
+		}
 		private bool _waitReturn;
-		internal bool waitReturn => timingSetting switch 	{
+		internal bool waitReturn => isReturn ? false : timingSetting switch 	{
 			TimingSetting.onReturn=>true,
-			TimingSetting.arrival=>_waitReturn,
+			TimingSetting.arrival => _waitReturn,
 			_=>false
 		};
 
@@ -142,7 +151,7 @@ namespace CnV
 		public SendTroops() {
 			this.InitializeComponent();
 			instance = this;
-			arrivalUI.PropertyChanged += PropagatePropertyChanged;
+		//	arrivalUI.PropertyChanged += PropagatePropertyChanged;
 
 		}
 
@@ -155,10 +164,18 @@ namespace CnV
 
 		private string travelInfoS { get {
 				var depart = departure;
-
-				var rv = $"Travel time: {travelTimeWithHorms.Format()}\nDepart: {depart}\nArrival: {(arrival)}";
-				if(depart+10 < Sim.simTime) {
-					rv += " (depart is past)";
+				string rv;
+				if(isReturn) {
+					rv = $" Travel time: {travelTimeWithHorms.Format()}\n{(isRaid? "Stop raiding at" : isDefense ? "Leave at" : "Stop sieging at")}: {depart}\nHome by: {(arrival)}";
+					if(prior.returnTimeIfAborted >= arrival ) {
+						rv += " (cannot be home in time)";
+					}
+				}
+				else {
+					rv = $" Travel time: {travelTimeWithHorms.Format()}\nDepart: {depart}\nArrival: {(arrival)}";
+					if(depart+10 < Sim.simTime) {
+						rv += " (depart is past)";
+					}
 				}
 				return rv;
 			}
@@ -168,7 +185,7 @@ namespace CnV
 			var troopItems = new List<SendTroopItem>();
 			if(troops is not null) {
 				foreach(var t in troops.Value) {
-					var rv = new SendTroopItem(target: target,city: city,type: t.t,count: (int)t.c,prior: prior);
+					var rv = new SendTroopItem(target: target,city: city,dialog:this,type: t.t,count: (int)t.c,prior: prior);
 					troopItems.Add(rv);
 					rv.PropertyChanged += PropagatePropertyChanged; // memory leak
 				}
@@ -177,7 +194,7 @@ namespace CnV
 				var ttHome = city.troopsOwnedPlusRecruiting;
 				for(var i = (TType)0;i<Troops.ttCount;++i) {
 					if(ttHome.GetCount(i) > 0) {
-						var rv = new SendTroopItem(target: target,city: city,type: i,prior: prior);
+						var rv = new SendTroopItem(target: target,city: city,dialog:this,type: i,prior: prior);
 						troopItems.Add(rv);
 						rv.PropertyChanged += PropagatePropertyChanged;
 					}
@@ -210,11 +227,14 @@ namespace CnV
 				if(isSettle) {
 					Assert(type == ArmyType.defense);
 				}
-				var isAttack = type.IsAttack();// is (>=Army.attackFirst and <= Army.attackLast);
 				if(prior != null) {
 					target = prior.targetCity;
+					type = prior.type;
+					isSettle = prior.isSettle;
 				}
-				else {
+				var isAttack = type.IsAttack();// is (>=Army.attackFirst and <= Army.attackLast);
+
+				if(prior is null) {
 					if(isAttack && city.IsAlly(target)) {
 						if(await AppS.DoYesNoBox("Attack ally","Are you sure that you want to send an attack at an ally?") != 1) {
 
@@ -224,16 +244,20 @@ namespace CnV
 				}
 
 				var rv = instance ?? new SendTroops();
+			//	rv.troopList.Visibility = prior is not null && prior.isRaid  ? Visibility.Collapsed : Visibility.Visible; 
 				//				rv.arrivalUI.ResetRecentTimesComboBox();
 				if(timing is not null)
 					rv.timingSetting = timing.Value;
 				if(_viaWater is not null) {
 					rv._viaWater = _viaWater;
 				}
+				var isReturn = prior is not null;
 				rv.prior = prior;
+				
+
 				rv.armyTypeCombo.Visibility = Visibility.Collapsed;
 				var isDefense = type == ArmyType.defense&& !isSettle;
-				if((isDefense)||((prior is not null&&prior.isDefense))) {
+				if((isDefense)||((prior is not null&&(prior.isDefense||prior.isRaid)))) {
 					if(useHorns is not null)
 						rv._useHorns = useHorns.Value;
 					rv.useHornsCheckbox.Visibility = Visibility.Visible;
@@ -260,7 +284,15 @@ namespace CnV
 				if(notSameAlliance is not null)
 					rv.notSameAlliance.IsChecked=notSameAlliance.Value;
 				rv.notSameAlliance.Visibility = Visibility.Collapsed;
-					var isRaid = type == ArmyType.raid;
+				var isRaid = type == ArmyType.raid;
+				if(isRaid) {
+					rv.useHornsCheckbox.Content = "Quadriga";
+					ToolTipService.SetToolTip(rv.useHornsCheckbox,"If set, Quadriga will be used to speed up raid return if needed");
+				}
+				else {
+					rv.useHornsCheckbox.Content = "Horns";
+					ToolTipService.SetToolTip(rv.useHornsCheckbox,"If set, horns will be used to speed up defense travel as needed");
+				}
 
 				if(prior is not null) {
 
@@ -342,16 +374,22 @@ namespace CnV
 							i.count = 1;
 					}
 				}
-				rv.raidPanel.Visibility = rv.isCavernRaid ? Visibility.Visible : Visibility.Collapsed;
-				rv.timingNow.Header = rv.isReturn ? "Return Now" : "Now";
-				rv.timingOnReturn.Header = rv.isReturn ?  string.Empty : "Wait troops";
+				var isRaidReturn = isRaid && isReturn;
+				var isNormalRaid = isRaid && !isReturn;
+		//		rv.troopList.Visibility =isRaidReturn ? Visibility.Collapsed : Visibility.Visible;
+			//	rv.troopString.Visibily = isRaidReturn ? Visibility.Visible : Visibility.Collapsed;
+				rv.raidPanel.Visibility = (rv.isCavernRaid && !isReturn).AsVisability();
 
-				rv.timingDepartureTimed.Header = rv.isRaid || rv.isSettle ? string.Empty : rv.isReturn ? "Leave at.." : "Depart at.."; 
-				rv.timingArrivalTimed.Header =rv.isRaid || rv.isSettle ?  string.Empty : rv.isReturn ? "Return home at.." : "Arrive at..";
+				rv.departureWaitReturn.Visibility = rv.arrivalWaitReturn.Visibility = (!isReturn).AsVisability();
+				rv.timingNow.Header = isReturn ? "Return Now" : "Now";
+				rv.timingOnReturn.Header = isReturn ?  string.Empty : "Wait troops";
+
+				rv.timingDepartureTimed.Header = isNormalRaid|| rv.isSettle ? string.Empty : isReturn ? "Stop by" : "Depart at"; 
+				rv.timingArrivalTimed.Header =isNormalRaid || rv.isSettle ?  string.Empty : isReturn ? "Home by" : "Arrive at";
 
 				if((uint)rv.timingSelection < rv.timingPivot.Items.Count && (rv.timingPivot.Items[rv.timingSelection] as PivotItem).Header.ToString().IsNullOrEmpty())
 					rv.timingSelection=0;
-
+				rv.returnAllRaidsCheckBox.Visibility = isRaidReturn.AsVisability();
 				rv.OnPropertyChanged();
 				var result = await rv.Show(false);
 				rv.troopItems = Array.Empty<SendTroopItem>();
@@ -467,16 +505,24 @@ namespace CnV
 				var travelTime = this.travelTime;
 				Assert(travelTime > 0);
 				var depart = waitReturn ? city.WhenWillEnoughTroopsReturnToSend(troops) : Sim.simTime;
+				
+				// for returns, this is when we are back home, for attacks this is when we arrive
+				var bestTimeNoHorns = prior is not null ? prior.returnTimeIfAborted : depart + travelTime;
+				var bestTimeHorns = prior is not null ? bestTimeNoHorns : depart + travelTime*0.5f;
+					
 
-				var canMakeIt = depart + travelTime <= arrivalTimeUI;
-				if(!canMakeIt) {
+
+				var canMakeItWithoutHorns = bestTimeNoHorns <= arrivalTimeUI;
+				var canMakeItWitHorns = bestTimeHorns <= arrivalTimeUI;
+				var willMakeIt = canMakeItWithoutHorns;
+				if(!canMakeItWithoutHorns) {
 					if(UseHorns) {
 						var timeAvailable = (arrivalTimeUI -depart);
 						if(timeAvailable > 0) {
 							var speedupNeeded = (double)travelTime/(double)timeAvailable;
 							Assert(speedupNeeded >= 1);
 							if(speedupNeeded <= 2.125f) {
-								canMakeIt = true;
+								willMakeIt = true;
 
 
 								//		1 + horns*tsPerHorn /ts  = speedupNeeded 
@@ -491,8 +537,8 @@ namespace CnV
 						}
 					}
 				}
-				if(!canMakeIt) {
-					AppS.MessageBox("Arrival too soon",$"The earliest time that we can make is {departure + (UseHorns.Switch(1.0f,0.5f)*travelTime).CeilToInt()}");
+				if(!willMakeIt) {
+					AppS.MessageBox("Arrival too soon",$"The earliest time that we can make is {departure + (UseHorns.Switch(1.0f,0.5f)*travelTime).CeilToInt()}, departing at {departure}");
 					return (false, 0);
 					
 				}
@@ -636,7 +682,10 @@ namespace CnV
 
 
 			if(isReturn) {
-				CnVEventReturnTroops.TryReturn(prior,ts.isEmpty || ts.IsSuperSetOf(prior.troops) ? default : ts, UseHorns);
+				var depart = departure;
+				CnVEventReturnTroops.TryReturn(prior,ts.isEmpty || ts.IsSuperSetOf(prior.troops) || (isRaid && isReturn) ? default : ts,
+					useHorns: UseHorns,
+					returnBy:(depart > Sim.simTime + 10) ? arrival : default ,allRaids: ReturnAllRaids  );
 				okay = true;
 			}
 			else {
@@ -705,12 +754,16 @@ namespace CnV
 		private void splitsChanged(object sender,SelectionChangedEventArgs e) {
 			OnPropertyChanged();
 		}
+		internal bool canEditTroops => !(isRaid&&isReturn);
+		internal Visibility editTroopsVisibility => canEditTroops.AsVisability();
+		internal Visibility isAttackVisibility => isAttack.AsVisability();
+		internal Visibility isAttackOrRaidVisibility => (isAttack||isRaid).AsVisability();
 	}
 
 
 	internal class SendTroopItem:INotifyPropertyChanged
 	{
-
+		internal SendTroops dialog;
 		internal City city; // convienience
 		internal City target;
 		internal Army prior;
@@ -726,12 +779,13 @@ namespace CnV
 			}
 		}
 
-		public SendTroopItem(City city,City target,byte type,bool wantMax = false,int? count = null,Army? prior = null) {
+		public SendTroopItem(City city,City target, SendTroops dialog,byte type,bool wantMax = false,int? count = null,Army? prior = null) {
 			this.city=city;
 			this.target=target;
 			this.type=type;
 			this.prior = prior;
 			this._count = count ??(wantMax ? (int)city.troopsHome.GetCount(type) : 0);
+			this.dialog =dialog;
 		}
 
 		internal TroopTypeCount tt => new(type,(uint)_count.Max(0));

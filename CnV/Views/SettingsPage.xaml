@@ -125,25 +125,14 @@
 			</wct:WrapPanel>
 
 			<wct:WrapPanel Orientation="Horizontal" HorizontalSpacing="2" VerticalSpacing="2" >
-				<CheckBox Content="Fetch Attack Reports"
-						  IsChecked="{x:Bind FetchFullHistory,Mode=TwoWay}"
-						  ToolTipService.ToolTip="If disabled, the Hits tab and Defense History tab will not work, but incoming and outgoing tabs will be faster"
-						  Margin="4" />
+				
 			
 
 
 		
 				
-				<NumberBox  Header="UI Update Latency"
-									 Value="{x:Bind cnv:Settings.uiUpdateDelay,Mode=TwoWay}"
-									 SmallChange="1"
-									 LargeChange="10"
-									 Style="{StaticResource NumberBoxSmallPositive}" />
-				<NumberBox  Header="Debug Layer"
-									 Value="{x:Bind cnv:GameClient.debugLayer,Mode=TwoWay}"
-									 SmallChange="1"
-									 LargeChange="10"
-									 Style="{StaticResource NumberBoxSmallPositive}" />
+	
+			
 				<NumberBox  Header="Show Attacks Limit"
 									 Value="{x:Bind cnv:Settings.showAttacksLimit,Mode=TwoWay}"
 									 SmallChange="1"
@@ -198,6 +187,10 @@
 				<CheckBox  Content="Popups Visible" IsThreeState="True" IsChecked="{x:Bind cnv:Settings.popupsVisible, Mode=TwoWay}" 
 							   Margin="4"
 						     ToolTipService.ToolTip="If off, popups are hidden"   />
+				<CheckBox  Content="Menu Shadows" IsThreeState="True" IsChecked="{x:Bind cnv:Settings.menuShadows, Mode=TwoWay}" 
+							   Margin="4"
+						     ToolTipService.ToolTip="Uses shadows to make menus more visible"   />
+				
 				<NumberBox Header="Reset Raids Carry %"
 									 Value="{x:Bind cnv:Settings.resetRaidsCarry,Mode=TwoWay}"
 									 SmallChange="1" ToolTipService.ToolTip="When resetting raids, if [Min(carry%)] &lt;= [Reset Raids Carry %] raids are reset"

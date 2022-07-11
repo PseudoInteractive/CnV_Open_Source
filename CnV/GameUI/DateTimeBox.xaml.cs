@@ -118,6 +118,7 @@ namespace CnV
 		}
 
 		public event PropertyChangedEventHandler? PropertyChanged;
+		public event EventHandler? DateTimeChanged;
 		public void OnPropertyChanged(string? member = null)
 		{
 			if (this.PropertyChanged is not null) 
@@ -134,6 +135,7 @@ namespace CnV
 
 		private void DateTime_SelectedTimeChanged(object? sender,Syncfusion.UI.Xaml.Editors.SelectedDateTimeChangedEventArgs e) {
 			OnPropertyChanged();
+			DateTimeChanged?.Invoke(this,e);
 		}
 
 		private void DateChanged(object sender,Syncfusion.UI.Xaml.Editors.SelectedDateTimeChangedEventArgs e) {

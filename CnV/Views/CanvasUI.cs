@@ -243,7 +243,7 @@ using Game;
 							//	toolTip = sb.ToString();
 							//}
 							ToolTipWindow.TipChanged();
-							World.UpdateTintData( );
+							World.RefreshTintDataForCurrentContinent( );
 						}
 					}
 				}

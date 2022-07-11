@@ -38,18 +38,18 @@
 
 	<converterTK:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
 
-	<tkmedia:AttachedCardShadow  x:Key="ShadowBig" Offset="4" BlurRadius="16" />
+	<!--<tkmedia:AttachedCardShadow  x:Key="ShadowBig" Offset="4" BlurRadius="16" />-->
 	<!--"Expander"-->
 	<x:Double x:Key="ControlContentThemeFontSize">12</x:Double>
 	<x:Double x:Key="ContentControlFontSize">12</x:Double>
 	<SolidColorBrush x:Key="ExpanderBrushContent" Color="{StaticResource SystemAccentColorDark3}" />
 	<SolidColorBrush x:Key="ExpanderBrushHeader" Color="{StaticResource SystemAccentColorDark3}" />
 	<SolidColorBrush x:Key="ExpanderBrushContentAlt">#B200</SolidColorBrush>
-	<CornerRadius x:Key="ControlCornerRadius">2</CornerRadius>
-	<CornerRadius x:Key="baseCR">2,2,2,2</CornerRadius>
+	<CornerRadius x:Key="ControlCornerRadius">0</CornerRadius>
+	<CornerRadius x:Key="baseCR">0</CornerRadius>
 	<!-- Override system shape defaults -->
 	<!--<CornerRadius x:Key="ControlCornerRadius">2,2,2,2</CornerRadius>-->
-	<CornerRadius x:Key="OverlayCornerRadius">2,2,2,2</CornerRadius>
+	<CornerRadius x:Key="OverlayCornerRadius">0</CornerRadius>
 	<x:Double x:Key="canvasHeight">740</x:Double>
     <!--Overrides-->
 

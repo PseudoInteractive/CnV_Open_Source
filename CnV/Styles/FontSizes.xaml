@@ -15,8 +15,8 @@
 			<x:Double x:Key="ChatImageHeight">32</x:Double>
 
 
-	<FontFamily x:Key="ContentControlThemeFontFamily">ms-appx:///Content/CnvIcons-Regular-SVG.ttf#CnvIcons,Segoe UI*</FontFamily>
-	<FontFamily x:Key="KeyTipFontFamily" >ms-appx:///Content/CnvIcons-Regular-SVG.ttf#CnvIcons,Segoe UI*</FontFamily>
+	<FontFamily x:Key="ContentControlThemeFontFamily">ms-appx:///Content/CnvIcons-Regular-SVG.ttf#CnvIcons,Segoe Fluent Icons,Segoe UI*</FontFamily>
+	<FontFamily x:Key="KeyTipFontFamily" >ms-appx:///Content/CnvIcons-Regular-SVG.ttf#CnvIcons,Segoe Fluent Icons,Segoe UI*</FontFamily>
 
 
 

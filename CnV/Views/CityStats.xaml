@@ -78,9 +78,10 @@
 
 			<!-- Palace -->
 
-			<Expander HorizontalAlignment="Stretch" IsExpanded="True" Background="{StaticResource ExpanderBrushContent}" Expanding="Expander_Expanding" Visibility="{x:Bind palaceVisible,Mode=OneWay}"  x:Name="expPalace"   >
+			<Expander HorizontalAlignment="Stretch" IsExpanded="True" Background="{StaticResource ExpanderBrushContent}" Expanding="Expander_Expanding" Visibility="{x:Bind palaceVisible,Mode=OneWay}"  
+					  x:Name="expPalace"   >
 				<Expander.Header   >
-					<Border  Padding="3" CornerRadius="{StaticResource baseCR}" >
+					<Border  Padding="3" Background="#f099">
 						<TextBlock Text ="{x:Bind palaceVirtue, Mode=OneWay}" Margin="0"   Style="{StaticResource TextBlockSmall}"  HorizontalAlignment="Right"  />
 					</Border>
 				</Expander.Header>
@@ -270,15 +271,13 @@
 
 			<!--Commands-->
 
-			<Expander HorizontalAlignment="Stretch" IsExpanded="True" Expanding="Expander_Expanding" x:Name="expCommands" Background="{StaticResource ExpanderBrushContent}"  >
+			<Expander HorizontalAlignment="Stretch" IsExpanded="True" Expanding="Expander_Expanding" x:Name="expCommands" Background="{StaticResource ExpanderBrushContent}" BorderThickness="1" BorderBrush="Indigo" >
 				<Expander.Header>
-					<Button Background="{x:Bind cnv:ImageHelper.GetAsBrush('UI/menues/main_menu/bgr_quickuse_research.png') }"  BorderThickness="0" Padding="0" Margin="2,0,2,0"  Content="{x:Bind commandsTitle, Mode=OneWay}"  HorizontalContentAlignment="Right" HorizontalAlignment="Stretch" Style="{StaticResource ButtonSmall}"
-							 >
-						<Button.Flyout>
-							<MenuFlyout>
-								<MenuFlyoutItem Text="Combat Calc.." Click="CombatCalc" />
-							</MenuFlyout>
-						</Button.Flyout>
+					<Button Background="{x:Bind cnv:ImageHelper.GetAsBrush('UI/menues/main_menu/bgr_quickuse_research.png') }"  BorderThickness="0" Padding="0" Margin="2,0,2,0"  
+							Content="{x:Bind commandsTitle, Mode=OneWay}"  HorizontalContentAlignment="Right" HorizontalAlignment="Stretch" Style="{StaticResource ButtonSmall}"
+							Click="CommandItemsClick"
+							/>
+						
 					</Button>
 				</Expander.Header>
 

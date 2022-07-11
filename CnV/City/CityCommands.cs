@@ -71,13 +71,17 @@ public partial class City
 	{
 		get {
 			var city = this;
-			if(isShrine)
-				return Shrine.FromCid(cid).toolTip;
-			else if(isPortal)
-				return "Moongate";
-			else if(isDungeonOrBoss)
-				return Cavern.Get(cid).Format('\n');
-			//if (spot is City city)
+			if(!isCityOrCastle) {
+				if(isShrine)
+					return Shrine.FromCid(cid).toolTip;
+				else if(isPortal)
+					return "Moongate";
+				else if(isDungeonOrBoss)
+					return Cavern.Get(cid).Format('\n');
+				
+				return tileType.String();
+			}
+			else // City or castle
 			{
 				using var psb = new PooledStringBuilder();
 				var sb = psb.s;

@@ -478,7 +478,7 @@ namespace CnV.Draw
 		public void AddQuadWithShadow(int layer,int shadowLayer, Material texture, Vector2 c0, Vector2 c1, Color color,Color shadowColor, float depth)
 		{
 			if(AGame.wantShadow)
-				AddQuad(shadowLayer, texture, c0, c1, shadowColor, View.zShadow);
+				AddQuad(shadowLayer, texture, c0+GameClient.shadowOffsetW, c1+GameClient.shadowOffsetW, shadowColor, View.zShadow);
 			AddQuad(layer, texture, c0, c1, color,depth: depth);
 
 		}

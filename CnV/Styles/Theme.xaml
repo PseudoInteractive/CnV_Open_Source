@@ -40,8 +40,8 @@
 					<Color x:Key="SystemRevealListMediumColor">#FF330909</Color>
 					<AcrylicBrush x:Key="SystemControlAcrylicWindowBrush"  TintColor="{ThemeResource SystemChromeAltHighColor}" TintOpacity="0.8" FallbackColor="{ThemeResource SystemChromeMediumColor}" />
 					<!-- Override system shape defaults -->
-					<CornerRadius x:Key="ControlCornerRadius">0,3,3,0</CornerRadius>
-					<CornerRadius x:Key="OverlayCornerRadius">0,4,4,0</CornerRadius>
+					<CornerRadius x:Key="ControlCornerRadius">0,0,0,0</CornerRadius>
+					<CornerRadius x:Key="OverlayCornerRadius">0,0,0,0</CornerRadius>
 					<!-- Override system borders -->
 					<Thickness x:Key="MenuBarItemBorderThickness">1,1,1,1</Thickness>
 					<Thickness x:Key="GridViewItemMultiselectBorderThickness">1,1,1,1</Thickness>
@@ -115,8 +115,8 @@
 					<Color x:Key="SystemRevealListMediumColor">#FF4D3591</Color>
 					<AcrylicBrush x:Key="SystemControlAcrylicWindowBrush"  TintColor="{ThemeResource SystemChromeAltHighColor}" TintOpacity="0.8" FallbackColor="{ThemeResource SystemChromeMediumColor}" />
 					<!-- Override system shape defaults -->
-					<CornerRadius x:Key="ControlCornerRadius">0,3,3,0</CornerRadius>
-					<CornerRadius x:Key="OverlayCornerRadius">0,4,4,0</CornerRadius>
+					<CornerRadius x:Key="ControlCornerRadius">0,0,0,0</CornerRadius>
+					<CornerRadius x:Key="OverlayCornerRadius">0,0,0,0</CornerRadius>
 					<!-- Override system borders -->
 					<Thickness x:Key="MenuBarItemBorderThickness">1,1,1,1</Thickness>
 					<Thickness x:Key="GridViewItemMultiselectBorderThickness">1,1,1,1</Thickness>

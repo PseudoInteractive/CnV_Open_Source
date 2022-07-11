@@ -138,7 +138,9 @@ internal partial class GameClient
 	const float lineThickness = 4.5f;
 	const float circleRadMin = 3.0f;
 	const float circleRadMax = 5.5f;
-	static Vector2 shadowOffset = new Vector2(4,4);
+
+	const float shadowOffsetDistance = 5f;
+	internal static Vector2 shadowOffsetW;//= new Vector2(4,4);// shadow offset in world space
 	const float detailsZoomThreshold = 18;
 	const float detailsZoomFade = 8;
 
@@ -157,7 +159,7 @@ internal partial class GameClient
 	public static float bulgeSpan => 1.0f + bulgeNegativeRange;
 	public static float bulgeGain = 0;
 	public static float lineWToUs = 1;
-	public static int debugLayer = -1;
+//	public static int debugLayer = -1;
 	//	const float dashLength = (dashD0 + dashD1) * lineThickness;
 	public static Draw.SpriteBatch draw;
 
@@ -476,6 +478,9 @@ internal partial class GameClient
 					Assert(Z> 0);
 					var lightZ = Z*shrink;
 					var lightC = new Vector3(cc.X,cc.Y,lightZ);
+
+					shadowOffsetW = (cc.Normalized()*-shadowOffsetDistance).ScreenToWorldOffset();
+
 					lightCCParam.SetValue(lightC);
 					lightCWParam.SetValue(lightC.CameraToWorld());
 					viewCWParam.SetValue(viewW);
@@ -1149,7 +1154,7 @@ internal partial class GameClient
 											if(drawArmyHash.Add(hash)) {
 												var t = (animationT  * ((hash&0xffff)/65536f).Lerp(0.375f,0.5f));
 												//	var t = (tick +i.sourceCid.CidToRandom()).Wave(1.5f / 512.0f+0.25f,2.0f / 512f+ 0.25f) ;
-												var r = t.Ramp();
+											//	var r = t.Ramp();
 												var alpha = 1.0f;
 												TType ttype = Troops.ttInvalid; ;
 												if(i.troops.Length > 0) {
@@ -1157,7 +1162,7 @@ internal partial class GameClient
 														var last = i.lastSeen;
 														var nSprite = last.troops.Count;
 
-														(int iType, alpha) = GetTroopBlend((float)t,nSprite);
+														(int iType, alpha) = GetTroopBlend(t,nSprite);
 														ttype = last.troops.GetIndexType(iType);
 													}
 													else {
@@ -1175,7 +1180,7 @@ internal partial class GameClient
 												}
 
 												var ttA = (float)i.TimeToArrival(simT);
-												DrawAction(ttA,i.journeyTime,r,
+												DrawAction(ttA,i.currentJourneyTime,t.Wrap01Pos(),
 													_c0.ToVector(),
 												_c1.ToVector(),c,ttype != ttInvalid ?troopImages[ttype] : null,
 												true,i,alpha: alpha,lineThickness: lineThickness,highlight: sel);
@@ -1536,7 +1541,7 @@ internal partial class GameClient
 								for(var cx = cx0;cx < cx1;++cx) {
 									(var name, var isMine, var hovered, var spot) = World.GetLabel((cx, cy));
 									//var zScale = CanvasHelpers.ParallaxScale(TileData.zCities);
-
+									float hz = 0;
 									if(name != null) {
 
 										var span = 1.0f;
@@ -1555,7 +1560,7 @@ internal partial class GameClient
 										var scale = regionFontScale;
 
 
-										if(TryGetViewHover(cid,out var hz)) {
+										if(TryGetViewHover(cid,out hz)) {
 											z += hz * viewHoverZGain;
 											scale *= hz.Lerp(1.0f,1.25f);
 										}
@@ -1600,53 +1605,36 @@ internal partial class GameClient
 									}
 									//if(false)
 									//{
-									//	if(spot != null && !focusOnCity && !(Settings.troopsVisible.HasValue && Settings.troopsVisible.Value == false))
-									//	{
-									//		if(!spot.troopsTotal.Any() && spot.isNotClassified && spot.canVisit && Settings.troopsVisible.GetValueOrDefault())
-									//			spot.TouchClassification();
-									//		if(spot.troopsTotal.Any() || spot.isClassified)
-									//		{
-									//			var c1 = (cx, cy);
-									//			var rand = spot.cid.CidToRandom();
-									//			var t = (tick * rand.Lerp(1.5f / 512.0f,1.75f / 512f)) + 0.25f;
+										if(spot != null && !focusOnCity && Settings.troopsVisible == true && spot.sharesInfo )
+										{
+											var tt = spot.GetTroopTypes(); // returns troops owned | troop tags
+											if(!tt.Any())
+												continue;
+										
+											var c1 = (cx, cy);
+											var rand = spot.cid.CidToRandom();
+											var t = (animationT * rand.Lerp(0.375f,0.5f ));
 
-									//			int type;
-									//			float typeBlend;
-									//			float alpha = 1;// (t * rand.Lerp(0.7f, 0.8f)).Wave() * 0.20f + 0.70f;
+											
+	//										float typeBlend;
+											//float alpha = 1;// (t * rand.Lerp(0.7f, 0.8f)).Wave() * 0.20f + 0.70f;
 
-									//			if(spot.troopsTotal.Any())
-									//			{
-									//				var ta = GetTroopBlend(t,spot.troopsTotal.Length);
-									//				alpha = ta.alpha;
+											var ta = GetTroopBlend(t,tt.Count());
+										//	alpha = ta.alpha;
 
-									//				type = spot.troopsTotal.GetIndexType(ta.iType);
-									//			}
-									//			else
-									//			{
-									//				type = spot.TroopType;
-									//				typeBlend = 1;
-									//				switch(spot.classification)
-									//				{
-									//					case Spot.Classification.misc:
-									//					case Spot.Classification.unknown:
-									//					case Spot.Classification.pending:
-									//					case Spot.Classification.missing:
-									//						goto dontDraw;
-									//				}
+											var type = tt[ta.iType];
+//											var r = t.Wrap01();
+											var spriteSize = new Vector2(spriteSizeGain *hz.Lerp(1.0f, 1.375f));
+											var _c0 = c1.ToVector() - spriteSize;
+											var _c1 = c1.ToVector() + spriteSize;
 
-									//			}
-									//			var r = t.Ramp();
-									//			var spriteSize = new Vector2(spriteSizeGain);
-									//			var _c0 = c1.ToVector() - spriteSize;
-									//			var _c1 = c1.ToVector() + spriteSize;
-
-									//			draw.AddQuadWithShadow(Layer.effects,Layer.effectShadow,troopImages[type],_c0,_c1,HSLToRGB.ToRGBA(rectSpan,0.3f,0.825f,alpha,alpha + 0.125f),ShadowColor(alpha),
-									//				zCities);
-									//		}
-									//		dontDraw:;
-									//	}
-									//}
-								}
+											draw.AddQuadWithShadow(Layer.effects,Layer.effectShadow,troopImages[type],_c0,_c1,HSLToRGB.ToRGBA(t.Wrap01(),0.3f,0.825f,ta.alpha),ShadowColor(ta.alpha),
+												hz*viewHoverZGain);
+										}
+										//		dontDraw:;
+										//	}
+										//}
+									}
 							}
 						}
 					}
@@ -1744,15 +1732,20 @@ internal partial class GameClient
 			draw._beginCalled = false;
 		}
 
-		static (int iType, float alpha) GetTroopBlend(float t,int nSprite) {
+		static (int iType, float alpha) GetTroopBlend(double td,int nSprite) {
 			int iType = 0;
 			float alpha = 1;
 			if(nSprite > 1) {
 				var fSprite = nSprite;
-				Assert(t > 0);
-				t -= MathF.Floor(t / fSprite) * fSprite;
+				Assert(td > 0);
+				// Wrap t to 0..nSprites
+				var t = (float)(td-Math.Floor(td / fSprite) * fSprite);
+				// 
 				var rType = MathF.Floor(t);
 				t -= rType;
+				// 0..0.25 ease in
+				// 0.25..0.75 max
+				// 0.75 .. 1 ease out
 
 				iType = ((int)rType).Min(nSprite - 1);
 				if(t < 0.25f)
@@ -2002,6 +1995,8 @@ internal partial class GameClient
 			var mid = progress.Lerp(c0,c1);
 			var _c0 = new Vector2(mid.X - spriteSize,mid.Y - spriteSize);
 			var _c1 = new Vector2(mid.X + spriteSize,mid.Y + spriteSize);
+			Assert(wave >= 0.0f);
+			Assert(wave <= 1.0f);
 			draw.AddQuadWithShadow(Layer.lineIconOverlay,Layer.effectShadow,bitmap,_c0,_c1,HSLToRGB.ToRGBA(wave,0.3f,gain * 1.1875f,alpha),shadowColor,zEffects);
 		}
 		//            ds.DrawRoundedSquare(midS, rectSpan, color, 2.0f);
@@ -2057,7 +2052,7 @@ internal partial class GameClient
 
 	internal static void DrawRectOutlineShadow(int layer,Vector2 c0,Vector2 c1,Color color,float thickness = 1,float expand = 0,double animationOffset = 0,float zScale = 1f,bool includeTop = true) {
 		DrawRectOutline(layer,c0,c1,color,zUI*zScale,thickness,expand,animationOffset,includeTop);
-		DrawRectOutline(Layer.tileShadow,c0,c1,color.GetShadowColorDark(),zShadow,thickness,expand,animationOffset,includeTop);
+		DrawRectOutline(Layer.tileShadow,c0+shadowOffsetW,c1+shadowOffsetW,color.GetShadowColorDark(),zShadow,thickness,expand,animationOffset,includeTop);
 	}
 	private static void DrawRectOutlineShadow(int layer,int cid,Color col,string label = null,float thickness = 1.0f,float expand = 0,double animationOffset = 0,bool includeTop = true) {
 		var wc = cid.CidToWorld();
@@ -2089,7 +2084,7 @@ internal partial class GameClient
 	private static void DrawDiamondShadow(int layer,Vector2 c0,Vector2 c1,Color color,float thickness,float expand) {
 		DrawDiamond(whiteMaterial,layer,c0,c1,color,zCities,thickness,expand);
 		if(wantParallax)
-			DrawDiamond(shadowMaterial,Layer.tileShadow,c0,c1,color.GetShadowColorDark(),zCities,thickness,expand);
+			DrawDiamond(shadowMaterial,Layer.tileShadow,c0+shadowOffsetW,c1+shadowOffsetW,color.GetShadowColorDark(),zCities,thickness,expand);
 	}
 	private static void DrawDiamondShadow(int layer,int cid,Color col,string label = null,float thickness = 2,float expand = 0) {
 		var wc = cid.CidToWorld();
