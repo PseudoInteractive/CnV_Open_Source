@@ -317,6 +317,52 @@ public partial class City
 
 		//}
 	}
+			internal void ReturnRaidsForScheduled() {
+		// find all raids
+		var verbose = true;
+
+			var earliestTime = ServerTime.infinity;
+			// check for conflicts with scheduled
+			foreach(var o in outgoing) {
+				if(!(o.isAttackOrDefense && o.isSchedueledNotSent))
+					continue;
+				var returnBy = o.departTime-Army.departTimeEpsilon;
+				var anyRaids = false;
+				foreach(var raid in outgoing) {
+					if(!raid.isRaid)
+						continue;
+					if(!o.troops.Overlaps(raid.troops))
+						continue;
+					if(o.scheduledReturnBy <= returnBy) {
+
+						if(verbose)
+							Note.Show($"Already scheduled to return {raid}");
+						continue;
+					}
+					anyRaids=true;
+				}
+				if(!anyRaids)
+					continue;
+
+				earliestTime = earliestTime.Min(returnBy);
+			}
+			if(!earliestTime.isInfinity) {
+				if(verbose) {
+					Note.Show($"Schedule to return at {earliestTime} for {c}");
+				}
+				var anyRaid = outgoing.FirstOrDefault(a => a.isRaid);
+				if(anyRaid is not null) {
+					CnVEventReturnTroops.TryReturn(army: anyRaid,troops: default,
+						useHorns: false,
+						returnBy: earliestTime,allRaids: true);
+				}
+				return ;
+			}
+			else {
+					Note.Show($"No outgoing or raids to return: {c}");
+			}
+		}
+
 
 
 }

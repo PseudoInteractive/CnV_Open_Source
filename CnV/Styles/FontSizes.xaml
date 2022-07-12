@@ -15,9 +15,10 @@
 			<x:Double x:Key="ChatImageHeight">32</x:Double>
 
 
-	<FontFamily x:Key="ContentControlThemeFontFamily">ms-appx:///Content/CnvIcons-Regular-SVG.ttf#CnvIcons,Segoe Fluent Icons,Segoe UI*</FontFamily>
-	<FontFamily x:Key="KeyTipFontFamily" >ms-appx:///Content/CnvIcons-Regular-SVG.ttf#CnvIcons,Segoe Fluent Icons,Segoe UI*</FontFamily>
+	<FontFamily x:Key="ContentControlThemeFontFamily">ms-appx:///Content/CnvIcons-Regular-SVG.ttf#CnvIcons,Segoe UI Variable</FontFamily>
+	<FontFamily x:Key="KeyTipFontFamily" >ms-appx:///Content/CnvIcons-Regular-SVG.ttf#CnvIcons,Segoe UI Variable</FontFamily>
 
+	<x:Double x:Key="ContentControlThemeFontSize">12</x:Double>
 
 
 
@@ -34,8 +35,8 @@
 			<!-- FRAMEWORK STYLES -->
 			<Style x:Key="BaseTextBlockStyle" TargetType="TextBlock" >
 				<Setter Property="FontFamily" Value="{StaticResource CnvIcons}" />
-				
-				<Setter Property="FontStretch" Value="Condensed" />
+		<Setter Property="FontWeight" Value="Normal" />
+		<Setter Property="FontStretch" Value="Condensed" />
 				<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 				<Setter Property="TextTrimming" Value="CharacterEllipsis" />
 				<Setter Property="TextWrapping" Value="Wrap" />

@@ -15,11 +15,23 @@
 	Background="{x:Null}"
 	Loaded="UserControl_Loaded"
     mc:Ignorable="d">
-	<!--<UserControl.Resources>
-		<cnv:TTipX  x:Name="TT_Buildings_1"   Subtitle="Your build queue.&#10;Drag items away to cancel&#10;right click items for more options" Target="{x:Bind expBuildQueue}" />
-		<cnv:TTipX  x:Name="TT_Buildings_2"   Subtitle="Building counts for your city.&#10;Click here to set autobuild settings" Target="{x:Bind buildingsHeader}" />
+	<UserControl.Resources>
+		<DataTemplate  x:Key="CommandItemTemplate" x:DataType="cnv:CommandItem">
+			<StackPanel Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ToolTipService.ToolTip="{x:Bind toolTip, Mode=OneWay}" ContextRequested="{x:Bind ContextRequested}"   >
+				<Button Margin="0,0" Padding="0" Height="24" Background="Black" >
+					<Button.Content>
+						<Image Stretch="UniformToFill" Source="{x:Bind action, Mode=OneWay}" />
+					</Button.Content>
 
-	</UserControl.Resources>-->
+					<Button.Flyout>
+						<MenuFlyout Opening="{x:Bind MenuOpening}" />
+					</Button.Flyout>
+				</Button>
+
+				<HyperlinkButton Content="{x:Bind info, Mode=OneWay}" Click="{x:Bind TargetClick}" />
+			</StackPanel>
+		</DataTemplate>
+	</UserControl.Resources>
 
 	<ScrollViewer  x:Name="scroll"
 					Background="{x:Null}"  
@@ -62,16 +74,8 @@
 						  Margin="0" Padding="0" HorizontalAlignment="Stretch" 
 						HorizontalContentAlignment="Stretch"
 						ItemsSource="{x:Bind incomingItems,Mode=OneWay}"
+					ItemTemplate="{StaticResource CommandItemTemplate}"
 						   >
-					<ListView.ItemTemplate>
-						<DataTemplate x:DataType="cnv:CommandItem">
-							<StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" ToolTipService.ToolTip="{x:Bind toolTip, Mode=OneWay}"  >
-								<Image Source="{x:Bind action, Mode=OneWay}"  />
-
-								<HyperlinkButton Content="{x:Bind info, Mode=OneWay}" Click="{x:Bind TargetClick}" />
-							</StackPanel>
-						</DataTemplate>
-					</ListView.ItemTemplate>
 				</ListView>
 
 			</Expander>
@@ -109,7 +113,7 @@
 					<GridView.ItemTemplate>
 						
 						<DataTemplate x:DataType="cnv:ResourceItem">
-							<Grid MinWidth="90" BorderThickness="1" BorderBrush="{StaticResource SystemControlBackgroundAccentRevealBorderBrush}" CornerRadius="3" >
+							<Grid MinWidth="90" BorderThickness="1" BorderBrush="{StaticResource SystemControlBackgroundAccentRevealBorderBrush}" CornerRadius="0" >
 							<StackPanel CornerRadius="{StaticResource baseCR}"  Padding="1" MinHeight="60" MinWidth="40"  HorizontalAlignment="Stretch"  
 								Tapped="{x:Bind Tapped}">
 								<TextBlock Text="{x:Bind incoming,Mode=OneWay}" Foreground="{x:Bind incomingBrush,Mode=OneWay}" HorizontalTextAlignment="Right" Style="{StaticResource TextBlockSmall}" Margin="0,0,2,0" />
@@ -133,11 +137,16 @@
 
 				<Expander.Header   >
 
-					<Border Background="{x:Bind cnv:ImageHelper.GetAsBrush('UI/menues/main_menu/bgr_quickuse_buildqueue.png') }"  BorderThickness="0" Padding="0" Margin="2,0,2,0" CornerRadius="0" 
-							
+					<Button Background="{x:Bind cnv:ImageHelper.GetAsBrush('UI/menues/main_menu/bgr_quickuse_buildqueue.png') }"  BorderThickness="0" Padding="0" Margin="2,0,2,0" CornerRadius="0" 
+							HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
 							ToolTipService.ToolTip="{x:Bind buildQueueTip, Mode=OneWay}" >
+						<Button.Content>
 						<TextBlock x:Name="queueText" TextAlignment="Right" VerticalAlignment="Center" RightTapped="QueueRightTapped" Text ="Queue" Margin="0"  Style="{StaticResource BodyTextBlockStyle}"   />
-					</Border>
+						</Button.Content>
+						<Button.Flyout>
+							<MenuFlyout Opening="BuildQueueFlyoutOpening" />
+						</Button.Flyout>
+					</Button>
 				</Expander.Header>
 				<ListView x:Name="buildQueueListView" x:FieldModifier="public"  
 						  SelectionMode="Extended" 
@@ -149,19 +158,24 @@
 						  DragItemsStarting="buildQueueListView_DragItemsStarting"
 						  DragOver="buildQueueListView_DragOver"
 						  DragItemsCompleted="buildQueueListView_DragItemsCompleted"
-						  ContextRequested="buildQueueListView_ContextRequested"
-						ItemClick="buildQueueListView_ItemClick"
-						  IsItemClickEnabled="True"
+					
 						  SelectionChanged="buildQueueListView_SelectionChanged"
 						ItemsSource="{x:Bind buildQueue,Mode=OneWay}"
 						  MaxHeight="200"  >
 					<ListView.ItemTemplate>
 						<DataTemplate x:DataType="cnv:BuildItem">
-							<Grid  Padding="1" ContextRequested="{x:Bind ContextRequested}" ToolTipService.ToolTip="{x:Bind resTip,Mode=OneWay}" >
+							<Grid  Padding="1" ContextRequested="{x:Bind ContextRequested}" Tapped="{x:Bind Tapped}" IsTapEnabled="True" ToolTipService.ToolTip="{x:Bind resTip,Mode=OneWay}" >
 								<Grid.ColumnDefinitions>
 									<ColumnDefinition Width="*"/>
 								</Grid.ColumnDefinitions>
-								<Image Source="{x:Bind image}" Width="32" Height="28" HorizontalAlignment="Left" />
+								<Button  Width="32" Height="28" HorizontalAlignment="Left" Padding="0" Margin="0" Background="Black" >
+									<Button.Content>
+										<Image Source="{x:Bind image}" />
+									</Button.Content>
+									<Button.Flyout>
+										<MenuFlyout Opening="{x:Bind FlyoutOpening}" />
+									</Button.Flyout>
+								</Button>
 								<TextBlock Text="{x:Bind opText}" Margin="36,0,0,0" Style="{StaticResource TextBlockSmall}"  VerticalAlignment="Center"	/>
 								<TextBlock Text="{x:Bind timeText,Mode=OneWay}" HorizontalAlignment="Right" Margin="0,0,4,0" Style="{StaticResource TextBlockSmall}" VerticalAlignment="Center" Foreground="{x:Bind timeColor,Mode=OneWay}"	/>
 							</Grid>
@@ -278,26 +292,19 @@
 							Click="CommandItemsClick"
 							/>
 						
-					</Button>
+					
 				</Expander.Header>
 
 				<ListView  
-						  SelectionMode="Single"  
+						  SelectionMode="Extended"  
 						  Margin="0" Padding="0" HorizontalAlignment="Stretch" 
 						
+					
 						HorizontalContentAlignment="Stretch"
-						 
+						 IsMultiSelectCheckBoxEnabled="False"
 						ItemsSource="{x:Bind commandItems,Mode=OneWay}"
-						  MaxHeight="200"  >
-					<ListView.ItemTemplate>
-						<DataTemplate x:DataType="cnv:CommandItem">
-							<StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" ToolTipService.ToolTip="{x:Bind toolTip, Mode=OneWay}" ContextRequested="{x:Bind ContextRequested}"   >
-								<Image Source="{x:Bind action, Mode=OneWay}"  />
-
-								<HyperlinkButton Content="{x:Bind info, Mode=OneWay}" Click="{x:Bind TargetClick}" />
-							</StackPanel>
-						</DataTemplate>
-					</ListView.ItemTemplate>
+						  MaxHeight="200" 
+					ItemTemplate="{StaticResource CommandItemTemplate}" >
 				</ListView>
 
 			</Expander>
@@ -309,7 +316,7 @@
 					</Border>
 				</Expander.Header>
 				<StackPanel>
-					<Border   CornerRadius="4" Margin="0" Padding="4"  >
+					<Border   CornerRadius="0" Margin="0" Padding="0"  >
 
 						<StackPanel>
 							<TextBlock Text="Owned" Style="{StaticResource TextBlockSmall}" Margin="4"  Visibility="{x:Bind TroopsHomeVisible,Mode=OneWay}" />
@@ -317,7 +324,7 @@
 									   TextWrapping="Wrap"  MaxLines="8" Margin="8,2,2,2" />
 						</StackPanel>
 					</Border>
-					<Border   CornerRadius="4" Margin="0" Padding="4"  
+					<Border   CornerRadius="0" Margin="0" Padding="0"  
 							  Visibility="{x:Bind TroopsHomeVisible,Mode=OneWay}">
 
 						<StackPanel>
@@ -326,7 +333,7 @@
 									   TextWrapping="Wrap"  MaxLines="8" Margin="8,2,2,2" />
 						</StackPanel>
 					</Border>
-					<Border   CornerRadius="4" Margin="0" Padding="4" 
+					<Border    Margin="0"  
 							  Visibility="{x:Bind IncomingReinforcementsVisible,Mode=OneWay}">
 
 						<StackPanel>
@@ -340,16 +347,7 @@
 						HorizontalContentAlignment="Stretch"
 						 
 						ItemsSource="{x:Bind reinforcementItems,Mode=OneWay}"
-						  MaxHeight="200"  >
-								<ListView.ItemTemplate>
-									<DataTemplate x:DataType="cnv:CommandItem">
-										<StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" ToolTipService.ToolTip="{x:Bind toolTip, Mode=OneWay}" ContextRequested="{x:Bind ReinContextRequested}"   >
-											<Image Source="{x:Bind action, Mode=OneWay}"  />
-
-											<HyperlinkButton Content="{x:Bind info, Mode=OneWay}" Click="{x:Bind TargetClick}" />
-										</StackPanel>
-									</DataTemplate>
-								</ListView.ItemTemplate>
+						  MaxHeight="200"	ItemTemplate="{StaticResource CommandItemTemplate}" >
 							</ListView>
 
 						</StackPanel>

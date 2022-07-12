@@ -83,8 +83,8 @@ namespace CnV.Views
 			return Spot.GetSelectedForContextMenu(focusCid).Count;
 
 		}
-		public static void ReturnSlowClick(object sender,RoutedEventArgs e) {
-			var cids = GetContextCids(sender);
+		public static void ReturnSlowClick(int cid) {
+			var cids = GetContextCids(cid);
 			if(cids.Count == 1)
 				Raiding.Return(cids[0],true,fast: false);
 			else
@@ -93,8 +93,8 @@ namespace CnV.Views
 
 
 
-		public static void ReturnFastClick(object sender,RoutedEventArgs e) {
-			var cids = GetContextCids(sender);
+		public static void ReturnFastClick(int cid) {
+			var cids = GetContextCids(cid);
 			if(cids.Count == 1)
 				Raiding.Return(cids[0],true,fast: true);
 			else
@@ -486,7 +486,7 @@ namespace CnV.Views
 			
 			}
 			if(ret.Count <= 1 && triedAgain == false) {
-				if(await AppS.DoYesNoBox($"{sel.Count} selected","Select all?",cancel: null) == 1) {
+				if(await AppS.DoYesNoBox($"{ret.Count} selected","Select all?",cancel: null) == 1) {
 					triedAgain=true;
 					SelectAll();
 					await Task.Delay(500);
@@ -591,57 +591,12 @@ namespace CnV.Views
 			base.SetupDataGrid(cityGrid,true,typeof(City),City.gridCitySource);
 		}
 
-		internal static bool ReturnRaidsForScheduled(City c,bool verbose) {
-			// find all raids
-
-
-			var earliestTime = ServerTime.infinity;
-			// check for conflicts with scheduled
-			foreach(var o in c.outgoing) {
-				if(!(o.isAttackOrDefense && o.isSchedueledNotSent))
-					continue;
-				var returnBy = o.departTime-Army.departTimeEpsilon;
-				var anyRaids = false;
-				foreach(var raid in c.outgoing) {
-					if(!raid.isRaid)
-						continue;
-					if(!o.troops.Overlaps(raid.troops))
-						continue;
-					if(o.scheduledReturnBy <= returnBy) {
-
-						if(verbose)
-							Note.Show($"Already scheduled to return {raid}");
-						continue;
-					}
-					anyRaids=true;
-				}
-				if(!anyRaids)
-					continue;
-
-				earliestTime = earliestTime.Min(returnBy);
-			}
-			if(!earliestTime.isInfinity) {
-				if(verbose) {
-						Note.Show($"Schedule to return at {earliestTime}, {c}");
-				}
-				var anyRaid = c.outgoing.FirstOrDefault(a => a.isRaid);
-				if(anyRaid is not null) {
-					CnVEventReturnTroops.TryReturn(army: anyRaid,troops: default,
-						useHorns: false,
-						returnBy: earliestTime,allRaids: true);
-				}
-				return true;
-			}
-			else {
-				return false;
-			}
-		}
 
 		private async void ReturnRaidsForScheduled(object sender,RoutedEventArgs e) {
 			var selected = await GetSelected();
 			foreach(var sel in selected) {
 				try {
-					ReturnRaidsForScheduled(sel.AsCity(),true);
+					sel.AsCity().ReturnRaidsForScheduled();
 				}
 				catch(Exception ex) {
 					LogEx(ex);

@@ -115,8 +115,6 @@
 					<AppBarButton x:Name="ContinentFilter"  x:FieldModifier="public"
 					              Content="Cont/Tags"
 					             VerticalAlignment="Center" 
-					              FontSize="{StaticResource MediumFontSize}"
-					              FontFamily="{StaticResource CnvIcons}"
 					              RightTapped="FilterRightTapped"
 					              Click="{x:Bind views:ShellPage.ContinentFilterClick}"
 					              AccessKey="F"

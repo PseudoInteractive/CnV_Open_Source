@@ -158,6 +158,7 @@
 		<Compile Include="Views\CanvasUI.cs" />
 		<Compile Include="Views\CityStats.xaml.cs" />
 		<Compile Include="Views\CnVSwapChainPanel.cs" />
+		<Compile Include="Views\CommandItem.cs" />
 		<Compile Include="Views\NPCHistory.xaml.cs" />
 		<Compile Include="Views\PlayerListBox.xaml.cs" />
 		<Compile Include="Views\PlayerStats.xaml.cs" />

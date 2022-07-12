@@ -28,11 +28,11 @@ using Windows.ApplicationModel.DataTransfer;
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 using static CnV.CityStats;
 using static CnV.BuildQueueItem;
-using static CnV.CnVEventUseArtifacts;
 
-namespace CnV
-{
-	public sealed partial class CityStats:UserControl, INotifyPropertyChanged {
+namespace CnV;
+
+	public sealed partial class CityStats:UserControl, INotifyPropertyChanged
+	{
 		public static CityStats instance;
 		public CityStats() {
 			this.InitializeComponent();
@@ -56,7 +56,7 @@ namespace CnV
 			if(instance is not null)
 				instance.OnPropertyChanged(member);
 		}
-	
+
 
 		private void CitySubmitted(ComboBox sender,ComboBoxTextSubmittedEventArgs args) {
 			var text = args.Text.ToLower();
@@ -171,14 +171,16 @@ namespace CnV
 
 
 		}
-		internal string buildQueueTip { get {
+		internal string buildQueueTip {
+			get {
 				var q = city.buildQueue;
-				var t = q.Aggregate( TimeSpanS.zero, (t,a) => a.TimeRequired(city)+t );
+				var t = q.Aggregate(TimeSpanS.zero,(t,a) => a.TimeRequired(city)+t);
 				return $"Items: {q.Length}\nTime: {t.Format()}\nComplete: {Sim.simTime+t}";
 
 			}
 		}
-		public string recruitTooltip { get {
+		public string recruitTooltip {
+			get {
 				string rv = "Recruit Queue, click to recruit.";
 				if(city.stats.rsInf>0)
 					rv += $"\nInfantry: {city.stats.rsInf}";
@@ -325,12 +327,11 @@ namespace CnV
 			}
 
 			// removed unused, these are all at the end now
-			for(int r = xQ.Count;--r >= lg;)
-			{
+			for(int r = xQ.Count;--r >= lg;) {
 				xQ.RemoveAt(r);
 				anyChanged=true;
 			}
-			
+
 			Assert(xQ.Count == rtQ.Count);
 			Assert(xQ.Count == lg);
 			//for(int i = 0;i<lg;++i) {
@@ -412,7 +413,8 @@ namespace CnV
 		//internal DebounceA buildCityChangeDebounce = new(BuildCityChanged) { runOnUiThread=true,debounceDelay=100 };
 		internal Visibility palaceVisible => city.blessData.isBlessed.Switch(Visibility.Collapsed,Visibility.Visible);
 		internal string palaceVirtue => city.blessData.virtue.EnumName();
-		internal string palaceInfo { get{
+		internal string palaceInfo {
+			get {
 				using var sb = new PooledStringBuilder();
 				var city = this.city;
 				var bd = city.blessData;
@@ -426,8 +428,8 @@ namespace CnV
 				var incoming = city.incomingDonations;
 				if(incoming.isNonZero) {
 					sb.s.Append("\nIncoming:\n").Append(incoming.Format(" "))
-						.Append("\nWill have:\n").Append( (bd.stored+incoming).Format(" ") );
-				
+						.Append("\nWill have:\n").Append((bd.stored+incoming).Format(" "));
+
 				}
 				if(bd.level < 10) {
 
@@ -436,15 +438,16 @@ namespace CnV
 
 				if(!bd.notes.IsNullOrEmpty())
 					sb.s.AppendLinePre(bd.notes);
-				if(bd.priority != PalacePriority.NA )
+				if(bd.priority != PalacePriority.NA)
 					sb.s.Append("\nPriority: ").Append(bd.priority.EnumTitle());
 				if(bd.damage > 0)
 					sb.s.Append("\nDamage: ").Append(bd.damage.Format());
-				
+
 
 
 				return sb.s.ToString();
-			} }
+			}
+		}
 
 		internal string TroopsHomeS => city?.troopsHere.Format(separator: ',');
 		internal string TroopsOwnedS => city?.troopsOwned.Format(separator: ',');
@@ -458,13 +461,14 @@ namespace CnV
 
 		public string commandsTitle => $"Commands {city.activeCommands}/{city.commandSlots}";
 		public string tradesTitle {
-		get{
-			var rv = $"Trades {tradeItems.Count} {CnV.Resources.cartGlyph}{city.cartsHome}/{city.carts}";
-			if(city.ships >0 ) 
+			get {
+				var rv = $"Trades {tradeItems.Count} {CnV.Resources.cartGlyph}{city.cartsHome}/{city.carts}";
+				if(city.ships >0)
 					rv += $"{CnV.Resources.shipGlyph}{city.shipsHome}/{city.ships}";
 				return rv;
-} }
-public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
+			}
+		}
+		public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 
 		public string recruitTitle => city?.amuletTime > 0 ? $"Recruit +{city.amuletTime}" : "Recruit";
 		//public SolidColorBrush ResourceForeground(int resId) => new SolidColorBrush(Windows.UI.Color.FromArgb(255,(byte)(31+64*resId),128,128) );
@@ -474,32 +478,27 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 
 		// invalidate the cache
 		private static City lastDisplayed;
-		static bool  SetLastDisplayed(City toDisplay)
-		{
+		static bool SetLastDisplayed(City toDisplay) {
 			if(lastDisplayed == toDisplay)
 				return false;
-			if(lastDisplayed is not null)
-			{
+			if(lastDisplayed is not null) {
 				lastDisplayed.PropertyChanged -= City_PropertyChanged;
 				lastDisplayed=null;
 			}
-			if(toDisplay is not null)
-			{
-				lastDisplayed = toDisplay; 
+			if(toDisplay is not null) {
+				lastDisplayed = toDisplay;
 				toDisplay.PropertyChanged += City_PropertyChanged;
-			
+
 			}
 			return true;
 		}
 		static void ClearLastDisplayed() => SetLastDisplayed(null);
-		public static void CityBuildingsChange(City _city)
-		{
+		public static void CityBuildingsChange(City _city) {
 			if(_city == lastDisplayed)
 				ClearLastDisplayed();
 			_city.OnPropertyChanged();
 		}
-		public static void CityRecruitChange(City _city)
-		{
+		public static void CityRecruitChange(City _city) {
 			if(_city == lastDisplayed)
 				ClearLastDisplayed();
 			_city.OnPropertyChanged();
@@ -508,30 +507,25 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 		//		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
 
 		static internal long nextTextUpdateTick; // tick64
-		// called from Sim
-		public void UpdateUI()
-		{
-			try
-			{
-				
+												 // called from Sim
+		public void UpdateUI() {
+			try {
+
 				//	var i = CityStats.instance;
-				
+
 				//if(City.GetBuild().IsInvalid())
 				//	return;
 				// building counts
 
-		
 
-				AppS.QueueOnUIThread(() =>
-				{
-					
 
-					try
-					{
+				AppS.QueueOnUIThread(() => {
+
+
+					try {
 						var city = City.GetBuild();
 						var cityChanged = SetLastDisplayed(city);
-						if(cityChanged)
-						{
+						if(cityChanged) {
 							Changed();
 						}
 						var t = Sim.simTime;
@@ -546,44 +540,37 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 #else
 						ShellPage.instance.timeDisplay.Text = t.FormatWithYear();
 #endif
-						var timeBrush = AppS.Brush( Sim.isWarmup? (Sim.isHistoric ? Colors.Orange: Colors.Gray ): Sim.isHistoric ? Colors.Yellow : Colors.White);
+						var timeBrush = AppS.Brush(Sim.isWarmup ? (Sim.isHistoric ? Colors.Orange : Colors.Gray) : Sim.isHistoric ? Colors.Yellow : Colors.White);
 						if(ShellPage.instance.timeDisplay.Foreground != timeBrush)
 							ShellPage.instance.timeDisplay.Foreground=timeBrush;
-						if(expResource.IsExpanded && wantTextUpdate)
-						{
+						if(expResource.IsExpanded && wantTextUpdate) {
 							var resources = city.SampleResources().Min(city.resourceStorage);
 							//var panels = expResource.Child<CommunityToolkit.WinUI.UI.Controls.WrapPanel>().Children<StackPanel>();
 							var prod = city.stats.production;
 							var incoming = new CnV.Resources();
 							var store = city.stats.storage;
-							foreach(var trade in city.tradesIn)
-							{
+							foreach(var trade in city.tradesIn) {
 								incoming += trade.resources;
 							}
-							foreach(var o in city.outgoing)
-							{
+							foreach(var o in city.outgoing) {
 								if(o.isReturn)
 									incoming += o.resources;
 							}
-							for(var r = 0;r< CnV.Resources.idCount;r++)
-							{
+							for(var r = 0;r< CnV.Resources.idCount;r++) {
 								var rr = resourceItems[r];
 
-								if(incoming[r] > 0)
-								{
+								if(incoming[r] > 0) {
 									rr.incoming = $"{CnV.Resources.cartGlyph} {incoming[r].Format()}";
 									var balance = store[r] - resources[r] - incoming[r];
 									rr.incomingBrush = AppS.Brush(balance>= 0 ? Colors.Green : Colors.Orange);
 								}
-								else
-								{
+								else {
 									rr.incoming = null;
-								
+
 								}
 								var p = prod[r];
 								rr.production =$"{p:+#,#;-#,#;' --'}/h";
-								rr.productionBrush = AppS.Brush((p switch
-								{
+								rr.productionBrush = AppS.Brush((p switch {
 									> 0 => Colors.White,
 									< 0 => Colors.Yellow,
 									_ => Colors.LightGray
@@ -596,8 +583,8 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 								var res = resources[r];
 								var storage = store[r];
 								rr.here = res.Format();
-								rr.storage =  storage.Format(); 
-								rr.hereBrush = AppS.Brush( (res >= storage && !city.canRefine ?
+								rr.storage =  storage.Format();
+								rr.hereBrush = AppS.Brush((res >= storage && !city.canRefine ?
 									Colors.Red : res >= storage*3/4 ?
 									Colors.Orange : res == 0 ?
 									Colors.LightGray : Colors.LightBlue));
@@ -608,16 +595,13 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 						}
 						if(expBuildQueue.IsExpanded) // update each tick
 						{
-							foreach(var b in buildQueue)
-							{
+							foreach(var b in buildQueue) {
 								b.UpdateText();
 							}
 						}
-						if(expEnlistment.IsExpanded)
-						{
+						if(expEnlistment.IsExpanded) {
 							int counter = 0;
-							foreach(var b in recruitQueue)
-							{
+							foreach(var b in recruitQueue) {
 								b.UpdateText(counter);
 								++counter;
 							}
@@ -627,48 +611,40 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 							PlayerStats.instance.gold.Text = Player.active.gold.Format();
 						}
 
-						if(cityChanged)
-						{
+						if(cityChanged) {
 							var bdd = GetBuildingCounts(city);
 
 							var txt = (expBuildings.Header as DependencyObject).Child<TextBlock>(1);
 							txt.UpdateLazy($"Buildings: [{bdd.buildingCount}/{bdd.townHallLevel*10}]");
 							var hasHammerTime = city.hammerTime > 0;
-							queueText.UpdateLazy($"cs:{city.stats.cs:N0}%{ (hasHammerTime ? " +" +city.hammerTime.Format() : "" )}", hasHammerTime ? Colors.GreenYellow : Colors.White); 
-						
+							queueText.UpdateLazy($"cs:{city.stats.cs:N0}%{(hasHammerTime ? " +" +city.hammerTime.Format() : "")}",hasHammerTime ? Colors.GreenYellow : Colors.White);
+
 							var bd = new List<BuildingCountAndBrush>();
-							foreach(var i in bdd.counts)
-							{
-								if(i.Value > 0)
-								{
-									bd.Add(new BuildingCountAndBrush()
-									{ count = i.Value,
+							foreach(var i in bdd.counts) {
+								if(i.Value > 0) {
+									bd.Add(new BuildingCountAndBrush() {
+										count = i.Value,
 										image = CityBuild.GetBuildingImage(i.Key,BuildingCountAndBrush.width),
-										bid = i.Key });
+										bid = i.Key
+									});
 								}
 							}
-							for(int i = buildingCounts.Count;--i>= 0;)
-							{
+							for(int i = buildingCounts.Count;--i>= 0;) {
 								var bid = buildingCounts[i].image;
-								if(!bd.Any(a => a.image== bid))
-								{
+								if(!bd.Any(a => a.image== bid)) {
 									buildingCounts.RemoveAt(i);
 								}
 							}
 							// Add or update
-							foreach(var i in bd)
-							{
+							foreach(var i in bd) {
 								var prior = buildingCounts.FirstOrDefault(a => a.image == i.image);
-								if(prior is not null)
-								{
-									if(prior.count != i.count)
-									{
+								if(prior is not null) {
+									if(prior.count != i.count) {
 										prior.count = i.count;
 										prior.OnPropertyChanged(nameof(prior.count));
 									}
 								}
-								else
-								{
+								else {
 									buildingCounts.Add(i);
 								}
 							}
@@ -681,42 +657,35 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 							//buildingCountGrid.ItemsSource = bd;
 						}
 					}
-					catch(Exception e)
-					{
+					catch(Exception e) {
 						LogEx(e,report: false);
 					}
-					finally
-					{
-						
+					finally {
+
 
 					}
 				});
 
 			}
-			catch(Exception e)
-			{
+			catch(Exception e) {
 				LogEx(e,report: false);
 			}
 		}
 
-		private static  void City_PropertyChanged(object? sender,PropertyChangedEventArgs e)
-		{
+		private static void City_PropertyChanged(object? sender,PropertyChangedEventArgs e) {
 			Invalidate();
 		}
-	
-		private void Expander_Expanding(Microsoft.UI.Xaml.Controls.Expander sender,ExpanderExpandingEventArgs args)
-		{
+
+		private void Expander_Expanding(Microsoft.UI.Xaml.Controls.Expander sender,ExpanderExpandingEventArgs args) {
 			Invalidate();
 		}
-		public string ResToolTip
-		{
+		public string ResToolTip {
 			get {
 				using var sb = new PooledStringBuilder();
-				sb.s.Append(  $"{CnV.Resources.goldGlyph} {Player.active.gold.Format()}\n  +{city.stats.goldProduction.Format()}/h\nRes+Incomming:" );
+				sb.s.Append($"{CnV.Resources.goldGlyph} {Player.active.gold.Format()}\n  +{city.stats.goldProduction.Format()}/h\nRes+Incomming:");
 				var peakRes = city.sampleResources+city.incomingRes;
 				var store = city.stats.storage;
-				for(int i=0;i<4;++i)
-				{
+				for(int i = 0;i<4;++i) {
 					sb.s.Append('\n').Append(CnV.Resources.ResGlyphC(i)).Append(' ')
 						.Append(peakRes[i].Format()).Append('/').Append(store[i].Format());
 				}
@@ -757,42 +726,36 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 		//}
 
 		static bool commandsDirty;
-	
-		internal static void InvalidateCommands()
-		{
+
+		internal static void InvalidateCommands() {
 			commandsDirty =true;
 			Invalidate();
 		}
 
 
-		internal static void Invalidate()
-		{
+		internal static void Invalidate() {
 			commandsDirty =true;
 			if(Sim.isInteractiveOrHistoric && instance != null) {
 				nextTextUpdateTick=0;
 				AppS.QueueOnUIThread(BuildCityChanged);
 			}
-				//				instance?.buildCityChangeDebounce.Go();
+			//				instance?.buildCityChangeDebounce.Go();
 
 
-			}
+		}
 
-			private (int buildingCount, int towerCount, int townHallLevel, Dictionary<BuildingId,int> counts) GetBuildingCounts(City build)
-		{
+		private (int buildingCount, int towerCount, int townHallLevel, Dictionary<BuildingId,int> counts) GetBuildingCounts(City build) {
 			var buildingCounts = new Dictionary<BuildingId,int>();
 			int buildingCount = 0;
 			int towerCount = 0;
-			try
-			{
+			try {
 				var buildings = CityBuild.isPlanner ? build.GetLayoutBuildings() : build.postQueueBuildings;
 
 
 
-				foreach(var bdi in buildings)
-				{
+				foreach(var bdi in buildings) {
 					var id = bdi.id;
-					if(id == 0 || !bdi.isBuilding || id == Building.bidTownHall || id == Building.bidWall)
-					{
+					if(id == 0 || !bdi.isBuilding || id == Building.bidTownHall || id == Building.bidWall) {
 						continue;
 					}
 
@@ -802,8 +765,7 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 						else
 							++buildingCount;
 
-						if(!buildingCounts.TryGetValue(id,out var counter))
-						{
+						if(!buildingCounts.TryGetValue(id,out var counter)) {
 							buildingCounts.Add(id,0);
 							counter = 0;
 						}
@@ -814,8 +776,7 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 				return (buildingCount, towerCount, buildings[Building.bspotTownHall].bl, buildingCounts);
 
 			}
-			catch(Exception ex)
-			{
+			catch(Exception ex) {
 				LogEx(ex);
 			}
 			return (buildingCount, towerCount, -1, buildingCounts);
@@ -825,69 +786,62 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 
 		internal ObservableCollection<BuildItem> buildQueue = new();
 		internal ObservableCollection<RecruitItem> recruitQueue = new();
-		internal ObservableCollection<CommandItem> commandItems= new();
-		internal ObservableCollection<CommandItem> reinforcementItems= new();
-		internal ObservableCollection<CommandItem> incomingItems= new();
-		internal ObservableCollection<TradeItem> tradeItems= new();
-		internal ResourceItem[] resourceItems = new[] { new ResourceItem() {r= 0},new ResourceItem() {r= 1},new ResourceItem() {r= 2},new ResourceItem() {r= 3}  };
-		private void UserControl_Loaded(object sender,RoutedEventArgs e)
-		{
+		internal ObservableCollection<CommandItem> commandItems = new();
+		internal ObservableCollection<CommandItem> reinforcementItems = new();
+		internal ObservableCollection<CommandItem> incomingItems = new();
+		internal ObservableCollection<TradeItem> tradeItems = new();
+		internal ResourceItem[] resourceItems = new[] { new ResourceItem() { r= 0 },new ResourceItem() { r= 1 },new ResourceItem() { r= 2 },new ResourceItem() { r= 3 } };
+		private void UserControl_Loaded(object sender,RoutedEventArgs e) {
 			Assert(instance is null);
 			instance = this;
 			City.buildCityChanged+= (_,_) => {
 				Invalidate();
-				
-			};			
-			
+
+			};
+
 
 		}
 
-		
 
-//		internal static bool hasTempleQueued =>	 instance.buildQueue.Any(a => a.op.bidIfNotMove == Building.bidTemple);
 
-		
+		//		internal static bool hasTempleQueued =>	 instance.buildQueue.Any(a => a.op.bidIfNotMove == Building.bidTemple);
 
-		private async void buildQueueListView_DragItemsCompleted(ListViewBase sender,DragItemsCompletedEventArgs args)
-		{
-			try
-			{
+
+
+		private async void buildQueueListView_DragItemsCompleted(ListViewBase sender,DragItemsCompletedEventArgs args) {
+			try {
 				Log(args.DropResult);
 				//if(hasTempleQueued) {
 				//	AppS.MessageBox("Cannot drag when temples are queued");
 				//	return;
 				//}
-				if(args.DropResult ==DataPackageOperation.Move)
-				{
+				if(args.DropResult ==DataPackageOperation.Move) {
 					var item = args.Items.FirstOrDefault() as BuildItem;
 					var index = buildQueue.IndexOf(item);
 					var bq = city.buildQueue;
 					Note.Show($"Change: {dragStartingIndex}=>{index}, {buildQueue.Count} {bq == bqAtDragStart} ");
-					if((index != -1 && dragStartingIndex != -1) && (bq==bqAtDragStart))
-					{
-						
+					if((index != -1 && dragStartingIndex != -1) && (bq==bqAtDragStart)) {
+
 						// async action
 						await city.AttemptMove(dragStartingIndex,index,bqAtDragStart);
 
 					}
 
 				}
-				else
-				{
-					
-					var items = args.Items.Select( (a) =>  buildQueue.IndexOf( a as BuildItem)).Where(x=>x!=-1).Select(a=>(byte)a);
-					
+				else {
+
+					var items = args.Items.Select((a) => buildQueue.IndexOf(a as BuildItem)).Where(x => x!=-1).Select(a => (byte)a);
+
 					city.RemoveWithDependencies(new(items),bqAtDragStart);
 
-					
+
 				}
 			}
-			catch(Exception ex)
-			{
+			catch(Exception ex) {
 				LogEx(ex);
 				city.BuildingsOrQueueChanged(false);
 			}
-			
+
 			//			Log(args.Items.Format());
 			//			LogJson(args);
 
@@ -895,164 +849,125 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 
 		BuildQueueType bqAtDragStart; // cache this, if it changes by drag end, everything is invalidated
 		int dragStartingIndex;
-		private void buildQueueListView_DragItemsStarting(object sender,DragItemsStartingEventArgs e)
-		{
+		private void buildQueueListView_DragItemsStarting(object sender,DragItemsStartingEventArgs e) {
 			Log(e.Data?.RequestedOperation);
 			var i = e.Items?.FirstOrDefault() as BuildItem;
 			dragStartingIndex = buildQueue.IndexOf(i);
 			// Cannot move if it is currently building
 			var city = this.city;
-			bqAtDragStart= lastSynchronizedQueue; 
-			if(e.Items.Count > 1)
-			{
+			bqAtDragStart= lastSynchronizedQueue;
+			if(e.Items.Count > 1) {
 				Note.Show("Multi item reorder not yet supported, moving first selement");
 			}
-	
+
 		}
 
-		private void buildQueueListView_ContextRequested(UIElement sender,ContextRequestedEventArgs args)
-		{
-			
-			Log(args);
-		}
+		
 
 
-		private void buildQueueListView_DropCompleted(UIElement sender,DropCompletedEventArgs args)
-		{
+		private void buildQueueListView_DropCompleted(UIElement sender,DropCompletedEventArgs args) {
 			Log(args.DropResult);
 			LogJson(args);
 		}
-		private void buildQueueListView_DragOver(object sender,DragEventArgs e)
-		{
+		private void buildQueueListView_DragOver(object sender,DragEventArgs e) {
 			LogJson(e);
 
 		}
 
-		private async void buildQueueListView_ItemClick(object sender,ItemClickEventArgs e)
-		{
-			try {
-				var i = e.ClickedItem as BuildItem;
-				if(i.status == Status.invalid) {
-					if(await AppS.DoYesNoBox("Clean","Remove invalid items?") == 1) {
-						RemoveInvalidBuildQueueItems();
-					}
-				}
-			}
-			catch(Exception _ex) {
-				LogEx(_ex);
+		
 
-			}
-
-		}
-
-		private void buildQueueListView_SelectionChanged(object sender,SelectionChangedEventArgs e)
-		{
+		private void buildQueueListView_SelectionChanged(object sender,SelectionChangedEventArgs e) {
 			CityView.selectedBuildCs = buildQueueListView.SelectedItems.Select(a => ((BuildItem)a).op.bspot).ToArray();
 			CityView.selectedBuildCsChangeTime = AGame.animationT;
 		}
 
-		private void buildingCountGrid_SelectionChanged(object sender,SelectionChangedEventArgs e)
-		{
+		private void buildingCountGrid_SelectionChanged(object sender,SelectionChangedEventArgs e) {
 			CityView.selectedBuildingIds = buildingCountGrid.SelectedItems.Select(a => ((BuildingCountAndBrush)a).bid).ToArray();
 			CityView.selectedBuildingIdsChangeTime = AGame.animationT;
 		}
 
-		private void WoodTap(object sender,TappedRoutedEventArgs e)=> CityUI.Show( Artifact.ArtifactType.axe, sender);
-		private void StoneTap(object sender,TappedRoutedEventArgs e)=> CityUI.Show( Artifact.ArtifactType.hammer, sender);
-		private void IronTap(object sender,TappedRoutedEventArgs e)=> CityUI.Show( Artifact.ArtifactType.pike, sender);
-		private void FoodTap(object sender,TappedRoutedEventArgs e)=> CityUI.Show( Artifact.ArtifactType.sickle, sender);
-		private void GoldTap(object sender,TappedRoutedEventArgs e)=> CityUI.Show( Artifact.ArtifactType.chest, sender);
+		private void WoodTap(object sender,TappedRoutedEventArgs e) => CityUI.Show(Artifact.ArtifactType.axe,sender);
+		private void StoneTap(object sender,TappedRoutedEventArgs e) => CityUI.Show(Artifact.ArtifactType.hammer,sender);
+		private void IronTap(object sender,TappedRoutedEventArgs e) => CityUI.Show(Artifact.ArtifactType.pike,sender);
+		private void FoodTap(object sender,TappedRoutedEventArgs e) => CityUI.Show(Artifact.ArtifactType.sickle,sender);
+		private void GoldTap(object sender,TappedRoutedEventArgs e) => CityUI.Show(Artifact.ArtifactType.chest,sender);
 
 		private void QueueRightTapped(object sender,RightTappedRoutedEventArgs e) {
 			e.Handled=true;
 			CityUI.Show(Artifact.ArtifactType.medallion,sender);
 		}
-		private void EnlistmentContextRequested(UIElement sender,ContextRequestedEventArgs args)
-		{
+		private void EnlistmentContextRequested(UIElement sender,ContextRequestedEventArgs args) {
 			args.Handled    = true;
 			var flyout = new MenuFlyout();
-			
-			flyout.AddItem("Distraint..",Symbol.OutlineStar,() =>
-			{
-				CityUI.Show( Artifact.ArtifactType.amulet, sender);
+
+			flyout.AddItem("Distraint..",Symbol.OutlineStar,() => {
+				CityUI.Show(Artifact.ArtifactType.amulet,sender);
 			});
 
-			if(instance.RecruitQueueListView.SelectedItems.Any())
-			{
-				flyout.AddItem("Cancel Selected",Symbol.Remove,() =>
-				{
+			if(instance.RecruitQueueListView.SelectedItems.Any()) {
+				flyout.AddItem("Cancel Selected",Symbol.Remove,() => {
 					var sel = instance.RecruitQueueListView.SelectedItems;
 					if(sel.Any())
 						city.RemoveFromRecruit(new(sel.Select(x => instance.recruitQueue.IndexOf(x as RecruitItem))),lastSynchronizedRecruitQueue);
 				});
 			}
-			if(city.recruitQueue.Any())
-			{
-				flyout.AddItem("Cancel all",Symbol.Cut,() =>
-				{
-					city.RemoveFromRecruit( Enumerable.Range(0,city.recruitQueue.Length).ToList(), lastSynchronizedRecruitQueue);
+			if(city.recruitQueue.Any()) {
+				flyout.AddItem("Cancel all",Symbol.Cut,() => {
+					city.RemoveFromRecruit(Enumerable.Range(0,city.recruitQueue.Length).ToList(),lastSynchronizedRecruitQueue);
 					var sel = instance.buildQueueListView.SelectedItems;
 					new CnVEventCancelBuildQueue(city.worldC).EnqueueAsap();
 				});
 			}
 			flyout.ShowContext(sender,args);
 
-			
-		}
 
-		private void CityIconTapped(object sender,TappedRoutedEventArgs e)
-		{
-			var city= (sender as FrameworkElement)?.DataContext as City;
-			if(city is not null)
-			{
+		}
+	
+
+		private void CityIconTapped(object sender,TappedRoutedEventArgs e) {
+			var city = (sender as FrameworkElement)?.DataContext as City;
+			if(city is not null) {
 				e.Handled=true;
 				city.Focus();
 			}
 		}
 
-		private void EnlistmentClick(object sender,RoutedEventArgs e)
-		{
+		private void EnlistmentClick(object sender,RoutedEventArgs e) {
 			RecruitDialog.ShowInstance(city);
 		}
 
-		private void RecruitTargetsClick(object sender,RoutedEventArgs e)
-		{
+		private void RecruitTargetsClick(object sender,RoutedEventArgs e) {
 			RecruitTargetDialog.ShowInstance(city);
 		}
 
-		private void AmuletClick(object sender,RoutedEventArgs e)
-		{
-			CityUI.Show( Artifact.ArtifactType.amulet, sender);
+		private void AmuletClick(object sender,RoutedEventArgs e) {
+			CityUI.Show(Artifact.ArtifactType.amulet,sender);
 		}
 
-		private void AutobuildTapped(object sender,TappedRoutedEventArgs e)
-		{
+		private void AutobuildTapped(object sender,TappedRoutedEventArgs e) {
 			e.Handled=true;
 			AutobuildDialog.ShowInstance();
 		}
 
-		private void TradesClick(object sender,RoutedEventArgs e)
-		{
+		private void TradesClick(object sender,RoutedEventArgs e) {
 			TradeSettingsDialog.ShowInstance();
-			
+
 		}
-		internal string tradesToolTip
-		{
+		internal string tradesToolTip {
 			get {
 				return $"{CnV.Resources.cartGlyph} {city.cartsHome.Format()}/{city.carts.Format()}\n{CnV.Resources.shipGlyph} {city.shipsHome.Format()}/{city.ships.Format()}";
 			}
 		}
 
-		private void CombatCalc(object sender,RoutedEventArgs e)
-		{
+		private void CombatCalc(object sender,RoutedEventArgs e) {
 			CombatCalcDialog.ShowInstance();
 		}
 
 		public void RemoveInvalidBuildQueueItems() {
 			try {
-					var bq = city.buildQueue;
-					var status = city.GetBuildQueueStatuses();
-					var remove = new List<byte>();
+				var bq = city.buildQueue;
+				var status = city.GetBuildQueueStatuses();
+				var remove = new List<byte>();
 				if(status.Length < 255) {
 					for(int i = 0;i<status.Length;++i) {
 						if(status[i] == Status.invalid) {
@@ -1061,11 +976,11 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 					}
 					city.RemoveWithDependencies(remove,bq);
 				}
-				}
-				catch(Exception _ex) {
-					LogEx(_ex);
+			}
+			catch(Exception _ex) {
+				LogEx(_ex);
 
-				}
+			}
 		}
 
 		private void DismissClick(object sender,RoutedEventArgs e) {
@@ -1075,617 +990,361 @@ public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 		private void CityBox_SelectionChanged(object sender,Spot e) {
 
 			var sel = e;
-			if(sel.IsValid() && sel.cid != City.build && e.CanVisit() ) {
-				City.ProcessCoordClick(sel.cid,AppS.keyModifiers.ClickMods(scrollIntoUi:true) );
+			if(sel.IsValid() && sel.cid != City.build && e.CanVisit()) {
+				City.ProcessCoordClick(sel.cid,AppS.keyModifiers.ClickMods(scrollIntoUi: true));
 			}
 		}
 
-		private void CommandItemsClick(object sender,RoutedEventArgs e) {
+	private void BuildQueueFlyoutOpening(object sender,object e) {
+		var flyout = sender as MenuFlyout;
+		flyout.Items.Clear();
+
+		if(buildQueue.Any(a => a.status == Status.invalid)) {
+					flyout.AddItem("Remove Invalid..",Symbol.Bullets,RemoveInvalidBuildQueueItems);
 
 		}
-	}
-	public class BuildingCountAndBrush:INotifyPropertyChanged
-	{
-		public BuildingId bid;
-		public const int width = 32;
-		public Microsoft.UI.Xaml.Media.Imaging.BitmapImage image { get; set; }
-		public int count { get; set; }
+		flyout.AddItem("Worker..",Symbol.OutlineStar,() => {
+				CityUI.Show(Artifact.ArtifactType.medallion,sender);
+			});
+		
+					if(buildQueueListView.SelectedItems.Any()) {
+						flyout.AddItem("Cancel Selected",Symbol.Cancel,() => {
+							var sel = buildQueueListView.SelectedItems;
 
-		public void OnPropertyChanged(string members = null) => PropertyChanged?.Invoke(this,new(members));
+							city.RemoveWithDependencies(new(sel.Select(x => (byte)buildQueue.IndexOf(x as BuildItem))),lastSynchronizedQueue);
+						});
+					}
+		if(buildQueue.Any()) {
+			flyout.AddItem("Cancel all",Symbol.Cut,() => {
+				new CnVEventCancelBuildQueue(city.worldC).EnqueueAsap();
+			});
+			flyout.AddItem("Sort",Symbol.Sort,() => {
+						if(BuildQueue.HasBuildOpsInFlight(city)) {
+							Note.Show("Please try again in a minute");
+						}
+						else {
+							new CnVEventSortBuildQueue(city.worldC).EnqueueAsap();
+						}
+					});
+		}
 
-		public event PropertyChangedEventHandler? PropertyChanged;
-	}
-	public class BuildItem:INotifyPropertyChanged
-	{
-		public const int size = 32;
-		public BitmapImage image { get; set; }
-		public string opText { get; set; }
-		public string timeText { get; set; }
-		public BuildQueueItem.Status status;
-		public Brush timeColor => AppS.Brush( status switch 
-		{ Status.building => Colors.White,
-			Status.valid => Colors.Green,
-			Status.invalid => Colors.Red,
-			_=> Colors.Gray
-		});
+					
+					
+		}
 
-		public string resTip => $"{ status.EnumTitle()}\n{
-			(op.op switch
-			{
+	
+}
+
+
+public class BuildingCountAndBrush:INotifyPropertyChanged
+		{
+			public BuildingId bid;
+			public const int width = 32;
+			public Microsoft.UI.Xaml.Media.Imaging.BitmapImage image { get; set; }
+			public int count { get; set; }
+
+			public void OnPropertyChanged(string members = null) => PropertyChanged?.Invoke(this,new(members));
+
+			public event PropertyChangedEventHandler? PropertyChanged;
+		}
+		public class BuildItem:INotifyPropertyChanged
+		{
+			public const int size = 32;
+			public BitmapImage image { get; set; }
+			public string opText { get; set; }
+			public string timeText { get; set; }
+			public BuildQueueItem.Status status;
+			public Brush timeColor => AppS.Brush(status switch {
+				Status.building => Colors.White,
+				Status.valid => Colors.Green,
+				Status.invalid => Colors.Red,
+				_ => Colors.Gray
+			});
+
+			public string resTip => $"{status.EnumTitle()}\n{(op.op switch {
 				Op.upgrade or Op.build => (op.BuildOrUpgradCost()).Format(),
 				Op.demo or Op.downgrade => op.DemoOrDowngradeRefund().Format(),
 				_ => null
-			}) }";
+			})}";
 
-		public BuildQueueItem op;
+			public BuildQueueItem op;
 
-		internal City city;
-		public BuildItem(BuildQueueItem item, City city)
-		{
-			this.city = city;
-			op = item;
-			image = CityBuild.GetBuildingImage( item.isMove ? Building.bidMove :  item.bid,size);
-			var u = op.unpack;
-			opText = u.isMove ? "Move" : u.isDemo ? "Destroy" : u.isBuild ? $"Build{(u.pa==false ? " p" : "") }" : $"{u.slvl} to {u.elvl}";
-			UpdateText();
-		}
-		public void UpdateText()
-		{
-			try
-			{
-				var q = city.buildQueue;
-				TimeSpanS dt;
-				if(q.Any() && q[0]== op && city.buildItemEndsAt.isNotZero)
-					dt = city.buildItemEndsAt - Sim.simTime;
-				else
-					dt = new(op.TimeRequired(city));
-				var text = dt.ToString();
-				if(text != timeText)
-				{
-					timeText = text;// + BuildingDef.FromId(item.bid).Bn;
-					OnPropertyChanged(nameof(this.timeText));
-				}
+			internal City city;
+			public BuildItem(BuildQueueItem item,City city) {
+				this.city = city;
+				op = item;
+				image = CityBuild.GetBuildingImage(item.isMove ? Building.bidMove : item.bid,size);
+				var u = op.unpack;
+				opText = u.isMove ? "Move" : u.isDemo ? "Destroy" : u.isBuild ? $"Build{(u.pa==false ? " p" : "")}" : $"{u.slvl} to {u.elvl}";
+				UpdateText();
 			}
-			catch(Exception ex)
-			{
-				LogEx(ex);
-			}
-
-		}
-
-		
-		public void ContextRequested(UIElement sender,ContextRequestedEventArgs args)
-		{
-			args.Handled    = true;
-			var flyout = new MenuFlyout();
-
-			if(instance.buildQueue.Any(a=>a.status == Status.invalid))
-				{
-			flyout.AddItem("Remove Invalid..",Symbol.Bullets,instance.RemoveInvalidBuildQueueItems);
-
-			}
-			flyout.AddItem("Worker..",Symbol.OutlineStar,() =>
-			{
-				CityUI.Show( Artifact.ArtifactType.medallion, sender);
-			});
-			if(op.isDemo && op.isRes )
-			{
-			flyout.AddItem("Powder..",Symbol.Favorite,() =>
-			{
-				CityUI.Show( Artifact.ArtifactType.black_powder, sender);
-			});
-			}
-//			if(!hasTempleQueued) 
-				{
-
-				flyout.AddItem("Remove..",Symbol.Remove,() => {
-					var index = instance.buildQueue.IndexOf(this);
-					if(index != -1)
-						city.RemoveWithDependencies(new(new[] { (byte)index }),lastSynchronizedQueue);
-					else {
-						Note.Show("Something changed");
-						Invalidate();
-					}
-				});
-				if(instance.buildQueueListView.SelectedItems.Any()) {
-					flyout.AddItem("Cancel Selected",Symbol.Cancel,() => {
-						var sel = instance.buildQueueListView.SelectedItems;
-
-						city.RemoveWithDependencies(new( sel.Select(x => (byte)instance.buildQueue.IndexOf(x as BuildItem))),lastSynchronizedQueue);
-					});
-				}
-				flyout.AddItem("Cancel all",Symbol.Cut,() => {
-					var sel = instance.buildQueueListView.SelectedItems;
-					new CnVEventCancelBuildQueue(city.worldC).EnqueueAsap();
-				});
-				flyout.AddItem("Sort",Symbol.Sort,() => {
-					if(BuildQueue.HasBuildOpsInFlight(city)) {
-						Note.Show("Please try again in a minute");
-					}
-					else {
-						var sel = instance.buildQueueListView.SelectedItems;
-						new CnVEventSortBuildQueue(city.worldC).EnqueueAsap();
-					}
-				});
-				flyout.AddItem("Move To Front",Symbol.Up,() => {
-					var index = instance.buildQueue.IndexOf(this);
-					if(index != -1)
-						city.AttemptMove(index,0,lastSynchronizedQueue);
-					else
-						Invalidate();
-				});
-				flyout.AddItem("Move To End",Symbol.Back,() => {
-					var index = instance.buildQueue.IndexOf(this);
-					if(index != -1)
-						city.AttemptMove(index,city.buildQueue.Length-1,lastSynchronizedQueue);
-					else
-						Invalidate();
-				});
-			}
-			flyout.ShowContext(sender,args);
-
-		}
-		public void OnPropertyChanged(string members = null) => PropertyChanged?.Invoke(this,new(members));
-
-		public event PropertyChangedEventHandler? PropertyChanged;
-	}
-	public class RecruitItem:INotifyPropertyChanged
-	{
-		public const int size = 32;
-		public BitmapImage image { get; set; }
-		public string count { get; set; }
-		public string timeText { get; set; }
-		public TroopTypeCount op;
-
-		internal City city;
-		public RecruitItem(TroopTypeCount item, City city)
-		{
-			this.city = city;
-			op = item;
-			image = Troops.Image(op.t);
-			count = item.c.Format();
-			///var u = op.unpack;
-			//opText = u.isMove ? "Move" : u.isDemo ? "Destroy" : u.isBuild ? $"Build{(u.pa==false ? " p" : "") }" : u.isDowngrade ? $"Down to {u.elvl}" : $"Up to {u.elvl}";
-	
-		}
-		public void UpdateText(int myId)
-		{
-			try
-			{
-				var q = city.recruitQueue;
-				if(myId < q.Length)
-				{
+			public void UpdateText() {
+				try {
+					var q = city.buildQueue;
 					TimeSpanS dt;
-					if(myId ==0 && city.recruitItemEndsAt.isNotZero)
-						dt = city.recruitItemEndsAt - Sim.simTime;
+					if(q.Any() && q[0]== op && city.buildItemEndsAt.isNotZero)
+						dt = city.buildItemEndsAt - Sim.simTime;
 					else
-						dt = new(op.RecruitTimeRequired(city));
+						dt = new(op.TimeRequired(city));
 					var text = dt.ToString();
-					if(text != timeText)
-					{
+					if(text != timeText) {
 						timeText = text;// + BuildingDef.FromId(item.bid).Bn;
 						OnPropertyChanged(nameof(this.timeText));
 					}
 				}
-			}
-			catch(Exception ex)
-			{
-				LogEx(ex);
+				catch(Exception ex) {
+					LogEx(ex);
+				}
+
 			}
 
-		}
-		
-		public void OnPropertyChanged(string members = null) => PropertyChanged?.Invoke(this,new(members));
 
-		public event PropertyChangedEventHandler? PropertyChanged;
+	internal void FlyoutOpening(object? sender,object  args) {
+		var a = sender as MenuFlyout;
+		a.Items.Clear();
+		var b = a.Target as Button;
+		var commandItem = b.DataContext as BuildItem;
+		commandItem.AddToFlyout(a);
 	}
-	public class CommandItem:INotifyPropertyChanged
-	{
-		internal Army army;
-		internal bool isOutgoing => army.sourceCid == City.build;
-	//	public string sourceCoords=> army.sourceCity.nameAndRemarksAndPlayer;
-	//	public string targetCoords=> army.targetCity.nameAndRemarksAndPlayer;
-		public string info => $"{army.NextStopTimeString(' ')} {army.splitsS}{(army.isReturn^isOutgoing ? "" : "" )} {(isOutgoing ? army.targetCity: army.sourceCity)}";
+	internal void Tapped(object sender,TappedRoutedEventArgs e) {
+		e.Handled    = true;
+				var flyout = new MenuFlyout();
 
-		//internal void SourceClick(object sender,RoutedEventArgs e)
-		//{
-		//	CityUI.ShowCity(army.sourceCid,false);
-		//}
-		internal void TargetClick(object sender,RoutedEventArgs e)
-		{
-			CityUI.ShowCity(isOutgoing ? army.targetCid : army.sourceCid);
-		}
-
-
-		internal string toolTip => army.WorldToolTip().tip;
-
-		public CommandItem(Army army)
-		{
-			this.army = army;
-			//UpdateAction();
-			
-			
-		}
-
-	public BitmapImage action =>
-			  ImageHelper.Get(  
-								army.isRaid ? (
-												army.isRepeating ? "UI/Icons/icon_cmmnds_raid_loop.png" : 
-												"UI/Icons/icon_cmmnds_raid_once.png" ):
-								army.isReturn? "Region/UI/icon_player_own_troops_ret.png"  : 
-								army.isSettle ? "Region/UI/icon_player_own_settlement.png" : 
-								army.isDefense ? "Region/UI/icon_player_own_support_inc.png" :
-								army.isSiege&&army.shareInfo ? "Region/UI/icon_player_alliance_siege.png" :
-								"Region/UI/icon_player_own_attack.png");
-		
-		
-		public void ContextRequested(UIElement sender,ContextRequestedEventArgs args)
-		{
-			args.Handled    = true;
-			var flyout = new MenuFlyout();
-
-			if(army.isRaid) {
-				if(army.isRepeating) {
-					flyout.AddItem( "Return at..",glyph:(char)0xF738 ,command:() =>SendTroops.ShowInstance(prior: army,timing:TimingSetting.arrival) );
-					flyout.AddItem(army.isReturn ? "Stop repeating once returned" :  "Abort raid and return",Symbol.Undo,() =>
-					{
-						CnVEventReturnTroops.TryReturn(army,default,false,isResume:false,isSlow:false);
-					});
-					if(!army.isReturn) {
-						flyout.AddItem("Stop repeating raid",glyph:(char)0xE1CC, () => {
-							CnVEventReturnTroops.TryReturn(army,default,false,isResume:false,isSlow:true);
-						});
-					}
-				}
-				else {
-					if(!army.isReturn) {
-					flyout.AddItem("Return immediately",Symbol.Undo,() =>
-					{
-						CnVEventReturnTroops.TryReturn(army,default,false,isResume:false,isSlow:false);
-					});
-
-					}
-					flyout.AddItem("Resume raiding",Symbol.Redo,() =>
-					{
-						CnVEventReturnTroops.TryReturn(army,default,false,isResume:true,isSlow:false);
-					});
-
-				}
-
-			}
-			else if(!army.isReturn)
-			{
-				flyout.AddItem("Return",Symbol.Undo,() =>
-				{
-					if( (army.isDefense && army.departed) || army.isSieging) {
-						SendTroops.ShowInstance(prior: army);
-					}
-					else {
-						CnVEventReturnTroops.TryReturn(army);
-					}
-				});
-			}
-			if( army.canUseWings)
-				flyout.AddItem("Use Horns",Symbol.Forward,SpeedupDefense);
-			if( army.canUseFanfare)
-				flyout.AddItem("Return raids with Quadriga",Symbol.Forward,UseFanfare);
-
-			flyout.AddItem("Return All",Symbol.Delete,() =>
-			{
-				foreach(var i in army.sourceCity.outgoing) {
-					if(!i.canReturn) {
-						AppS.MessageBox("One or more armies cannot be returned automatically (outgoing attack?)");
-						return;
-					}
-				}
-				new CnVEventReturnTroops(army.sourceC,CnVEventReturnTroops.outgoingAll).EnqueueAsap();
-			});
-			
-			if(army.sourceCity.outgoing.Any(i => i.isRaid && (i.isRepeating || (!i.isReturn))))
-				{
-				flyout.AddItem("Return all raids immediately",Symbol.Refresh,() => {
-					new CnVEventReturnTroops(army.sourceC,CnVEventReturnTroops.outgoingRaidsFast).EnqueueAsap();
-				});
-				flyout.AddItem("Return all raids when complete",Symbol.Refresh,() => {
-					new CnVEventReturnTroops(army.sourceC,CnVEventReturnTroops.outgoingRaidsSlow).EnqueueAsap();
-				});
-			}
-			if(army.sourceCity.outgoing.Any(i => i.isRaid && (!i.isRepeating )))
-				{
-				flyout.AddItem("Resume all raids",Symbol.Play,() => {
-					new CnVEventReturnTroops(army.sourceC,CnVEventReturnTroops.outgoingRaidsResume,default,useWings:false,resume: true,returnSlow:true).EnqueueAsap();
-				});
-			}
-			flyout.ShowContext(sender,args);
-		}
-		private void UseFanfare()
-		{
-			try
-			{
-				var art = Artifact.GetUniversal(Artifact.ArtifactType.magical_fanfare);
-				if(art is null)
-				{
-					Assert(false);
-					return;
-				}
-				var artifact = art.id;
-
-
-				var city = army.sourceCity;
-				var id = city.outgoing.IndexOf(army);
-				Assert(id != -1);
-				if(id >= 0)
-				{
-					var toUse = 1;
-					var needed = toUse- Player.active.ArtifactCount(artifact);
-					if(!Artifact.Get(artifact).IsOkayToUse(toUse))
-						return;
-					
-					// do we need to return first
-					Assert(army.isRaid);
-					// return troops first
-					
-					 {
-						SocketClient.DeferSendStart();
-
-						try {
-							if(needed > 0) {
-								new CnVEventPurchaseArtifacts((ushort)artifact,(ushort)needed,Player.active.id).EnqueueAsap();
-							}
-							// If the army has not returned, we do a return with wings and pay later with a dummy call to useArtifacts
-							// If it has started returning, we use the artifact
-							
-
-							
-							(new CnVEventUseArtifacts(city.c) { artifactId = (ushort)artifact,count = (ushort)toUse,aux=id }).EnqueueAsap();
-
-						}
-						catch(Exception _ex) {
-							LogEx(_ex);
-
-						}
-						finally {
-							SocketClient.DeferSendEnd();
-						}
-					}
-				}
-			}
-			catch(Exception _ex)
-			{
-				LogEx(_ex);
-
-			}
-		}
-
-		private void SpeedupDefense()
-		{
-			try
-			{
-				var art = Artifact.GetForPlayerRank(Artifact.ArtifactType.Horn);
-				if(art is null)
-				{
-					Assert(false);
-					return;
-				}
-				var artifact = art.id;
-
-
-				var city = army.sourceCity;
-				var id = city.outgoing.IndexOf(army);
-				Assert(id != -1);
-				if(id >= 0)
-				{
-					var toUse = (int)army.splits;
-					var needed = toUse- Player.active.ArtifactCount(artifact);
-					if(!Artifact.Get(artifact).IsOkayToUse(toUse))
-						return;
-					
-					// do we need to return first
-					Assert(army.isDefense);
-					// return troops first
-					
-					{
-						SocketClient.DeferSendStart();
-
-						try {
-							if(needed > 0) {
-								new CnVEventPurchaseArtifacts((ushort)artifact,(ushort)needed,Player.active.id).EnqueueAsap();
-							}
-							// If the army has not returned, we do a return with wings and pay later with a dummy call to useArtifacts
-							// If it has started returning, we use the artifact
-							if(army.arrived) {
-									CnVEventReturnTroops.TryReturn(army,default,true);
-							}
-
-							
-								(new CnVEventUseArtifacts(city.c) { artifactId = (ushort)artifact,count = (ushort)toUse,aux=id, flags = army.arrived.Switch(Flags.none,Flags.noEffect) | AppS.isTest.Switch(Flags.none,Flags.dontRemoveArtifacts|Flags.dontRemoveKarma) }).EnqueueAsap();
-
-						}
-						catch(Exception _ex) {
-							LogEx(_ex);
-
-						}
-						finally {
-							SocketClient.DeferSendEnd();
-						}
-					}
-				}
-			}
-			catch(Exception _ex)
-			{
-				LogEx(_ex);
-
-			}
-		}
-
-		public void ReinContextRequested(UIElement sender,ContextRequestedEventArgs args)
-		{
-			args.Handled    = true;
-			var flyout = new MenuFlyout();
-		
-
-			flyout.AddItem("Return",Symbol.Undo,() =>
-			{
-				SendTroops.ShowInstance(prior: army);
-//				CnVEventReturnTroops.TryReturn(army);
-			});
-		//	if( army.canUseWings)
-	//			flyout.AddItem("Speedup",Symbol.Forward,SpeedupDefense);
-
-			flyout.ShowContext(sender,args);
-		}
-
-
-		public void OnPropertyChanged(string members = null) => PropertyChanged?.Invoke(this,new(members));
-
-		public event PropertyChangedEventHandler? PropertyChanged;
+				AddToFlyout(flyout);
+		flyout.ShowAt(sender as UIElement,new());
 	}
+		public void AddToFlyout(MenuFlyout flyout)
+		{
+			
+				flyout.AddItem("Worker..",Symbol.OutlineStar,() => {
+					CityUI.Show(Artifact.ArtifactType.medallion,null);
+				});
+				if(op.isDemo && op.isRes) {
+					flyout.AddItem("Powder..",Symbol.Favorite,() => {
+						CityUI.Show(Artifact.ArtifactType.black_powder,null);
+					});
+				}
+				//			if(!hasTempleQueued) 
+				{
 
-	public class ResourceItem:CNotifyPropertyChanged
-	{
-		internal int r;
-		internal void Tapped(object sender,TappedRoutedEventArgs e) {
-			e.Handled= true;
-			CityUI.Show(
-			r switch { 0 => Artifact.ArtifactType.axe, 1 => Artifact.ArtifactType.hammer, 2 => Artifact.ArtifactType.pike, _ => Artifact.ArtifactType.sickle },
-			sender);
+					flyout.AddItem("Remove..",Symbol.Remove,() => {
+						var index = instance.buildQueue.IndexOf(this);
+						if(index != -1)
+							city.RemoveWithDependencies(new(new[] { (byte)index }),lastSynchronizedQueue);
+						else {
+							Note.Show("Something changed");
+							Invalidate();
+						}
+					});
+					
+					
+					flyout.AddItem("Move To Front",Symbol.Up,() => {
+						var index = instance.buildQueue.IndexOf(this);
+						if(index != -1)
+							city.AttemptMove(index,0,lastSynchronizedQueue);
+						else
+							Invalidate();
+					});
+					flyout.AddItem("Move To End",Symbol.Back,() => {
+						var index = instance.buildQueue.IndexOf(this);
+						if(index != -1)
+							city.AttemptMove(index,city.buildQueue.Length-1,lastSynchronizedQueue);
+						else
+							Invalidate();
+					});
+				}
 		}
-		internal string incoming;
-		internal Brush incomingBrush;
+			public void ContextRequested(UIElement sender,ContextRequestedEventArgs args) {
+				args.Handled    = true;
+				var flyout = new MenuFlyout();
 
-		internal string here;
-		internal Brush hereBrush;
+				AddToFlyout(flyout);
+				flyout.ShowContext(sender,args);
 
-		internal string storage;
+			}
+			public void OnPropertyChanged(string members = null) => PropertyChanged?.Invoke(this,new(members));
 
-		internal string production;
-		internal Brush productionBrush;
-		internal const int height = 28;
-		internal ImageSource resIcon => ImageHelper.Get(r switch {
-			0=> WoodText.path,
-			1=> StoneText.path,
-			2=> IronText.path,
-			_=> FoodText.path,
+			public event PropertyChangedEventHandler? PropertyChanged;
+		}
+		public class RecruitItem:INotifyPropertyChanged
+		{
+			public const int size = 32;
+			public BitmapImage image { get; set; }
+			public string count { get; set; }
+			public string timeText { get; set; }
+			public TroopTypeCount op;
+
+			internal City city;
+			public RecruitItem(TroopTypeCount item,City city) {
+				this.city = city;
+				op = item;
+				image = Troops.Image(op.t);
+				count = item.c.Format();
+				///var u = op.unpack;
+				//opText = u.isMove ? "Move" : u.isDemo ? "Destroy" : u.isBuild ? $"Build{(u.pa==false ? " p" : "") }" : u.isDowngrade ? $"Down to {u.elvl}" : $"Up to {u.elvl}";
+
+			}
+			public void UpdateText(int myId) {
+				try {
+					var q = city.recruitQueue;
+					if(myId < q.Length) {
+						TimeSpanS dt;
+						if(myId ==0 && city.recruitItemEndsAt.isNotZero)
+							dt = city.recruitItemEndsAt - Sim.simTime;
+						else
+							dt = new(op.RecruitTimeRequired(city));
+						var text = dt.ToString();
+						if(text != timeText) {
+							timeText = text;// + BuildingDef.FromId(item.bid).Bn;
+							OnPropertyChanged(nameof(this.timeText));
+						}
+					}
+				}
+				catch(Exception ex) {
+					LogEx(ex);
+				}
+
+			}
+
+			public void OnPropertyChanged(string members = null) => PropertyChanged?.Invoke(this,new(members));
+
+			public event PropertyChangedEventHandler? PropertyChanged;
+		}
+
+		public class ResourceItem:CNotifyPropertyChanged
+		{
+			internal int r;
+			internal void Tapped(object sender,TappedRoutedEventArgs e) {
+				e.Handled= true;
+				CityUI.Show(
+				r switch { 0 => Artifact.ArtifactType.axe, 1 => Artifact.ArtifactType.hammer, 2 => Artifact.ArtifactType.pike, _ => Artifact.ArtifactType.sickle },
+				sender);
+			}
+			internal string incoming;
+			internal Brush incomingBrush;
+
+			internal string here;
+			internal Brush hereBrush;
+
+			internal string storage;
+
+			internal string production;
+			internal Brush productionBrush;
+			internal const int height = 28;
+			internal ImageSource resIcon => ImageHelper.Get(r switch {
+				0 => WoodText.path,
+				1 => StoneText.path,
+				2 => IronText.path,
+				_ => FoodText.path,
 			},height
-		 );
-	}
-	public class TradeItem:CNotifyPropertyChanged
-	{
-		internal TradeOrder trade;
-		
-		public BitmapImage action { get; set; }
-	//	public string sourceCoords=> army.sourceCity.nameAndRemarksAndPlayer;
-	//	public string targetCoords=> army.targetCity.nameAndRemarksAndPlayer;
-		public string info =>  $"{(trade.isReturning ? trade.returnTime.Format(): trade.time.Format())} {(isIncoming?"in":"out")} { (!isIncoming ? trade.targetCity : trade.sourceCity) }";
-
-		
-		internal void InfoClick(object sender,RoutedEventArgs e)
-		{
-			CityUI.ShowCity(!isIncoming ? trade.targetCid : trade.sourceCid);
+			 );
 		}
-
-
-		internal string toolTip => trade.Format("\n");
-		internal bool isIncoming => trade.targetCid == City.build;
-		internal bool isOutgoing => !isIncoming;
-		internal TradeItem(TradeOrder army)
+		public class TradeItem:CNotifyPropertyChanged
 		{
-			this.trade = army;
-			
-			action =  ImageHelper.Get( trade.isTempleTrade ?  "UI/icons/icon_playerinfo_townicon_palace_land.png":
-				trade.isReturning ?  "Region/UI/icon_player_own_troops_ret.png" : 
-				isIncoming ?  "Region/UI/icon_player_resource_inc.png" : "Region/UI/icon_player_resource_outgoing.png"  );
-			
-		}
+			internal TradeOrder trade;
 
-		public void ContextRequested(UIElement sender,ContextRequestedEventArgs args) {
-			args.Handled    = true;
-			var flyout = new MenuFlyout();
+			public BitmapImage action { get; set; }
+			//	public string sourceCoords=> army.sourceCity.nameAndRemarksAndPlayer;
+			//	public string targetCoords=> army.targetCity.nameAndRemarksAndPlayer;
+			public string info => $"{(trade.isReturning ? trade.returnTime.Format() : trade.time.Format())} {(isIncoming ? "in" : "out")} {(!isIncoming ? trade.targetCity : trade.sourceCity)}";
 
-			if(trade.canCancel && !trade.isCancelled && !trade.isReturning) {
 
-			
-			flyout.AddItem("Return",Symbol.Undo,() => {
+			internal void InfoClick(object sender,RoutedEventArgs e) {
+				CityUI.ShowCity(!isIncoming ? trade.targetCid : trade.sourceCid);
+			}
 
-				new CnVEventCancelTrade(trade.sourceC,trade).EnqueueAsap();
 
-			});
-		}	
+			internal string toolTip => trade.Format("\n");
+			internal bool isIncoming => trade.targetCid == City.build;
+			internal bool isOutgoing => !isIncoming;
+			internal TradeItem(TradeOrder army) {
+				this.trade = army;
 
-			flyout.AddItem("Speedup",Symbol.Forward,async () =>
-			{
-				try
-				{
-					var aType = trade.viaLand ? Artifact.ArtifactType.Wheel : Artifact.ArtifactType.Anchor;
-					var art = Artifact.GetForPlayerRank(aType);
-					if(art is null)
-					{
-						Assert(false);
-						return;
-					}
-					var artifact = art.id;
-					
-					
-					var city = trade.sourceCity;
-					var prior = city.tradesOut;
-					var id = city.tradesOut.IndexOf(trade);
-					Assert(id != -1);
-					if(id >= 0)
-					{
-					
-						var timeLeft = (trade.isReturning ? trade.returnTime : trade.arrival) - Sim.simTime;
-						var speedUp = trade.viaLand ? art.r[14] : art.r[15];
-						Assert(speedUp > 0);
-						var toUse = (timeLeft.seconds *(trade.viaLand ? trade.transport.carts : trade.transport.ships)).DivideRoundUp( speedUp*ServerTime.secondsPerHour );
-						
-						if( toUse > 1 ) {
-							var i = await AppS.DoYesNoBox($"Use how many Items?",$"Trade will require {toUse} to {(trade.isReturning ? "return" :"reach its destination")} instantly",toUse.ToString(),"1");
-							if(i == -1)
-								return;
-							if(i==0)
-								toUse = 1;
+				action =  ImageHelper.Get(trade.isTempleTrade ? "UI/icons/icon_playerinfo_townicon_palace_land.png" :
+					trade.isReturning ? "Region/UI/icon_player_own_troops_ret.png" :
+					isIncoming ? "Region/UI/icon_player_resource_inc.png" : "Region/UI/icon_player_resource_outgoing.png");
 
-						}
-						var needed = toUse- Player.active.ArtifactCount(artifact);
-						if(!Artifact.Get(artifact).IsOkayToUse(toUse))
+			}
+
+			public void ContextRequested(UIElement sender,ContextRequestedEventArgs args) {
+				args.Handled    = true;
+				var flyout = new MenuFlyout();
+
+				if(trade.canCancel && !trade.isCancelled && !trade.isReturning) {
+
+
+					flyout.AddItem("Return",Symbol.Undo,() => {
+
+						new CnVEventCancelTrade(trade.sourceC,trade).EnqueueAsap();
+
+					});
+				}
+
+				flyout.AddItem("Speedup",Symbol.Forward,async () => {
+					try {
+						var aType = trade.viaLand ? Artifact.ArtifactType.Wheel : Artifact.ArtifactType.Anchor;
+						var art = Artifact.GetForPlayerRank(aType);
+						if(art is null) {
+							Assert(false);
 							return;
-						if( city.tradesOut != prior ) {
-							AppS.MessageBox("Trades changed, please try again");
 						}
-						SocketClient.DeferSendStart();
+						var artifact = art.id;
 
-						try
-						{
-							if(needed > 0)
-							{
-								new CnVEventPurchaseArtifacts((ushort)artifact, (ushort)needed,Player.active.id).EnqueueAsap();
+
+						var city = trade.sourceCity;
+						var prior = city.tradesOut;
+						var id = city.tradesOut.IndexOf(trade);
+						Assert(id != -1);
+						if(id >= 0) {
+
+							var timeLeft = (trade.isReturning ? trade.returnTime : trade.arrival) - Sim.simTime;
+							var speedUp = trade.viaLand ? art.r[14] : art.r[15];
+							Assert(speedUp > 0);
+							var toUse = (timeLeft.seconds *(trade.viaLand ? trade.transport.carts : trade.transport.ships)).DivideRoundUp(speedUp*ServerTime.secondsPerHour);
+
+							if(toUse > 1) {
+								var i = await AppS.DoYesNoBox($"Use how many Items?",$"Trade will require {toUse} to {(trade.isReturning ? "return" : "reach its destination")} instantly",toUse.ToString(),"1");
+								if(i == -1)
+									return;
+								if(i==0)
+									toUse = 1;
+
 							}
+							var needed = toUse- Player.active.ArtifactCount(artifact);
+							if(!Artifact.Get(artifact).IsOkayToUse(toUse))
+								return;
+							if(city.tradesOut != prior) {
+								AppS.MessageBox("Trades changed, please try again");
+							}
+							SocketClient.DeferSendStart();
 
-							(new CnVEventUseArtifacts(city.c) { artifactId = (ushort)artifact,count = (ushort)toUse,aux=id }).EnqueueAsap();
+							try {
+								if(needed > 0) {
+									new CnVEventPurchaseArtifacts((ushort)artifact,(ushort)needed,Player.active.id).EnqueueAsap();
+								}
 
-						}
-						catch(Exception _ex)
-						{
-							LogEx(_ex);
+								(new CnVEventUseArtifacts(city.c) { artifactId = (ushort)artifact,count = (ushort)toUse,aux=id }).EnqueueAsap();
 
-						}
-						finally
-						{
-							SocketClient.DeferSendEnd();
+							}
+							catch(Exception _ex) {
+								LogEx(_ex);
+
+							}
+							finally {
+								SocketClient.DeferSendEnd();
+							}
 						}
 					}
-				}
-				catch(Exception _ex)
-				{
-					LogEx(_ex);
+					catch(Exception _ex) {
+						LogEx(_ex);
 
-				}
-			});
-			
-			flyout.ShowContext(sender,args);
+					}
+				});
+
+				flyout.ShowContext(sender,args);
+
+			}
 
 		}
 		
-	}
-	
-}
+

@@ -768,6 +768,13 @@ namespace CnV
 			menu.Items.Add(rv);
 			return rv;
 		}
+		public static MenuFlyoutItem AddText(this MenuFlyout menu,string text)
+		{
+			var rv = new MenuFlyoutItem() { Text=text,IsEnabled = false };
+
+			menu.Items.Add(rv);
+			return rv;
+		}
 		public static MenuFlyoutItem AddItem(this MenuFlyoutSubItem menu,string text,RoutedEventHandler command,object context = null)
 		{
 			var rv = CreateMenuItem(text,command,context);
@@ -780,6 +787,44 @@ namespace CnV
 			var rv = CreateMenuItem(text,isChecked,command);
 
 			menu.Items.Add(rv);
+			return rv;
+		}
+		public static AppBarButton AddItem(this (CommandBarFlyout root,CommandBarFlyout menu)  menu,string text,Action command,IconElement icon = null,bool isPrimary = false,string toolTip = null,CommandBarFlyout root=null)
+		{
+		
+			var rv = new AppBarButton () { Label = text,Icon= icon, MaxHeight=64,Height=64,MinHeight=32,VerticalAlignment=VerticalAlignment.Stretch,VerticalContentAlignment=VerticalAlignment.Stretch, HorizontalContentAlignment=HorizontalAlignment.Stretch };
+			rv.Click +=  (_,_) => {
+				
+				try {
+					if(menu.root != menu.menu)
+						menu.root.Hide();
+					//if(menu.Target is CommandBarFlyout parent)
+					//	parent.Hide();
+					command();
+
+				}
+				catch(Exception _ex) {
+					LogEx(_ex);
+
+				}			};
+			if(toolTip is not null)
+				rv.SetToolTip(toolTip);
+			if(isPrimary)
+				menu.menu.PrimaryCommands.Add(rv);
+			else
+				menu.menu.SecondaryCommands.Add(rv);
+			return rv;
+		}
+		public static AppBarToggleButton AddToggle(this (CommandBarFlyout root,CommandBarFlyout menu) menu,string text,bool? isChecked, Action<bool> command,IconElement icon=null, bool isPrimary=false, string toolTip=null)
+		{
+			var rv = new AppBarToggleButton () { Label = text,Icon= icon,IsChecked=isChecked , MaxHeight=64,Height=64};
+			rv.Click +=  (_,_)=> command(rv.IsChecked.GetValueOrDefault());
+			if(toolTip is not null)
+				rv.SetToolTip(toolTip);
+			if(isPrimary)
+				menu.menu.PrimaryCommands.Add(rv);
+			else
+				menu.menu.SecondaryCommands.Add(rv);
 			return rv;
 		}
 		public static MenuFlyoutItem AddItem(this MenuFlyoutSubItem menu,string text,bool isChecked,Action<bool> command)
@@ -795,6 +840,13 @@ namespace CnV
 
 			menu.Items.Add(rv);
 			return rv;
+		}
+		public static (CommandBarFlyout root,CommandBarFlyout menu) AddSubMenu(this (CommandBarFlyout root,CommandBarFlyout menu) menu,string text, IconElement icon=null)
+		{
+			var sub = new CommandBarFlyout() { AreOpenCloseAnimationsEnabled=false };
+			var rv = new AppBarButton () { Label = text,Flyout=sub,Icon= icon };
+			menu.menu.SecondaryCommands.Add(rv);
+			return (menu.root,sub);
 		}
 		public static MenuFlyoutSubItem AddSubMenu(this MenuFlyoutSubItem menu,string text)
 		{

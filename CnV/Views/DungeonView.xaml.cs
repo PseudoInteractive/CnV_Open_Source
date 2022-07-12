@@ -387,6 +387,8 @@ namespace CnV.Views
 			}
 		}
 
-		
+		private void CheckChanged(object sender,RoutedEventArgs e) {
+				UpdateRaidPlans.Go();
+		}
 	}
 }

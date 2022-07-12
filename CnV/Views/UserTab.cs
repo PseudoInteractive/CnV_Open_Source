@@ -446,7 +446,10 @@ public partial class UserTab:Page, IANotifyPropertyChanged {
 					var column = info?.DataGrid.Columns[e.RowColumnIndex.ColumnIndex];
 					if(info.Record is City city)
 					{
-						city.AddToFlyout(flyout);
+						e.Handled = true;
+						city.ShowContextMenu(sender as UIElement,new());
+						Assert(false);
+	//					city.AddToFlyout(flyout);
 
 						break;
 					}

@@ -56,7 +56,7 @@ public static partial class CityUI
 			LogEx(ex);
 		}
 	}
-	public  static void Show(this Artifact.ArtifactType type, object sender)
+	public  static void Show(this Artifact.ArtifactType type, object __)
 		{
 			//var level = Player.me.title.rank;
 			var art = Artifact.GetForPlayerRank(type);
@@ -76,12 +76,27 @@ public static partial class CityUI
 		City.GetBuild().OnPropertyChanged();
 		PlayerStats.Changed();
 	}
-	public static  void AddToFlyout(this City me, MenuFlyout flyout, bool useSelected = false)
+	public static  void AddToFlyout(this City me, (CommandBarFlyout root,CommandBarFlyout menu) flyout, bool useSelected = false)
 	{
 		var cid     = me.cid;
+
+
+		if(CanVisit(cid) && cid != City.build) {
+			flyout.AddItem( "",icon:ImageHelper.GetIcon("zirconia.png") , command:async ()=>
+				{
+					if(Player.IsSubOrMe(cid.CidToPid()) || (await AppS.DoYesNoBox("Sub",$"Switch to sub {cid.AsCity().player.name}?")==1)) {
+						await CnVClient.CitySwitch(cid); // keep current view, switch to city
+					}
+			});
+		}
+		//if( Player.IsSubOrMe(cid.CidToPid() ) || (await AppS.DoYesNoBox("Sub", $"Switch to sub {cid.AsCity().player.name}?" )==1) ) {
+		//			await CnVClient.CitySwitch(cid, clickMods); // keep current view, switch to city
+		//																	   //	View.SetViewMode(ShellPage.viewMode.GetNextUnowned());// toggle between city/region view
+		//		}
+	
 		var aSetup  = AApp.AddSubMenu(flyout, "Setup..");
 		var aMisc   = flyout.AddSubMenu("Misc..");
-		var aExport = new MenuFlyoutSubItem();// flyout.AddSubMenu("Import/Export..");
+		var aExport = (flyout.root,new CommandBarFlyout());// flyout.AddSubMenu("Import/Export..");
 		var aWar    = AApp.AddSubMenu(flyout, "War..");
 		if(me.isCityOrCastle) {
 			// Look - its my city!
@@ -108,13 +123,14 @@ public static partial class CityUI
 
 				var aRaid = AApp.AddSubMenu(flyout,"Raid..");
 				aRaid.AddItem($"Raid ..",() => DungeonView.ShowDungeonList(City.Get(cid),false));
+				aRaid.AddItem($"Return for scheduled",me.ReturnRaidsForScheduled,toolTip:"Brings home raids in time for scheuled attacks or defense");
 				//			return await DungeonView.ShowDungeonList(City.Get(_cid),  autoRaid);
 
 
 				if(count > 1) {
-					aRaid.AddItem($"End Raids x{count} selected",MainPage.ReturnSlowClick,cid)
+					aRaid.AddItem($"End Raids x{count} selected",()=>MainPage.ReturnSlowClick(cid) )
 						.SetToolTip("Returns raids when they are done (stops them from repeating");
-					aRaid.AddItem($"Stop Raids x{count} selected",MainPage.ReturnFastClick,cid)
+					aRaid.AddItem($"Stop Raids x{count} selected",() => MainPage.ReturnFastClick(cid) )
 						.SetToolTip("Stops raids and returns them immediately");
 					//	aRaid.AddItem($"Return At...x{count}",        ()=> ReturnAtBatch(cid) );
 
@@ -128,13 +144,13 @@ public static partial class CityUI
 				}
 
 
-				aSetup.AddItem("Setup...",(_,_) => CityUI.SetupClick(cid,SetupFlags.suggestAutobuild | SetupFlags.layout));
-				aSetup.AddItem("Settings...",(_,_) => CityUI.SetupClick(cid,SetupFlags.none));
-				aSetup.AddItem("Name...",(_,_) => CityUI.SetupClick(cid,SetupFlags.name));
+				aSetup.AddItem("Setup...",() => CityUI.SetupClick(cid,SetupFlags.suggestAutobuild | SetupFlags.layout));
+				aSetup.AddItem("Settings...",() => CityUI.SetupClick(cid,SetupFlags.none));
+				aSetup.AddItem("Name...",() => CityUI.SetupClick(cid,SetupFlags.name));
 
-				aSetup.AddItem("Set Recruit",(_,_) => CitySettings.SetRecruitFromTag(cid));
+				aSetup.AddItem("Set Recruit",() => CitySettings.SetRecruitFromTag(cid));
 				//aSetup.AddItem("Change...",   (_, _) => ShareString.Show(cid, default));
-				aSetup.AddItem("Move Stuff",(_,_) => me.MoveStuffLocked());
+				aSetup.AddItem("Move Stuff",() => me.MoveStuffLocked(),toolTip:"Moves around buildings, matching existing buildings with those in its layout");
 				//aSetup.AddItem("Remove Castle", (_, _) => 
 				//{
 				//	CityBuild.
@@ -156,31 +172,31 @@ public static partial class CityUI
 			{
 				var sel = Spot.GetSelectedForContextMenu(cid,false);
 				{
-					aWar.AddItem("Assault..",(_,_) => SendTroops.ShowInstance(GetBuild(),City.Get(cid),isSettle: false,type: ArmyType.assault));
-					aWar.AddItem("Siege..",(_,_) => SendTroops.ShowInstance(GetBuild(),City.Get(cid),isSettle: false,type: ArmyType.siege));
-					aWar.AddItem("Scout..",(_,_) => SendTroops.ShowInstance(GetBuild(),City.Get(cid),isSettle: false,type: ArmyType.scout));
-					aWar.AddItem("Attack Targets",(_,_) => AttackSender.ShowInstance(GetBuild(),City.Get(cid)));
+					aWar.AddItem("Assault..",() => SendTroops.ShowInstance(GetBuild(),City.Get(cid),isSettle: false,type: ArmyType.assault));
+					aWar.AddItem("Siege..",() => SendTroops.ShowInstance(GetBuild(),City.Get(cid),isSettle: false,type: ArmyType.siege));
+					aWar.AddItem("Scout..",() => SendTroops.ShowInstance(GetBuild(),City.Get(cid),isSettle: false,type: ArmyType.scout));
+					aWar.AddItem("Attack Targets",() => AttackSender.ShowInstance(GetBuild(),City.Get(cid)));
 					var multiString = sel.Count > 1 ? $" _x {sel.Count} selected" : "";
 					//	aWar.AddItem("Cancel Attacks..", me.CancelAttacks);
-					var afly = aWar.AddSubMenu("Attack Planner");
-					if(!me.player.isAllyOrNap) {
-						afly.AddItem("Ignore Player" + multiString,(_,_) => AttackTab.IgnorePlayer(cid.CidToPid()));
-					}
+					//var afly = aWar.AddSubMenu("Attack Planner");
+					//if(!me.player.isAllyOrNap) {
+					//	afly.AddItem("Ignore Player" + multiString,(_,_) => AttackTab.IgnorePlayer(cid.CidToPid()));
+					//}
 
-					afly.AddItem("Add as Target" + multiString,(_,_) => AttackTab.AddTarget(sel));
-					afly.AddItem("Add as Attacker" + multiString,(_,_) => {
-						using var work =
-								new WorkScope("Add as attackers..");
+					//afly.AddItem("Add as Target" + multiString,(_,_) => AttackTab.AddTarget(sel));
+					//afly.AddItem("Add as Attacker" + multiString,(_,_) => {
+					//	using var work =
+					//			new WorkScope("Add as attackers..");
 
-						string s = string.Empty;
-						foreach(var id in sel) {
-							s = s + id.CidToString() + "\t";
-						}
+					//	string s = string.Empty;
+					//	foreach(var id in sel) {
+					//		s = s + id.CidToString() + "\t";
+					//	}
 
-						AttackTab.AddAttacksFromString(s,false);
-						Note.Show($"Added attacker {s}");
+					//	AttackTab.AddAttacksFromString(s,false);
+					//	Note.Show($"Added attacker {s}");
 
-					});
+					//});
 
 				}
 				//else
@@ -204,10 +220,10 @@ public static partial class CityUI
 			}
 			//if (cid != City.build)
 			{
-				aSetup.AddItem("Find Closest Hub",(_,_) => CityUI.SetClosestHub(cid));
-				aSetup.AddItem("Set As Hub",(_,_) => SetTradeSettings(City.build,sourceHub: cid,targetHub: cid));
-				aSetup.AddItem("Set as Target hub",(_,_) => SetTradeSettings(City.build,sourceHub: null,targetHub: cid));
-				aSetup.AddItem("Set as Source hub",(_,_) => SetTradeSettings(City.build,sourceHub: cid,targetHub: null));
+				aSetup.AddItem("Find Closest Hub",() => CityUI.SetClosestHub(cid));
+				aSetup.AddItem($"Set as Hub for {City.buildCity.FormatName(false,false,false)}",() => SetTradeSettings(City.build,sourceHub: cid,targetHub: cid));
+				aSetup.AddItem($"Set as Target hub for {City.buildCity.FormatName(false,false,false)}",() => SetTradeSettings(City.build,sourceHub: null,targetHub: cid));
+				aSetup.AddItem($"Set as Source hub for  {City.buildCity.FormatName(false,false,false)}",() => SetTradeSettings(City.build,sourceHub: cid,targetHub: null));
 				//if(Player.myName == "Avatar")
 				//    AApp.AddItem(flyout, "Set target hub I", (_, _) => CitySettings.SetOtherHubSettings(City.build, cid));
 			}
@@ -215,17 +231,21 @@ public static partial class CityUI
 
 			//	aWar.AddItem("Attack",       (_, _) => Spot.JSAttack(cid));
 			aWar.AddItem("Near Defence",me.DefendMe);
-			if(me.incoming.Any())
+			if(me.incoming.Any() && me.isAlliedWithPlayer)
 				aWar.AddItem("Incoming",me.ShowIncoming);
+			if(me.outgoing.Any())
+				aWar.AddItem("Incoming",me.ShowOutgoing);
+		
 			aWar.AddItem("Hits",me.ShowHitHistory);
+		
 			//if(me.outgoing.Any())
 
 			//	if (Raid.test)
-			aWar.AddItem("Send Defence",(_,_) => City.GetBuild().SendDefence(WorldC.FromCid(cid)));
+			aWar.AddItem("Send Defence",() => City.GetBuild().SendDefence(WorldC.FromCid(cid)));
 			//	aWar.AddItem("Recruit Sen",             (_, _) => Recruit.Send(cid, ttSenator, 1, true));
-			aWar.AddItem("Show Reinforcements",(_,_) => ReinforcementsTab.ShowReinforcements(cid,null));
-			aWar.AddItem("Show All Reinforcements",(_,_) => ReinforcementsTab.ShowReinforcements(0,null));
-			aWar.AddItem("Return outgoing reinforcements",async (_,_) => {
+			aWar.AddItem("Show Reinforcements",() => ReinforcementsTab.ShowReinforcements(cid,null));
+		//	aWar.AddItem("Show All Reinforcements",(_,_) => ReinforcementsTab.ShowReinforcements(0,null));
+			aWar.AddItem("Return outgoing reinforcements",async () => {
 				foreach(var army in me.outgoing) {
 					if(army.isDefense && !army.isReturn) {
 						if(army.departed) {
@@ -237,7 +257,7 @@ public static partial class CityUI
 					}
 				}
 			});
-			aWar.AddItem("Return incoming reinforcements",async (_,_) => {
+			aWar.AddItem("Return incoming reinforcements",async () => {
 				foreach(var army in me.incoming) {
 					Assert(!army.isReturn);
 					if(army.isDefense && !army.isReturn) {
@@ -254,30 +274,30 @@ public static partial class CityUI
 
 
 			aExport.AddItem("Defense Sheet", me.ExportToDefenseSheet);
-			AApp.AddItem(flyout, "Send Res", (_, _) => SendResDialogue.ShowInstance(City.GetBuild(),me,null,null,palaceDonation:null));
+			flyout.AddItem( "Send Res", () => SendResDialogue.ShowInstance(City.GetBuild(),me,null,null,palaceDonation:null));
 			AApp.AddItem(flyout, "Near Res", me.ShowNearRes);
 			if (me.isSubOrMine)
 			{
-				aWar.AddItem("Dismiss..",(_,_) => DismissDialog.ShowInstance(me));
-				AApp.AddItem(flyout, "Do the stuff",  (_, _) => me.DoTheStuff());
+				aWar.AddItem("Dismiss..",() => DismissDialog.ShowInstance(me));
+				flyout.AddItem( "Do the stuff",  () => me.DoTheStuff());
 			//	AApp.AddItem(flyout, "Food Warnings", (_, _) => CitySettings.SetFoodWarnings(cid));
-				flyout.AddItem("Ministers", me.ministersOn, me.SetMinistersOn);
+				flyout.AddToggle("Ministers", me.ministersOn, me.SetMinistersOn);
 			}
 		}
 		else if (me.isDungeonOrBoss)
 		{
-			AApp.AddItem(flyout, "Raid", (_, _) => City.GetBuild().Raid(WorldC.FromCid(cid) ));
+			flyout.AddItem( "Raid", () => City.GetBuild().Raid(WorldC.FromCid(cid) ));
 
 		}
 		if (me.isEmpty || (me.isCityOrCastle && !me.isCastle && me.isLawless) )
 		{
-			AApp.AddItem(flyout, "Settle", (_,_)=> City.GetBuild().Settle(WorldC.FromCid(cid) ) );
+			flyout.AddItem( "Settle", ()=> City.GetBuild().Settle(WorldC.FromCid(cid) ) );
 		//	AApp.AddItem(flyout, "Claim", (_,_)=> CityUI.DiscordClaim(WorldC.FromCid(cid) ) );
 
 		}
 		if(me.isBlessed && me.isAlliedWithPlayer) {
-			AApp.AddItem(flyout, "Palace Wood Artifact..", (_,_)=> ArtifactDialogue.ShowInstance(Artifact.GetForPlayerRank(Artifact.ArtifactType.Arch),false,me.c) );;
-			AApp.AddItem(flyout, "Palace Stone Artifact..", (_,_)=> ArtifactDialogue.ShowInstance(Artifact.GetForPlayerRank(Artifact.ArtifactType.Pillar),false,me.c) );;
+			flyout.AddItem( "Palace Wood Artifact..", ()=> ArtifactDialogue.ShowInstance(Artifact.GetForPlayerRank(Artifact.ArtifactType.Arch),false,me.c) );;
+			flyout.AddItem( "Palace Stone Artifact..", ()=> ArtifactDialogue.ShowInstance(Artifact.GetForPlayerRank(Artifact.ArtifactType.Pillar),false,me.c) );;
 
 		}
 		
@@ -288,14 +308,14 @@ public static partial class CityUI
 		//	aMisc.AddItem("Settle whenever land",  (_, _) => Spot.TrySettle(City.build, cid, false));
 		//}
 
-		aMisc.AddItem("Distance",       (_, _) => me.ShowDistanceTo());
-		aMisc.AddItem("Select",         (_, _) => me.ProcessClick(AppS.keyModifiers.ClickMods(false,false)|ClickModifiers.select));
+		aMisc.AddItem("Distance",       () => me.ShowDistanceTo());
+		aMisc.AddItem("Select",         () => me.ProcessClick(AppS.keyModifiers.ClickMods(false,false)|ClickModifiers.select));
 		aMisc.AddItem("Coords to Chat", () => CoordsToChat(cid));
 		if(AppS.isTest) {
-			aMisc.AddItem("Fixes",         (_, _) => FixDialog.ShowInstance(me));
+			aMisc.AddItem("Fixes",         () => FixDialog.ShowInstance(me));
 			
 		}
-		flyout.RemoveEmpy();
+//		flyout.RemoveEmpy();
 	}
 
 	public static void CoordsToChat(int _cid)
@@ -414,13 +434,13 @@ public static partial class CityUI
 			return;
 		}
 		//   SelectMe(false) ;
-	
-		var flyout = new MenuFlyout();
-		AddToFlyout(me,flyout, uie == MainPage.CityGrid || uie == BuildTab.CityGrid);
+
+		var flyout = new CommandBarFlyout() { AreOpenCloseAnimationsEnabled=false,ShouldConstrainToRootBounds=false };
 		flyout.SetXamlRoot(uie);
+		AddToFlyout(me,(flyout,flyout), uie is UserTab );
 
 		//   flyout.XamlRoot = uie.XamlRoot;
-		flyout.ShowAt(uie, position);
+		flyout.ShowAt(uie, new() {Position= position,ShowMode=Microsoft.UI.Xaml.Controls.Primitives.FlyoutShowMode.Auto});
 	}
 	
 
@@ -598,7 +618,8 @@ public static partial class CityUI
 		tab.refresh.Go();
 	}
 	public static async void ShowIncoming(this City me) {
-		if(me.isAlliedWithPlayer) {
+		Assert(me.isAlliedWithPlayer);
+		
 
 
 			await IncomingTab.ShowOrAdd<IncomingTab>();
@@ -608,13 +629,12 @@ public static partial class CityUI
 			});
 
 		}
-		else {
+	public static async void ShowOutgoing(this City me) {
 			await OutgoingTab.ShowOrAdd<OutgoingTab>();
 			AppS.DispatchOnUIThreadIdle(() =>
 										{
 											OutgoingTab.instance.attackerGrid.SetFocus(me);
 										});
-		}
 	}
 	public static void ShowHitHistory(this City me) {
 		

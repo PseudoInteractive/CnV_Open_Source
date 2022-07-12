@@ -218,7 +218,8 @@ namespace CnV
 		internal bool isAttack => type.IsAttack();// is (>=Army.attackFirst and <= Army.attackLast);
 		public static async Task<bool> ShowInstance(City city = null,City target = null,bool isSettle = false,bool ? _viaWater=null,ArmyType type = ArmyType.nop,Army? prior = null,TroopTypeCounts? troops = null,
 			TimingSetting? timing=null,
-			ServerTime arrival = default, bool ? useHorns=null, bool? waitReturn=null, bool ? notSameAlliance=null) {
+			ServerTime arrival = default, bool ? useHorns=null, bool? waitReturn=null, bool ? notSameAlliance=null,
+			bool? returnAllRaids= null) {
 			try {
 				if(city == target && prior is null) {
 					AppS.MessageBox("Cannot send to self");
@@ -244,6 +245,8 @@ namespace CnV
 				}
 
 				var rv = instance ?? new SendTroops();
+				if(returnAllRaids is not null)
+					rv.returnAllRaids = returnAllRaids.Value;
 			//	rv.troopList.Visibility = prior is not null && prior.isRaid  ? Visibility.Collapsed : Visibility.Visible; 
 				//				rv.arrivalUI.ResetRecentTimesComboBox();
 				if(timing is not null)
