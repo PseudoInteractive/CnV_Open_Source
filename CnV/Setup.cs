@@ -560,8 +560,8 @@ partial class App
 
 		var title = (Player.activeId!=0) ?
 				(Sim.isPastWarmup ? Player.active.shortName
-				: $"Conquest and Virtue Alpha\nW{World.id} - {Player.active.shortName}\nVersion: {AppS.currentVersion}")
-				: $"Conquest and Virtue Alpha\nW{World.id} Sign in to Discord\nVersion: {AppS.currentVersion}";
+				: $"Conquest and Virtue Alpha W{World.id} - {Player.active.shortName}\nVersion: {AppS.currentVersion}")
+				: $"Conquest and Virtue Alpha W{World.id} Sign in to Discord\nVersion: {AppS.currentVersion}";
 
 		try {
 			if(AppWindowTitleBar.IsCustomizationSupported()) {

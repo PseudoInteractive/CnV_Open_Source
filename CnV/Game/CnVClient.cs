@@ -434,7 +434,7 @@ namespace CnV
 					// Is it locked?
 					if(!Spot.CanChangeCity(cid))
 					{
-						View.EnsureNotCityView();
+						View.EnsureNotCityView(cid);
 						Note.Show("Please wait for current operation to complete");
 						return false;
 					}
@@ -495,7 +495,7 @@ namespace CnV
 
 
 						}
-						CityUI.ProcessClick(cid,clickMods);
+						CityUI.ProcessClick(cid,AppS.keyModifiers.ClickMods()| ClickModifiers.bringIntoWorldView|ClickModifiers.scrollIntoUiView|ClickModifiers.noFlyout);;
 						CityUI.SyncCityBox();
 
 						if(changed)

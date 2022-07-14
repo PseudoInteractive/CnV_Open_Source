@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Blend for Visual Studio Version 17
+VisualStudioVersion = 17.0.31717.71
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CnV", "CnV\CnV.csproj", "{D3C61EE9-9FAD-45BD-ACCE-F4E95AE32807}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A932D01D-2F2F-4C1F-8CF9-BD778D7D42D3}"
+	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
+		ext\CotgKey.pfx = ext\CotgKey.pfx
+	EndProjectSection
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "CnVShared", "..\CnVShared\CnVShared.shproj", "{06711006-5A6C-41FF-AA66-A08C8624F98B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CnVResource", "..\cnvResource\CnVResource.csproj", "{5453771C-78A7-4D71-8739-74C4D2BFDDFF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+		SinglePlayer|x64 = SinglePlayer|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D3C61EE9-9FAD-45BD-ACCE-F4E95AE32807}.Debug|x64.ActiveCfg = Debug|x64
+		{D3C61EE9-9FAD-45BD-ACCE-F4E95AE32807}.Debug|x64.Build.0 = Debug|x64
+		{D3C61EE9-9FAD-45BD-ACCE-F4E95AE32807}.Release|x64.ActiveCfg = Release|x64
+		{D3C61EE9-9FAD-45BD-ACCE-F4E95AE32807}.Release|x64.Build.0 = Release|x64
+		{D3C61EE9-9FAD-45BD-ACCE-F4E95AE32807}.Release|x64.Deploy.0 = Release|x64
+		{D3C61EE9-9FAD-45BD-ACCE-F4E95AE32807}.SinglePlayer|x64.ActiveCfg = SinglePlayer|x64
+		{D3C61EE9-9FAD-45BD-ACCE-F4E95AE32807}.SinglePlayer|x64.Build.0 = SinglePlayer|x64
+		{5453771C-78A7-4D71-8739-74C4D2BFDDFF}.Debug|x64.ActiveCfg = Debug|x64
+		{5453771C-78A7-4D71-8739-74C4D2BFDDFF}.Debug|x64.Build.0 = Debug|x64
+		{5453771C-78A7-4D71-8739-74C4D2BFDDFF}.Release|x64.ActiveCfg = Release|x64
+		{5453771C-78A7-4D71-8739-74C4D2BFDDFF}.Release|x64.Build.0 = Release|x64
+		{5453771C-78A7-4D71-8739-74C4D2BFDDFF}.SinglePlayer|x64.ActiveCfg = Debug|x64
+		{5453771C-78A7-4D71-8739-74C4D2BFDDFF}.SinglePlayer|x64.Build.0 = Debug|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {50CB1CD1-9FFF-4468-B57E-E0C17078A417}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\CnVShared\CnVShared.projitems*{06711006-5a6c-41ff-aa66-a08c8624f98b}*SharedItemsImports = 13
+		..\CnVShared\CnVShared.projitems*{d3c61ee9-9fad-45bd-acce-f4e95ae32807}*SharedItemsImports = 5
+	EndGlobalSection
+EndGlobal

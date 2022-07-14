@@ -152,7 +152,7 @@ partial class ShellPage
 					spot.SetFocus(AppS.keyModifiers.ClickMods() );
 				var position = args.Position;
 				AppS.DispatchOnUIThread(action: () =>
-					 spot.ShowContextMenu(canvas,position));
+					 spot.ShowContextMenu(position));
 
 			}
 		}

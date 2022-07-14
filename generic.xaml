@@ -18967,11 +18967,11 @@
     <DataTemplate x:Key="ForegroundImageDefaultTemplate">
         <Image Margin="-8,-8,0,0" AutomationProperties.AccessibilityView="Raw" />
     </DataTemplate>
-    <x:Double x:Key="PaneToggleButtonSize">40</x:Double>
-    <x:Double x:Key="NavigationViewCompactPaneLength">40</x:Double>
-    <x:Double x:Key="NavigationViewTopPaneHeight">40</x:Double>
-    <Thickness x:Key="NavigationViewItemInnerHeaderMargin">10,0,0,0</Thickness>
-    <Thickness x:Key="NavigationViewAutoSuggestBoxMargin">10,0,16,0</Thickness>
+    <x:Double x:Key="PaneToggleButtonSize">30</x:Double>
+    <x:Double x:Key="NavigationViewCompactPaneLength">30</x:Double>
+    <x:Double x:Key="NavigationViewTopPaneHeight">30</x:Double>
+    <Thickness x:Key="NavigationViewItemInnerHeaderMargin">2,0,0,0</Thickness>
+    <Thickness x:Key="NavigationViewAutoSuggestBoxMargin">4,0,4,0</Thickness>
 
     <Style x:Key="PaneToggleButtonStyle" TargetType="Button">
         <Setter Property="FontSize" Value="16" />

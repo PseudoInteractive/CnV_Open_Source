@@ -13,8 +13,8 @@
 					<FontFamily x:Key="CnVFont">ms-appx:///Assets/CnVFont-VF.ttf#CnVFont,Segoe Fluent Icons"</FontFamily>
 				</ResourceDictionary>-->
 				<ResourceDictionary >
-					<FontFamily x:Key="CnvIcons" >ms-appx:///Content/CnvIcons-Regular-SVG.ttf#CnvIcons,Segoe UI Variable</FontFamily>
-					<FontFamily x:Key="ContentControlThemeFontFamily" >ms-appx:///Content/CnvIcons-Regular-SVG.ttf#CnvIcons,Segoe UI Variable</FontFamily>
+					<FontFamily x:Key="CnvIcons" >ms-appx:///Content/CnvIcons-Regular-SVG.ttf#CnvIcons,Segoe UI Variable,Segoe UI*,Segoe MDL2 Assets,Segoe UI*,Segoe MDL2 Assets</FontFamily>
+					<FontFamily x:Key="ContentControlThemeFontFamily" >ms-appx:///Content/CnvIcons-Regular-SVG.ttf#CnvIcons,Segoe UI Variable,Segoe UI*,Segoe MDL2 Assets</FontFamily>
 					
 					<!--<Color x:Key="SystemAltHighColor">#FF0FFA00</Color>
 					<Color x:Key="SystemAltLowColor">#A1A200F0</Color>
@@ -60,7 +60,14 @@
 					<Color x:Key="RegionColor">#FF153A35</Color>
 					<SolidColorBrush x:Key="RegionBrush" Color="{StaticResource RegionColor}" />
 
-
+					<x:Double x:Key="AppBarExpandButtonThemeHeight">34</x:Double>
+					<x:Double x:Key="AppBarExpandButtonThemeWidth">58</x:Double>
+					<x:Double x:Key="AppBarThemeMinHeight">76</x:Double>
+					<x:Double x:Key="AppBarThemeMinimalHeight">34</x:Double>
+					<x:Double x:Key="AppBarThemeCompactHeight">40</x:Double>
+					<x:Double x:Key="AppBarExpandButtonCircleDiameter">8</x:Double>
+					<x:Double x:Key="NavigationViewTopPaneHeight">10</x:Double>
+					<x:Double x:Key="MenuBarHeight">10</x:Double>
 
 				</ResourceDictionary>
 				<ColorPaletteResources  Accent="#BB7A57D6" 
@@ -75,7 +82,7 @@
 				<ResourceDictionary Source="ms-appx:///Styles/Page.xaml" />
 				<ResourceDictionary Source="ms-appx:///Styles/ScrollBarHack.xaml" />
 				<ResourceDictionary Source="ms-appx:///Styles/BattleReport.xaml" />
-				
+				<ResourceDictionary Source="ms-appx:///Styles/Theme.xaml"  />
 			</ResourceDictionary.MergedDictionaries>
 			<!--<ResourceDictionary.ThemeDictionaries>
 
@@ -139,9 +146,9 @@
 
 				
 			</ResourceDictionary.ThemeDictionaries>-->
-			<!--<ResourceDictionary Source="Styles/Theme.xaml"  />-->
 			
 			<!--<ResourceDictionary Source="/Styles/SharedResources.xaml" />-->
+			
 		</ResourceDictionary>
 		
 	</Application.Resources>

@@ -1,0 +1,104 @@
+﻿<NavigationView
+    x:Class="CnV.CityFlyout"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cnv="using:CnV"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+
+	mc:Ignorable="d"
+	
+	SelectionFollowsFocus="Disabled"
+	SelectionChanged="CategoryChanged"
+	PaneDisplayMode="Left"
+	ExpandedModeThresholdWidth="1000"
+	Width="400"
+	Padding="0"
+	Margin="0"
+	IsPaneToggleButtonVisible="True"
+	Height="400"
+	IsPaneOpen="True"
+	IsBackButtonVisible="Collapsed"
+	IsBackEnabled="False"
+	IsSettingsVisible="True"
+	OpenPaneLength="180"
+	CompactPaneLength="40"
+	CompactModeThresholdWidth="900"
+	AlwaysShowHeader="False"
+	PaneTitle="{x:Bind city,Mode=OneWay}"
+	>
+	<NavigationView.Resources>
+		<DataTemplate x:Key="commandTemplate"  x:DataType="cnv:ACommandInstance">
+			<StackPanel Orientation="Horizontal" ToolTipService.ToolTip="{x:Bind command.desc}" Background="{x:Bind isEnabledColor, Mode=OneWay}" >
+				<Image Height="36"  
+						 Source="{x:Bind cnv:ImageHelper.Get( command.icon,32 ) }" Stretch="None"  />
+						
+					
+					<TextBlock Text="{x:Bind command.Label}"  Style="{StaticResource TextBlockMedium}"  VerticalAlignment="Center"	/>
+				</StackPanel>
+		</DataTemplate>
+	</NavigationView.Resources>
+	<NavigationView.AutoSuggestBox>
+		<AutoSuggestBox x:Name="search"  TextChanged="SearchChange" QuerySubmitted="SearchSubmit" PlaceholderText="Search Commands" HorizontalAlignment="Stretch" UpdateTextOnSelect="False" 
+						FontSize="16" FontStretch="Condensed" ToolTipService.ToolTip="Search Commands for City" FocusEngaged="SearchFocusEngaged" FocusDisengaged="search_FocusDisengaged" ItemTemplate="{StaticResource commandTemplate}"  />
+
+	</NavigationView.AutoSuggestBox>
+
+	<NavigationView.Header >
+		
+			<TextBlock Text="{x:Bind city,Mode=OneWay}" Style="{StaticResource TextBlockMedium}" />
+
+	</NavigationView.Header>
+	<!--<NavigationView.PaneCustomContent >
+
+		<ListView  x:Name="baseCommandGrid" x:FieldModifier="public" BorderThickness="1" BorderBrush="Indigo"  
+						  SelectionMode="Single" 
+						  Margin="0" Padding="0" HorizontalAlignment="Stretch" 
+					  ItemsSource="{x:Bind baseCommands,Mode=OneWay}"
+					ItemTemplate="{StaticResource commandTemplate}"
+					  ItemClick="CommandClick"
+					  IsItemClickEnabled="True"
+						   >
+			<ListView.ItemContainerTransitions>
+				<TransitionCollection>
+
+				</TransitionCollection>
+			</ListView.ItemContainerTransitions>
+		</ListView>
+
+	</NavigationView.PaneCustomContent>-->
+
+	
+	<NavigationView.MenuItems>
+		
+		<NavigationViewItem Content="City" Icon="Home" x:Name="catCity" x:FieldModifier="internal" ToolTipService.ToolTip="Common commands"   />
+		<NavigationViewItem Content="Build" Icon="GlobalNavigationButton" x:Name="catBuild" ToolTipService.ToolTip="Atack actions and commands" />
+		<NavigationViewItem Content="Attack" Icon="Accept" x:Name="catAttack" ToolTipService.ToolTip="Atack actions and commands" />
+		<NavigationViewItem Content="Defense" Icon="Important" x:Name="catDefense" ToolTipService.ToolTip="Atack actions and commands" />
+		<NavigationViewItem Content="Trade" Icon="Mail" x:Name="catTrade" ToolTipService.ToolTip="Atack actions and commands" />
+
+	</NavigationView.MenuItems>
+
+		<Grid>
+		<ListView x:Name="commands" x:FieldModifier="public"  BorderThickness="1" BorderBrush="Indigo"
+						  SelectionMode="Single" 
+				  ItemsSource="{x:Bind categoryCommands,Mode=OneWay}"
+						  Margin="0" Padding="0" HorizontalAlignment="Stretch" 
+					ItemTemplate="{StaticResource commandTemplate}"
+									  ItemClick="CommandClick"
+					  IsItemClickEnabled="True"
+
+						   >
+
+
+
+			<ListView.ItemContainerTransitions>
+				<TransitionCollection>
+					<!--  Remove all -->
+				</TransitionCollection>
+			</ListView.ItemContainerTransitions>
+
+		</ListView>
+
+	</Grid>
+</NavigationView>

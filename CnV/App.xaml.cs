@@ -789,24 +789,28 @@ namespace CnV
 			menu.Items.Add(rv);
 			return rv;
 		}
-		public static AppBarButton AddItem(this (CommandBarFlyout root,CommandBarFlyout menu)  menu,string text,Action command,IconElement icon = null,bool isPrimary = false,string toolTip = null,CommandBarFlyout root=null)
+		public static AppBarButton AddItem(this (CommandBarFlyout root,CommandBarFlyout menu)  menu,string text,Action command=null,IconElement icon = null,bool isPrimary = false,string toolTip = null,bool isEnabled=true, bool isCompact=false)
 		{
-		
-			var rv = new AppBarButton () { Label = text,Icon= icon, MaxHeight=64,Height=64,MinHeight=32,VerticalAlignment=VerticalAlignment.Stretch,VerticalContentAlignment=VerticalAlignment.Stretch, HorizontalContentAlignment=HorizontalAlignment.Stretch };
-			rv.Click +=  (_,_) => {
-				
-				try {
-					if(menu.root != menu.menu)
-						menu.root.Hide();
-					//if(menu.Target is CommandBarFlyout parent)
-					//	parent.Hide();
-					command();
+			
 
-				}
-				catch(Exception _ex) {
-					LogEx(_ex);
+			var rv = new AppBarButton() { Width=128,Height=128,MinHeight=64,MaxHeight=64, IsEnabled=isEnabled,IsCompact=isCompact, Label = text,FontSize=24,Icon= icon,Padding=new(),Margin=new(), LabelPosition= text.IsNullOrEmpty() ? CommandBarLabelPosition.Collapsed : CommandBarLabelPosition.Default };
+			if(command is not null) {
+				rv.Click +=  (_,_) => {
 
-				}			};
+					try {
+						if(menu.root != menu.menu)
+							menu.root.Hide();
+						//if(menu.Target is CommandBarFlyout parent)
+						//	parent.Hide();
+						command();
+
+					}
+					catch(Exception _ex) {
+						LogEx(_ex);
+
+					}
+				};
+			}
 			if(toolTip is not null)
 				rv.SetToolTip(toolTip);
 			if(isPrimary)
@@ -817,7 +821,8 @@ namespace CnV
 		}
 		public static AppBarToggleButton AddToggle(this (CommandBarFlyout root,CommandBarFlyout menu) menu,string text,bool? isChecked, Action<bool> command,IconElement icon=null, bool isPrimary=false, string toolTip=null)
 		{
-			var rv = new AppBarToggleButton () { Label = text,Icon= icon,IsChecked=isChecked , MaxHeight=64,Height=64};
+			//menu.root.DefaultLabelPosition = CommandBarDefaultLabelPosition.Bottom;
+			var rv = new AppBarToggleButton () { LabelPosition= CommandBarLabelPosition.Default, Label = text,Icon= icon,IsChecked=isChecked , MaxHeight=64,Height=64};
 			rv.Click +=  (_,_)=> command(rv.IsChecked.GetValueOrDefault());
 			if(toolTip is not null)
 				rv.SetToolTip(toolTip);

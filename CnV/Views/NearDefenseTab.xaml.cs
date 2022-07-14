@@ -249,7 +249,7 @@ namespace CnV.Views
 		private void Image_RightTapped(object sender,RightTappedRoutedEventArgs e) {
 			var image = sender as FrameworkElement;
 			var supporter = image.DataContext as Supporter;
-			supporter.city.ShowContextMenu(supportGrid,e.GetPosition(supportGrid));
+			supporter.city.ShowContextMenu(e.GetPosition(null));
 		}
 
 		private void supportGrid_SelectionChanged(object sender,SelectionChangedEventArgs e) {

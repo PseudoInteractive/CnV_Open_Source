@@ -99,7 +99,7 @@ namespace CnV
 			var image = sender as FrameworkElement;
 			var cc = image.FindParent<CityBox>();
 			if(cc?.city != null)
-				cc.city.ShowContextMenu(image,e.GetPosition(image));
+				cc.city.ShowContextMenu(e.GetPosition(image));
 		}
 
 

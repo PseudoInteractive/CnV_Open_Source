@@ -220,14 +220,14 @@ namespace CnV.Views
 		//	return ChatTab.tabPage.IsLocalPointOver(pt.X,pt.Y);
 		//}
 
-		public static void SetViewModeCity()
-		{
-			SetViewMode(ViewMode.city);
-		}
+		//public static void SetViewModeCity()
+		//{
+		//	SetViewMode(ViewMode.city,City.build);
+		//}
 
-		public static void SetViewModeRegion() => SetViewMode(ViewMode.region);
+		//public static void SetViewModeRegion() => SetViewMode(ViewMode.region);
 
-		public static void SetViewModeWorld() => SetViewMode(ViewMode.world);
+		//public static void SetViewModeWorld() => SetViewMode(ViewMode.world);
 
 		//public static void SetWebViewHasFocus(bool _webviewHasFocus)
 		//{

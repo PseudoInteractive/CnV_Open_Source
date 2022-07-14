@@ -1454,29 +1454,29 @@ namespace CnV.Views
 		//	}
 		//}
 
-		private void FocusClick(object sender,RoutedEventArgs e) {
-			try {
-				if(Spot.focus == 0) {
-					return;
-				}
+		//private void FocusClick(object sender,RoutedEventArgs e) {
+		//	try {
+		//		if(Spot.focus == 0) {
+		//			return;
+		//		}
 
-				if(Spot.focus.BringIntoWorldView(false) && City.IsBuild(Spot.focus)) // first just focus
-				{
-					return;
-				}
+		//		if(Spot.focus.BringIntoWorldView(false) && City.IsBuild(Spot.focus)) // first just focus
+		//		{
+		//			return;
+		//		}
 
-				Spot.ProcessCoordClick(Spot.focus,AppS.keyModifiers.ClickMods(scrollIntoUi:true)); // then normal click
-			}
-			catch(Exception _ex) {
-				LogEx(_ex);
+		//		Spot.ProcessCoordClick(Spot.focus,AppS.keyModifiers.ClickMods(scrollIntoUi:true)); // then normal click
+		//	}
+		//	catch(Exception _ex) {
+		//		LogEx(_ex);
 
-			}
-		}
+		//	}
+		//}
 
 		internal static void CityRightTapped(object sender,RightTappedRoutedEventArgs e) {
 			try {
 				var ui = sender as UIElement;
-				Spot.GetFocus()?.ShowContextMenu(ui,e.GetPosition(ui));
+				Spot.GetFocus()?.ShowContextMenu(e.GetPosition(ui));
 			}
 			catch(Exception _ex) {
 				LogEx(_ex);
@@ -1490,7 +1490,7 @@ namespace CnV.Views
 					return;
 				}
 
-				Spot.ProcessCoordClick(City.build,AppS.keyModifiers.ClickMods(scrollIntoUi:true)); // then normal click
+				Spot.ProcessCoordClick(City.build,AppS.keyModifiers.ClickMods()); // then normal click
 			}
 			catch(Exception _ex) {
 				LogEx(_ex);
@@ -1500,8 +1500,11 @@ namespace CnV.Views
 
 		internal static void BuildHomeRightTapped(object sender,RightTappedRoutedEventArgs e) {
 			try {
-				var ui = sender as UIElement;
-				City.GetBuild()?.ShowContextMenu(ui,e.GetPosition(ui));
+				if(City.build == 0) {
+					return;
+				}
+
+				Spot.ProcessCoordClick(City.build,AppS.keyModifiers.ClickMods(isRight:true)); // then normal click
 			}
 			catch(Exception _ex) {
 				LogEx(_ex);
@@ -1654,9 +1657,6 @@ namespace CnV.Views
 			ContinentTagFilter.Show(true);
 		}
 
-		private void GridSpliterOnPointerReleased(object sender,PointerRoutedEventArgs e) {
-			//	updateHtmlOffsets.Go(true);
-		}
 
 		private void TimeBackClick(object sender,RoutedEventArgs e) {
 			var t = Sim.simTime - TimeSpanS.FromHours(gotoTimeOffset.Value);
@@ -1787,6 +1787,7 @@ namespace CnV.Views
 		private void GridSplitter_ManipulationCompleted(object sender,ManipulationCompletedRoutedEventArgs e) {
 			//Note.Show("ManipulationCompleted");
 			updateHtmlOffsets.UserUpdated();
+			
 		}
 
 		private void SendError(object sender,RoutedEventArgs e) {

@@ -39,7 +39,7 @@ public static class DoTheStuff
 			var cid = city.cid;
 			Assert(city.isBuild);
 			if(View.viewMode != ViewMode.city)
-				View.SetViewMode(ViewMode.city);
+				View.SetViewMode(ViewMode.city, cid);
 			await CityBuild._IsPlanner(false,true);
 
 			Assert(AppS.uiSema.CurrentCount == 0);

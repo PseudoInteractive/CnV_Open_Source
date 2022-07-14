@@ -35,7 +35,7 @@ internal partial class GameClient
 	//public static Effect imageEffect;
 	public static Effect avaEffect;
 	public static Span2i[] popups = Array.Empty<Span2i>();
-
+	static float lastTimeOfDay;
 	//    public static TintEffect worldBackgroundDark;
 	public static Material worldObjects;
 	public static Material worldOwners;
@@ -458,6 +458,22 @@ internal partial class GameClient
 					//						t = t*64;
 
 					t -= MathF.Floor(t);
+					var delta = t - lastTimeOfDay;
+					if(delta.Abs() > 0.5f) {
+						lastTimeOfDay = 1.0f - lastTimeOfDay;
+						delta =  t - lastTimeOfDay; 
+					}
+					Assert(delta.Abs() <= 0.5f);
+
+					//	delta -= delta.SignOr0();
+					var maxDelta = (float) ((1.0f/32.0f) * timeSinceLastFrame.Min(1f));
+					if(delta.Abs() > maxDelta) {
+						delta = delta.SignOr0() * maxDelta;
+					}
+					t += delta;
+					t -= MathF.Floor(t);
+					lastTimeOfDay = t;
+
 					//	t = t.Bezier(0f,0.3f,0.43f,0.57f,0.70f,1.0f);
 					t = t.Bezier(0f,0.375f,0.625f,1.0f);
 					//	t = t.Bezier(0f,0.5f,0.5f,1.0f);

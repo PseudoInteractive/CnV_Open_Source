@@ -256,7 +256,7 @@ namespace CnV.Views
 		{
 			var image = sender as FrameworkElement;
 			var supporter = image.DataContext as ResSource;
-			supporter.city.ShowContextMenu(supportGrid, e.GetPosition(supportGrid));
+			supporter.city.ShowContextMenu( e.GetPosition(supportGrid));
 		}
 
 		private void supportGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)

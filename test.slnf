@@ -1,0 +1,10 @@
+{
+  "solution": {
+    "path": "CnV.sln",
+    "projects": [
+      "..\\CnVShared\\CnVShared.shproj",
+      "..\\cnvResource\\CnVResource.csproj",
+      "CnV\\CnV.csproj"
+    ]
+  }
+}

@@ -13,11 +13,11 @@ public sealed partial class TradeSettingsDialog:DialogG, INotifyPropertyChanged 
 	protected override string title => "Trade Settings";
 
 
-	public static async void ShowInstance()
+	public static async void ShowInstance(City city)
 	{
 		var rv = instance ?? new TradeSettingsDialog();
 		// once in case of exception
-		rv.settings.city = City.GetBuild();
+		rv.settings.city = city ?? City.GetBuild();
 		rv.settings.InitializeFromCity();
 		rv.settings.OnPropertyChanged();
 		await rv.Show(true);

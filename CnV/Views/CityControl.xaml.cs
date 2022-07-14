@@ -254,7 +254,7 @@ namespace CnV
 				var image = sender as FrameworkElement;
 				var cc = image.FindParent<CityControl>();
 				if(cc.isValid)
-					cc.city.ShowContextMenu(image,e.GetPosition(image));
+					cc.city.ShowContextMenu(e.GetPosition(image));
 			}
 			catch(Exception _ex)
 			{
@@ -460,7 +460,7 @@ namespace CnV
 			try
 			{
 				var ui = sender as UIElement;
-				city?.ShowContextMenu(ui,e.GetPosition(ui));
+				city?.ShowContextMenu(e.GetPosition(null));
 			}
 			catch(Exception _ex)
 			{

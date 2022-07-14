@@ -950,7 +950,7 @@ namespace CnV;
 		}
 
 		private void TradesClick(object sender,RoutedEventArgs e) {
-			TradeSettingsDialog.ShowInstance();
+			TradeSettingsDialog.ShowInstance(city);
 
 		}
 		internal string tradesToolTip {

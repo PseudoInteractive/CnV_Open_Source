@@ -447,8 +447,8 @@ public partial class UserTab:Page, IANotifyPropertyChanged {
 					if(info.Record is City city)
 					{
 						e.Handled = true;
-						city.ShowContextMenu(sender as UIElement,new());
-						Assert(false);
+						city.ShowContextMenu();
+				//		Assert(false);
 	//					city.AddToFlyout(flyout);
 
 						break;

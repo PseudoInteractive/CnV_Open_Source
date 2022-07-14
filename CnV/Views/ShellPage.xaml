@@ -18,15 +18,23 @@
 			IsTabStop="false"
 		
 		>
+	<UserControl.Resources>
+		<Flyout x:Name="cityFlyoutFlyout" x:FieldModifier="internal" Placement="RightEdgeAlignedTop" ShowMode="Standard"  AreOpenCloseAnimationsEnabled="False" >
+			<cnv:CityFlyout x:Name="cityFlyout" x:FieldModifier="internal" />
+		
+		</Flyout>
+
+	</UserControl.Resources>
 
 
 
-    <Grid x:Name="_rootGrid" Canvas.ZIndex="33" Background="{x:Null}" 
+		<Grid x:Name="_rootGrid" Canvas.ZIndex="33" Background="{x:Null}" 
 		                IsHitTestVisible="True" >
 		<Grid.RowDefinitions>
 			<RowDefinition Height="auto" />
 			<RowDefinition Height="*" />
 		</Grid.RowDefinitions>
+			
 		<Grid x:Name="AppTitleBar" x:FieldModifier="internal"
 			  Background ="{StaticResource SystemAccentColorDark1}"
               IsHitTestVisible="True"
@@ -69,7 +77,7 @@
 				Margin="0"
 				Padding="0"	/>
 
-			<CommandBar  Grid.Column ="4"  IsHitTestVisible="True"  DefaultLabelPosition="Collapsed" IsSticky="True" IsTabStop="True" Padding="0" MinHeight="20" Height="40"  
+			<CommandBar  Grid.Column ="4"  IsHitTestVisible="True"  DefaultLabelPosition="Collapsed"  IsTabStop="True" Padding="0" MinHeight="40" Height="40"  
 						x:Name="commandBar" x:FieldModifier="public"  >
 
 
@@ -101,10 +109,10 @@
 
 				<CommandBar.PrimaryCommands  >
 					<AppBarElementContainer x:Name="progressContainer" VerticalAlignment="Center">
-						<ProgressBar x:Name="progress" IsIndeterminate="True" Width="32" IsEnabled="True" Minimum="0" Maximum="1" />
+						<ProgressBar x:Name="progress" IsIndeterminate="True" Width="32" IsEnabled="False" Minimum="0" Maximum="1" />
 					</AppBarElementContainer>
 					<AppBarElementContainer  x:Name="workContainer" VerticalAlignment="Center"  >
-						<TextBlock  x:Name="work" x:FieldModifier="public" Margin="6,0,6,0" VerticalAlignment="Center" Width="255" />
+						<TextBlock  x:Name="work" x:FieldModifier="public" Margin="6,0,6,0" VerticalAlignment="Center"  />
 					</AppBarElementContainer>
 
 					<AppBarElementContainer VerticalAlignment="Center" AllowFocusOnInteraction="True" IsTabStop="True">
@@ -113,7 +121,7 @@
 					</AppBarElementContainer>
 
 					<AppBarButton x:Name="ContinentFilter"  x:FieldModifier="public"
-					              Content="Cont/Tags"
+					              Content="Cont+Tags"
 					             VerticalAlignment="Center" 
 					              RightTapped="FilterRightTapped"
 					              Click="{x:Bind views:ShellPage.ContinentFilterClick}"
@@ -136,10 +144,7 @@
 VerticalAlignment="Center" 
 					              ToolTipService.ToolTip="Switch to next city in the current city list" 
 							             AccessKey="Right" Icon="Next"/>
-					<AppBarButton x:Name="focus" Margin="4,0,4,0" Width="140"  VerticalAlignment="Center" x:FieldModifier="public"
-                            Click="FocusClick" RightTapped="{x:Bind views:ShellPage.CityRightTapped}" 
-								
-                            ToolTipService.ToolTip="Spot with Focus.&#x0a;Click to re-center or swith to this city&#x0a;Right clck for menu" Visibility="Collapsed"/>
+					
 
 
 
@@ -159,6 +164,7 @@ VerticalAlignment="Center"
                               Label="Refresh"
                               Click="Refresh"
                           RightTapped="RefreshX"
+								  DynamicOverflowOrder="98"
                       VerticalAlignment="Center" 
                                ToolTipService.ToolTip="When in doubt, refresh - Right click to refresh world data"
 								  AccessKey="F5"
@@ -181,9 +187,9 @@ VerticalAlignment="Center"
 					             Icon="Send"
 					             VerticalAlignment="Center" 
 					              Click="SendError"
-					              ToolTipService.ToolTip="Send an error Report"  />
+					              ToolTipService.ToolTip="Send an error Report"  DynamicOverflowOrder="1" />
 
-					<AppBarButton Label="Settings"  VerticalAlignment="Center"  Click="ShowSettings" Icon="Setting" />
+					<AppBarButton Label="Settings"  VerticalAlignment="Center"  Click="ShowSettings" Icon="Setting" DynamicOverflowOrder="99" />
 
 
 				</CommandBar.PrimaryCommands>
@@ -261,7 +267,6 @@ VerticalAlignment="Center"
 			
 			<tk:GridSplitter
 				IsTabStop="True"
-				PointerMoved="GridSpliterOnPointerReleased"
 				CursorBehavior="ChangeOnSplitterHover"
 				GripperCursor="SizeNorthSouth"
 				VerticalAlignment="Stretch"
