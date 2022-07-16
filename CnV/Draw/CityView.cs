@@ -807,12 +807,12 @@ namespace CnV
 		public static void LoadContent()
 		{
 			LoadTheme();
-			decalBuildingInvalid       = LoadMaterialAdditive("runtime/art/City/decal_building_invalid.dds");
-			decalBuildBuilding         = LoadMaterialAdditive("runtime/art/City/decal_building_valid.dds");
-			decalBuildBuildingMulti    = LoadMaterialAdditive("runtime/art/City/decal_building_valid_multi.dds");
-			decalMoveBuilding          = LoadMaterialAdditive("runtime/art/City/decal_move_building.dds");
-			decalSelectBuilding        = LoadMaterialAdditive("runtime/art/City/decal_select_building.dds");
-			decalSelectGloss           = LoadMaterialAdditive("runtime/art/City/build_details_gloss_overlay.dds");
+			decalBuildingInvalid       = LoadMaterialAdditive("decal_building_invalid.dds");
+			decalBuildBuilding         = LoadMaterialAdditive("decal_building_valid.dds");
+			decalBuildBuildingMulti    = LoadMaterialAdditive("decal_building_valid_multi.dds");
+			decalMoveBuilding          = LoadMaterialAdditive("decal_move_building.dds");
+			decalSelectBuilding        = LoadMaterialAdditive("decal_select_building.dds");
+			decalSelectGloss           = LoadMaterialAdditive("build_details_gloss_overlay.dds");
 		}
 
 		internal  struct MaterialShadowPair

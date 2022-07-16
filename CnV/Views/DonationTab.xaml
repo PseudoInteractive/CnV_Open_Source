@@ -182,7 +182,7 @@
 										   TextAlignment="Left"
 										 
 										    />
-								<sf:GridDateColumn  UseBindingValue="True" ValueBinding="{Binding blessedUntil,Converter={StaticResource DateTimeConverter},Mode=OneWay}"
+								<sf:GridDateColumn   ValueBinding="{Binding blessedUntil,Converter={StaticResource DateTimeConverter},Mode=OneWay}"
                                DisplayDateFormat="MM/dd HH:mm"
                                              />
 
@@ -305,7 +305,7 @@
 				<sf:GridTextColumn  MappingName="Pri"
                                                       TextAlignment="Center"
                                              />
-				<sf:GridDateColumn UseBindingValue="True" ValueBinding="{Binding blessedUntil,Converter={StaticResource DateTimeConverter},Mode=OneWay}"
+				<sf:GridDateColumn UseBindingValue="False" ValueBinding="{Binding blessedUntil,Converter={StaticResource DateTimeConverter},Mode=OneWay}"
                                                     
                                         
                                                 TextAlignment="Center"

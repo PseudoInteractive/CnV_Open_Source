@@ -33,9 +33,9 @@ partial class ShellPage
 	public static void SetupNonCoreInput()
 	{
 		canvas.ManipulationMode = ManipulationModes.None;
-		
+		canvas.PointerPressed += (object sender, PointerRoutedEventArgs e)=> canvas.CapturePointer(e.Pointer);
 		//Canvas_PointerWheelChanged(mouseState, priorMouseState);
-	//	canvas.ManipulationMode= ManipulationModes.None;
+		//	canvas.ManipulationMode= ManipulationModes.None;
 		SetupCoreInput();
 
 		//		canvas.PointerMoved+=KeyboardProxy_PointerMoved;
@@ -71,9 +71,9 @@ partial class ShellPage
 						);
 					recognizer = new()
 					{
-						GestureSettings= GestureSettings.Tap|GestureSettings.RightTap|
-					GestureSettings.ManipulationTranslateX|GestureSettings.ManipulationTranslateY|GestureSettings.ManipulationScale
-				//	|GestureSettings.ManipulationMultipleFingerPanning
+						GestureSettings= GestureSettings.Tap|GestureSettings.RightTap|GestureSettings.Drag|GestureSettings.ManipulationScale|
+					GestureSettings.ManipulationTranslateX|GestureSettings.ManipulationTranslateY
+					|GestureSettings.ManipulationMultipleFingerPanning
 				//|GestureSettings.Hold
 				,AutoProcessInertia=false
 					};
@@ -93,9 +93,13 @@ partial class ShellPage
 					//		InteractionSourceRedirectionMode.Enabled;
 
 					recognizer.AutoProcessInertia = false;
+					recognizer.ShowGestureFeedback=false;
 					recognizer.ManipulationCompleted+=Recognizer_ManipulationCompleted;
 					recognizer.ManipulationInertiaStarting+=Recognizer_ManipulationInertiaStarting;
 					recognizer.ManipulationStarted+=Recognizer_ManipulationStarted;
+					recognizer.Dragging +=Recognizer_Dragging;
+					recognizer.CrossSliding +=Recognizer_CrossSliding;
+			
 					recognizer.ManipulationUpdated+=Recognizer_ManipulationUpdated;
 					recognizer.Tapped+=Recognizer_Tapped;
 					recognizer.RightTapped+=Recognizer_RightTapped;
@@ -110,7 +114,7 @@ partial class ShellPage
 					//coreInputSource.PointerCaptureLost += CoreInputSource_PointerCaptureLost;
 					coreInputSource.PointerRoutedTo+=CoreInputSource_PointerRoutedTo;
 					coreInputSource.PointerWheelChanged+=CoreInputSource_PointerWheelChanged;
-
+					coreInputSource.PointerCaptureLost +=CoreInputSource_PointerCaptureLost;
 				}
 				catch(Exception __ex)
 				{
@@ -119,6 +123,22 @@ partial class ShellPage
 
 				//	Thread.Sleep(-1);
 			});
+	}
+
+	
+	private static void Recognizer_CrossSliding(GestureRecognizer sender,CrossSlidingEventArgs args) {
+		Format(sender,args);
+
+	}
+
+	private static void Recognizer_Dragging(GestureRecognizer sender,DraggingEventArgs args) {
+		Format(sender,args);
+
+	}
+
+	private static void CoreInputSource_PointerCaptureLost(InputPointerSource sender,PointerEventArgs args) {
+		Format(args,"Pointer cap lost");
+
 	}
 
 	private static void CoreInputSource_PointerRoutedTo(InputPointerSource sender,PointerEventArgs args)
@@ -130,11 +150,14 @@ partial class ShellPage
 	}
 
 	private static void Recognizer_Holding(GestureRecognizer sender,HoldingEventArgs args) {
-	
+		Format(sender,args);
+
 	}
-	
+
 	private static void Recognizer_RightTapped(GestureRecognizer sender,RightTappedEventArgs args)
 	{
+		Format(sender,args);
+
 		//args.KeyModifiers.UpdateKeyModifiers();
 		UpdateMousePosition(args.Position);
 		(var wc, var bc) = ToWorldAndCityC(mousePositionW);
@@ -148,11 +171,11 @@ partial class ShellPage
 			if(!wc.isNan)
 			{
 				var spot = Spot.GetOrAdd(wc.cid);
-				if(AppS.IsKeyPressedShiftOrControl())
-					spot.SetFocus(AppS.keyModifiers.ClickMods() );
-				var position = args.Position;
-				AppS.DispatchOnUIThread(action: () =>
-					 spot.ShowContextMenu(position));
+			//	if(AppS.IsKeyPressedShiftOrControl())
+					spot.SetFocus(AppS.keyModifiers.ClickMods()|ClickModifiers.isRightTap );
+		//		var position = args.Position;
+		//		AppS.DispatchOnUIThread(action: () =>
+		//			 spot.ShowContextMenu(position));
 
 			}
 		}
@@ -160,6 +183,8 @@ partial class ShellPage
 
 	private static void Recognizer_Tapped(GestureRecognizer sender,TappedEventArgs args)
 	{
+		Format(sender,args);
+
 		UpdateMousePosition(args.Position);
 		(var wc, var bc) = ToWorldAndCityC(mousePositionW);
 
@@ -187,11 +212,11 @@ partial class ShellPage
 		if(dr.LengthSquared() > 0)
 		{
 			dr *= 1.0f.ScreenToWorld();
-			View.SetViewTargetInstant(View.viewW2 - dr);
+		//	View.SetViewTargetInstant(View.viewW2 - dr);
 		}
 		var scale = args.Cumulative.Scale;
 		//if(scale != 1.0f)
-		//	Note.Show($"Scale: {scale}");
+		//	($"Scale: {scale}");
 		var exp = args.Delta.Expansion;
 		if(exp != 0.0f
 			//&&
@@ -202,10 +227,17 @@ partial class ShellPage
 		}
 	}
 
-	private static void Recognizer_ManipulationStarted(GestureRecognizer sender,ManipulationStartedEventArgs args)  {}// Note.Show("Manipulation Started");
-	private static void Recognizer_ManipulationInertiaStarting(GestureRecognizer sender,ManipulationInertiaStartingEventArgs args)  {}// Note.Show("Inertia");
+	private static void Recognizer_ManipulationStarted(GestureRecognizer sender,ManipulationStartedEventArgs args)  {
+		Format(sender,args);
+
+
+	}// Note.Show("Manipulation Started");
+	private static void Recognizer_ManipulationInertiaStarting(GestureRecognizer sender,ManipulationInertiaStartingEventArgs args)  {
+		Format(sender,args);
+	}// Note.Show("Inertia");
 	private static void Recognizer_ManipulationCompleted(GestureRecognizer sender,ManipulationCompletedEventArgs args) 
 	{
+		Format(sender,args);
 		var dv = args.Velocities.Linear;
 		var dr = new Vector2(dv._x,dv._y);
 		var speed = dr.Length();
@@ -218,14 +250,34 @@ partial class ShellPage
 		}
 	}
 
+	static bool Format(PointerEventArgs args, string _s) {
+		var s = new PooledStringBuilder();
+		var c = args.CurrentPoint;
+		ToolTips.debugTip = s.AppendLine(_s).AppendLine($"Frame: {c.FrameId}, {c.PointerId}, {c.Properties.PointerUpdateKind} {c.PointerDeviceType}, {c.Position} ,{c.IsInContact},{c.Timestamp}").
+			AppendLine(c.Properties.IsHorizontalMouseWheel.ToString()).ToString();
+
+		return true;
+	}
+
+	static bool Format<T>(GestureRecognizer g, T args) {
+		var s = new PooledStringBuilder();
+
+		Note.Show( s.AppendLine(typeof(T).ToString()).AppendLine(JSON.ToJson(args)).ToString() );
+
+		return true;
+	}
 	private static void CoreInputSource_PointerExited(InputPointerSource sender,PointerEventArgs args)
 	{
+		Format(args,"Pointer exit");
+
 		args.KeyModifiers.UpdateKeyModifiers();
 		Canvas_PointerExited(args.CurrentPoint.Position,args.CurrentPoint.PointerId);
 	}
 
 	private static void CoreInputSource_PointerEntered(InputPointerSource sender,PointerEventArgs args)
 	{
+		Format(args,"Pointer entered");
+	//coreInputSource.Cap CapturePointer(sender);
 		args.KeyModifiers.UpdateKeyModifiers();
 
 		Canvas_PointerEntered(args.CurrentPoint.Position);
@@ -233,6 +285,8 @@ partial class ShellPage
 
 	private static void CoreInputSource_PointerReleased(InputPointerSource sender,PointerEventArgs args)
 	{
+		Format(args,"Pointer released");
+
 		--pointerPressedCount;
 		recognizer.ProcessUpEvent(args.CurrentPoint);
 
@@ -245,6 +299,8 @@ partial class ShellPage
 	//		public static PointerUpdateKind GetPointerUpdateKind()
 	private static void CoreInputSource_PointerPressed(InputPointerSource sender,PointerEventArgs args)
 	{
+		Format(args,"Pointer pressed");
+
 		++pointerPressedCount;
 		View.EndCoasting();
 		//View.isCoasting = false;
@@ -294,6 +350,8 @@ partial class ShellPage
 
 	public static void CoreInputSource_PointerMoved(InputPointerSource sender,PointerEventArgs e)
 	{
+	//	Format(e,"Pointer moved");
+
 		var points = e.GetIntermediatePoints();
 		var point = points.Last();
 		var pointC = point.Position;
@@ -301,31 +359,45 @@ partial class ShellPage
 		
 
 		//if(point.PointerDeviceType == PointerDeviceType.Touchpad)
-		//	Note.Show("Touchpad");
+		//	("Touchpad");
 
 		//if(point.Properties.ContactRect._width> 1)
-		//	Note.Show(point.Properties.ContactRect.ToString());
+		//	(point.Properties.ContactRect.ToString());
 		e.KeyModifiers.UpdateKeyModifiers();
-		Canvas_PointerMoved((pointC, point.PointerId, point.IsInContact, point.Timestamp, point.Properties.PointerUpdateKind));
+		Canvas_PointerMoved((pointC, point.PointerId, point.IsInContact, point.Timestamp, point.Properties.PointerUpdateKind, point.Properties.IsPrimary));
 		e.Handled=true;
 	}
 	private static void CoreInputSource_PointerWheelChanged(InputPointerSource sender,PointerEventArgs e)
 	{
+		Format(e,"Pointer wheel");
+
 		View.EndCoasting();
 		var pt = e.CurrentPoint;
 		var point = pt.Position;
 		//if(pt.PointerDeviceType == PointerDeviceType.Touchpad)
-		//	Note.Show("Touchpad");
+		//	("Touchpad");
+		var scroll = pt.Properties.MouseWheelDelta;
+		var hor = pt.Properties.IsHorizontalMouseWheel;
 
-		if(  pt.PointerDeviceType == PointerDeviceType.Mouse && (Settings.pointerGestureMode == PointerGestureMode.wheelIsZoom) )
-		{
-			var scroll = pt.Properties.MouseWheelDelta;
+		if((Settings.pointerGestureMode == PointerGestureMode.wheelIsZoom)
+	  || e.KeyModifiers.IsShiftOrControl()
+	  && !hor   ) {
+
 			HandleWheel(point,scroll*0.5f);
 		}
 		else
 		{
-		 recognizer.ProcessMouseWheelEvent(e.CurrentPoint,e.KeyModifiers.IsShift(),e.KeyModifiers.IsControl());
+			var dr = (hor ? new Vector2(1,0) : new Vector2(0,-1))*scroll*0.5f;
+		//	View.viewVW= new(-scroll*dr.ScreenToWorldOffset(),0.0f);
+			if(dr.LengthSquared() > 0) {
+				dr *= 1.0f.ScreenToWorld();
+				View.SetViewTarget(View.viewW2 - dr);
+			}	
 		}
+		//else
+	//	{
+	//	 recognizer.ProcessMouseWheelEvent(e.CurrentPoint,e.KeyModifiers.IsShift(),e.KeyModifiers.IsControl());
+//		}
 			e.Handled=true;
 	}
 }

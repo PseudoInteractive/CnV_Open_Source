@@ -74,20 +74,20 @@
 											ColumnWidthMode="None"
 										    />
 					<sf:GridNumericColumn MappingName="cont"
-										   UseBindingValue="True"
+										   UseBindingValue="False"
 												TextAlignment="Center"
 											Width="42"
 										  AllowResizing="False"
 										  ColumnWidthMode="None"
 									/>
 				<sf:GridNumericColumn ValueBinding="{Binding tsTotal, Mode=OneWay}"
-									  UseBindingValue="True"
+									  UseBindingValue="False"
 												HeaderText="TS"
 												TextAlignment="Right"
 												DisplayNumberFormat="N0"
 												 />
 				<sf:GridNumericColumn ValueBinding="{Binding tsRaid, Mode=OneWay}"
-									  UseBindingValue="True"
+									  UseBindingValue="False"
 												HeaderText="Raid"
 												TextAlignment="Right"
 												DisplayNumberFormat="N0"

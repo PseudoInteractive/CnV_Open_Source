@@ -599,6 +599,7 @@ namespace CnV.Views
 				//});
 				FindName(nameof(playerStats));
 				FindName(nameof(cityStats));
+				FindName(nameof(cityFlyout));
 
 
 				IncomingTab.UpdateIncomingStatus();
@@ -667,7 +668,7 @@ namespace CnV.Views
 
 
 				HistoricModeUIUpdate(); // Disable buttons
-				
+				//Microsoft.UI.Xaml.Media.Animation.Timeline.AllowDependentAnimations=false;
 				AppS.QueueIdleTask(DailyDialog.DailyRewardTask);
 				{
 					var p = Player.me;
@@ -1766,7 +1767,7 @@ namespace CnV.Views
 				City.gridCitySourceWithNone.Set(l.Prepend(City.invalid));
 				// todo change this
 				Spot.selected = Spot.selected.Where(cid => City.TestContinentAndFlagFilter(cid))
-					.ToHashSet(); // filter selected
+					.ToImmutableHashSet(); // filter selected
 								  //	CityUI.cityListChanged?.Invoke(l);
 				CityUI.SyncCityBox();
 				//   if (MainPage.IsVisible())

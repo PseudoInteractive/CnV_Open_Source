@@ -23,37 +23,52 @@ using Game;
 
 	using Microsoft.UI.Xaml.Input;
 
-	partial class ShellPage
-	{
-		private static void Canvas_PointerMoved((Windows.Foundation.Point Position, uint PointerId,
-																			bool IsInContact, ulong Timestamp, PointerUpdateKind PointerUpdateKind) point)
-		{
+using System.Numerics;
 
+partial class ShellPage
+	{
+	static Vector2 lastMovePosition;
+		private static void Canvas_PointerMoved((Windows.Foundation.Point Position, uint PointerId,
+																			bool IsInContact, ulong Timestamp, PointerUpdateKind PointerUpdateKind, bool isPrimary) point)
+		{
+		if(!point.isPrimary)
+			return;
 			//			if(!mouseOverCanvas)
 			//				Log("Mouse Moved Canvas");
 			//	App.cursorDefault.Set();
 			// prevent idle timer;
 			mouseOverCanvas = true;
-			//	instance.mouseOverCanvasBox.IsChecked = mouseOverCanvas;
-
+		//	instance.mouseOverCanvasBox.IsChecked = mouseOverCanvas;
 
 			//	PointerInfo(e);
 			UpdateMousePosition(point.Position);
-		//	ShellPage.TakeFocus();
+
+		if(point.IsInContact) {
+			var dr = mousePosition- lastMovePosition;
+			dr *= -1.0f.ScreenToWorld();
+			//dr.X *= -1;
+			var lg = dr.Length();
+			if(lg < 128f) {
+				View.SetViewTargetInstant(View.viewW2 + dr);
+			}
+		}
+		lastMovePosition = mousePosition;
+
+			//	ShellPage.TakeFocus();
 			//UpdateFocus();
 			//	if (!isFocused)
 			//		return;
 			//	var priorMouseC = mousePosition;
 			//var gestureResult = Gesture.ProcessMoved(point);
 			//if(gestureResult.action == GestureAction.none)
-		//		return;
+			//		return;
 
 			//SetMousePosition( gestureResult.c);
 
 			//			var windowsPosition = e.CurrentPoint.Position;
 			//			mousePosition = GetCanvasPosition(windowsPosition);
-		//	mousePositionW = mousePosition.ScreenToWorld();
-	//		mousePositionW = mousePositionC.InverseProject();
+			//	mousePositionW = mousePosition.ScreenToWorld();
+			//		mousePositionW = mousePositionC.InverseProject();
 
 			(var c, var cc) = ToWorldAndCityC(mousePositionW);
 			//var point = e.CurrentPoint;

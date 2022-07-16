@@ -215,8 +215,11 @@ namespace CnV.Views
 			await base.Closed();
 			instance = null;
 		}
+		internal static void QueueSyncSelectionToUI() {
+			AppS.QueueOnUIThread(() => SyncSelectionToUI());
+		}
 		internal static void SyncSelectionToUI(bool syncRecentGrid=true, bool syncCityGrid=true) {
-			
+			Assert(AppS.IsOnUIThread());
 			++SpotTab.silenceSelectionChanges;
 			try {
 				var i = instance;
@@ -247,7 +250,7 @@ namespace CnV.Views
 			if(silenceSelectionChanges==0) {
 				++silenceSelectionChanges;
 				try {
-					City.selected = selection.Select(i => (i as City).cid).ToHashSet();
+					City.selected = selection.Select(i => (i as City).cid).ToImmutableHashSet();
 					SyncSelectionToUI(syncRecentGrid: false,syncCityGrid: true);
 				}
 				catch(Exception ex) 
@@ -283,15 +286,12 @@ namespace CnV.Views
 		}
 
 		private void SelectPinned(object sender,RoutedEventArgs e) {
-			foreach(var p in Settings.pinned) {
-				City.selected.Add(p);
-				
-			}
+			City.selected = City.selected.Union(Settings.pinned);
 			SyncSelectionToUI();
 		}
 
 		private void ClearSelected(object sender,RoutedEventArgs e) {
-			City.selected.Clear();
+			City.selected = City.selected.Clear();
 			SyncSelectionToUI();
 		}
 

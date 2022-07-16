@@ -316,7 +316,9 @@ namespace CnV
 		internal static bool IsMultipleOf4(int w,int h) => ((h&3)|(w&3)) ==0;//(v+3)&(~3);
 		public static Texture2D CreateFromDDS(string fileName,bool wantSRGB=true) {
 			try {
-
+				fileName = ImageHelper.TranslateDDSFileName(fileName);
+				if(fileName.IsNullOrEmpty())
+					return null;
 				using var scratch = DirectXTexNet.TexHelper.Instance.LoadFromDDSFile(fileName,DDS_FLAGS.NONE);// DDS_FLAGS.BAD_DXTN_TAILS|DDS_FLAGS.FORCE_DX10_EXT_MISC2|DDS_FLAGS.FORCE_DX10_EXT);
 				var meta = scratch.GetMetadata();
 				//			Log($"{fileName} {meta.Dimension} {meta.Width}x{meta.Height}x{meta.Depth}[{meta.ArraySize}] Mips: {meta.MipLevels} Images: {scratch.GetImageCount()}  Format: {meta.Format} {meta.GetAlphaMode()}");
@@ -399,12 +401,13 @@ namespace CnV
 
 		public static bool TryLoadLitMaterialFromDDS(string nameAndPath,out Material main,out Material shadow,bool wantShadow,bool unlit,bool city,bool opaque = false) {
 			try {
-				var path = AppS.AppFileName($"{nameAndPath}.dds");
-				var pathN = AppS.AppFileName($"{nameAndPath}_n.dds");
+				
+				var path = ImageHelper.TranslateDDSFileName(nameAndPath);
+				var pathN = ImageHelper.TranslateDDSFileName(nameAndPath + "_n");
 				//	var animated = nameAndPath.Contains("animseq");
 				//var frames = animated ? animationFrames : 1;
-				var texture = CreateFromDDS(path,wantSRGB: true);
-				var normalMap = unlit ? null : CreateFromDDS(pathN,wantSRGB: false);
+				var texture = path.IsNullOrEmpty() ? null : CreateFromDDS(path,wantSRGB: true);
+				var normalMap = unlit || pathN.IsNullOrEmpty() ? null : CreateFromDDS(pathN,wantSRGB: false);
 				if(texture is not null) {
 					var animated = texture.IsAnimated();
 					main = new Material(texture,normalMap,AGame.GetTileEffect(animated,unlit,city: city,opaque: opaque));

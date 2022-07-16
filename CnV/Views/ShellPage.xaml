@@ -14,27 +14,26 @@
     
 	  Background="{x:Null}"
 	  Margin="0"
-      mc:Ignorable="d"	
-			IsTabStop="false"
+     		IsTabStop="false"
 		
 		>
-	<UserControl.Resources>
+	
+	<!--<UserControl.Resources>
 		<Flyout x:Name="cityFlyoutFlyout" x:FieldModifier="internal" Placement="RightEdgeAlignedTop" ShowMode="Standard"  AreOpenCloseAnimationsEnabled="False" >
-			<cnv:CityFlyout x:Name="cityFlyout" x:FieldModifier="internal" />
 		
 		</Flyout>
 
-	</UserControl.Resources>
+	</UserControl.Resources>-->
 
 
-
-		<Grid x:Name="_rootGrid" Canvas.ZIndex="33" Background="{x:Null}" 
-		                IsHitTestVisible="True" >
+	<Grid x:Name="_rootGrid" Canvas.ZIndex="33" Background="{x:Null}" 
+		                IsHitTestVisible="True"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:FieldModifier="internal">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="auto" />
 			<RowDefinition Height="*" />
 		</Grid.RowDefinitions>
-			
+
+
 		<Grid x:Name="AppTitleBar" x:FieldModifier="internal"
 			  Background ="{StaticResource SystemAccentColorDark1}"
               IsHitTestVisible="True"
@@ -217,18 +216,16 @@ VerticalAlignment="Center"
 
 			
 		</Grid>
-		
+		<Canvas x:Name="fullCanvas" Grid.Row="1" Background="{x:Null}" IsHitTestVisible="True" IsTabStop="True" 
+		HorizontalAlignment="Stretch" x:FieldModifier="public" VerticalAlignment="Stretch"  Canvas.ZIndex="54" Width="auto">
+
+			<cnv:CityFlyout  x:Load="False" x:Name="cityFlyout" x:FieldModifier="internal" Canvas.ZIndex="55"  Visibility="Collapsed" />
+
+		</Canvas>
+
 
 		<Grid  x:Name="grid" Grid.Row="1" x:FieldModifier="public"  ColumnSpacing="0" RowSpacing="0" Margin="0,0,0,0" >
-			<Grid.Resources>
-				<Style x:Key="TimeFlyoutStyle"
-               TargetType="FlyoutPresenter">
-					<Setter Property="HorizontalContentAlignment"
-                    Value="Stretch" />
-					<Setter Property="VerticalContentAlignment"
-                    Value="Stretch" />
-				</Style>
-			</Grid.Resources>
+			
 			<Grid.RowDefinitions>
 				<RowDefinition Height="auto" x:Name="rowHeader" />
 				<RowDefinition Height="auto" x:Name="stats" />
@@ -289,6 +286,9 @@ VerticalAlignment="Center"
 								   Grid.ColumnSpan="3"
 			                      Grid.Row="2" Grid.RowSpan="2"
 			                      IsTabStop="True"
+								   IsTapEnabled="False"
+								   IsDoubleTapEnabled="False"
+								   IsRightTapEnabled="False"
 									IsHitTestVisible="False"
 								  Margin="0"
 								   AllowFocusOnInteraction="True"

@@ -25,7 +25,7 @@ namespace CnV
 		public MessageBox()
 		{
 			this.InitializeComponent();
-			DialogG.SetupShadow(this);
+			this.SetupShadow();
 		}
 
 		

@@ -432,42 +432,7 @@ public static partial class CityUI
 			});
 		}
 	}
-	public static void ShowContextMenu(this City me, Windows.Foundation.Point position)
-	{
-		if(!me.isValid) {
-			Assert(false);
-			return;
-		}
-		//   SelectMe(false) ;
-		AppS.DispatchOnUIThread(() => {
-			var flyout = ShellPage.instance.cityFlyoutFlyout;// new Flyout() {  AreOpenCloseAnimationsEnabled=false,ShouldConstrainToRootBounds=false,ShowMode=Microsoft.UI.Xaml.Controls.Primitives.FlyoutShowMode.Auto };
-			var nav = ShellPage.instance.cityFlyout;
-			//		nav.Reset(me);
-			nav.SetCity(me);
 
-			//foreach(var cat in City.ACatCity.children) {
-			//	NavigationViewItem i = new();
-			//	i.Icon = ImageHelper.GetIcon(cat.icon);
-			//	i.Content = cat.label;
-			//	if(cat.description is not null)
-			//		i.SetToolTip(cat.description);
-			//	nav.MenuItems.Add(i);
-
-			//}
-
-			//	flyout.SetXamlRoot(uie);
-			//	AddToFlyout(me,(flyout,nav), uie is UserTab );
-			//		nav.IsPaneOpen=false;
-			//		nav.SelectedItem = nav.catCity;
-			nav.UpdateCommands();
-
-			//   flyout.XamlRoot = uie.XamlRoot;
-			flyout.ShowAt(null,new() { Position= position });
-		});
-	}
-	public static void ShowContextMenu(this City me) {
-		ShowContextMenu(me,ShellPage.mousePosition.AsPoint());
-	}
 
 
 		//public static void SelectMe(this City me, ClickModifiers clickMods)
@@ -871,7 +836,8 @@ public partial class City
 
 				break;
 			case nameof(xy):
-				ProcessCoordClick(cid, modifiers.ClickMods());
+				// xy means takeMe there
+				ProcessCoordClick(cid, modifiers.ClickMods(isRight:true));
 			
 				break;
 			

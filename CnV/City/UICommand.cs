@@ -58,6 +58,12 @@ internal class ACommand {
 	public string category;
 	public string[]? tags;
 	public string icon;
+	internal bool isToggle => method.GetParameters().Length ==1;	
+
+	public string toolTip => desc ?? Label;
+
+	public string Label => label?? method.Name;
+
 	public ACommand(MethodInfo method,string? label,string desc,string category,string icon,PropertyInfo canExecult) {
 		this.method=method;
 		this.label=label;
@@ -97,10 +103,9 @@ internal class ACommand {
 
 	}
 
-	const int imageSize = 32;
-	public string Label => label?? method.Name;
+	const int imageSize = 40;
 
-	public ACommandInstance CreateInstance(City city) => new ACommandInstance(this,city);
+	//public ACommandInstance CreateInstance(City city) => new ACommandInstance(this,city);
 
 	internal static ACommand[] commands;
 	static ACommand() {
@@ -121,40 +126,60 @@ internal class ACommand {
 		commands = c.ToArray();
 	}
 
-	
-}
-
-internal class ACommandInstance  :ICommand  {
-	public ACommand command;
-	public City city;
-
-	public string toolTip => command.desc ?? command.Label;
-
-	public ACommandInstance(ACommand command,City city) {
-		this.command=command;
-		this.city=city;
-	}
-
-	public event EventHandler? CanExecuteChanged;
-
-	public bool CanExecute(object? parameter) {
+	public bool CanExecute(City city) {
 		if(!city.IsValid())
 			return false;
-		if(command.canExecult is not null)
-			return (bool) command.canExecult.GetValue(city);
+		if(canExecult is not null)
+			return (bool)canExecult.GetValue(city);
 		return true;
 	}
-	internal bool isEnabled => CanExecute(city);
 
-	internal Brush isEnabledColor => AppS.Brush(isEnabled ? UIColors.Transparent : UIColors.Maroon );  
-	public void Execute(object? parameter) {
+	// TODO
+	//internal bool isEnabled => CanExecute(city);
+	public Task<bool?> Go(City? _city) {
 
 		try {
-			command.method.Invoke(city,null);
+		//	method.CreateDelegate<City>();
+			var rv = method.Invoke(_city,null) as Task<bool?>;
+			return rv;
 		}
 		catch(Exception ex) {
 			LogEx(ex);
 			;
 		}
+		return null;
 	}
+
+	public Task<bool?> Go(City? _city, bool ? toggleState) {
+
+		try {
+			var rv = method.Invoke(_city,new object?[]{ toggleState}) as Task<bool?>;
+			return rv;
+		}
+		catch(Exception ex) {
+			LogEx(ex);
+			;
+		}
+		return null;
+	}
+
 }
+
+//internal class ACommandInstance    {
+//	public ACommand command;
+//	public City city;
+
+
+//	public ACommandInstance(ACommand command,City city) {
+//		this.command=command;
+//		this.city=city;
+//	}
+
+//	public event EventHandler? CanExecuteChanged;
+
+//	internal Brush isEnabledColor => AppS.Brush(isEnabled ? UIColors.Transparent : UIColors.Maroon );
+// // legacy ICommand interface
+//	public void Execute(object? parameter) {
+//		Go(parameter as City);
+//	}
+//}

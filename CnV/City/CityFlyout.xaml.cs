@@ -17,20 +17,22 @@ using Windows.Foundation.Collections;
 
 namespace CnV;
 
-public sealed partial class CityFlyout:NavigationView, IANotifyPropertyChanged
+public sealed partial class CityFlyout:UserControl, IANotifyPropertyChanged
 {
 	internal City city = City.invalid;
-
-
-	ObservableCollection<ACommandInstance> baseCommands = new();
-	ObservableCollection<ACommandInstance> categoryCommands = new();
-	ObservableCollection<ACommandInstance> mruCommands = new();
+	internal static bool isLoaded;
+	
+	List<ACommandCategory> categories => City.ACatCity.children;
+	ObservableCollection<ACommand> baseCommands = new();
+	ObservableCollection<ACommand> categoryCommands = new();
+	ObservableCollection<ACommand> mruCommands = new();
+	ObservableCollection<ACommand> searchCommands = new();
 	List<ACommand> mru = new();
 
 	public event PropertyChangedEventHandler? PropertyChanged;
 
 	public CityFlyout() {
-		this.InitializeComponent();
+		InitializeComponent();
 	}
 
 	public void SetCity(City city) {
@@ -41,7 +43,8 @@ public sealed partial class CityFlyout:NavigationView, IANotifyPropertyChanged
 	void ClearCommands() {
 		categoryCommands.Clear();
 		baseCommands.Clear();
-		mruCommands.Clear();
+		searchCommands.Clear();
+		//mruCommands.Clear();
 			
 
 	}
@@ -53,7 +56,12 @@ public sealed partial class CityFlyout:NavigationView, IANotifyPropertyChanged
 //			UpdateCommands();
 //	}
 
-	private void CategoryChanged(NavigationView sender,NavigationViewSelectionChangedEventArgs args) {
+	internal static void Hide() {
+		if(isLoaded)
+			ShellPage.instance.cityFlyout.Visibility = Visibility.Collapsed;
+
+	}
+	private void CategoryChanged(object sender,SelectionChangedEventArgs e) {
 		UpdateCommands();
 	}
 		internal void UpdateCommands() {
@@ -64,43 +72,67 @@ public sealed partial class CityFlyout:NavigationView, IANotifyPropertyChanged
 				return;
 			}
 
-		var sel = SelectedItem as NavigationViewItem;
+		var sel = categoryListView.SelectedItem as ACommandCategory;
 		if(sel is null)
 			return;
-		var cat = sel.Name;
+		var cat = sel.name;
 
 		if(cat.StartsWith("Settings") ){
 			cat = "settings";
 		}
 		else { 
-			Assert(cat.StartsWith("cat"));
-			cat = cat.Substring(3);
+			Assert(cat.StartsWith("ACat"));
+			cat = cat.Substring(4);
 		}
-		//var items = new List<ACommandInstance>();
+		//var items = new List<ACommandI>();
 		foreach(var c in ACommand.commands) 
 		{
-				//if(c.category == "city") {
-				//	baseCommands.Add(c.CreateInstance(city));
-				//}
-				//else
+				if(c.category == "city") {
+					baseCommands.Add(c);
+				}
+				else
 				{
 					if(!c.category.EqualsIgnoreCase(cat)) {
 						continue;
 					}
 					//				var b = new Button() { Command = c.CreateInstance(city),Content = c.Label,CommandParameter = city };
-					categoryCommands.Add(c.CreateInstance(city));
+					categoryCommands.Add(c);
 				}
 		}
 
 	//	commands.ItemsSource = items;
 	}
-	private void CommandClick(object sender,ItemClickEventArgs e) {
-		var c = e.ClickedItem as ACommandInstance;
+	internal static void RegisterRecentCommand( ACommand c) {
+		var mru = ShellPage.instance.cityFlyout.mruCommands;
+		var id = mru.IndexOf(c);
+		if(id >= 0) {
+			if(id != 0)
+				mru.Move(0,id);
+		}
+		else {
+			if(mru.Count > 3)
+				mru.RemoveAt(AMath.random.Next(mru.Count));
+	
+			mru.Add(c);
+		}
+
+	}
+	private async void CommandClick(object sender,ItemClickEventArgs e) {
+		var c = e.ClickedItem as ACommand;
+		await Execute(c);
+	}
+
+	private async Task Execute(ACommand c) {
 		if(c is not null) {
 			try {
-				ShellPage.instance.cityFlyoutFlyout.Hide();
-				if(c.CanExecute(c.city))
-					c.Execute(c.city);
+
+				if(c.CanExecute(city)) {
+					RegisterRecentCommand(c);
+					if(await c.Go(city) == true) {
+						Hide();
+					}
+
+				}
 				else {
 
 					Note.Show("cannot do that now");
@@ -123,29 +155,82 @@ public sealed partial class CityFlyout:NavigationView, IANotifyPropertyChanged
 			// 
 			var t = search.Text;
 			if(!t.IsNullOrEmpty()) {
-				var candidates = new SortedList<int,ACommandInstance>();
+				var candidates = new SortedList<int,ACommand>();
 				foreach(var c in ACommand.commands) {
 					var score = c.GetSearchScore(t);
 					if(score <= 0)
 						continue;
-					candidates.Add(score,c.CreateInstance(city));
+					candidates.Add(score,c);
 				}
-				candidates.Values.ToArray().SyncList(categoryCommands);
+				candidates.Values.ToArray().SyncList(searchCommands);
 			}
 			
 		}
 	}
 
-	private void SearchSubmit(AutoSuggestBox sender,AutoSuggestBoxQuerySubmittedEventArgs args) {
-
+	private async void SearchSubmit(AutoSuggestBox sender,AutoSuggestBoxQuerySubmittedEventArgs args) {
+		if( (args.ChosenSuggestion is ACommand c) && c is not null) {
+			await Execute(c);
+		}
 	}
 
-	private void TogglePane(object sender,TappedRoutedEventArgs e) {
-		IsPaneOpen = !IsPaneOpen;
+	private void OnLoaded(object sender,RoutedEventArgs e) {
+		isLoaded = true;
 	}
 
-    private void search_FocusDisengaged(Control sender,FocusDisengagedEventArgs args) {
+	//private void TogglePane(object sender,TappedRoutedEventArgs e) {
+	//	IsPaneOpen = !IsPaneOpen;
+	//}
 
-    }
+	//   private void search_FocusDisengaged(Control sender,FocusDisengagedEventArgs args) {
+
+	//   }
 }
 
+ static partial class CityUI {
+	public static void ShowContextMenu(this City me,Windows.Foundation.Point position) {
+		if(!me.isValid) {
+			Assert(false);
+			return;
+		}
+		if(!CityFlyout.isLoaded)
+			return;
+		//   SelectMe(false) ;
+		AppS.DispatchOnUIThread(() => {
+			//	var flyout = ShellPage.instance.cityFlyoutFlyout;// new Flyout() {  AreOpenCloseAnimationsEnabled=false,ShouldConstrainToRootBounds=false,ShowMode=Microsoft.UI.Xaml.Controls.Primitives.FlyoutShowMode.Auto };
+			var nav = ShellPage.instance.cityFlyout;
+			//		nav.Reset(me);
+			var sc = (new Windows.Foundation.Point(ShellPage.mousePosition.X,ShellPage.mousePosition.Y)).TransformPoint(ShellPage.canvas,ShellPage.instance._rootGrid);
+
+			Canvas.SetLeft(nav,sc.X + 8); // Points in relation to window since canvas is at origin
+			Canvas.SetTop(nav,sc.Y - 32);
+			//	Canvas.SetZIndex(nav,99); // Points in relation to window since canvas is at origin	
+
+			nav.SetCity(me);
+
+			//foreach(var cat in City.ACatCity.children) {
+			//	NavigationViewItem i = new();
+			//	i.Icon = ImageHelper.GetIcon(cat.icon);
+			//	i.Content = cat.label;
+			//	if(cat.description is not null)
+			//		i.SetToolTip(cat.description);
+			//	nav.MenuItems.Add(i);
+
+			//}
+
+			//	flyout.SetXamlRoot(uie);
+			//	AddToFlyout(me,(flyout,nav), uie is UserTab );
+			//		nav.IsPaneOpen=false;
+			//		nav.SelectedItem = nav.catCity;
+			nav.UpdateCommands();
+			nav.Visibility = Visibility.Visible;
+			nav.categoryListView.Focus(FocusState.Programmatic);
+			//	nav.ApplyTemplate();
+			//   flyout.XamlRoot = uie.XamlRoot;
+			//		flyout.ShowAt(null,new() { Position= position });
+		});
+	}
+	public static void ShowContextMenu(this City me) {
+		ShowContextMenu(me,ShellPage.mousePosition.AsPoint());
+	}
+}

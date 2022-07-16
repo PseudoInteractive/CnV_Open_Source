@@ -129,6 +129,7 @@ partial class App
 		//			services = ConfigureServices();
 		RequestedTheme = ApplicationTheme.Dark;
 		InitializeComponent();
+		//Microsoft.UI.Xaml.Media.Animation.Timeline.AllowDependentAnimations=false;
 		//		UnhandledException += App_UnhandledException;
 		//try
 		//{
@@ -500,6 +501,7 @@ partial class App
 
 			if(wasRunning)
 				return;
+
 			window.Content.PreviewKeyUp   += Content_PreviewKeyUp;
 			window.Content.PreviewKeyDown += Content_PreviewKeyDown;
 			;

@@ -38,9 +38,8 @@
 
 	<converterTK:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
 
-	<!--<tkmedia:AttachedCardShadow  x:Key="ShadowBig" Offset="4" BlurRadius="16" />-->
+	<tkmedia:AttachedCardShadow  x:Key="aShadow" Offset="4" BlurRadius="8" Color = "#F103"  />
 	<!--"Expander"-->
-	<x:Double x:Key="MenuBarHeight">10</x:Double>
 
 	<x:Double x:Key="ControlContentThemeFontSize">12</x:Double>
 	<x:Double x:Key="ContentControlFontSize">12</x:Double>
@@ -56,7 +55,7 @@
     <!--Overrides-->
 
 	<!--"Expander"-->
-	<x:Double x:Key="ExpanderMinHeight">12</x:Double>
+	<x:Double x:Key="ExpanderMinHeight">24</x:Double>
 	<x:Double x:Key="ExpanderPopinVerticalOffset">0</x:Double>
 	<!-- Header -->
     <Thickness x:Key="ExpanderHeaderPadding">0,0,0,0</Thickness>
@@ -75,11 +74,14 @@
 		<Setter Property="TabFocusNavigation" Value="Cycle" />
 	</Style>-->
 	<Style TargetType="FlyoutPresenter"  >
+		<Setter Property="IsDefaultShadowEnabled" Value="False" />
 		<Setter Property="MaxWidth" Value="800" />
 		<Setter Property="MaxHeight" Value="740" />
 		<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
+		<Setter Property="FontStretch" Value="Condensed" />
 		<Setter Property="Margin" Value="0" />
 		<Setter Property="Padding" Value="0" />
+		<Setter Property="IsDoubleTapEnabled" Value="False" />
 		<Setter Property="Transitions" >
 				<Setter.Value>
 					<TransitionCollection>
@@ -115,11 +117,14 @@
 		<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
 		<Setter Property="FontStretch" Value="Condensed" />
 		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+		<Setter Property="IsDoubleTapEnabled" Value="False" />
+
 	</Style>
 	
 	<Style TargetType="MenuFlyoutItem" BasedOn="{StaticResource DefaultMenuFlyoutItemStyle}" >
 		<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
 		<Setter Property="FontStretch" Value="Condensed" />
+		<Setter Property="IsDoubleTapEnabled" Value="False" />
 	</Style>
 
 
@@ -140,13 +145,17 @@
 				<Setter Property="FontWeight" Value="Normal" />
 
 				<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
-			</Style>
+		<Setter Property="IsDoubleTapEnabled" Value="False" />
+
+	</Style>
 
 			<Style x:Key="ButtonSmall" TargetType="Button" BasedOn="{StaticResource ButtonRevealStyle}">
 				<Setter Property="Margin" Value="2"/>
-			<Setter Property="Padding" Value="3"/>
+			<Setter Property="Padding" Value="8,4,8,4"/>
 			<Setter Property="VerticalAlignment" Value="Center"/>
-				<Setter Property="HorizontalAlignment" Value="Center"/>
+		<Setter Property="IsDoubleTapEnabled" Value="False" />
+
+		<Setter Property="HorizontalAlignment" Value="Center"/>
 				<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
 				<Setter Property="FontStretch" Value="Condensed" />
 				<Setter Property="FontWeight" Value="Normal" />
@@ -157,6 +166,7 @@
 
 			<Style x:Key="ButtonMedium" TargetType="Button" BasedOn="{StaticResource ButtonSmall}">
 				<Setter Property="Margin" Value="4"/>
+				
 				<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 			</Style>
 			<Style x:Key="ButtonLarge" TargetType="Button" BasedOn="{StaticResource ButtonSmall}">
@@ -179,13 +189,16 @@
 				<Setter Property="FontStretch" Value="Condensed" />
 				<Setter Property="Margin" Value="1" />
 				<Setter Property="Padding" Value="1" />
-			</Style>
+		<Setter Property="IsDoubleTapEnabled" Value="False" />
+
+	</Style>
 
 			<Style x:Key="ToggleButtonCondensed" TargetType="ToggleButton" BasedOn="{StaticResource ToggleButton}" >
 				<Setter Property="FontStretch" Value="Condensed" />
 				<Setter Property="FontWeight" Value="Normal" />
+		<Setter Property="IsDoubleTapEnabled" Value="False" />
 
-			</Style>
+	</Style>
 
 			<!--default-->
 
@@ -214,6 +227,8 @@
 			<Style x:Key="SfTextCell" TargetType="sf:GridCell">
 				<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
 				<Setter Property="FontSize" Value="{StaticResource TinyFontSize}" />
+		
+
 		<Setter Property="FontStretch" Value="Condensed" />
 	</Style>
 	
@@ -238,11 +253,18 @@
 				
 				<Setter Property="AllowFiltering" Value="False"/>
 			</Style>
-			<Style  TargetType="sf:GridNumericColumn" BasedOn="{StaticResource SfGridColumnBase}">
-				
-				
-        <Setter Property="ShowHeaderToolTip" Value="True"/>
+	<Style  TargetType="sf:GridTextColumnBase" BasedOn="{StaticResource SfGridColumnBase}" >
+		<Setter Property="TextWrapping" Value="NoWrap" />
+
+		<Setter Property="CellStyle"  Value="{StaticResource SfTextCell}" />
+	</Style>
+	
+	<Style  TargetType="sf:GridNumericColumn" BasedOn="{StaticResource SfGridColumnBase}">
+		<Setter Property="TextWrapping" Value="NoWrap" />
+		<Setter Property="ShowHeaderToolTip" Value="True"/>
     </Style>
+	
+	
 	<Style  TargetType="sf:GridCheckBoxColumn" BasedOn="{StaticResource SfGridColumnBase}">
         <Setter Property="ShowHeaderToolTip" Value="True"/>
 	</Style>

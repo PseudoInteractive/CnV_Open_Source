@@ -76,6 +76,7 @@
 		</PackageReference>
 		<PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.5.0" />
 		<PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.5.0" />
+		<PackageReference Include="Microsoft.Extensions.FileSystemGlobbing" Version="7.0.0-preview.6.22324.4" />
 		<PackageReference Include="Microsoft.Extensions.ObjectPool" Version="7.0.0-preview.6.22330.3" />
 		<PackageReference Include="Microsoft.Extensions.Primitives" Version="7.0.0-preview.6.22324.4" />
 		<PackageReference Include="Microsoft.Graphics.Win2D" Version="1.0.3.1" />
@@ -661,7 +662,6 @@
 		<None Remove="GameUI\QuestList.xaml" />
 		<None Remove="GameUI\RecruitDialog.xaml" />
 		<None Remove="GameUI\RecruitTargetDialog.xaml" />
-		<None Remove="Strings\en-us\Resources.resw" />
 		<None Remove="GameUI\RefineDialogue.xaml" />
 		<None Remove="GameUI\ResearchList.xaml" />
 		<None Remove="GameUI\ResearchPurchase.xaml" />
@@ -675,7 +675,6 @@
 		<None Remove="GameUI\TroopsControl.xaml" />
 		<None Remove="Package.StoreAssociation.xml" />
 		<None Remove="Resources\CnVFont-VF.ttf" />
-		<None Remove="Resources\Icon1.ico" />
 		<None Remove="Package.appxmanifest" />
 		<None Remove="Styles\CommandBar.xaml" />
 		<None Remove="Styles\ScrollBarHack.xaml" />
@@ -776,7 +775,6 @@
 	</ItemGroup>
 	<ItemGroup>
 		<Folder Include="Base\" />
-		<Folder Include="Resources\" />
 		<Folder Include="Services\DragAndDrop\" />
 	</ItemGroup>
 	<ItemGroup>

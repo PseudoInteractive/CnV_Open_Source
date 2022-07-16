@@ -70,7 +70,7 @@ public partial class UserTab:Page, IANotifyPropertyChanged {
 					
 				var sel = City.gridCitySelected;
 				var prior = Spot.selected;
-				Spot.selected = (sel.Select(a => ((Spot)a).cid)).Concat(prior.Where(a=> !City.gridCitySource.Contains(a.AsCity()) )).ToHashSet();
+				Spot.selected = (sel.Select(a => ((Spot)a).cid)).Concat(prior.Where(a=> !City.gridCitySource.Contains(a.AsCity()) )).ToImmutableHashSet();
 				SpotTab.SyncSelectionToUI(syncRecentGrid: true,syncCityGrid: false);
 			}
 			catch(Exception ex)
@@ -447,7 +447,7 @@ public partial class UserTab:Page, IANotifyPropertyChanged {
 					if(info.Record is City city)
 					{
 						e.Handled = true;
-						city.ShowContextMenu();
+						CityUI.ProcessClick(city.cid,AppS.keyModifiers.ClickMods()| ClickModifiers.bringIntoWorldView|ClickModifiers.scrollIntoUiView|ClickModifiers.noFlyout);
 				//		Assert(false);
 	//					city.AddToFlyout(flyout);
 

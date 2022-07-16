@@ -314,7 +314,7 @@ public static partial class ADataGrid
 			grid.AllowResizingColumns = true;
 		//	grid.CanMaintainScrollPosition=true;
 			//grid.ShowToolTip=true;
-		//	grid.CellStyle = App.instance.Resources["SfTextCell"] as Style;
+	//		grid.CellStyle = App.instance.Resources["SfTextCell"] as Style;
 		//	grid.RowStyle = App.instance.Resources["sfRowStyle"] as Style;
 			grid.HeaderStyle=App.instance.Resources["sfHeaderStyle"] as Style;
 			grid.AllowEditing=false;
@@ -365,6 +365,7 @@ public static partial class ADataGrid
 			if(source is not null)
 				grid.ItemsSource = source;
 			grid.ResetAutoColumns();
+			grid.ApplyTemplate();
 //			grid.LoadDataGrid();
 		//	grid.ColumnSizer.Refresh();
 			return _lock0;

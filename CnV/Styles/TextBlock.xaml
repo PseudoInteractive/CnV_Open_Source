@@ -118,17 +118,19 @@
 				<Setter Property="SmallChange" Value="1"/>
 				<Setter Property="LargeChange" Value="10"/>
 				<Setter Property="BorderThickness" Value="1" />
-				<Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundAccentRevealBorderBrush}"/>
+				<Setter Property="BorderBrush" Value="{ThemeResource TextControlElevationBorderBrush}"/>
 				<Setter Property="AcceptsExpression" Value="True" />
 				<Setter Property="PlaceholderText" Value="0" />
 				<Setter Property="IsTabStop" Value="True" />
 				<Setter Property="VerticalAlignment" Value="Center" />
 				<Setter Property="Margin" Value="1" />
 				<Setter Property="Padding" Value="2" />
+				<Setter Property="HorizontalContentAlignment" Value="Right" />
+				
 
-        <!--<Setter Property="HorizontalAlignment" Value="Stretch" />-->
+		<!--<Setter Property="HorizontalAlignment" Value="Stretch" />-->
 				<!--<Setter Property="HorizontalContentAlignment" Value="Center" />-->
-				<!--<Setter Property="VerticalContentAlignment" Value="Center" />-->
+				<Setter Property="VerticalContentAlignment" Value="Center" />
 
 			</Style>
 
@@ -149,6 +151,7 @@
 			</Style>
 			<Style  x:Key="NumberBoxWide" BasedOn="{StaticResource BaseNumberBox}" TargetType="NumberBox">
 				<Setter Property="Width" Value="140" />
+				<Setter Property="SpinButtonPlacementMode" Value="Inline"/>
 			</Style>
 
 
@@ -164,6 +167,8 @@
 				<Setter Property="Width" Value="140"/>
 				<Setter Property="LargeChange" Value="100000"/>
 				<Setter Property="Minimum" Value="0" />
+				<Setter Property="SpinButtonPlacementMode" Value="Inline"/>
+
 			</Style>
 	<Style x:Key="NumberBoxCarts" BasedOn="{StaticResource NumberBoxRightAlignPositive}" TargetType="NumberBox">
 				<Setter Property="SmallChange" Value="100"/>
@@ -187,21 +192,14 @@
 
 			<!--NumberBox-->
 
-			<!--  MasterDetail TextBlock Styles  -->
-			<Style
-		x:Key="ListItemStyle"
-		BasedOn="{StaticResource BodyTextBlockStyle}"
-		TargetType="TextBlock">
-				<Setter Property="LineStackingStrategy" Value="MaxHeight" />
-
-			</Style>
+	
 
 
 
 
 
 			<Style	x:Key="ButtonTextStyle"	TargetType="TextBlock" BasedOn="{StaticResource TextBlockCondensed}">
-				<Setter Property="Foreground" Value="#FF8040FF" />
+				<Setter Property="Foreground" Value="#FF6020FF" />
 			</Style>
 			<Style
 		x:Key="CellTextStyle"

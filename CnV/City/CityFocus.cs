@@ -36,12 +36,13 @@ public static partial class CityUI
 			AppS.QueueOnUIThread(UpdateFocusText);
 		}
 		if(clickMods.HasFlag(ClickModifiers.bringIntoWorldView) && !clickMods.IsShiftOrControl()) {
-			cid.BringCidIntoWorldView(clickMods.HasFlag(ClickModifiers.bringIntoWorldViewLazy),clickMods.IsRight());
-			if(clickMods.IsRight()) {
-				if( cid != City.build && CanVisit(cid) ) {
-					cid.AsCity().Visit();
-				}
-			}
+			var lazy = clickMods.HasFlag(ClickModifiers.bringIntoWorldViewLazy);
+			cid.BringCidIntoWorldView(lazy,clickMods.IsRight() );
+			//if(clickMods.IsRight()) {
+			//	if( cid != City.build && CanVisit(cid) ) {
+			//		cid.AsCity().Visit();
+			//	}
+			//}
 		}
 		SpotTab.AddToGrid(spot);
 		

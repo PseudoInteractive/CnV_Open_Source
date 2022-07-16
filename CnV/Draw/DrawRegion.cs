@@ -1713,7 +1713,7 @@ internal partial class GameClient
 			//}
 			var _debugTip = ToolTips.debugTip;
 			if(_debugTip != null) {
-				ToolTips.debugTip=null;
+//				ToolTips.debugTip=null;
 				var alpha = 255;
 				System.Numerics.Vector2 c = new Vector2(clientSpan.X/2,clientSpan.Y -16).ScreenToWorld();
 				DrawTextBox(_debugTip,c,tipTextFormatCenteredBottom,Color.White.Scale(alpha),(byte)(alpha * 192.0f).RoundToInt(),Layer.overlay2d,4,4,0,scale: baseFontScale);

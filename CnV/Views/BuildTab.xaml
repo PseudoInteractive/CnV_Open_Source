@@ -159,7 +159,7 @@
 				<sf:GridNumericColumn ValueBinding="{Binding constructionSpeed, Mode=OneWay}"
 											HeaderText="cs"
 											Width="64"
-									  UseBindingValue="True"
+									  UseBindingValue="False"
 												TextAlignment="Right"
 											DisplayNumberFormat="N0"
 									  AllowResizing="False"

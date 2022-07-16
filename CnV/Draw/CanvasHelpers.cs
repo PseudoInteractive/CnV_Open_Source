@@ -217,10 +217,13 @@ using static GameClient;
 	//	return s* pixelScale + AGame.projectionC;
 	//}
 
-	//public static Vector2 WorldToScreen(this Vector2 s)
-	//{
-	//	return CameraToScreen(WorldToCamera(s));
-	//}
+	public static Vector2 WorldToScreenSpan(this Vector2 s)
+	{
+		return s*pixelScale;
+	}
+	public static float WorldToScreenSpan(this float s) {
+		return s*pixelScale;
+	}
 	//public static Vector3 WorldToCamera(this Vector3 s)
 	//{
 	//	return s - viewW;

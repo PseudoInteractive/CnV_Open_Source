@@ -113,16 +113,16 @@ namespace CnV
 		}
 		public static BuildingMRU[] buildingMru = new BuildingMRU[maxMRUSize];
 
-		static readonly BuildMenuItem amSelect = new BuildMenuItem("Modify", CityBuildAction.none, "City/decal_select_building.png", "Left click opens a menu");
-		static readonly BuildMenuItem amMove = new BuildMenuItem("Move", CityBuildAction.moveStart, "City/decal_move_building.png", "In this mode you first click a building, then click empty space, then click the next buildin to move, etc.");
-		static readonly BuildMenuItem amDemo = new BuildMenuItem("Demo", CityBuildAction.destroy, "City/decal_building_invalid.png", "Destroy anything you click");
-		static readonly BuildMenuItem amLayout = new BuildMenuItem("Smart", CityBuildAction.layout, "City/decal_building_valid_multi.png", "Smart build based on city layouts");
+		static readonly BuildMenuItem amSelect = new BuildMenuItem("Modify", CityBuildAction.none, "decal_select_building.png", "Left click opens a menu");
+		static readonly BuildMenuItem amMove = new BuildMenuItem("Move", CityBuildAction.moveStart, "decal_move_building.png", "In this mode you first click a building, then click empty space, then click the next buildin to move, etc.");
+		static readonly BuildMenuItem amDemo = new BuildMenuItem("Demo", CityBuildAction.destroy, "decal_building_invalid.png", "Destroy anything you click");
+		static readonly BuildMenuItem amLayout = new BuildMenuItem("Smart", CityBuildAction.layout, "decal_building_valid_multi.png", "Smart build based on city layouts");
 		static readonly BuildMenuItem amNone = new BuildMenuItem();
-		static readonly BuildMenuItem amUpgrade = new BuildMenuItem("Upgrade", CityBuildAction.upgrade, "City/decal_building_valid.png", "Upgrade buildings");
-		static readonly BuildMenuItem amBuild = new BuildMenuItem("Build", CityBuildAction.upgrade, "City/decal_building_valid.png", "Build this");
-		static readonly BuildMenuItem amDowngrade = new BuildMenuItem("Downgrade", CityBuildAction.downgrade, "City/decal_building_invalid.png", "Downgrade buildings");
-		static readonly BuildMenuItem amFlipLayoutH = new BuildMenuItem("Flip H", CityBuildAction.flipLayoutH, "City/build_details_gloss_overlay.png", "Flip Layout Horizontally");
-		static readonly BuildMenuItem amFlipLayoutV = new BuildMenuItem("Flip V", CityBuildAction.flipLayoutV, "City/build_details_gloss_overlay.png", "Flip Layout Vertically");
+		static readonly BuildMenuItem amUpgrade = new BuildMenuItem("Upgrade", CityBuildAction.upgrade, "decal_building_valid.png", "Upgrade buildings");
+		static readonly BuildMenuItem amBuild = new BuildMenuItem("Build", CityBuildAction.upgrade, "decal_building_valid.png", "Build this");
+		static readonly BuildMenuItem amDowngrade = new BuildMenuItem("Downgrade", CityBuildAction.downgrade, "decal_building_invalid.png", "Downgrade buildings");
+		static readonly BuildMenuItem amFlipLayoutH = new BuildMenuItem("Flip H", CityBuildAction.flipLayoutH, "build_details_gloss_overlay.png", "Flip Layout Horizontally");
+		static readonly BuildMenuItem amFlipLayoutV = new BuildMenuItem("Flip V", CityBuildAction.flipLayoutV, "build_details_gloss_overlay.png", "Flip Layout Vertically");
 
 
 
@@ -387,6 +387,7 @@ namespace CnV
 
 			Style s = new Microsoft.UI.Xaml.Style { TargetType = typeof(Microsoft.UI.Xaml.Controls.FlyoutPresenter) };
 			s.Setters.Add(new Setter(MinHeightProperty, "300"));
+			s.Setters.Add(new Setter(Microsoft.UI.Xaml.Controls.FlyoutPresenter.IsDefaultShadowEnabledProperty,"False"));
 			s.Setters.Add(new Setter(MinWidthProperty, "400"));
 			s.Setters.Add(new Setter(MaxWidthProperty, "800"));
 			s.Setters.Add(new Setter(MaxHeightProperty, Settings.canvasHeight.ToString() ));

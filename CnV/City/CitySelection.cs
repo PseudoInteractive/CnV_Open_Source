@@ -32,7 +32,7 @@ public static partial class CityUI
 					{
 						if(!mod.IsShift())
 						{
-							selected = new HashSet<int>(sel.Where(a => a != cid));
+							selected = (sel.Where(a => a != cid)).ToImmutableHashSet();
 							//		sel0.Remove(this);
 							//		sel1.Remove(this);
 
@@ -44,8 +44,7 @@ public static partial class CityUI
 					}
 					else
 					{
-						var newSel = new HashSet<int>(sel);
-						newSel.Add(cid);
+						var newSel = sel.Add(cid);
 						selected = newSel;
 
 						//sel0.Add(this);
@@ -66,7 +65,7 @@ public static partial class CityUI
 					}
 					else
 					{
-						selected = new HashSet<int>(new[] { cid });
+						selected = ImmutableHashSet<int>.Empty.Add( cid );
 
 						///sel0.Clear();
 						//sel0.Add(this);

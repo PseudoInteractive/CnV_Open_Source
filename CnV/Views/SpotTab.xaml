@@ -60,10 +60,10 @@
                                         Width="32" />
                 <sf:GridTextColumn ValueBinding="{Binding nameAndRemarks, Mode=OneWay}"
 								   HeaderText="Name"
-                                     UseBindingValue="True"
+                                     UseBindingValue="False"
                                        />
                 <sf:GridHyperlinkColumn MappingName="xy"
-										UseBindingValue="True"
+										UseBindingValue="False"
 										AllowResizing="False"
 									ColumnWidthMode="None"
 										Width="60"
@@ -77,7 +77,7 @@
 
                 <sf:GridNumericColumn MappingName="cont"
                                        TextAlignment="Center"
-									  UseBindingValue="True"
+									  UseBindingValue="False"
                                        Width="48"
 									  AllowResizing="False"
 									ColumnWidthMode="None"

@@ -187,7 +187,7 @@
 				<CheckBox  Content="Popups Visible" IsThreeState="True" IsChecked="{x:Bind cnv:Settings.popupsVisible, Mode=TwoWay}" 
 							   Margin="4"
 						     ToolTipService.ToolTip="If off, popups are hidden"   />
-				<CheckBox  Content="Menu Shadows" IsThreeState="True" IsChecked="{x:Bind cnv:Settings.menuShadows, Mode=TwoWay}" 
+				<CheckBox  Content="Menu Shadows" IsThreeState="True" IsChecked="{x:Bind cnv:Settings.UIShadows, Mode=TwoWay}" 
 							   Margin="4"
 						     ToolTipService.ToolTip="Uses shadows to make menus more visible"   />
 				

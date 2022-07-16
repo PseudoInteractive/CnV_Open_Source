@@ -60,14 +60,7 @@
 					<Color x:Key="RegionColor">#FF153A35</Color>
 					<SolidColorBrush x:Key="RegionBrush" Color="{StaticResource RegionColor}" />
 
-					<x:Double x:Key="AppBarExpandButtonThemeHeight">34</x:Double>
-					<x:Double x:Key="AppBarExpandButtonThemeWidth">58</x:Double>
-					<x:Double x:Key="AppBarThemeMinHeight">76</x:Double>
-					<x:Double x:Key="AppBarThemeMinimalHeight">34</x:Double>
-					<x:Double x:Key="AppBarThemeCompactHeight">40</x:Double>
-					<x:Double x:Key="AppBarExpandButtonCircleDiameter">8</x:Double>
-					<x:Double x:Key="NavigationViewTopPaneHeight">10</x:Double>
-					<x:Double x:Key="MenuBarHeight">10</x:Double>
+					
 
 				</ResourceDictionary>
 				<ColorPaletteResources  Accent="#BB7A57D6" 

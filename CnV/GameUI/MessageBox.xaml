@@ -25,7 +25,7 @@ IsTabStop="True"
 			   Stretch="None" Margin="4,8,4,8" />
 		<Border Grid.Row="1"  
 				Background="#6000" Visibility="{x:Bind message.Visibility,Mode=OneWay}"
-				BorderBrush="{StaticResource SystemControlHighlightAccentRevealBorderBrush}" BorderThickness="1" Padding="8" Margin="0,0,24,0" HorizontalAlignment="Right" VerticalAlignment="Center">
+				BorderBrush="{StaticResource ButtonBorderThemeBrush}" BorderThickness="1" Padding="8" Margin="0,0,24,0" HorizontalAlignment="Right" VerticalAlignment="Center">
 
 			<tk:MarkdownTextBlock LinkClicked="{x:Bind cnv:Note.MarkDownLinkClicked}" x:Name="message"   x:FieldModifier="internal" TextWrapping="Wrap" Background="{x:Null}" />
 		</Border>

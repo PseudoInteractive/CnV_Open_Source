@@ -11,29 +11,48 @@ partial class City
 	public static ACommandCategory ACatDefense = new(nameof(ACatDefense),"Defense","zirconia","tbd",ACatCity);
 	public static ACommandCategory ACatTrade = new(nameof(ACatTrade),"Trade","zirconia","tbd",ACatCity);
 	public static ACommandCategory ACatSettings = new(nameof(ACatSettings),"Settings","zirconia","tbd",ACatCity);
-
+	  
 
 	internal bool CanVisitUI { get {
 			return !isBuild && CanVisit(cid);
 
 		} }
 	[ACommand("city","zirconia","Visit city")]
-	public async void Visit() 
-		{
+	public async Task<bool?> Visit() 
+	{
+		if(!CanVisit(cid)) {
+			CityUI.ProcessClick(cid,AppS.keyModifiers.ClickMods()| ClickModifiers.bringIntoWorldView|ClickModifiers.scrollIntoUiView|ClickModifiers.noFlyout); ;
+			return true;
+		}
+
 		if(isBuild) {
-			ProcessCoordClick(cid,AppS.keyModifiers.ClickMods() | ClickModifiers.noFlyout);
+			await ProcessCoordClick(cid,AppS.keyModifiers.ClickMods() | ClickModifiers.noFlyout);
 		}
 		else {
 			if(Player.IsSubOrMe(cid.CidToPid()) || (await AppS.DoYesNoBox("Sub",$"Switch to sub {cid.AsCity().player.name}?")==1)) {
-				await CnVClient.CitySwitch(cid); // keep current view, switch to city
+				return await CnVClient.CitySwitch(cid); // keep current view, switch to city
 												 //	View.SetViewMode(ShellPage.viewMode.GetNextUnowned());// toggle between city/region view
 			}
 		}
+		return false;
 	}
 
 
 
 	[ACommand("settings","mana","Set trade settings")]
-	public void TradeSettings() { TradeSettingsDialog.ShowInstance(this); }
+	public Task<bool?> TradeSettings() 
+	{
+		TradeSettingsDialog.ShowInstance(this);
+		return AUtil.completedTaskTrueN;
+	}
+
+	[ACommand("city","mana","Toggle sected")]
+	public Task<bool?> Select(bool ? prior) {
+		if(prior is null)
+			return AUtil.TaskResult(  (bool?)false );
+		isSelected = prior.Value;
+		SpotTab.QueueSyncSelectionToUI();
+		return AUtil.completedTaskFalseN;
+	}
 
 }

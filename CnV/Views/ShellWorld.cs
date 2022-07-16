@@ -44,6 +44,7 @@ namespace CnV.Views
 
 	public partial class ShellPage
 	{
+		static bool hasCapture;
 
 		public static Vector2 mousePosition;
 		//public static Vector2 mousePositionC; // in camera space
@@ -400,6 +401,8 @@ namespace CnV.Views
 
 		private static void Canvas_PointerEntered(Windows.Foundation.Point args)
 		{
+//			if(!hasCapture)
+//				args.cap
 			//	Assert(mouseOverCanvas== false);
 			//	Note.Show($"Pointer entered {mouseOverCanvas}");
 			if(!mouseOverCanvas)

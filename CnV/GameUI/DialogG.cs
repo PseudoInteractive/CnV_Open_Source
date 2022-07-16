@@ -21,7 +21,6 @@ namespace CnV
 		protected virtual string title => "Title";
 		internal virtual bool closeOnCitySwitch => true;
 
-		static AttachedCardShadow shadow;
 
 	//		<ui:Effects.Shadow>
 	//	<tkmedia:AttachedCardShadow CornerRadius="0"
@@ -37,6 +36,8 @@ namespace CnV
 		get { return(UIElementCollection) GetValue(TitleGridProperty);}
 		set { SetValue(TitleGridProperty,value); }
 	}
+
+		
 
 		public static readonly DependencyProperty TitleGridProperty = DependencyProperty.Register(
 		"TitleGrid",
@@ -69,7 +70,7 @@ namespace CnV
 			HorizontalAlignment= HorizontalAlignment.Stretch;
 			Background = brush;
 			//var shadow = App.instance.Resources["Shadow8"] as AttachedDropShadow;
-			//Effects.SetShadow(this,shadow);
+
 			MaxHeight = Settings.canvasHeight;
 			var grid = new Grid() {Padding=new(),Margin=new()  };
 			
@@ -93,23 +94,28 @@ namespace CnV
 				HorizontalAlignment=HorizontalAlignment.Right,Width=40,
 				
 				Style = (Style)App.instance.Resources["ButtonMedium"],Margin=new(16,0,8,0),Padding=new(4,0,4,0) };
+			
 			closeButton.Click += Cancel;
+
 			var headerB = new Button() { 
 				HorizontalAlignment=HorizontalAlignment.Stretch,
 				HorizontalContentAlignment=HorizontalAlignment.Stretch,
 				VerticalContentAlignment=VerticalAlignment.Stretch,CornerRadius=new(2),Margin=new(),Padding=new(),
 				Background=AppS.Brush(0xff000000u) };
 			headerB.Content = grid;
+			
 			Grid.SetColumn(closeButton,2);
 			
 			grid.Children.Add(closeButton);
-		//	IsTabStop=true;
-		//	TabFocusNavigation = KeyboardNavigationMode.Cycle;
+
+			//	IsTabStop=true;
+			//	TabFocusNavigation = KeyboardNavigationMode.Cycle;
 			base.Header =headerB;
 			//grid.IsTapEnabled=true;
 			//grid.Tapped +=Grid_Tapped;
+
 			
-			
+
 		//	Canvas.SetZIndex(this,101);
 			Canvas.SetLeft(this,260);
 		//	this.ManipulationDelta+=this.OnManipulationDelta;
@@ -121,18 +127,21 @@ namespace CnV
 
 				all.Add(this);
 			}
-			SetupShadow(this);
+			this.SetupShadow();
+			//this.AddHandler(PointerPressedEvent,(object sender,PointerRoutedEventArgs e) => {
+			//	lock(all) {
+			//		if(!all.Contains(this))
+			//			return; // closing?
+			//	}
+			//	var id = ShellPage.gameUIFrame.Children.IndexOf(this);
+			//	if(id > 0) {
+			//		ShellPage.gameUIFrame.Children.Move((uint)id,0); // move to front
+			//	}
+			//}
+
+			// ,true);
 
 		}
-		internal static void SetupShadow(FrameworkElement me) {
-			if(Settings.menuShadows != false) {
-				if(shadow is null)
-					shadow = new AttachedCardShadow() { Offset="4,4",BlurRadius=6.0f, Color=Microsoft.UI.ColorHelper.FromArgb(255,16,0,48) };
-				Effects.SetShadow(me,shadow);
-			}
-
-		}
-
 
 		
 		protected void FilterNaNs(NumberBox sender,NumberBoxValueChangedEventArgs args)
@@ -180,11 +189,7 @@ namespace CnV
 			try
 			{
 				// Might have changed on the fly
-				if(Settings.menuShadows == false && shadow is not null) {
-					shadow.Opacity = 0;
-					shadow = null;
-
-					}
+			
 
 				var was = Hide(false);
 
