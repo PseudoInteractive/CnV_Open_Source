@@ -411,16 +411,9 @@ namespace CnV
 		//		i.Abort();
 		//	return xx;
 		//}
-		public static  Task<bool> CitySwitch(int cid,bool lazyMove=false,bool select = false,bool scrollIntoUI = true,bool isLocked = false,bool waitOnChange = false) {
-			ClickModifiers mod = ClickModifiers.bringIntoWorldView;
-			if(lazyMove) {
-				mod |= ClickModifiers.bringIntoWorldViewLazy;
-			}
-			if(scrollIntoUI)
-				mod |= ClickModifiers.scrollIntoUiView;
-			if(select) {
-				mod |= ClickModifiers.select;
-			}
+		public static  Task<bool> CitySwitch(int cid,bool bringIntoWorldView=false,bool select = false,bool scrollIntoUI = true,bool isLocked = false,bool waitOnChange = false) {
+			ClickModifiers mod = AppS.keyModifiers.ClickMods(autoSelect:select,bringIntoView:bringIntoWorldView,scrollIntoUi:scrollIntoUI );
+		
 			return CitySwitch(cid,mod,isLocked,waitOnChange);
 		}
 		public static async Task<bool> CitySwitch(int cid,ClickModifiers clickMods , bool isLocked = false, bool waitOnChange = false)
@@ -434,7 +427,7 @@ namespace CnV
 					// Is it locked?
 					if(!Spot.CanChangeCity(cid))
 					{
-						View.EnsureNotCityView(cid);
+						View.EnsureNotCityView();
 						Note.Show("Please wait for current operation to complete");
 						return false;
 					}
@@ -495,7 +488,7 @@ namespace CnV
 
 
 						}
-						CityUI.ProcessClick(cid,AppS.keyModifiers.ClickMods()| ClickModifiers.bringIntoWorldView|ClickModifiers.scrollIntoUiView|ClickModifiers.noFlyout);;
+						CityUI.ProcessClick(cid,(clickMods | ClickModifiers.bringIntoWorldViewCenter | ClickModifiers.bringIntoWorldView|ClickModifiers.noFlyout|ClickModifiers.setFocus)&(~ClickModifiers.autoToggleView));;
 						CityUI.SyncCityBox();
 
 						if(changed)

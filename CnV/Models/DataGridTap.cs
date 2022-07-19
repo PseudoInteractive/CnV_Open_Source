@@ -62,7 +62,7 @@ namespace CnV;
 						{
 							case nameof(BossReport.bossC):
 						
-								Spot.ProcessCoordClick(br.bossC,  AppS.keyModifiers.ClickMods());
+								Spot.ProcessCoordClick(br.bossC,  AppS.keyModifiers.ClickMods(isRight: true));
 								break;
 							case nameof(BossReport.city):
 								Spot.ProcessCoordClick(br.cityC, AppS.keyModifiers.ClickMods() );

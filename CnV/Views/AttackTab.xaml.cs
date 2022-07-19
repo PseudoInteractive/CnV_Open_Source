@@ -1455,7 +1455,7 @@ namespace CnV.Views
 
 									foreach (var fake in fakesC)
 									{
-										var d = (c.span + fake.cid.ToWorldC()).radius2 - r0;
+										var d = (c.span | fake.cid.ToWorldC()).radius2 - r0;
 										if (d < bestDist)
 										{
 											bestDist = d;
@@ -1469,7 +1469,7 @@ namespace CnV.Views
 								break;
 							bestCluster.fakes.Add(best);
 							best.attackCluster = bestCluster.id;
-							bestCluster.span += best.cid.ToWorldC();
+							bestCluster.span |= best.cid.ToWorldC();
 
 						}
 						// optimize
@@ -1558,8 +1558,8 @@ namespace CnV.Views
 											var span1b = AttackPlanHelper.UnionWithout(cluster1.targets, f1);
 											Assert(f1.attackType.GetCategory() == cluster1.category);
 
-											var span0c = span0b + f1.cid.ToWorldC();
-											var span1c = span1b + f0.cid.ToWorldC();
+											var span0c = span0b | f1.cid.ToWorldC();
+											var span1c = span1b | f0.cid.ToWorldC();
 											// L4 distance
 											var scoreA = span0a.radius2 + span1a.radius2;
 											var scoreC = span0c.radius2 + span1c.radius2;

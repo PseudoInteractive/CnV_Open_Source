@@ -9,10 +9,11 @@
 	
 	Background="{x:Null}"
 	Padding="0"
+	IsTabStop="False"
     mc:Ignorable="d"
-Width="130"
+	IsHitTestVisible="False"
 	>
-	<Grid  Margin="0" Padding="0">
+	<Grid  Margin="0" Padding="0" IsHitTestVisible="False" IsTabStop="False"  >
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="*" />
 		</Grid.ColumnDefinitions>

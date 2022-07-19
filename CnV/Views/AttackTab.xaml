@@ -395,17 +395,11 @@
 
 		<tk:GridSplitter Grid.Row="2"
                          ResizeDirection="Rows"
-                         Height="11"
-                         Background="Transparent"
 						 			
-				GripperCursor="SizeNorthSouth"
                          HorizontalAlignment="Stretch"
                          VerticalAlignment="Top"
                        >
-		<tk:GridSplitter.Element>
-				<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}"
-                          Glyph="&#xE76F;" />
-			</tk:GridSplitter.Element>
+		
 		</tk:GridSplitter>
 		<Grid Grid.Row="2">
 			<Grid.RowDefinitions>

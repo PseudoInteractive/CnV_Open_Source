@@ -24,6 +24,7 @@ using Microsoft.UI.Xaml.Input;
 
 using System.Numerics;
 	using Microsoft.UI.Composition.Interactions;
+using Windows.Foundation;
 
 partial class ShellPage
 {
@@ -33,7 +34,8 @@ partial class ShellPage
 	public static void SetupNonCoreInput()
 	{
 		canvas.ManipulationMode = ManipulationModes.None;
-		canvas.PointerPressed += (object sender, PointerRoutedEventArgs e)=> canvas.CapturePointer(e.Pointer);
+		canvas.AllowFocusOnInteraction = true;
+	//	canvas.PointerPressed += (object sender, PointerRoutedEventArgs e)=> canvas.CapturePointer(e.Pointer);
 		//Canvas_PointerWheelChanged(mouseState, priorMouseState);
 		//	canvas.ManipulationMode= ManipulationModes.None;
 		SetupCoreInput();
@@ -56,6 +58,29 @@ partial class ShellPage
 
 	internal static DispatcherQueueController inputQueueController;
 	static GestureRecognizer recognizer;
+	public record struct PointData(
+	 Point point,
+		 bool bLeft,
+		 bool bRight,
+		 bool bMiddle,
+		 bool bPrimary)
+	{ } // this should always be true
+	
+	const int maxPointDatas = 1024*4;
+	static Dictionary<uint,SortedList<ulong,PointData>> points = new();
+	// Not thread safe
+	static void RegisterPointerUpdates(PointerEventArgs args) {
+		foreach(var a in args.GetIntermediatePoints()) {
+			var pointerId = a.PointerId;
+			var q = points.GetOrAdd(pointerId,(key) => new());
+			Assert(q.ContainsKey(a.Timestamp) == false);
+			q.TryAdd(a.Timestamp,new PointData(point: a.Position,bLeft: a.Properties.IsLeftButtonPressed,bRight: a.Properties.IsRightButtonPressed,bMiddle: a.Properties.IsMiddleButtonPressed,bPrimary: a.Properties.IsPrimary));
+
+
+		}
+
+
+	}
 	public static void SetupCoreInput()
 	{
 	//	MouseWheelParameters
@@ -71,7 +96,7 @@ partial class ShellPage
 						);
 					recognizer = new()
 					{
-						GestureSettings= GestureSettings.Tap|GestureSettings.RightTap|GestureSettings.Drag|GestureSettings.ManipulationScale|
+						GestureSettings= GestureSettings.Tap|GestureSettings.ManipulationScale|GestureSettings.RightTap|GestureSettings.DoubleTap|
 					GestureSettings.ManipulationTranslateX|GestureSettings.ManipulationTranslateY
 					|GestureSettings.ManipulationMultipleFingerPanning
 				//|GestureSettings.Hold
@@ -97,10 +122,10 @@ partial class ShellPage
 					recognizer.ManipulationCompleted+=Recognizer_ManipulationCompleted;
 					recognizer.ManipulationInertiaStarting+=Recognizer_ManipulationInertiaStarting;
 					recognizer.ManipulationStarted+=Recognizer_ManipulationStarted;
+					recognizer.ManipulationUpdated+=Recognizer_ManipulationUpdated;
+
 					recognizer.Dragging +=Recognizer_Dragging;
 					recognizer.CrossSliding +=Recognizer_CrossSliding;
-			
-					recognizer.ManipulationUpdated+=Recognizer_ManipulationUpdated;
 					recognizer.Tapped+=Recognizer_Tapped;
 					recognizer.RightTapped+=Recognizer_RightTapped;
 					recognizer.Holding+=Recognizer_Holding;
@@ -172,7 +197,7 @@ partial class ShellPage
 			{
 				var spot = Spot.GetOrAdd(wc.cid);
 			//	if(AppS.IsKeyPressedShiftOrControl())
-					spot.SetFocus(AppS.keyModifiers.ClickMods()|ClickModifiers.isRightTap );
+					spot.SetFocus(AppS.keyModifiers.ClickMods(isRight:true,scrollIntoUi:true,center:false,setFocus:true) );
 		//		var position = args.Position;
 		//		AppS.DispatchOnUIThread(action: () =>
 		//			 spot.ShowContextMenu(position));
@@ -184,7 +209,10 @@ partial class ShellPage
 	private static void Recognizer_Tapped(GestureRecognizer sender,TappedEventArgs args)
 	{
 		Format(sender,args);
-
+		
+		if(args.TapCount > 1) {
+			Note.Show(JSON.ToJson(args));
+		}
 		UpdateMousePosition(args.Position);
 		(var wc, var bc) = ToWorldAndCityC(mousePositionW);
 
@@ -199,7 +227,7 @@ partial class ShellPage
 			if(!wc.isNan)
 			{
 				// check to see if it needs to go to the webview
-				Spot.ProcessCoordClick(wc.cid,AppS.keyModifiers.ClickMods(scrollIntoUi:true,lazy:true)); ;
+				Spot.ProcessCoordClick(wc.cid,AppS.keyModifiers.ClickMods(scrollIntoUi:true)); ;
 			}
 			//e.Handled = true;
 		}
@@ -213,6 +241,7 @@ partial class ShellPage
 		{
 			dr *= 1.0f.ScreenToWorld();
 		//	View.SetViewTargetInstant(View.viewW2 - dr);
+		// no longer handled here
 		}
 		var scale = args.Cumulative.Scale;
 		//if(scale != 1.0f)
@@ -237,17 +266,17 @@ partial class ShellPage
 	}// Note.Show("Inertia");
 	private static void Recognizer_ManipulationCompleted(GestureRecognizer sender,ManipulationCompletedEventArgs args) 
 	{
-		Format(sender,args);
-		var dv = args.Velocities.Linear;
-		var dr = new Vector2(dv._x,dv._y);
-		var speed = dr.Length();
-		//Note.Show($"Speed: {speed}");
-		if(speed  >  0.5f  )
-		{
-			View.isCoasting =true;
-		//	var gain = -View.panV1*View.viewW.Z / speed;
-			View.viewVW= new(-1000*dr.ScreenToWorldOffset(),0.0f);
-		}
+		//Format(sender,args);
+		//var dv = args.Velocities.Linear;
+		//var dr = new Vector2(dv._x,dv._y);
+		//var speed = dr.Length();
+		////Note.Show($"Speed: {speed}");
+		//if(speed  >  0.5f  )
+		//{
+		//	View.isCoasting =true;
+		////	var gain = -View.panV1*View.viewW.Z / speed;
+		//	View.viewVW= new(-1000*dr.ScreenToWorldOffset(),0.0f);
+		//}
 	}
 
 	static bool Format(PointerEventArgs args, string _s) {
@@ -262,7 +291,7 @@ partial class ShellPage
 	static bool Format<T>(GestureRecognizer g, T args) {
 		var s = new PooledStringBuilder();
 
-		Note.Show( s.AppendLine(typeof(T).ToString()).AppendLine(JSON.ToJson(args)).ToString() );
+	//	Note.Show( s.AppendLine(typeof(T).ToString()).AppendLine(JSON.ToJson(args)).ToString() );
 
 		return true;
 	}
@@ -391,7 +420,7 @@ partial class ShellPage
 		//	View.viewVW= new(-scroll*dr.ScreenToWorldOffset(),0.0f);
 			if(dr.LengthSquared() > 0) {
 				dr *= 1.0f.ScreenToWorld();
-				View.SetViewTarget(View.viewW2 - dr);
+				View.SetViewTarget(View.viewTargetW2 - dr);
 			}	
 		}
 		//else

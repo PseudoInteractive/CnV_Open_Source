@@ -61,8 +61,6 @@ namespace CnV
 
 
 
-		//static List<QuickBuildItem> items;
-		internal static bool menuOpen;
 
 		// build menu cache
 		public const int buildMenuRootItems = 8;
@@ -367,10 +365,10 @@ namespace CnV
 			
 			if(buildFlyout == null)
 			{
-				Assert(menuOpen==false);
+				Assert(isOpen == false);
 				return;
 			}
-			menuOpen = false;
+			isOpen=false;
 			buildFlyout.Hide();
 		}
 		public static CityBuild Initialize()
@@ -452,7 +450,8 @@ namespace CnV
 		{
 			try
 			{
-				menuOpen = false;
+				Assert(isOpen);
+				isOpen=false;
 				buildFlyout.Content=null;
 
 				await Task.Delay(50);
@@ -791,6 +790,7 @@ namespace CnV
 
 
 		public static (int x, int y) int00 = (0, 0);
+		internal static bool isOpen;
 
 		private static async Task RemoveCastleFromLayout(City city)
 		{
@@ -829,7 +829,7 @@ namespace CnV
 		public static async void Click(BuildC cc, bool isRight)
 		{
 			// clicked on region view with flyout was open
-			if(CityBuild.menuOpen)
+			if(isOpen)
 			{
 				AppS.DispatchOnUIThreadHigh( CloseFlyout );
 				return;
@@ -905,6 +905,7 @@ namespace CnV
 		//static bool contextMenuResultSelected = false;
 		public static void ShowContextMenu(City city, BuildC cc, bool isRight)
 		{
+			Assert(isOpen == false);
 			isSingleClickAction = false; // default
 										 // toggle visibility
 
@@ -956,7 +957,7 @@ namespace CnV
 			//		ShellPage.instance.buildMenuCanvas.Visibility = Visibility.Visible;
 			//bm.ContentMenuBackgroundStyle = new Style( typeof(Rectangle) ) {  (Style)Application.Current.Resources[isRight? "ContentMenuStyle" : "ContentMenu2Style"];
 			instance.gridView.Background =  AppS.Brush(isRight ? Color.FromArgb(0xFF, 0x20, 0x05, 0x30) : Color.FromArgb(0xFF, 0x30, 0x05, 0x05));
-			menuOpen =true;
+			isOpen = true;
 			buildFlyout.Content = instance;
 			buildFlyout.ShowAt(ShellPage.instance.grid, new FlyoutShowOptions() { Position = new Windows.Foundation.Point(sc.X, sc.Y), Placement = FlyoutPlacementMode.Auto, ShowMode=FlyoutShowMode.Standard });
 

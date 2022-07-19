@@ -143,19 +143,13 @@
         </sf:SfDataGrid>
         <tk:GridSplitter
                     Grid.Row="2"
-                    Background="transparent"
+                   
 									 				IsTabStop="True"
-				CursorBehavior="ChangeOnSplitterHover"
-				GripperCursor="SizeNorthSouth"
-                        VerticalAlignment="Top"
+			            VerticalAlignment="Top"
                     Canvas.ZIndex="22"
-                        Height="11"
                         HorizontalAlignment="Stretch"
                     >
-            <tk:GridSplitter.Element>
-                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE76F;"
-                 />
-            </tk:GridSplitter.Element>
+           
         </tk:GridSplitter>
     </Grid>
 </local:UserTab>

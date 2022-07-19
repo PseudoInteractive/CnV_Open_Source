@@ -28,7 +28,14 @@ using System.Numerics;
 partial class ShellPage
 	{
 	static Vector2 lastMovePosition;
-		private static void Canvas_PointerMoved((Windows.Foundation.Point Position, uint PointerId,
+
+	internal static void ViewChanged() {
+		QueueOnPropertyChanged(nameof(viewZ));
+		//QueueOnPropertyChanged(nameof(viewX));
+		//QueueOnPropertyChanged(nameof(viewY));
+	}
+
+	private static void Canvas_PointerMoved((Windows.Foundation.Point Position, uint PointerId,
 																			bool IsInContact, ulong Timestamp, PointerUpdateKind PointerUpdateKind, bool isPrimary) point)
 		{
 		if(!point.isPrimary)
@@ -49,7 +56,7 @@ partial class ShellPage
 			//dr.X *= -1;
 			var lg = dr.Length();
 			if(lg < 128f) {
-				View.SetViewTargetInstant(View.viewW2 + dr);
+				View.SetViewTarget(View.viewW2 + dr,true);
 			}
 		}
 		lastMovePosition = mousePosition;

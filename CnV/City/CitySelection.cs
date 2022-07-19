@@ -23,60 +23,38 @@ public static partial class CityUI
 				//var grid = GetGrid();
 				//var sel1 = grid.SelectedItems;
 				var cid = me.cid;
-				var sel = selected;
-				var present = sel.Contains(cid);
-				var wantUISync = false;
-				if(mod.IsShift() || mod.IsControl() )
-				{
-					if(present)
-					{
-						if(!mod.IsShift())
-						{
-							selected = (sel.Where(a => a != cid)).ToImmutableHashSet();
-							//		sel0.Remove(this);
-							//		sel1.Remove(this);
-
-						}
-						else
-						{
-							//	wantUISync = true;
-						}
-					}
-					else
-					{
-						var newSel = sel.Add(cid);
-						selected = newSel;
-
-						//sel0.Add(this);
-						//	sel1.Add(this);
-						wantUISync = true;
-
-					}
-					//                 SpotTab.SelectedToGrid();
+				
+				var present = selected.Contains(cid);
+				if(mod.IsShift()) {
+					if(!present)
+						selected = selected.Add(cid);
 				}
 
-				else
-				{
-					wantUISync = true;
-					// clear selection and select this
-					if(present && selected.Count == 1)
-					{
-						/// nothing
+				else if(mod.IsControl()) {
+					
+						selected = ImmutableHashSet<int>.Empty.Add(cid);
 					}
-					else
-					{
-						selected = ImmutableHashSet<int>.Empty.Add( cid );
 
-						///sel0.Clear();
-						//sel0.Add(this);
+					else {
+					// toggle
+						// clear selection and select this
+						if(present) {
+							/// nothing
+							selected = selected.Remove(cid);
+						}
+						else {
+							selected = selected.Add(cid);
 
-						//sel1.Clear();
-						//sel1.Add(this);
+							///sel0.Clear();
+							//sel0.Add(this);
+
+							//sel1.Clear();
+							//sel1.Add(this);
+						}
+						//                   SpotTab.SelectOne(this);
 					}
-					//                   SpotTab.SelectOne(this);
+					SpotTab.SyncSelectionToUI();
 				}
-				SpotTab.SyncSelectionToUI();
-			}
 			catch(Exception e)
 			{
 				LogEx(e);

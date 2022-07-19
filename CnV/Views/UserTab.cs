@@ -85,7 +85,7 @@ public partial class UserTab:Page, IANotifyPropertyChanged {
 	}
 	public void SelectAllWorkAround(xDataGrid grid)
 	{
-		grid.SelectAll();
+		grid.SelectAll(false);
 		SpotSelectionChanged(grid,null);
 	}
 
@@ -447,7 +447,7 @@ public partial class UserTab:Page, IANotifyPropertyChanged {
 					if(info.Record is City city)
 					{
 						e.Handled = true;
-						CityUI.ProcessClick(city.cid,AppS.keyModifiers.ClickMods()| ClickModifiers.bringIntoWorldView|ClickModifiers.scrollIntoUiView|ClickModifiers.noFlyout);
+						CityUI.ProcessClick(city.cid,AppS.keyModifiers.ClickMods(isRight:true,bringIntoView:true,noFlyout:true,setFocus:true));
 				//		Assert(false);
 	//					city.AddToFlyout(flyout);
 

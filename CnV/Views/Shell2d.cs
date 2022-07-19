@@ -432,51 +432,36 @@ namespace CnV.Views
 		{
 		//	Log($"DoKeyDown {key}");
 			AppS.UpdateKeyStates();
-			if(AppS.IsKeyPressedShiftOrControl())
-				return false;
-			if(!buildKeys.Contains(key))
-			{
-//				Log("Not a build Key " + key);
-				return false;
-			}
 			if(!Sim.isInteractive)
 				return false;
-			if(!mouseOverCanvas)
-			{
-			//	Note.Show("Not over canvas");
+			if(!mouseOverCanvas) {
+				//	Note.Show("Not over canvas");
 				return false;
 			}
 			if(AppS.focusedOnTextBox) {
-			//	Note.Show("Text focus");
+				//	Note.Show("Text focus");
 				return false;
 			}
-			if(CityBuild.menuOpen) {
+			if(AppS.IsFlyoutOpen()) {
 				//Assert(false);
-				return false ;
+				return false;
 			}
-			// don't process if chat has focus
-			//AppS.UpdateKeyStates();
-			//if(ChatTabHasFocus)
-			//	return false;
-		
-//			Log("SomeKeyDown " + key);
-			
 
-		
-			//if (CityBuild.menuOpen)
-			//{
-			//	// todo:  Handle naviation menu items and selection
-			//	AppS.DispatchOnUIThreadLow(() =>
-			//	{
-			//		ShellPage.instance.buildMenu.IsOpen = false;
-			//	});
-			//	return;
 
-			//}
-			if (!View.IsCityView())
-			{
-				switch (key)
-				{
+			if(!View.IsCityView()) {
+				// Region view control
+				var spot =City.focus;
+				var isControl = AppS.controlPressed;
+				void MoveFocus( int dx, int dy ) {
+					Spot.ProcessCoordClick(spot.Translate((dx,dy)),AppS.keyModifiers.ClickMods(autoSelect: false,autoToggleView: false,center: false,bringIntoView: true,noFlyout: false));
+				}
+				void MoveView( float dx, float dy) {
+					var dxy = (new System.Numerics.Vector2(dx,dy)* (View.targetZ/View.viewRegionZ1).Max(1)).Round();
+
+					View.SetViewTarget(View.viewTargetW2 + dxy);
+				}
+
+				switch(key) {
 					// todo: handle differently for city view
 
 					case Windows.System.VirtualKey.Space:
@@ -485,35 +470,75 @@ namespace CnV.Views
 							GameClient.drawOverlays=0;
 						break;
 					case Windows.System.VirtualKey.Enter:
-						Spot.ProcessCoordClick(Spot.focus,  AppS.keyModifiers.ClickMods(scrollIntoUi:true) );
+						Spot.ProcessCoordClick(spot,AppS.keyModifiers.ClickMods(autoSelect: false,autoToggleView: false,center: false,noFlyout: false));
 						break;
 
 					case Windows.System.VirtualKey.Left:
-						Spot.SetFocus(Spot.focus.Translate((-1, 0)),  AppS.keyModifiers.ClickMods(scrollIntoUi:true) );
+						MoveView(-1,0);
 						break;
-
-					case Windows.System.VirtualKey.Up:
-						Spot.SetFocus(Spot.focus.Translate((0, -1)),  AppS.keyModifiers.ClickMods(scrollIntoUi:true) );
-						break;
-
 					case Windows.System.VirtualKey.Right:
-						Spot.SetFocus(Spot.focus.Translate((1, 0)),  AppS.keyModifiers.ClickMods(scrollIntoUi:true) );
+						MoveView(1,0);
+						break;
+					case Windows.System.VirtualKey.Up:
+						MoveView(0,-1);
+						break;
+					case Windows.System.VirtualKey.Down:
+						MoveView(0,1);
 						break;
 
-					case Windows.System.VirtualKey.Down:
-						Spot.SetFocus(Spot.focus.Translate((0, 1)), AppS.keyModifiers.ClickMods(scrollIntoUi:true) );
+					case Windows.System.VirtualKey.W:
+						MoveFocus(0,-1);
 						break;
+					case Windows.System.VirtualKey.A:
+						MoveFocus(-1,0);
+						break;
+					case Windows.System.VirtualKey.S:
+						MoveFocus(1,0);
+						break;
+					case Windows.System.VirtualKey.D:
+						MoveFocus(0,1);
+						break;
+
+
 				}
 				return false;
+
 			}
-			else
-			{
-				// AppS.DispatchOnUIThreadLow(() =>
+			else {
+
+				// why is this not allowed?
+				if(AppS.IsKeyPressedShiftOrControl())
+					return false;
+				//if(!buildKeys.Contains(key)) {
+				//	//				Log("Not a build Key " + key);
+				//	return false;
+				//}
 				
-				return ProcessKey(key);
+				// don't process if chat has focus
+				//AppS.UpdateKeyStates();
+				//if(ChatTabHasFocus)
+				//	return false;
+
+				//			Log("SomeKeyDown " + key);
+
+
+
+				//if (CityBuild.menuOpen)
+				//{
+				//	// todo:  Handle naviation menu items and selection
+				//	AppS.DispatchOnUIThreadLow(() =>
+				//	{
+				//		ShellPage.instance.buildMenu.IsOpen = false;
+				//	});
+				//	return;
+
+				//}
+					// AppS.DispatchOnUIThreadLow(() =>
+
+					return ProcessKey(key);
+
 				
 			}
-			
 			// });
 		}
 

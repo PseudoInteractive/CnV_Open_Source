@@ -22,29 +22,68 @@ public static partial class CityUI
 
 		ProcessClick(c.cid,clickMods);
 	}
+	static bool lastFocusViewToggle;
 	public static void ProcessClick(int cid,ClickModifiers clickMods)
 	{
 		if(cid == Spot.cidNone) {
 			Assert(false);
 			return;
 		}
-		var changed = cid != focus;
-		var spot    = Spot.GetOrAdd(cid);
-		if(changed)
-		{
-			focus = (WorldC)cid;
-			AppS.QueueOnUIThread(UpdateFocusText);
+		var wantFlyout = (!(clickMods.IsShiftOrControl()|clickMods.IsRight()|clickMods.HasFlag(ClickModifiers.noFlyout)));
+		var spot = Spot.GetOrAdd(cid);
+		bool focusChanged = false;
+		if(clickMods.HasFlag(ClickModifiers.setFocus)) {
+			focusChanged= cid != focus;
+
+			if(focusChanged) {
+			
+					lastFocusViewToggle = false;
+				focus = (WorldC)cid;
+				AppS.QueueOnUIThread(UpdateFocusText);
+			}
 		}
-		if(clickMods.HasFlag(ClickModifiers.bringIntoWorldView) && !clickMods.IsShiftOrControl()) {
-			var lazy = clickMods.HasFlag(ClickModifiers.bringIntoWorldViewLazy);
-			cid.BringCidIntoWorldView(lazy,clickMods.IsRight() );
-			//if(clickMods.IsRight()) {
-			//	if( cid != City.build && CanVisit(cid) ) {
-			//		cid.AsCity().Visit();
-			//	}
-			//}
+
+		if(!wantFlyout | clickMods.HasFlag(ClickModifiers.bringIntoWorldView)) {
+		
+			var moved = cid.BringCidIntoWorldView(clickMods.HasFlag(ClickModifiers.bringIntoWorldViewCenter) );
+			if(!moved && clickMods.HasFlag(ClickModifiers.autoToggleView)) {
+				// Toggle
+				switch(View.viewMode) {
+				
+					case ViewMode.world:
+							lastFocusViewToggle = false;
+							View.SetViewMode( ViewMode.region,cid,clickMods.HasFlag(ClickModifiers.bringIntoWorldViewCenter));
+						break;
+					case ViewMode.region:
+							if(City.CanVisit(cid)) {
+								View.SetViewMode(lastFocusViewToggle ?  ViewMode.world : ViewMode.city,cid,true);
+							}
+							else if(View.IsNearFocus(new(cid)))
+								View.SetViewMode(ViewMode.world,cid,false);
+							else
+								View.EnsureInView(cid,true);
+
+						break;
+					default:  // view mode city
+						lastFocusViewToggle  = true;
+						View.SetViewMode(ViewMode.region ,cid,false);
+						break;
+				}
+
+			}
+		
 		}
-		SpotTab.AddToGrid(spot);
+		//if(clickMods.HasFlag(ClickModifiers.bringIntoWorldView) && !clickMods.IsShiftOrControl()) {
+		//	//var lazy = clickMods.HasFlag(ClickModifiers.bringIntoWorldViewLazy);
+		//	cid.BringCidIntoWorldView( );
+		//	//if(clickMods.IsRight()) {
+		//	//	if( cid != City.build && CanVisit(cid) ) {
+		//	//		cid.AsCity().Visit();
+		//	//	}
+		//	//}
+		//}
+		if(clickMods.HasFlag(ClickModifiers.addToMru))
+			SpotTab.AddToGrid(spot);
 		
 		if(clickMods.HasFlag(ClickModifiers.select) | clickMods.IsShiftOrControl() )
 			ProcessSelection(spot,clickMods);
@@ -53,20 +92,17 @@ public static partial class CityUI
 			CityUI.ScrollIntoView(cid);
 		}
 		NavStack.Push(cid);
-		if( !(clickMods.IsShiftOrControl()|clickMods.IsRight()|clickMods.HasFlag(ClickModifiers.noFlyout) ))
+		if( wantFlyout)
 				cid.AsCity().ShowContextMenu();
 
 	}
 
-	public static bool IsNearFocus(this WorldC cid) {
-		var thresh = 0.5f;
-		// only move if moving more than about 1 city span
-		return (System.Numerics.Vector2.Distance(View.viewTargetW2,cid.v) <= thresh);
+	//private static void ToggleView(int cid) {
+	//	View.SetViewMode(View.viewMode.GetNext(cid),cid);
+	//	View.TrySetViewTarget(TODO);
+	//}
 
-	}
-	public static bool IsOnScreen(this WorldC cid) {
-		return View.cullWCF.Contains( cid.v);
-	}
+	
 	//public static  async void SelectInWorldView(this City me, bool lazyMove)
 	//{
 	//	var cid = me.cid;

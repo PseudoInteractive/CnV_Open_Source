@@ -90,7 +90,6 @@
 			</Setter>
 
 
-			<Setter Property="TabFocusNavigation" Value="Cycle" />
 	</Style>
 
 
@@ -111,7 +110,13 @@
 			<x:Double x:Key="TeachingTipMaxHeight">640</x:Double>
 	<x:Double x:Key="TeachingTipMaxWidth">640</x:Double>
 	<SolidColorBrush x:Key="HyperLinkBrush" Color="#FF7060FF" />
+	<Style TargetType="tk:GridSplitter"  >
+		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="BorderThickness" Value="1"/>
+		<Setter Property="BorderBrush" Value="Indigo"/>
+		<Setter Property="FontSize" Value="16" />
 
+	</Style>
 
 	<Style TargetType="ComboBox" BasedOn="{StaticResource DefaultComboBoxStyle}" >
 		<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>

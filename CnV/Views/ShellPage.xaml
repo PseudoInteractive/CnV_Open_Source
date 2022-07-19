@@ -14,8 +14,9 @@
     
 	  Background="{x:Null}"
 	  Margin="0"
-     		IsTabStop="false"
-		
+ 		TabFocusNavigation="Local"
+		  IsTabStop="True"
+			 
 		>
 	
 	<!--<UserControl.Resources>
@@ -27,6 +28,7 @@
 
 
 	<Grid x:Name="_rootGrid" Canvas.ZIndex="33" Background="{x:Null}" 
+		  
 		                IsHitTestVisible="True"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:FieldModifier="internal">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="auto" />
@@ -216,10 +218,10 @@ VerticalAlignment="Center"
 
 			
 		</Grid>
-		<Canvas x:Name="fullCanvas" Grid.Row="1" Background="{x:Null}" IsHitTestVisible="True" IsTabStop="True" 
+		<Canvas x:Name="fullCanvas" Grid.Row="1" Background="{x:Null}" IsHitTestVisible="True" 
 		HorizontalAlignment="Stretch" x:FieldModifier="public" VerticalAlignment="Stretch"  Canvas.ZIndex="54" Width="auto">
 
-			<cnv:CityFlyout  x:Load="False" x:Name="cityFlyout" x:FieldModifier="internal" Canvas.ZIndex="55"  Visibility="Collapsed" />
+			<cnv:CityFlyout  x:Load="False" x:Name="cityFlyout" x:FieldModifier="internal" Canvas.ZIndex="55"  Visibility="Collapsed" AllowFocusOnInteraction="True" IsTabStop="True" />
 
 		</Canvas>
 
@@ -227,33 +229,32 @@ VerticalAlignment="Center"
 		<Grid  x:Name="grid" Grid.Row="1" x:FieldModifier="public"  ColumnSpacing="0" RowSpacing="0" Margin="0,0,0,0" >
 			
 			<Grid.RowDefinitions>
-				<RowDefinition Height="auto" x:Name="rowHeader" />
-				<RowDefinition Height="auto" x:Name="stats" />
-				<RowDefinition x:Name="CanvasStart" />
-				<RowDefinition x:Name="rowChatBase" />
-				<RowDefinition Height="auto"  x:Name="rowFooter" />
+				<RowDefinition Height="3*" x:Name="CanvasStart" />
+				<RowDefinition Height="*" x:Name="rowChatBase" />
+				<RowDefinition Height="40"  x:Name="rowFooter" />
 			</Grid.RowDefinitions>
 			<Grid.ColumnDefinitions>
 				<!-- 0 HTML column -->
-				<ColumnDefinition Width="420" x:Name="columnHtml" />
+				<ColumnDefinition Width="*" x:Name="columnHtml" />
 				<!-- 1 black space for popups -->
-				<ColumnDefinition Width="0"  x:Name="columnPopup" />
+				<ColumnDefinition Width="auto"  x:Name="columnSplitter0" />
 				<!-- 2 Render View -->
-				<ColumnDefinition Width="*"  x:Name="columnRender" />
+				<ColumnDefinition Width="4*"  x:Name="columnRender" />
 				<!-- 3 Tab View -->
+				<ColumnDefinition Width="auto"  x:Name="columnSplitter1" />
 				<ColumnDefinition Width="1*" x:Name="columnTabs" />
 			</Grid.ColumnDefinitions>
 			<!-- Overlay grid for sizing -->
 
-			<Canvas x:Name="toolTipHolder" Grid.Column="2" Width="140" IsHitTestVisible="False" IsTabStop="False" Background="{x:Null}" 
-		HorizontalAlignment="Right" x:FieldModifier="public" VerticalAlignment="Stretch" />
+			<cnv:ToolTipWindow x:Name="toolTipWindow" Grid.Column="2"  IsHitTestVisible="False" IsTabStop="False" Background="{x:Null}" 
+		HorizontalAlignment="Right" x:FieldModifier="public" VerticalAlignment="Top" Visibility="Collapsed" />
 
 
 
 
-	<cnv:CityStats 
+		<cnv:CityStats 
 				x:Name="cityStats"
-				Grid.Row="2" 
+				Grid.Row="{x:Bind grid.RowDefinitions.IndexOf(CanvasStart)}" 
 				Grid.ColumnSpan="1"
 				Grid.RowSpan="2" 	
 				x:Load="False"
@@ -263,28 +264,23 @@ VerticalAlignment="Center"
 				/>
 			
 			<tk:GridSplitter
+				
 				IsTabStop="True"
-				CursorBehavior="ChangeOnSplitterHover"
-				GripperCursor="SizeNorthSouth"
 				VerticalAlignment="Stretch"
-				HorizontalAlignment="Right"
+				HorizontalAlignment="Center"
 				ManipulationCompleted="GridSplitter_ManipulationCompleted"
-				Height="11"
-				Grid.Column="{x:Bind grid.ColumnDefinitions.IndexOf(columnHtml) }"
+				Grid.Column="{x:Bind grid.ColumnDefinitions.IndexOf(columnSplitter0) }"
 				Grid.Row="0"
+				ResizeBehavior="PreviousAndNext"
 				Grid.RowSpan="3"
-				Background="Transparent"
-				Canvas.ZIndex="22">
-				<tk:GridSplitter.Element>
-					<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE784;"
-					/>
-				</tk:GridSplitter.Element>
+				>
 			</tk:GridSplitter>
 
 			<cnv:CnVSwapChainPanel x:Name="_canvas" 
-			                      Grid.Column="0"
-								   Grid.ColumnSpan="3"
-			                      Grid.Row="2" Grid.RowSpan="2"
+			                      Grid.Column="2"
+								   Grid.ColumnSpan="1"
+			                      Grid.Row="{x:Bind grid.RowDefinitions.IndexOf(CanvasStart)}" 
+								   Grid.RowSpan="2"
 			                      IsTabStop="True"
 								   IsTapEnabled="False"
 								   IsDoubleTapEnabled="False"
@@ -296,107 +292,101 @@ VerticalAlignment="Center"
 			                      Canvas.ZIndex="12" />
 
 			<Canvas  x:Name="_gameUIFrame"  Canvas.ZIndex="43"  Grid.Column="0"
-								   Grid.ColumnSpan="4" Grid.Row="2" Grid.RowSpan="2" />
+								   Grid.ColumnSpan="4" 
+					  Grid.Row="{x:Bind grid.RowDefinitions.IndexOf(CanvasStart)}"  
+					 
+					 Grid.RowSpan="2" />
 
 
 
 			<Grid Grid.Column="{x:Bind grid.ColumnDefinitions.IndexOf(columnTabs)}" 
-			      Grid.RowSpan="5" Margin="0,0,0,0">
+			      Grid.RowSpan="{x:Bind grid.RowDefinitions.Count}" Margin="0,0,0,0">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="3*"  x:Name="rowTabTop"  />
+					<RowDefinition Height="auto"/>
 					<RowDefinition Height="*"/>
 				</Grid.RowDefinitions>
 				<views:TabPage x:Name="rightTabs"  x:FieldModifier="public"   />
-				<views:TabPage x:Name="spotTabs"  Grid.Row="1"  x:FieldModifier="public" />
-				<tk:GridSplitter
+				<views:TabPage x:Name="spotTabs"  Grid.Row="2"  x:FieldModifier="public" />
+				<!-- Controls the relative size of main tabs vs the mru tabs -->
+				<tk:GridSplitter 
+					Grid.Row="1"
 				IsTabStop="True"
-				CursorBehavior="ChangeOnSplitterHover"
-				GripperCursor="SizeWestEast"
 					ManipulationCompleted="GridSplitter_ManipulationCompleted"
-                        VerticalAlignment="Top"
+                        VerticalAlignment="Center"
+								 ResizeBehavior="PreviousAndNext"
                         HorizontalAlignment="Stretch"
-                        Height="11"
-                        Grid.Row="1"
-				Background="#80808080"
-                        Canvas.ZIndex="22">
-					<tk:GridSplitter.Element>
-						<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE76F;"
-                       />
-					</tk:GridSplitter.Element>
+                        >
 				</tk:GridSplitter>
 			</Grid>
-			<Grid x:Name="chatGrid" Grid.Column="{x:Bind grid.ColumnDefinitions.IndexOf(columnRender)}"
-			      Grid.Row="3" Grid.RowSpan="1" Canvas.ZIndex="20" Background="{x:Null}" >
+			<Grid x:Name="chatGrid" 
+				  Grid.Column="{x:Bind grid.ColumnDefinitions.IndexOf(columnRender)}"
+			        Grid.Row="{x:Bind grid.RowDefinitions.IndexOf(rowChatBase)}" 
+				  Grid.RowSpan="1" Canvas.ZIndex="20" Background="{x:Null}" >
 				<Grid.RowDefinitions>
-					<RowDefinition Height="*"/>
-					<RowDefinition Height="100"  x:Name="rowChat"  />
+					<RowDefinition Height="2*"/>
+					<RowDefinition Height="*"  x:Name="rowChat"  />
 				</Grid.RowDefinitions>
 				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="*"/>
-					<ColumnDefinition Width="100"  x:Name="columnChat"  />
+					<ColumnDefinition Width="2*"/>
+					<ColumnDefinition Width="*"  x:Name="columnChat"  />
 				</Grid.ColumnDefinitions>
-				<views:TabPage x:Name="chatTabs" x:FieldModifier="public" Grid.Column ="1" Grid.Row="1"  Margin="12,12,16,0"  />
+				<views:TabPage x:Name="chatTabs" x:FieldModifier="public" Grid.Column ="1" Grid.Row="1"  Margin="12,12,16,0"  MinHeight="40" MaxHeight="320" PointerPressed="ChatGotFocus"  PointerCaptureLost="ChatLostFocus" 
+							   VerticalAlignment="Bottom" Height="40" />
 				<!--Chat Width resizer-->
 				<tk:GridSplitter
-                        Background="{x:Null}"
+					x:Name="chatGridSpliterX"
+                    
                     Grid.Row="1" ManipulationCompleted="GridSplitter_ManipulationCompleted"
 											IsTabStop="True"
 			 				
-				CursorBehavior="ChangeOnSplitterHover"
-				GripperCursor="SizeWestEast"
+			Visibility="Collapsed"
                         Grid.Column="1"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Stretch"
-                        Width="11"
                         Canvas.ZIndex="22">
-					<tk:GridSplitter.Element>
-						<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE784;"
-               />
-					</tk:GridSplitter.Element>
+					
 				</tk:GridSplitter>
 				<!--Chat Height resizer-->
 				<tk:GridSplitter
+					Visibility="Collapsed"
+					x:Name="chatGridSpliterY"
                     Grid.Row="1"
                      Tapped="chatResizeTapped"
 												IsTabStop="True"
 					ManipulationCompleted="GridSplitter_ManipulationCompleted"
-		 				 Background="{x:Null}"
-				CursorBehavior="ChangeOnSplitterHover"
-				GripperCursor="SizeAll"
+		 			
                     Grid.Column="1"
                         VerticalAlignment="Top"
                     Canvas.ZIndex="22"
-                        Height="11"
+          
                         HorizontalAlignment="Stretch"
                     >
-					<tk:GridSplitter.Element>
-						<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE76F;"
-                        />
-					</tk:GridSplitter.Element>
 				</tk:GridSplitter>
 			</Grid>
-			<Expander IsExpanded="True"  
+
+			<ListView  
 					  
 					  Grid.Column="2" 
 					  VerticalAlignment="Bottom"
 					  HorizontalAlignment="Left"
-					  FontSize="{StaticResource SmallFontSize}"
-		              
 					  Grid.Row="{x:Bind GridRowIndex(rowFooter,-1)}"
 					  Grid.RowSpan="2" 
 					  Margin="0"
 					  Padding="0"
 					  Width="300"
-						MinHeight="20"
-					  ExpandDirection="Up"
-					  Canvas.ZIndex="35"   >
-				<Expander.Header   >
-					<TextBlock Text="Info" FontSize="{StaticResource SmallFontSize}"  Margin="0" Padding="0"
-		               HorizontalAlignment="Right" />
-				</Expander.Header>
-				<ListView x:Name="InAppNote" x:FieldModifier="public"  Margin="0" Padding="0"
+					Height="40"
+					 
+				Canvas.ZIndex="35"   
+			
+				 x:Name="InAppNote" x:FieldModifier="public" 
+					MinHeight="40"
+						  
 						  Background="#aa140030"
-                 MaxHeight="250"  >
+                 MaxHeight="250"
+				PointerEntered="InfoGotFocus"
+				PointerExited="InfoLostFocus"
+				>
 					<ListView.Items>
 						<x:String>"🙃"</x:String>
 					</ListView.Items>
@@ -432,17 +422,16 @@ VerticalAlignment="Center"
 						</Style>
 					</ListView.ItemContainerStyle>-->
 				</ListView>
-			</Expander>
 			<Expander  Grid.Row="{x:Bind GridRowIndex(rowFooter,-1)}"
 					    Canvas.ZIndex="35"
 					   BorderThickness="0"
 					   HorizontalContentAlignment="Center"
 					   ExpandDirection="Up"
 					   VerticalAlignment="Bottom"
-					  MinHeight="22" Padding="0" Margin="0" Grid.RowSpan="2" >
+				 Padding="0" Margin="0" Grid.RowSpan="2" >
 				<Expander.Header>
-					<Border BorderThickness="0" BorderBrush="{x:Null}" Background="{StaticResource ExpanderBrushContent}" Padding="4" CornerRadius="{StaticResource baseCR}" >
-					<TextBlock x:Name="timeDisplay" x:FieldModifier="public"  HorizontalAlignment="Stretch" />
+					<Border BorderThickness="0" BorderBrush="{x:Null}" Background="{StaticResource ExpanderBrushContent}" Padding="0" CornerRadius="{StaticResource baseCR}" >
+					<TextBlock x:Name="timeDisplay" x:FieldModifier="public"  HorizontalAlignment="Stretch" VerticalAlignment="Center" />
 					</Border>
 				</Expander.Header>
 				<StackPanel Orientation="Vertical"  Padding="4" CornerRadius="{StaticResource baseCR}" Margin="0" Background="{StaticResource ExpanderBrushContent}" HorizontalAlignment="Center">
@@ -499,25 +488,72 @@ VerticalAlignment="Center"
 			<!--
 		</InfoBar>-->
 
+			<Slider Orientation="Vertical"
+                       Background="{x:Null}"
+                    Grid.RowSpan="1"
+					Grid.Row="0"
+					Margin="0,8,0,8"
+					Padding="0,8,0,8"
+					MaxHeight="256"
+			 				VerticalAlignment="Stretch"
+			            Grid.Column="{x:Bind grid.ColumnDefinitions.IndexOf(columnRender)}"
+					HorizontalAlignment="Right"
+                    ToolTipService.ToolTip="Zoom (kind of)"
+					Value="{x:Bind viewZ,Mode=TwoWay}"
+					IsThumbToolTipEnabled="False"
+					SmallChange="0.5"
+					LargeChange="4.0"
+					StepFrequency="0.5"
+					TickPlacement="BottomRight"
+					TickFrequency="5.0"
+					Width="32"
+					VerticalContentAlignment="Stretch"
+					HorizontalContentAlignment="Center"
+					Maximum="19.5"
+					Minimum="0.5"
+					Canvas.ZIndex="14"
+					/>
+			<PipsPager x:Name="verticalPips"
+					   Grid.Column="{x:Bind grid.ColumnDefinitions.IndexOf(columnRender)}"
+					    Grid.RowSpan="1"
+					Grid.Row="1"
+					   Canvas.ZIndex="15"
+					   HorizontalAlignment="Right"
+	    VerticalAlignment="Stretch"
+					   VerticalContentAlignment="Stretch"
+					   
+		  NumberOfPages="60"
+		MaxVisiblePips="10"
+					   Orientation="Vertical"
+		 SelectedPageIndex="{x:Bind viewY, Mode=TwoWay}" />
+
+			<PipsPager x:Name="HorizontalPips"
+	      HorizontalAlignment="Center"
+	      VerticalAlignment="Bottom"
+					   Grid.Row="{x:Bind grid.RowDefinitions.IndexOf(rowFooter)}"
+					    Grid.Column="{x:Bind grid.ColumnDefinitions.IndexOf(columnRender)}"
+					   Orientation="Horizontal"
+      			   
+		  NumberOfPages="60"
+		MaxVisiblePips="30"
+					   Background="{x:Null}"
+		 SelectedPageIndex="{x:Bind viewX, Mode=TwoWay}" 
+					      Canvas.ZIndex="14"
+					   />
+
+<!-- Splitter between Tabs and canvas -->
 			<tk:GridSplitter
-                        Background="{x:Null}"
-                    Grid.RowSpan="3"
-				Grid.Row="1"
+             
+                    Grid.RowSpan="2"
+				Grid.Row="0"
 				ManipulationCompleted="GridSplitter_ManipulationCompleted"
 										IsTabStop="True"
+				ResizeBehavior="PreviousAndNext"
 			 				
-			CursorBehavior="ChangeOnSplitterHover"
-				GripperCursor="SizeWestEast"
-                        Grid.Column="{x:Bind grid.ColumnDefinitions.IndexOf(columnRender)}"
-                        HorizontalAlignment="Right"
+                        Grid.Column="{x:Bind grid.ColumnDefinitions.IndexOf(columnSplitter1)}"
+                        HorizontalAlignment="Center"
                         VerticalAlignment="Stretch"
-                        Width="11"
-                        Canvas.ZIndex="22">
-				<tk:GridSplitter.Element>
-					<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE784;"
-                 
-						  />
-				</tk:GridSplitter.Element>
+                       >
 			</tk:GridSplitter>
 		</Grid>
 	</Grid>

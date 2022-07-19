@@ -31,6 +31,8 @@ using static GameClient;
 			int splits = (timeSinceLastFrame*targetStepsPerSecond).RoundToInt().Max(1);
 			Assert(timeSinceLastFrame <= 0.25f);
 			var dt = (float)(timeSinceLastFrame / splits);
+			Assert(View.targetZ >= View.viewMinZ);
+			Assert(View.targetZ <= View.viewMaxZ);
 			for(int step = 0;step<splits;++step)
 			{
 				var viewVW0 = viewVW;
@@ -39,18 +41,19 @@ using static GameClient;
 				//
 				var damping = cameraControlDampingNormal;//,cameraControlDampingTight);
 				var viewKs = cameraControlFrequencyNormal.FreqencyToKsAndKd(damping);//,cameraControlFrequencyTight).FreqencyToKsAndKd(damping);
-
 				if( View.isCoasting)
 				{
 					float lg = viewVW.ToV2().Length();
+					System.Numerics.Vector2 dr;
 					if(lg <= panV0 * viewW.Z )
 					{
-						viewVW -= viewVW*viewKs.kd*dt;
+						dr = viewVW.ToV2() *viewKs.kd*dt;
 					}
 					else
 					{
-						viewVW -= viewVW*panSlowdown*dt; // inertia
+						dr = viewVW.ToV2()*panSlowdown*dt; // inertia
 					}
+					viewVW = viewVW with { X= viewVW.X - dr.X,Y = viewVW.Y - dr.Y };
 				}
 				else
 				{
@@ -58,14 +61,17 @@ using static GameClient;
 						viewVW += ((viewTargetW - viewW) * viewKs.ks - viewVW*viewKs.kd)*dt;
 				
 				}
-					viewW += (viewVW0+viewVW)*(0.5f * dt);
+				var dW = (viewVW0+viewVW)*(0.5f * dt); // Mid point
+				viewW  += dW;
+				viewW.Z = viewW.Z.Clamp(viewMinZ,viewMaxZ);
+				
 				if(View.isCoasting)
 				{
 					viewTargetW = viewW;
 				}
 			//	viewControlTightness -= viewControlTightness*viewControlTightnessDecay*dt;
 
-				eventTimeOffsetLag += (ShellPage.instance.eventTimeOffset - eventTimeOffsetLag) * dt*8.0f;
+			//	eventTimeOffsetLag += (ShellPage.instance.eventTimeOffset - eventTimeOffsetLag) * dt*8.0f;
 
 			}
 		}

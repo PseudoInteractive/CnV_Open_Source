@@ -22,6 +22,9 @@ public sealed partial class CityFlyout:UserControl, IANotifyPropertyChanged
 	internal City city = City.invalid;
 	internal static bool isLoaded;
 	
+	internal static bool hasFocus;
+	internal static bool isOpen => hasFocus;
+
 	List<ACommandCategory> categories => City.ACatCity.children;
 	ObservableCollection<ACommand> baseCommands = new();
 	ObservableCollection<ACommand> categoryCommands = new();
@@ -170,12 +173,48 @@ public sealed partial class CityFlyout:UserControl, IANotifyPropertyChanged
 
 	private async void SearchSubmit(AutoSuggestBox sender,AutoSuggestBoxQuerySubmittedEventArgs args) {
 		if( (args.ChosenSuggestion is ACommand c) && c is not null) {
+			// Change focus back
 			await Execute(c);
 		}
 	}
 
+	
+
+
+	private void SearchGotFocus(object sender,RoutedEventArgs e) {
+		search.Width = 200;
+	}
+
+	private void SearchLostFocus(UIElement sender,LosingFocusEventArgs args) {
+		search.Width=40;
+		search.Text = string.Empty;
+	}
+
+	private void VisitCity(object sender,RoutedEventArgs e) {
+		if(city.CanVisit() && !city.isBuild && city.isFocus) {
+			CnVClient.CitySwitch(city.cid);
+		}
+		else {
+			city.ProcessClick(AppS.keyModifiers.ClickMods(isRight: true,noFlyout: true));
+		}
+	}
+
+	private void ViewCity(object sender,RightTappedRoutedEventArgs e) {
+		city.ProcessClick(AppS.keyModifiers.ClickMods(isRight: true,noFlyout: true));
+	}
+
 	private void OnLoaded(object sender,RoutedEventArgs e) {
 		isLoaded = true;
+	}
+
+	private void lostFocus(object sender,RoutedEventArgs e) {
+		Note.Show($"Lost Focus ");
+
+	}
+
+	private void gotFocus(object sender,RoutedEventArgs e) {
+		Note.Show($"Got Focus ");
+
 	}
 
 	//private void TogglePane(object sender,TappedRoutedEventArgs e) {
@@ -187,7 +226,7 @@ public sealed partial class CityFlyout:UserControl, IANotifyPropertyChanged
 	//   }
 }
 
- static partial class CityUI {
+static partial class CityUI {
 	public static void ShowContextMenu(this City me,Windows.Foundation.Point position) {
 		if(!me.isValid) {
 			Assert(false);
@@ -202,8 +241,8 @@ public sealed partial class CityFlyout:UserControl, IANotifyPropertyChanged
 			//		nav.Reset(me);
 			var sc = (new Windows.Foundation.Point(ShellPage.mousePosition.X,ShellPage.mousePosition.Y)).TransformPoint(ShellPage.canvas,ShellPage.instance._rootGrid);
 
-			Canvas.SetLeft(nav,sc.X + 8); // Points in relation to window since canvas is at origin
-			Canvas.SetTop(nav,sc.Y - 32);
+			Canvas.SetLeft(nav,sc.X - 32); // Points in relation to window since canvas is at origin
+		Canvas.SetTop(nav,sc.Y - 60);
 			//	Canvas.SetZIndex(nav,99); // Points in relation to window since canvas is at origin	
 
 			nav.SetCity(me);
@@ -224,10 +263,12 @@ public sealed partial class CityFlyout:UserControl, IANotifyPropertyChanged
 			//		nav.SelectedItem = nav.catCity;
 			nav.UpdateCommands();
 			nav.Visibility = Visibility.Visible;
-			nav.categoryListView.Focus(FocusState.Programmatic);
+			nav.visitCityButton.Focus(FocusState.Programmatic);
+//			nav.visitCityButton.
 			//	nav.ApplyTemplate();
 			//   flyout.XamlRoot = uie.XamlRoot;
-			//		flyout.ShowAt(null,new() { Position= position });
+			//		flyout.ShowAt(null,new() { Position= position, ShowMode=FlyoutShowMode.TransientWithDismissOnPointerMoveAway,Placement=FlyoutPlacementMode.Auto});
+
 		});
 	}
 	public static void ShowContextMenu(this City me) {

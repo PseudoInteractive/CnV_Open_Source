@@ -192,17 +192,11 @@
         <tk:GridSplitter Grid.Row="4"
                          ResizeDirection="Rows"
 						 						 				IsTabStop="True"
-				CursorBehavior="ChangeOnSplitterHover"
-				GripperCursor="SizeNorthSouth"
-                                                 Height="11"
+			           
                          HorizontalAlignment="Stretch"
                          VerticalAlignment="Top"
-                          Background="transparent"
                     >
-            <tk:GridSplitter.Element>
-                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE76F;"
-                />
-            </tk:GridSplitter.Element>
+            
         </tk:GridSplitter>
         <tk:DataGrid x:Name="troopTypeGrid" x:FieldModifier="public"
                         AutoGenerateColumns="False"

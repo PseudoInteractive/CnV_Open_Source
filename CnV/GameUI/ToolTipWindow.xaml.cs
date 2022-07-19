@@ -22,8 +22,8 @@ namespace CnV
 {
 	public sealed partial class ToolTipWindow:UserControl
 	{
-		public static ToolTip tooltip;
-		public static ToolTipWindow content;
+		//	public static ToolTip tooltip;
+		public static ToolTipWindow content => ShellPage.instance.toolTipWindow;
 		
 		public ToolTipWindow()
 		{
@@ -38,18 +38,18 @@ namespace CnV
 			{
 			if(AppS.isShuttingDown)
 				return;
-				if(tooltip == null)
-				{
-					tooltip = new ToolTip();
+			//	if(tooltip == null)
+			//	{
+			//		tooltip = new ToolTip();
 					
-					ToolTipService.SetToolTip(ShellPage.instance.toolTipHolder,tooltip);
-					tooltip.Placement = PlacementMode.Bottom;
-					content = new ToolTipWindow();
-					tooltip.Content = content;
-				//	tooltip.Placement = PlacementMode.Mouse;
-				//	tooltip.VerticalOffset =32;
-			//		tooltip.HorizontalOffset =-32;
-				}
+			//		ToolTipService.SetToolTip(ShellPage.instance.toolTipHolder,tooltip);
+			//		tooltip.Placement = PlacementMode.Top;
+			//		content = new ToolTipWindow();
+			//		tooltip.Content = content;
+			//	//	tooltip.Placement = PlacementMode.Mouse;
+			//	//	tooltip.VerticalOffset =32;
+			////		tooltip.HorizontalOffset =-32;
+			//	}
 				string str;
 				ImageSource i0;
 				if(ToolTips.actionToolTip is not null)
@@ -74,12 +74,12 @@ namespace CnV
 				//	tooltip.VerticalOffset =32;
 				//	tooltip.HorizontalOffset =-32;
 
-					tooltip.IsOpen=true;
+					content.Visibility = Visibility.Visible;
 
 				}
 				else
 				{
-					tooltip.IsOpen = false;
+					content.Visibility = Visibility.Collapsed;
 				}
 
 			});

@@ -166,7 +166,7 @@ internal partial class GameClient
 	static IToolTip underMouse; // could also be a trade?
 	static float bestUnderMouseScore;
 	//   public static Vector2 cameraMid;
-	public static float eventTimeOffsetLag; // smoothed version of event time offset
+//	public static float eventTimeOffsetLag; // smoothed version of event time offset
 											//public static float eventTimeEnd;
 	static public Color nameColor, nameColorHover, myNameColor, nameColorOutgoing, nameColorIncoming, nameColorSieged,
 			nameColorIncomingHover, nameColorSiegedHover, myNameColorIncoming, myNameColorSieged,
@@ -968,7 +968,7 @@ internal partial class GameClient
 									{
 										var c0 = cluster.topLeft;
 										var c1 = cluster.bottomRight;
-										DrawRectOutlineShadow(Layer.effects+2,c0,c1,isHover ? new Color(128,64,64,220) : new Color(64,0,0,162),2,2);
+										DrawRectOutlineShadow(Layer.effects+2,(c0,c1),isHover ? new Color(128,64,64,220) : new Color(64,0,0,162),2,2);
 									}
 
 									{
@@ -1514,11 +1514,13 @@ internal partial class GameClient
 					}
 					if(Spot.focus != 0) {
 						var cid = Spot.focus;
-						DrawAccent(cid.cid,-1.125f,focusColor);
+						DrawDiamondShadow(Layer.effects - 1,cid,focusColor,null,1.0f,1.0f);
 					}
 					if(Spot.viewHover != 0) {
 						var cid = Spot.viewHover;
-						DrawAccent(cid.cid,1.25f,hoverColor);
+						// Checkmark
+						DrawRectOutlineShadow(Layer.effects - 1,cid,selectColor,null,1.0f,1.0f);
+
 					}
 					for(int j = 0;j<2;++j) {
 						(var h, var fade) = j==0 ? (Player.viewHover, Player.viewHoverFade) : (Player.priorViewHover, Player.priorViewHoverFade);
@@ -2046,14 +2048,14 @@ internal partial class GameClient
 	private static void DrawRect(int layer,Vector2 c0,Vector2 c1,Color color,float Z) {
 		draw.AddQuad(layer,quadTexture,c0,c1,new Vector2(),new Vector2(1,1),color,zEffects);
 	}
-	private static void DrawRectOutline(int layer,Vector2 c0,Vector2 c1,Color color,float z,float thickness,float _expand = 0f,double animationOffset = 0,bool includeTop = true) {
+	private static void DrawRectOutline(int layer,Span2 cs,Color color,float z,float thickness,float _expand = 0f,double animationOffset = 0,bool includeTop = true) {
 
 		float t = thickness.DipToWorld();
 		var expand = _expand.DipToWorld();
 		const float waveGain = 0.5f;
 		z = z * (0.125f+ ((animationT-animationOffset)*(1.0/3)).Wave() * waveGain);
-		c0 = new(c0.X - expand,c0.Y - expand);
-		c1 = new(c1.X + expand,c1.Y + expand);
+		var c0 = new Vector2(cs.c0.X - expand,cs.c0.Y - expand);
+		var c1 = new Vector2(cs.c1.X + expand,cs.c1.Y + expand);
 
 		if(includeTop)
 			draw.AddQuad(layer,quadTexture,new(c0.X,c0.Y-t),new(c1.X,c0.Y+t),new Vector2(),new Vector2(1,1),color,z);
@@ -2066,9 +2068,9 @@ internal partial class GameClient
 	}
 
 
-	internal static void DrawRectOutlineShadow(int layer,Vector2 c0,Vector2 c1,Color color,float thickness = 1,float expand = 0,double animationOffset = 0,float zScale = 1f,bool includeTop = true) {
-		DrawRectOutline(layer,c0,c1,color,zUI*zScale,thickness,expand,animationOffset,includeTop);
-		DrawRectOutline(Layer.tileShadow,c0+shadowOffsetW,c1+shadowOffsetW,color.GetShadowColorDark(),zShadow,thickness,expand,animationOffset,includeTop);
+	internal static void DrawRectOutlineShadow(int layer,Span2 cs,Color color,float thickness = 1,float expand = 0,double animationOffset = 0,float zScale = 1f,bool includeTop = true) {
+		DrawRectOutline(layer,cs,color,zUI*zScale,thickness,expand,animationOffset,includeTop);
+		DrawRectOutline(Layer.tileShadow,cs+shadowOffsetW,color.GetShadowColorDark(),zShadow,thickness,expand,animationOffset,includeTop);
 	}
 	private static void DrawRectOutlineShadow(int layer,int cid,Color col,string label = null,float thickness = 1.0f,float expand = 0,double animationOffset = 0,bool includeTop = true) {
 		var wc = cid.CidToWorld();
@@ -2077,7 +2079,7 @@ internal partial class GameClient
 		var cc = wc.ToVector(); ;
 		var c0 = cc - v2Half;
 		var c1 = cc + v2Half;
-		DrawRectOutlineShadow(Layer.effects,c0,c1,col,thickness,expand,animationOffset,includeTop: includeTop);
+		DrawRectOutlineShadow(Layer.effects,(c0,c1),col,thickness,expand,animationOffset,includeTop: includeTop);
 		if(label != null) {
 			DrawTextBox(label,cc,textformatLabel,new Color(col,255),textBackgroundOpacity,Layer.tileText,scale: (regionFontScale * 2.0f));
 		}
@@ -2086,8 +2088,9 @@ internal partial class GameClient
 	private static void DrawDiamond(Material lineMaterial,int layer,Vector2 c0,Vector2 c1,Color color,float z,float thickness,float expand) {
 		float d = thickness;
 		var cm = (c0 + c1) * 0.5f;
-		float ext = 0.41f + expand.ScreenToWorld();
-		float ext1 = 1.0f + ext;
+		const float rGain = 1.0f;
+		float ext = rGain*0.41f + expand.ScreenToWorld();
+		float ext1 = rGain*1f + ext;
 		var ct = new Vector2(cm.X,c0.Y * ext1 - cm.Y * ext);
 		var cb = new Vector2(cm.X,c1.Y * ext1 - cm.Y * ext);
 		var cl = new Vector2(c0.X * ext1 - cm.X * ext,cm.Y);

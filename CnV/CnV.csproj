@@ -107,10 +107,10 @@
 		<PackageReference Include="System.Collections.Immutable" Version="7.0.0-preview.6.22324.4" />
 		<PackageReference Include="System.Drawing.Common" Version="7.0.0-preview.6.22324.4" />
 		<PackageReference Include="System.Memory.Data" Version="7.0.0-preview.6.22324.4" />
+		<PackageReference Include="System.Reflection.Metadata" Version="7.0.0-preview.6.22324.4" />
 		<PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="7.0.0-preview.2.22152.2" />
 		<PackageReference Include="System.Text.Json" Version="7.0.0-preview.6.22324.4" />
 		<PackageReference Include="System.Threading.Channels" Version="7.0.0-preview.6.22324.4" />
-		<PackageReference Include="Verify.MSTest" Version="17.2.1" />
 	</ItemGroup>
 	<ItemGroup>
 		<Compile Include="Activation\ProtocolActivation.cs" />
@@ -750,7 +750,7 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
 		<Optimize>False</Optimize>
 		<WarningLevel>4</WarningLevel>
-		<DefineConstants>$(DefineConstants);CNV;CNVCLIENT;APPCENTER</DefineConstants>
+		<DefineConstants>$(DefineConstants);CNV;CNVCLIENT</DefineConstants>
 		<Deterministic>True</Deterministic>
 		<FileAlignment>4096</FileAlignment>
 		<CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
@@ -758,7 +758,7 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='SinglePlayer|x64'">
 		<Optimize>False</Optimize>
 		<WarningLevel>4</WarningLevel>
-    <DefineConstants>$(DefineConstants);CNV;CNVCLIENT;APPCENTER;DEBUG</DefineConstants>
+    <DefineConstants>$(DefineConstants);CNV;CNVCLIENT</DefineConstants>
 		<Deterministic>True</Deterministic>
 		<FileAlignment>4096</FileAlignment>
 		<CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
@@ -766,7 +766,7 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
 		<Optimize>True</Optimize>
 		<WarningLevel>4</WarningLevel>
-		<DefineConstants>$(DefineConstants);CNV;CNVCLIENT;APPCENTER</DefineConstants>
+		<DefineConstants>$(DefineConstants);CNV;CNVCLIENT</DefineConstants>
 		<Deterministic>True</Deterministic>
 		<FileAlignment>4096</FileAlignment>
 	</PropertyGroup>

@@ -8,10 +8,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 IsTabStop="True"
 	AllowFocusOnInteraction="True"
-	TabFocusNavigation="Cycle"
+
     mc:Ignorable="d">
 
-	<Grid  MinWidth="200" TabFocusNavigation="Cycle" IsTabStop="True"  Padding="0" Margin="0" 
+	<Grid  MinWidth="200"    Padding="0" Margin="0" 
 		   Background="{StaticResource ApplicationPageBackgroundThemeBrush}"
 		   CornerRadius="0">
 		<Grid.RowDefinitions >

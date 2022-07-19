@@ -129,7 +129,7 @@ partial class App
 		//			services = ConfigureServices();
 		RequestedTheme = ApplicationTheme.Dark;
 		InitializeComponent();
-		//Microsoft.UI.Xaml.Media.Animation.Timeline.AllowDependentAnimations=false;
+		
 		//		UnhandledException += App_UnhandledException;
 		//try
 		//{
@@ -234,7 +234,7 @@ partial class App
 				//	Windows.UI.ViewManagement.ApplicationView.PreferredLaunchWindowingMode =Windows.UI.ViewManagement.ApplicationViewWindowingMode.Maximized;// new Size(bounds.Width, bounds.Height);
 				//				Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TryEnterViewModeAsync(Windows.UI.ViewManagement.ApplicationViewMode.CompactOverlay);
 
-				//	FocusVisualKind = FocusVisualKind.Reveal;
+				FocusVisualKind = FocusVisualKind.Reveal;
 
 				window = new();
 				AppS.globalQueue = window.DispatcherQueue;

@@ -800,7 +800,7 @@ namespace CnV
 		{
 			Assert(isDrawing);
 			var cs = CityPointToQuad(cc, yScale:0.675f, yOffset:0.25f);
-			DrawRectOutlineShadow(Layer.effects,cs.c0,cs.c1,color,animationOffset:animationOffsets[cc]+animationOffset,zScale:0.25f,includeTop:false,thickness:1.25f);
+			DrawRectOutlineShadow(Layer.effects,cs,color,animationOffset:animationOffsets[cc]+animationOffset,zScale:0.25f,includeTop:false,thickness:1.25f);
 		}
 		
 

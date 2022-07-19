@@ -519,13 +519,14 @@ namespace CnV.Views
 
 			return (wi, bi);
 		}
+		
 
-		//static public Vector2 CameraToWorld(Vector2 c1)
-		//{
-		//	return new Vector2( (c1.X-halfSpan.X)/cameraZoomLag + viewCW.X, (c1.Y - halfSpan.Y) / cameraZoomLag + viewCW.Y) ;
-		//}
+			//static public Vector2 CameraToWorld(Vector2 c1)
+			//{
+			//	return new Vector2( (c1.X-halfSpan.X)/cameraZoomLag + viewCW.X, (c1.Y - halfSpan.Y) / cameraZoomLag + viewCW.Y) ;
+			//}
 
-		static public ref int lastCanvasC => ref View.lastCanvasC;
+			static public ref int lastCanvasC => ref View.lastCanvasC;
 		//private void EventTimeTravelSliderChanged(object sender, RangeBaseValueChangedEventArgs e)
 		//{
 		//	var dt = TimeSpan.FromMinutes(e.NewValue);
@@ -832,7 +833,7 @@ namespace CnV.Views
 			//	//				ShellPage.SetWebViewHasFocus(true);
 			//	return true;
 			//}
-			DoZoom(scroll);
+			DoZoom(scroll,new(mousePositionW) );
 			return false;
 		}
 		//public static void UpdateMousePosition(PointerEventArgs e)

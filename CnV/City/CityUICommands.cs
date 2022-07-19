@@ -21,12 +21,12 @@ partial class City
 	public async Task<bool?> Visit() 
 	{
 		if(!CanVisit(cid)) {
-			CityUI.ProcessClick(cid,AppS.keyModifiers.ClickMods()| ClickModifiers.bringIntoWorldView|ClickModifiers.scrollIntoUiView|ClickModifiers.noFlyout); ;
+			CityUI.ProcessClick(cid,AppS.keyModifiers.ClickMods(isRight:true,noFlyout: true)) ;
 			return true;
 		}
 
 		if(isBuild) {
-			await ProcessCoordClick(cid,AppS.keyModifiers.ClickMods() | ClickModifiers.noFlyout);
+			await ProcessCoordClick(cid,AppS.keyModifiers.ClickMods(isRight: true) );
 		}
 		else {
 			if(Player.IsSubOrMe(cid.CidToPid()) || (await AppS.DoYesNoBox("Sub",$"Switch to sub {cid.AsCity().player.name}?")==1)) {

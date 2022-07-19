@@ -48,7 +48,7 @@ namespace CnV
 		static readonly Color selectColor = new Color(20,255,255,160);
 		static readonly Color buildColor = Color.DarkRed;
 		static readonly Color hoverColor = Color.Purple;
-		static readonly Color focusColor = Color.Maroon;
+		static readonly Color focusColor = new Color(r: 80,g: 200,b: 250,alpha: 255);
 		static readonly Color pinnedColor = Color.Teal;
 		internal static readonly Color black0Alpha = new Color() { A = 0,R = 0,G = 0,B = 0 };
 		public static Material[] troopImages = new Material[Troops.ttCount];
@@ -258,10 +258,11 @@ namespace CnV
 
 			//clientSpan.X = MathF.Round( (float)((dx* dipToNative+3) / 4))*4.0f;
 			//clientSpan.Y = MathF.Round((float)((dy* dipToNative+3) /4))*4.0f;
-
+			
 			// bug:  Not using Dip
 			clientSpan.X  = (float)(canvasSizeDip.X);
 			clientSpan.Y  = (float)(canvasSizeDip.Y);
+			View.aspectRatio = clientSpan.X/clientSpan.Y.Max(1f);
 			virtualSpan.X = clientSpan.X;//        + View.popupLeftMargin;
 			virtualSpan.Y = clientSpan.Y;//        + View.popupTopMargin;
 			projectionC.X = clientSpan.X * 0.5f;// - View.popupLeftMargin * 0.5f;

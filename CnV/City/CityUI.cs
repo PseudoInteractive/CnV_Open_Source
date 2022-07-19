@@ -549,43 +549,43 @@ public static partial class CityUI
 
 		//}
 
-		public static bool OnKeyDown(object _spot, VirtualKey key)
-	{
-		var spot = _spot as Spot;
-		switch(key)
-		{
-			case VirtualKey.Enter:
-				spot.SetFocus(AppS.keyModifiers.ClickMods());
-				return true;
-				break;
-			case VirtualKey.Space:
-			{
-				if(spot.isSubOrMine)
-					spot.ShowDungeons();
-				else
-					spot.SetFocus(AppS.keyModifiers.ClickMods());
-				return true;
-			}
+	//	public static bool OnKeyDown(object _spot, VirtualKey key)
+	//{
+	//	var spot = _spot as Spot;
+	//	switch(key)
+	//	{
+	//		case VirtualKey.Enter:
+	//			spot.SetFocus(AppS.keyModifiers.ClickMods());
+	//			return true;
+	//			break;
+	//		case VirtualKey.Space:
+	//		{
+	//			if(spot.isSubOrMine)
+	//				spot.ShowDungeons();
+	//			else
+	//				spot.SetFocus(AppS.keyModifiers.ClickMods());
+	//			return true;
+	//		}
 
-			default:
-				break;
-		}
-		return false;
-	}
+	//		default:
+	//			break;
+	//	}
+	//	return false;
+	//}
 
 	
-	public static async void SetupClick(int _intialCid, SetupFlags flags)
-	{
-		//var cids =Spot.GetSelectedForContextMenu(_intialCid);
-		//foreach(var cid in cids)
-		//{
-		//	var _cid = cid;
-			await ShareString.Show(_intialCid,flags);
-		//	{
-		//		break;
-		//	}
-		//}
-	}
+	//public static async void SetupClick(int _intialCid, SetupFlags flags)
+	//{
+	//	//var cids =Spot.GetSelectedForContextMenu(_intialCid);
+	//	//foreach(var cid in cids)
+	//	//{
+	//	//	var _cid = cid;
+	//		await ShareString.Show(_intialCid,flags);
+	//	//	{
+	//	//		break;
+	//	//	}
+	//	//}
+	//}
 	
 	public static async void DefendMe(this Spot me)
 	{
@@ -830,6 +830,7 @@ public partial class City
 				// second acts as coord click
 //				if(IsSelected(cid))
 //				{
+// This will bring up a contect menu
 					ProcessCoordClick(cid, modifiers.ClickMods());
 			//	} else {	}
 
@@ -837,7 +838,7 @@ public partial class City
 				break;
 			case nameof(xy):
 				// xy means takeMe there
-				ProcessCoordClick(cid, modifiers.ClickMods(isRight:true));
+				ProcessCoordClick(cid, modifiers.ClickMods(isRight:true,noFlyout:true));
 			
 				break;
 			
@@ -888,6 +889,14 @@ public partial class City
 
 	public bool IsNearFocus() => c.IsNearFocus();
 	public bool IsOnScreen() => c.IsOnScreen();	
-
+	public static WorldC GetFocusOrWhatever() {
+		if(focus.IsOnScreen())
+			return focus;
+		if(build.IsOnScreen())
+			return build;
+		if(hasViewHover)
+			return viewHover;
+		return new WorldC(View.viewTargetW2);
+	}
 
 	}

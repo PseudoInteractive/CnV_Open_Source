@@ -14,6 +14,7 @@ using CommunityToolkit.WinUI.Helpers;
 namespace CnV.Views
 {
 	using Microsoft.AppCenter;
+	using Microsoft.UI.Input;
 	using Microsoft.UI.Xaml.Data;
 
 	using Windows.Storage;
@@ -86,6 +87,25 @@ namespace CnV.Views
 				OnPropertyChanged();
 			}
 		}
+
+		internal float viewZ {
+			get => (View.targetZ/View.viewZCityDefault).Sqrt();
+			set {
+				var z = (value.Squared() * View.viewZCityDefault).Clamp(View.viewMinZ,View.viewMaxZ);
+				if( !z.AlmostEquals(View.targetZ,0.125f) )
+					View.SetTargetZ(z,AppS.IsKeyPressedShift(), City.focus );
+			}
+		}
+		internal int viewX {
+			get => (View.viewTargetW.X/10).RoundToInt();
+			set => View.SetViewTarget(View.viewTargetW2 with { X= value*10+5 } );
+		}
+		internal int viewY {
+			get => (View.viewTargetW.Y/10).RoundToInt();
+			set => View.SetViewTarget(View.viewTargetW2 with { Y= value*10+5 } );
+		}
+
+
 		class TimeScaleToolTipConverter:IValueConverter
 		{
 
@@ -317,6 +337,17 @@ namespace CnV.Views
 				rootGrid = _rootGrid;
 			//	instance = this;
 				View.dipToNative = XamlRoot.RasterizationScale;
+
+				//Windows.Devices.Input.PointerDevice getPointerDeviceFromPointPoint(PointerPoint ptrPt)
+				//{
+				//	var pointerDeviceList = Windows.Devices.Input.PointerDevice.GetPointerDevices();
+
+				//	foreach(var pointerDevice in pointerDeviceList) {
+				//		Log($"PointerDevice: {JSON.ToJson(pointerDevice)}");
+				//	}
+
+				//}
+
 				//var ps = new PlayerStats();
 				//Header = ps;
 
@@ -601,7 +632,7 @@ namespace CnV.Views
 				FindName(nameof(cityStats));
 				FindName(nameof(cityFlyout));
 
-
+				var KeyboardAccelerators = commandBar.KeyboardAccelerators;
 				IncomingTab.UpdateIncomingStatus();
 				PlayerStats.instance.UpdateOutgoingText();
 
@@ -663,7 +694,7 @@ namespace CnV.Views
 				await ShellPage.RefreshX();
 
 				System.GC.Collect(2,GCCollectionMode.Default,true,true);
-
+				Microsoft.UI.Xaml.Media.Animation.Timeline.AllowDependentAnimations=false;
 				TabPage.ShowTabs();
 
 
@@ -1103,7 +1134,7 @@ namespace CnV.Views
 
 		public event PropertyChangedEventHandler PropertyChanged;
 
-		private void OnPropertyChanged(string propertyName = "") =>
+		private void OnPropertyChanged(string propertyName = null) =>
 				PropertyChanged?.Invoke(this,new PropertyChangedEventArgs(propertyName));
 
 		private void Set<T>(ref T storage,T value,[CallerMemberName] string propertyName = null) {
@@ -1115,7 +1146,9 @@ namespace CnV.Views
 			OnPropertyChanged(propertyName);
 		}
 
-
+		public static void QueueOnPropertyChanged(string propertyName = null) {
+			AppS.QueueOnUIThreadIdle(() => instance.OnPropertyChanged(propertyName));
+		}
 		//private async void GetWorldInfo(object sender, RoutedEventArgs e)
 		//{
 		//    await RestAPI.getWorldInfo.Post();
@@ -1491,7 +1524,7 @@ namespace CnV.Views
 					return;
 				}
 
-				Spot.ProcessCoordClick(City.build,AppS.keyModifiers.ClickMods()); // then normal click
+				Spot.ProcessCoordClick(City.build,AppS.keyModifiers.ClickMods(scrollIntoUi: true)); // then normal click
 			}
 			catch(Exception _ex) {
 				LogEx(_ex);
@@ -1505,7 +1538,7 @@ namespace CnV.Views
 					return;
 				}
 
-				Spot.ProcessCoordClick(City.build,AppS.keyModifiers.ClickMods(isRight:true)); // then normal click
+				Spot.ProcessCoordClick(City.build,AppS.keyModifiers.ClickMods(isRight:true,scrollIntoUi: true)); // then normal click
 			}
 			catch(Exception _ex) {
 				LogEx(_ex);
@@ -1889,7 +1922,35 @@ namespace CnV.Views
 			CnV.JoinAlliance.ShowInstance();
 		}
 
+        private void InfoGotFocus(object sender,PointerRoutedEventArgs e) {
+			var x = sender as FrameworkElement;
+			x.Height = x.MaxHeight;
+        }
+		private void InfoLostFocus(object sender,PointerRoutedEventArgs e) {
+			var x = sender as FrameworkElement;
+			x.Height = x.MinHeight;
+		}
 
+
+	
+		
+
+		private void ChatGotFocus(object sender,PointerRoutedEventArgs e) {
+			var s = sender as FrameworkElement;
+			s.CapturePointer(e.Pointer);
+			s.Height = s.MaxHeight;
+			chatGridSpliterX.Visibility  = Visibility.Visible;
+			chatGridSpliterY.Visibility  = Visibility.Visible;
+
+		}
+
+		private void ChatLostFocus(object sender,PointerRoutedEventArgs e) {
+			var s = sender as FrameworkElement;
+			s.Height = s.MinHeight;
+			chatGridSpliterX.Visibility  = Visibility.Collapsed;
+			chatGridSpliterY.Visibility  = Visibility.Collapsed;
+
+		}
 
 		//private void GotoTimeOffset(object sender,RoutedEventArgs e)
 		//{
