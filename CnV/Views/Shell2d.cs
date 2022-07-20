@@ -451,10 +451,10 @@ namespace CnV.Views
 				// todo: handle differently for city view
 
 				case Windows.System.VirtualKey.PageUp:
-					View.DoZoom(32f,City.focus);
+					View.DoZoom(32f);
 					return true;
 				case Windows.System.VirtualKey.PageDown:
-					View.DoZoom(-32f,City.focus);
+					View.DoZoom(-32f);
 					return true;
 
 				//case Windows.System.VirtualKey.Left:

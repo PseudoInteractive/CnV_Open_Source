@@ -93,7 +93,7 @@ namespace CnV.Views
 			set {
 				var z = (value.Squared() * View.viewZCityDefault).Clamp(View.viewMinZ,View.viewMaxZ);
 				if( !z.AlmostEquals(View.targetZ,0.125f) )
-					View.SetTargetZ(z,AppS.IsKeyPressedShift(), City.focus );
+					View.SetTargetZ(z,AppS.IsKeyPressedShift() );
 			}
 		}
 		internal int viewX {

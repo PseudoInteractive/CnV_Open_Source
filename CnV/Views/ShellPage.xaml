@@ -389,8 +389,8 @@ VerticalAlignment="Center"
 		               HorizontalAlignment="Right" />
 				</Expander.Header>
 				<ListView x:Name="InAppNote" x:FieldModifier="public"  Margin="0" Padding="0"
-						  Background="{StaticResource SystemAccentColorDarkTransparent}" IsHitTestVisible="False"
-                 MaxHeight="250"  >
+						  Background="{StaticResource SystemAccentColorDarkTransparent}" IsItemClickEnabled="False" SelectionMode="None" 
+                 MaxHeight="250"  HorizontalAlignment="Stretch" >
 					<ListView.Items>
 						<x:String>"🙃"</x:String>
 					</ListView.Items>
@@ -402,7 +402,7 @@ VerticalAlignment="Center"
 											  FontSize="{StaticResource SmallFontSize}"
 											IsHitTestVisible="False"
 												   FontStretch="Condensed"
-                                              TextWrapping="Wrap"  />
+                                              TextWrapping="Wrap"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
 
 						</DataTemplate>
 					</ListView.ItemTemplate>
@@ -410,10 +410,10 @@ VerticalAlignment="Center"
 					<!-- These properties allow the list to grow from the bottom -->
 					<ListView.ItemsPanel>
 						<ItemsPanelTemplate>
-							<ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView" 
+							<ItemsStackPanel ItemsUpdatingScrollMode="KeepItemsInView" 
 									Background="{x:Null}"
-											 IsHitTestVisible ="False"
-                            VerticalAlignment="Center"/>
+											  
+						   />
 						
 						</ItemsPanelTemplate>
 					</ListView.ItemsPanel>

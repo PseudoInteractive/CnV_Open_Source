@@ -43,7 +43,7 @@ public static partial class CityUI
 			}
 		}
 
-		if(!wantFlyout | clickMods.HasFlag(ClickModifiers.bringIntoWorldView)) {
+		if((!wantFlyout | clickMods.HasFlag(ClickModifiers.bringIntoWorldView)) && !clickMods.IsShiftOrControl()) {
 		
 			var moved = cid.BringCidIntoWorldView(clickMods.HasFlag(ClickModifiers.bringIntoWorldViewCenter) );
 			if(!moved && clickMods.HasFlag(ClickModifiers.autoToggleView)) {

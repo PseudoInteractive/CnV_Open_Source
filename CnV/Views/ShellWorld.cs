@@ -833,7 +833,7 @@ namespace CnV.Views
 			//	//				ShellPage.SetWebViewHasFocus(true);
 			//	return true;
 			//}
-			DoZoom(scroll,City.focus);// new(mousePositionW) );
+			DoZoom(scroll);// new(mousePositionW) );
 			return false;
 		}
 		//public static void UpdateMousePosition(PointerEventArgs e)
