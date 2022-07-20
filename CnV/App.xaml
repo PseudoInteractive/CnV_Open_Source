@@ -13,7 +13,7 @@
 					<FontFamily x:Key="CnVFont">ms-appx:///Assets/CnVFont-VF.ttf#CnVFont,Segoe Fluent Icons"</FontFamily>
 				</ResourceDictionary>-->
 				<ResourceDictionary >
-					<x:Boolean x:Key="IsApplicationFocusVisualKindReveal>True">True</x:Boolean>
+					<x:Boolean x:Key="IsApplicationFocusVisualKindReveal">True</x:Boolean>
 					<FontFamily x:Key="CnvIcons" >ms-appx:///Content/CnvIcons-Regular-SVG.ttf#CnvIcons,Segoe UI Variable,Segoe UI*,Segoe MDL2 Assets,Segoe UI*,Segoe MDL2 Assets</FontFamily>
 					<FontFamily x:Key="ContentControlThemeFontFamily" >ms-appx:///Content/CnvIcons-Regular-SVG.ttf#CnvIcons,Segoe UI Variable,Segoe UI*,Segoe MDL2 Assets</FontFamily>
 					
@@ -52,31 +52,34 @@
 					<!--<AcrylicBrush x:Key="SystemControlAcrylicWindowBrush"  TintColor="{StaticResource SystemChromeAltHighColor}" TintOpacity="0.8" FallbackColor="{StaticResource SystemChromeMediumColor}" />-->
 
 					<!--Override system generated accent colors-->
-					<Color x:Key="SystemAccentColorLight1">#FF144929</Color>
-					<Color x:Key="SystemAccentColorLight2">#FF105A2C</Color>
-					<Color x:Key="SystemAccentColorLight3">#FF146F21</Color>
-					<Color x:Key="SystemAccentColorDark1">#FF180030</Color>
-					<Color x:Key="SystemAccentColorDark2">#FF120020</Color>
-					<Color x:Key="SystemAccentColorDark3">#FF080014</Color>
-					<Color x:Key="RegionColor">#FF033A10</Color>
+					<Color x:Key="SystemAccentColorLight1">#FF5b7967</Color>
+					<Color x:Key="SystemAccentColorLight2">#FF98AD9A</Color>
+					<Color x:Key="SystemAccentColorLight3">#FFD1EDD3</Color>
+					<Color x:Key="SystemAccentColorDark1">#FF120030</Color>
+					<Color x:Key="SystemAccentColorDark2">#FF080020</Color>
+					<Color x:Key="SystemAccentColorDark3">#FF060014</Color>
+					<Color x:Key="SystemAccentColorDarkTransparent">#44080020</Color>
+					<Color x:Key="RegionColor">#FF002A10</Color>
 					<SolidColorBrush x:Key="RegionBrush" Color="{StaticResource RegionColor}" />
+					<StaticResource x:Key="CnVBorderBrush" ResourceKey="ControlElevationBorderBrush" />
+					<StaticResource x:Key="CnVBorderBrush2" ResourceKey="AccentControlElevationBorderBrush" />
 
-					
 
 				</ResourceDictionary>
-				<ColorPaletteResources  Accent="#BB3A2796" 
+				<ColorPaletteResources  Accent="#FFCACAF6" 
 									   BaseHigh="#FFFFFFFF" BaseLow="#FF280808" BaseMedium="#FF380E0E" BaseMediumHigh="#BB680808"
-                                       BaseMediumLow="#FF380808" ChromeAltLow="#FF4393A1" ChromeBlackHigh="#FF21DA2A" ChromeBlackLow="#AA39008B" 
-                                       ChromeBlackMedium="#FF30A0F0" ChromeBlackMediumLow="#FF20F0D0" ChromeDisabledHigh="#FF380E0E" 
-                                       ChromeDisabledLow="#FFABA9A7" ChromeGray="#FF527B89" ChromeHigh="#FF4A7B67" ChromeLow="#DD6A0343" 
-                                       ChromeMedium="#FF2DF606" ChromeMediumLow="#CC14003B" ChromeWhite="#FF3FC190" ListLow="#AA6D0646" ListMedium="#AA380E0E" 					
-					AltHigh="#FF8570FF" AltLow="#B000F000" AltMedium="#B00430F0" AltMediumHigh="#B0163416" AltMediumLow="#800515F5"		 />
+                                       BaseMediumLow="#FF380808" ChromeAltLow="#FF4393A1" ChromeBlackHigh="#AA005A5A" ChromeBlackLow="#AA39008B" 
+                                       ChromeBlackMedium="#AF004000" ChromeBlackMediumLow="#AA004000" ChromeDisabledHigh="#FF380E0E" 
+                                       ChromeDisabledLow="#FF1B2927" ChromeGray="#AA051B19" ChromeHigh="#AF001B17" ChromeLow="#DD001500" 
+                                       ChromeMedium="#90002727" ChromeMediumLow="#CC001000" ChromeWhite="#FF001500" ListLow="#AA6D0646" ListMedium="#AA380E0E" 					
+					AltHigh="#FFB6EBFF" AltLow="#FF002000" AltMedium="#B00030F0" AltMediumHigh="#B0063406" AltMediumLow="#800515F5"		 />
 				<ResourceDictionary Source="ms-appx:///Styles/FontSizes.xaml"  />
 				<ResourceDictionary Source="ms-appx:///Styles/TextBlock.xaml" />
 				<ResourceDictionary Source="ms-appx:///Styles/Page.xaml" />
-				<ResourceDictionary Source="ms-appx:///Styles/ScrollBarHack.xaml" />
+				<!--<ResourceDictionary Source="ms-appx:///Styles/ScrollBarHack.xaml" />-->
 				<ResourceDictionary Source="ms-appx:///Styles/BattleReport.xaml" />
 				<ResourceDictionary Source="ms-appx:///Styles/Theme.xaml"  />
+
 			</ResourceDictionary.MergedDictionaries>
 			<!--<ResourceDictionary.ThemeDictionaries>
 

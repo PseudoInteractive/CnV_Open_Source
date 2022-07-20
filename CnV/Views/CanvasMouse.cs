@@ -33,6 +33,7 @@ partial class ShellPage
 
 	public static void SetupNonCoreInput()
 	{
+		
 		canvas.ManipulationMode = ManipulationModes.None;
 		canvas.AllowFocusOnInteraction = true;
 	//	canvas.PointerPressed += (object sender, PointerRoutedEventArgs e)=> canvas.CapturePointer(e.Pointer);
@@ -83,8 +84,10 @@ partial class ShellPage
 	}
 	public static void SetupCoreInput()
 	{
-	//	MouseWheelParameters
-//		recognizer.MouseWheelParameters
+		InputHook.Init();
+
+		//	MouseWheelParameters
+		//		recognizer.MouseWheelParameters
 		inputQueueController = DispatcherQueueController.CreateOnDedicatedThread();
 		inputQueueController.DispatcherQueue.TryEnqueue(DispatcherQueuePriority.High,
 			() =>
@@ -100,6 +103,7 @@ partial class ShellPage
 					GestureSettings.ManipulationTranslateX|GestureSettings.ManipulationTranslateY
 					|GestureSettings.ManipulationMultipleFingerPanning
 				//|GestureSettings.Hold
+				,ShowGestureFeedback=false
 				,AutoProcessInertia=false
 					};
 
@@ -117,8 +121,8 @@ partial class ShellPage
 					//interactionSource.PointerWheelConfig.ScaleSourceMode =
 					//		InteractionSourceRedirectionMode.Enabled;
 
-					recognizer.AutoProcessInertia = false;
-					recognizer.ShowGestureFeedback=false;
+//					recognizer.AutoProcessInertia = false;
+//					recognizer.ShowGestureFeedback=false;
 					recognizer.ManipulationCompleted+=Recognizer_ManipulationCompleted;
 					recognizer.ManipulationInertiaStarting+=Recognizer_ManipulationInertiaStarting;
 					recognizer.ManipulationStarted+=Recognizer_ManipulationStarted;
@@ -252,7 +256,7 @@ partial class ShellPage
 			//args.PointerDeviceType != PointerDeviceType.Mouse
 			)
 		{
-			HandleWheel(args.Position,exp);
+//			HandleWheel(args.Position,exp);
 		}
 	}
 
@@ -279,19 +283,21 @@ partial class ShellPage
 		//}
 	}
 
-	static bool Format(PointerEventArgs args, string _s) {
-		var s = new PooledStringBuilder();
-		var c = args.CurrentPoint;
-		ToolTips.debugTip = s.AppendLine(_s).AppendLine($"Frame: {c.FrameId}, {c.PointerId}, {c.Properties.PointerUpdateKind} {c.PointerDeviceType}, {c.Position} ,{c.IsInContact},{c.Timestamp}").
-			AppendLine(c.Properties.IsHorizontalMouseWheel.ToString()).ToString();
+	static bool Format(PointerEventArgs args,[System.Runtime.CompilerServices.CallerMemberName] string memberName = "") {
+	//	var s = new PooledStringBuilder();
+	//	var c = args.CurrentPoint;
+//		ToolTips.debugTip = s.AppendLine(memberName).AppendLine($"Frame: {c.FrameId}, {c.PointerId}, {c.Properties.PointerUpdateKind} {c.PointerDeviceType}, {c.Position} ,{c.IsInContact},{c.Timestamp}").
+//			AppendLine(c.Properties.IsHorizontalMouseWheel.ToString()).ToString();
+//		Note.Show(memberName);
 
 		return true;
 	}
 
-	static bool Format<T>(GestureRecognizer g, T args) {
-		var s = new PooledStringBuilder();
+	static string lastCaller;
+	static bool Format<T>(GestureRecognizer g, T args,[System.Runtime.CompilerServices.CallerMemberName] string memberName = "" ) {
+	//	var s = new PooledStringBuilder();
 
-	//	Note.Show( s.AppendLine(typeof(T).ToString()).AppendLine(JSON.ToJson(args)).ToString() );
+	//	Note.Show(memberName);
 
 		return true;
 	}
@@ -301,6 +307,7 @@ partial class ShellPage
 
 		args.KeyModifiers.UpdateKeyModifiers();
 		Canvas_PointerExited(args.CurrentPoint.Position,args.CurrentPoint.PointerId);
+		args.Handled=true;
 	}
 
 	private static void CoreInputSource_PointerEntered(InputPointerSource sender,PointerEventArgs args)
@@ -310,6 +317,7 @@ partial class ShellPage
 		args.KeyModifiers.UpdateKeyModifiers();
 
 		Canvas_PointerEntered(args.CurrentPoint.Position);
+		args.Handled=true;
 	}
 
 	private static void CoreInputSource_PointerReleased(InputPointerSource sender,PointerEventArgs args)
@@ -425,7 +433,7 @@ partial class ShellPage
 		}
 		//else
 	//	{
-	//	 recognizer.ProcessMouseWheelEvent(e.CurrentPoint,e.KeyModifiers.IsShift(),e.KeyModifiers.IsControl());
+		 recognizer.ProcessMouseWheelEvent(e.CurrentPoint,e.KeyModifiers.IsShift(),e.KeyModifiers.IsControl());
 //		}
 			e.Handled=true;
 	}

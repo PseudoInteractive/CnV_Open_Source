@@ -7,21 +7,25 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	Margin="0"
 	
-	Background="{x:Null}"
+
 	Padding="0"
 	IsTabStop="False"
     mc:Ignorable="d"
 	IsHitTestVisible="False"
+	Background="{x:Null}"
 	>
-	<Grid  Margin="0" Padding="0" IsHitTestVisible="False" IsTabStop="False"  >
+	<Grid  Margin="2" Padding="0" IsHitTestVisible="False" IsTabStop="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  
+		   BorderThickness="1"
+		  BorderBrush="{StaticResource CnVBorderBrush}" 
+		   Background="{StaticResource SystemAccentColorDarkTransparent}"  >
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="140" />
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="auto"/>
 			<RowDefinition Height="auto"/>
 		</Grid.RowDefinitions>
-		<Image x:Name="i0" Stretch="None" Margin="0"   HorizontalAlignment="Center" />
-		<TextBlock Grid.Row="1" Grid.ColumnSpan="1" HorizontalAlignment="Stretch" x:Name="t" Style="{StaticResource TextBlockSmall}" TextWrapping="Wrap"/>
+		<Image x:Name="i0" Stretch="None" Margin="0"   HorizontalAlignment="Center"  />
+		<TextBlock Grid.Row="1" Grid.ColumnSpan="1" HorizontalAlignment="Stretch" x:Name="t" Style="{StaticResource TextBlockSmall}" TextWrapping="Wrap" IsColorFontEnabled="True" />
 	</Grid>
 </UserControl>

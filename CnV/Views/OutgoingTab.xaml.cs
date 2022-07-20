@@ -136,7 +136,7 @@ namespace CnV.Views
 			if(!IsVisible())
 				return;
 
-			var sel = instance.attackerGrid.SelectedItem as Spot;
+			var sel = instance.attackerGrid.CurrentItem as Spot;
 			lastSelected =sel;
 			if (sel != null)
 			{
@@ -155,16 +155,6 @@ namespace CnV.Views
 		}
 
 	
-        private void defenderGrid_SelectionChanged(object sender, GridSelectionChangedEventArgs e)
-		{
-			if (!isOpen)
-				return;
-			if(instance.attackerGrid.SelectedItem as Spot != lastSelected) {
-				AppS.QueueOnUIThread(() => UpdateTargetIncoming(true) );
-		
-			}
-
-		}
 
 		private void ToggleSwitch_Toggled(object sender, RoutedEventArgs e)
 		{
@@ -174,6 +164,18 @@ namespace CnV.Views
 		private void filterFromChanged(object sender,Microsoft.UI.Xaml.Controls.SelectionChangedEventArgs e)
 		{
 			refresh.Go();
+		}
+
+		private void defenderGrid_SelectionChanged(object sender,Syncfusion.UI.Xaml.DataGrid.CurrentCellActivatedEventArgs e) {
+			if(e.ActivationTrigger != ActivationTrigger.Program) {
+				if(!isOpen)
+					return;
+				if(instance.attackerGrid.CurrentItem as Spot != lastSelected) {
+					AppS.QueueOnUIThread(() => UpdateTargetIncoming(true));
+
+				}
+
+			}
 		}
 	}
        

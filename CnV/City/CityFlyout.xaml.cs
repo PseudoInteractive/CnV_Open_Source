@@ -264,10 +264,11 @@ static partial class CityUI {
 			nav.UpdateCommands();
 			nav.Visibility = Visibility.Visible;
 			nav.visitCityButton.Focus(FocusState.Programmatic);
+	//		nav.visitCityButton.CapturePointer();
 //			nav.visitCityButton.
-			//	nav.ApplyTemplate();
-			//   flyout.XamlRoot = uie.XamlRoot;
-			//		flyout.ShowAt(null,new() { Position= position, ShowMode=FlyoutShowMode.TransientWithDismissOnPointerMoveAway,Placement=FlyoutPlacementMode.Auto});
+//	nav.ApplyTemplate();
+//   flyout.XamlRoot = uie.XamlRoot;
+//		flyout.ShowAt(null,new() { Position= position, ShowMode=FlyoutShowMode.TransientWithDismissOnPointerMoveAway,Placement=FlyoutPlacementMode.Auto});
 
 		});
 	}

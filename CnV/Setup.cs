@@ -650,6 +650,16 @@ partial class App
 	}
 	internal static void SetupTitleBar() {
 
+		{
+			// Title bar customization using these APIs is currently
+			// supported only on Windows 11. In other cases, hide
+			// the custom title bar element.
+			ShellPage.instance.AppTitleBarText.Visibility = Visibility.Collapsed; // don't draw text here
+			AppS.appWindow.SetIcon("assets\\cnv.ico");
+
+			// Show alternative UI for any functionality in
+			// the title bar, such as search.
+		}
 		// Check to see if customization is supported.
 		// Currently only supported on Windows 11.
 		try {
@@ -665,16 +675,7 @@ partial class App
 			LogEx(ex);
 		}
 
-		{
-			// Title bar customization using these APIs is currently
-			// supported only on Windows 11. In other cases, hide
-			// the custom title bar element.
-			ShellPage.instance.AppTitleBarText.Visibility = Visibility.Collapsed; // don't draw text here
-			AppS.appWindow.SetIcon("assets\\cnv.ico");
-
-			// Show alternative UI for any functionality in
-			// the title bar, such as search.
-		}
+		
 
 	}
 

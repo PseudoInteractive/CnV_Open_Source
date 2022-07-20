@@ -437,16 +437,18 @@ public partial class UserTab:Page, IANotifyPropertyChanged {
 	{
 		var flyout = e.ContextFlyout;
 		flyout.Items.Clear();
-
+//		var info = e.ContextFlyoutInfo as GridColumnContextFlyoutInfo;
 		switch(e.ContextFlyoutType)
 		{
 			case ContextFlyoutType.RecordCell:
 				{
 					var info = e.ContextFlyoutInfo as GridRecordContextFlyoutInfo;
 					var column = info?.DataGrid.Columns[e.RowColumnIndex.ColumnIndex];
+//					var c = info.DataGrid.ge
 					if(info.Record is City city)
 					{
 						e.Handled = true;
+						var c = flyout.Target;
 						CityUI.ProcessClick(city.cid,AppS.keyModifiers.ClickMods(isRight:true,bringIntoView:true,noFlyout:true,setFocus:true));
 				//		Assert(false);
 	//					city.AddToFlyout(flyout);

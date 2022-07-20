@@ -297,7 +297,7 @@ public static partial class ADataGrid
 //			grid.RowHeight = Settings.shortGridRowHeight;
 			grid.CurrentCellBorderThickness = new(0.5f);
 			
-			grid.CurrentCellBorderBrush = AppS.Brush(Microsoft.UI.Colors.Purple);
+		//	grid.CurrentCellBorderBrush = AppS.Brush(Microsoft.UI.Colors.Purple);
 			//	grid.FontSize = Settings.smallFontSize;
 			grid.ElementSoundMode = ElementSoundMode.Off;
 			grid.FontWeight=Microsoft.UI.Text.FontWeights.Normal;
@@ -390,7 +390,7 @@ public static partial class ADataGrid
 	{
 		await Task.Delay(500);
 		grid.ScrollItemIntoView(p,true);
-		grid.SelectedItem = p;
+		grid.CurrentItem = p;
 
 	}
 }

@@ -1923,20 +1923,20 @@ namespace CnV.Views
 		}
 
         private void InfoGotFocus(object sender,PointerRoutedEventArgs e) {
-			var x = sender as FrameworkElement;
-			x.Height = x.MaxHeight;
+			//		var x = sender as FrameworkElement;
+			//			if(x is not null)
+			InAppNote.Height = InAppNote.MaxHeight;
         }
 		private void InfoLostFocus(object sender,PointerRoutedEventArgs e) {
-			var x = sender as FrameworkElement;
-			x.Height = x.MinHeight;
+			InAppNote.Height = InAppNote.MinHeight;
 		}
 
 
-	
-		
+
+
 
 		private void ChatGotFocus(object sender,PointerRoutedEventArgs e) {
-			var s = sender as FrameworkElement;
+			var s = chatTabs;
 			s.CapturePointer(e.Pointer);
 			s.Height = s.MaxHeight;
 			chatGridSpliterX.Visibility  = Visibility.Visible;
@@ -1945,7 +1945,7 @@ namespace CnV.Views
 		}
 
 		private void ChatLostFocus(object sender,PointerRoutedEventArgs e) {
-			var s = sender as FrameworkElement;
+			var s = chatTabs;
 			s.Height = s.MinHeight;
 			chatGridSpliterX.Visibility  = Visibility.Collapsed;
 			chatGridSpliterY.Visibility  = Visibility.Collapsed;

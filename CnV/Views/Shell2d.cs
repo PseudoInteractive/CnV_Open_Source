@@ -447,13 +447,26 @@ namespace CnV.Views
 				return false;
 			}
 
+			switch(key) {
+				// todo: handle differently for city view
 
-			if(!View.IsCityView()) {
+				case Windows.System.VirtualKey.PageUp:
+					View.DoZoom(32f,City.focus);
+					return true;
+				case Windows.System.VirtualKey.PageDown:
+					View.DoZoom(-32f,City.focus);
+					return true;
+
+				//case Windows.System.VirtualKey.Left:
+			}
+
+
+					if(!View.IsCityView()) {
 				// Region view control
 				var spot =City.focus;
 				var isControl = AppS.controlPressed;
 				void MoveFocus( int dx, int dy ) {
-					Spot.ProcessCoordClick(spot.Translate((dx,dy)),AppS.keyModifiers.ClickMods(autoSelect: false,autoToggleView: false,center: false,bringIntoView: true,noFlyout: false));
+					Spot.ProcessCoordClick(spot.Translate((dx,dy)),AppS.keyModifiers.ClickMods(autoSelect: false,autoToggleView: false,center: false,bringIntoView: true,noFlyout: true,addToMru:false));
 				}
 				void MoveView( float dx, float dy) {
 					var dxy = (new System.Numerics.Vector2(dx,dy)* (View.targetZ/View.viewRegionZ1).Max(1)).Round();

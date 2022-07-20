@@ -815,7 +815,7 @@ namespace CnV.Views
 			UpdateMousePosition(point);
 			///Note.Show($"Wheel");
 
-		//	ShellPage.TakeFocus();
+			//	ShellPage.TakeFocus();
 			//PointerInfo(e);
 			//if (ShellPage.IsCityView())
 			//{
@@ -833,7 +833,7 @@ namespace CnV.Views
 			//	//				ShellPage.SetWebViewHasFocus(true);
 			//	return true;
 			//}
-			DoZoom(scroll,new(mousePositionW) );
+			DoZoom(scroll,City.focus);// new(mousePositionW) );
 			return false;
 		}
 		//public static void UpdateMousePosition(PointerEventArgs e)

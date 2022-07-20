@@ -29,34 +29,42 @@
 		<Configurations>Debug;Release;SinglePlayer</Configurations>
 	</PropertyGroup>
   <ItemGroup>
+  <Manifest Include="$(ApplicationManifest)" />
     <Content Remove="Content\**" />
     <Content Remove="gamebin\**" />
     <Content Remove="gameobj\**" />
     <Content Remove="JS\**" />
     <Content Remove="Properties\ServiceDependencies\**" />
+    <Content Remove="Services\DragAndDrop\**" />
+    <Content Remove="Themes\Syncfusion\**" />
     <EmbeddedResource Remove="AppPackages\**" />
     <EmbeddedResource Remove="BundleArtifacts\**" />
     <EmbeddedResource Remove="CnVDiscord\**" />
     <EmbeddedResource Remove="Content\**" />
     <EmbeddedResource Remove="gamebin\**" />
     <EmbeddedResource Remove="gameobj\**" />
-    <EmbeddedResource Remove="Helpers\**" />
     <EmbeddedResource Remove="JS\**" />
     <EmbeddedResource Remove="Properties\ServiceDependencies\**" />
+    <EmbeddedResource Remove="Services\DragAndDrop\**" />
+    <EmbeddedResource Remove="Themes\Syncfusion\**" />
+   
     <None Remove="AppPackages\**" />
     <None Remove="BundleArtifacts\**" />
     <None Remove="CnVDiscord\**" />
     <None Remove="Content\**" />
     <None Remove="gamebin\**" />
     <None Remove="gameobj\**" />
-    <None Remove="Helpers\**" />
     <None Remove="JS\**" />
     <None Remove="Properties\ServiceDependencies\**" />
+    <None Remove="Services\DragAndDrop\**" />
+    <None Remove="Themes\Syncfusion\**" />
     <PRIResource Remove="Content\**" />
     <PRIResource Remove="gamebin\**" />
     <PRIResource Remove="gameobj\**" />
     <PRIResource Remove="JS\**" />
     <PRIResource Remove="Properties\ServiceDependencies\**" />
+    <PRIResource Remove="Services\DragAndDrop\**" />
+    <PRIResource Remove="Themes\Syncfusion\**" />
   </ItemGroup>
 
 	<ItemGroup>
@@ -93,17 +101,18 @@
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.2" />
 		<PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
 		<PackageReference Include="PlayFabAllSDK" Version="1.108.220118" />
-		<PackageReference Include="Syncfusion.Chart.WinUI" Version="20.2.0.38" />
-		<PackageReference Include="Syncfusion.Editors.WinUI" Version="20.2.0.38" />
-		<PackageReference Include="Syncfusion.Grid.WinUI" Version="20.2.0.38" />
-		<PackageReference Include="Syncfusion.Licensing" Version="20.2.0.38" />
+		<PackageReference Include="SharpHook" Version="3.0.2" />
+		<PackageReference Include="Syncfusion.Chart.WinUI" Version="20.2.0.39" />
+		<PackageReference Include="Syncfusion.Editors.WinUI" Version="20.2.0.39" />
+		<PackageReference Include="Syncfusion.Grid.WinUI" Version="20.2.0.39" />
+		<PackageReference Include="Syncfusion.Licensing" Version="20.2.0.39" />
 		<PackageReference Include="SharpDX" Version="4.2.0" />
 		<PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
 		<PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
 		<PackageReference Include="SharpDX.DXGI" Version="4.2.0" />
 		<PackageReference Include="SharpDX.MediaFoundation" Version="4.2.0" />
 		<PackageReference Include="SharpGen.Runtime.COM" Version="2.0.0-beta.11" />
-		<PackageReference Include="Syncfusion.Scheduler.WinUI" Version="20.2.0.38" />
+		<PackageReference Include="Syncfusion.Scheduler.WinUI" Version="20.2.0.39" />
 		<PackageReference Include="System.Collections.Immutable" Version="7.0.0-preview.6.22324.4" />
 		<PackageReference Include="System.Drawing.Common" Version="7.0.0-preview.6.22324.4" />
 		<PackageReference Include="System.Memory.Data" Version="7.0.0-preview.6.22324.4" />
@@ -155,6 +164,8 @@
 		<Compile Include="GameUI\TradeSettingsControl.xaml.cs" />
 		<Compile Include="GameUI\TradeSettingsDialog.xaml.cs" />
 		<Compile Include="GameUI\TroopsControl.xaml.cs" />
+		<Compile Include="Helpers\EnumToBooleanConverter.cs" />
+		<Compile Include="Models\InputHooks.cs" />
 		<Compile Include="Program.cs" />
 		<Compile Include="Services\CnVSignin.cs" />
 		<Compile Include="Services\HostBuilder.cs" />
@@ -775,7 +786,6 @@
 	</ItemGroup>
 	<ItemGroup>
 		<Folder Include="Base\" />
-		<Folder Include="Services\DragAndDrop\" />
 	</ItemGroup>
 	<ItemGroup>
 		<Reference Include="Cyotek.Drawing.BitmapFont">
@@ -801,9 +811,6 @@
 		</Content>
 	</ItemGroup>
 	<Import Project="..\..\CnVShared\CnVShared.projitems" Label="Shared" />
-	<ItemGroup>
-		<PRIResource Remove="Helpers\**" />
-	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\..\cnvResource\CnVResource.csproj">
 	    <Private></Private>

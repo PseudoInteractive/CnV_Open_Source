@@ -30,10 +30,9 @@
                         FontSize="{StaticResource SmallFontSize}"
                         RowHeight="{StaticResource MediumGridRowHeight}"
                         SelectionMode="Single"
-					   AllowSelectionOnPointerPressed="True"
 						ItemsSource="{x:Bind targets,Mode=OneWay}"
                       
-                        SelectionChanged="defenderGrid_SelectionChanged"
+                        CurrentCellActivated="defenderGrid_SelectionChanged"
                         SelectionUnit="Row"
        >
             <sf:SfDataGrid.Columns>

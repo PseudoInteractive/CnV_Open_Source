@@ -502,7 +502,7 @@ internal partial class GameClient
 					viewCWParam.SetValue(viewW);
 					var waterGain = regionFade.Lerp(0.5f,1.0f);
 					var terrainGain = regionFade.Lerp(0.25f,1.0f);
-					tileGains.SetValue(new Vector4(terrainGain,waterGain,terrainGain,0.5f));
+					tileGains.SetValue(new Vector4(terrainGain,waterGain,terrainGain,1f - terrainGain));
 					//	ToolTips.debugTip = $"{XVector3.Normalize(lightCC).ToNumerics().Format()} {AUtil.Format(lightCC.ToNumerics())}";
 					var sat = Settings.lightSat;
 					// Hue night
@@ -1518,8 +1518,18 @@ internal partial class GameClient
 					}
 					if(Spot.viewHover != 0) {
 						var cid = Spot.viewHover;
+						var wc = cid;
+						if(IsCulledWC(wc))
+							return;
+						var sp = Span2.FromCenterAndRadius( wc.v, 0.5f);
+						
+
+						
 						// Checkmark
-						DrawRectOutlineShadow(Layer.effects - 1,cid,selectColor,null,1.0f,1.0f);
+						DrawRectOutlineShadow(Layer.effects - 1,sp.Probe( new(0f,0.0f),new(0.5f,0.5f)) ,focusColor,1.0f,1.0f);
+						DrawRectOutlineShadow(Layer.effects - 1,sp.Probe( new(0.5f, 0f),new(1f, 0.5f)),selectColor,1.0f,1.0f);
+						DrawRectOutlineShadow(Layer.effects - 1,sp.Probe(new(0.5f, 0.5f),new(1.0f, 1.0f)),Color.AntiqueWhite,1.0f,1.0f);
+						DrawRectOutlineShadow(Layer.effects - 1,sp.Probe(new(0.0f, 0.5f),new(0.5f, 1.0f)),Color.Bisque,1.0f,1.0f);
 
 					}
 					for(int j = 0;j<2;++j) {

@@ -10,6 +10,8 @@
     xmlns:sf="using:Syncfusion.UI.Xaml.DataGrid"
 	
  >
+
+	<cnv:EnumToBooleanConverter x:Key="EnumToBooleanConverter" />
 	<DataTemplate x:Key="playerComboTemplate">
 		<Grid HorizontalAlignment="Center"
                                       VerticalAlignment="Center">
@@ -110,13 +112,13 @@
 			<x:Double x:Key="TeachingTipMaxHeight">640</x:Double>
 	<x:Double x:Key="TeachingTipMaxWidth">640</x:Double>
 	<SolidColorBrush x:Key="HyperLinkBrush" Color="#FF7060FF" />
-	<Style TargetType="tk:GridSplitter"  >
+	<!--<Style TargetType="tk:GridSplitter"  >
 		<Setter Property="Background" Value="Transparent"/>
 		<Setter Property="BorderThickness" Value="1"/>
 		<Setter Property="BorderBrush" Value="Indigo"/>
 		<Setter Property="FontSize" Value="16" />
 
-	</Style>
+	</Style>-->
 
 	<Style TargetType="ComboBox" BasedOn="{StaticResource DefaultComboBoxStyle}" >
 		<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
@@ -229,19 +231,17 @@
 
 			<!--Syncfusion text-->
 
-			<Style x:Key="SfTextCell" TargetType="sf:GridCell">
+	<Style x:Key="SfTextCell" TargetType="sf:GridCell" BasedOn="{StaticResource GridCellStyle}" >
 				<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
 				<Setter Property="FontSize" Value="{StaticResource TinyFontSize}" />
 		
 
 		<Setter Property="FontStretch" Value="Condensed" />
 	</Style>
-	
 
-	<Style  TargetType="sf:GridCell" BasedOn="{StaticResource SfTextCell}">
-	</Style>
-	
 
+
+	
 	<Style x:Key="SfGridColumnBase" TargetType="sf:GridColumn">
 				<Setter Property="ShowHeaderToolTip" Value="True"/>
 				
@@ -345,7 +345,9 @@
 				<Setter Property="Margin" Value="1"/>
 				<Setter Property="Padding" Value="1"/>
 		<Setter Property="CornerRadius" Value="4" />
-		<Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"/>
+		<Setter Property="BorderBrush" Value="{StaticResource CnVBorderBrush2}"
+				
+				/>
 			</Style>
 	<Style TargetType="Border" BasedOn="{StaticResource BorderReveal}" >
 		
@@ -381,7 +383,253 @@
 		<Setter Property="Orientation" Value="Horizontal"/>
 	</Style>
 	<!-- Default-->
-	<Style TargetType="Slider"  BasedOn="{StaticResource HorizontalSlider}">
+
+
+	<!--<Style x:Key="GridCellStyle" TargetType="sf:GridCell">
+		<Setter Property="Background" Value="Transparent" />
+		<Setter Property="BorderBrush" Value="{ThemeResource SyncfusionDataGridLineStroke}" />
+		<Setter Property="FontFamily" Value="{ThemeResource SyncfusionDataGridFontFamily}"/>
+		<Setter Property="FontSize" Value="{ThemeResource SyncfusionBodyFontSize}"/>
+		<Setter Property="FontWeight" Value="{ThemeResource SyncfusionDataGridFontWeight}"/>
+		<Setter Property="BorderThickness" Value="0,0,1,1" />
+		<Setter Property="Padding" Value="0,0,0,0" />
+		<Setter Property="VerticalContentAlignment" Value="Center" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="sf:GridCell">
+					<Grid>
+						<VisualStateManager.VisualStateGroups>
+							<VisualStateGroup x:Name="IndicationStates">
+								<VisualState x:Name="NoError">
+									--><!--<Storyboard BeginTime="0">
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_InValidCellBorder" Storyboard.TargetProperty="(UIElement.Visibility)">
+                                            <DiscreteObjectKeyFrame KeyTime="0">
+                                                <DiscreteObjectKeyFrame.Value>
+                                                    <Visibility>Collapsed</Visibility>
+                                                </DiscreteObjectKeyFrame.Value>
+                                            </DiscreteObjectKeyFrame>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>--><!--
+								</VisualState>
+								<VisualState x:Name="HasError">
+									<Storyboard>
+										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_InValidCellBorder" Storyboard.TargetProperty="(UIElement.Visibility)">
+											<DiscreteObjectKeyFrame KeyTime="0">
+												<DiscreteObjectKeyFrame.Value>
+													<Visibility>Visible</Visibility>
+												</DiscreteObjectKeyFrame.Value>
+											</DiscreteObjectKeyFrame>
+										</ObjectAnimationUsingKeyFrames>
+									</Storyboard>
+								</VisualState>
+							</VisualStateGroup>
+							<VisualStateGroup x:Name="BorderStates">
+								<VisualState x:Name="NormalCell" />
+								<VisualState x:Name="FrozenColumnCell">
+									<Storyboard BeginTime="0">
+										<ObjectAnimationUsingKeyFrames BeginTime="0"
+                                                                       Duration="1"
+                                                                       Storyboard.TargetName="PART_FrozenCellBorder"
+                                                                       Storyboard.TargetProperty="BorderThickness">
+											<DiscreteObjectKeyFrame KeyTime="0" Value="0,0,1,0" />
+										</ObjectAnimationUsingKeyFrames>
+									</Storyboard>
+								</VisualState>
+								<VisualState x:Name="FooterColumnCell">
+									<Storyboard BeginTime="0">
+										<ObjectAnimationUsingKeyFrames BeginTime="0"
+                                                                       Duration="1"
+                                                                       Storyboard.TargetName="PART_FooterCellBorder"
+                                                                       Storyboard.TargetProperty="BorderThickness">
+											<DiscreteObjectKeyFrame KeyTime="0" Value="1,0,0,0" />
+										</ObjectAnimationUsingKeyFrames>
+									</Storyboard>
+								</VisualState>
+								<VisualState x:Name="BeforeFooterColumnCell">
+									<Storyboard BeginTime="0">
+										<ObjectAnimationUsingKeyFrames BeginTime="0"
+                                                                       Duration="1"
+                                                                       Storyboard.TargetName="PART_GridCellBorder"
+                                                                       Storyboard.TargetProperty="Margin">
+											<DiscreteObjectKeyFrame KeyTime="0" Value="0,0,-1,0" />
+										</ObjectAnimationUsingKeyFrames>
+									</Storyboard>
+								</VisualState>
+								<VisualState x:Name="CurrentCell">
+									<Storyboard>
+										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_CurrentCellBorder" Storyboard.TargetProperty="(UIElement.Visibility)">
+											<DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
+										</ObjectAnimationUsingKeyFrames>
+									</Storyboard>
+								</VisualState>
+								<VisualState x:Name="SelectedCell">
+									<Storyboard>
+										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_SelectionCellBorder" Storyboard.TargetProperty="(UIElement.Visibility)">
+											<DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
+										</ObjectAnimationUsingKeyFrames>
+									</Storyboard>
+								</VisualState>
+								<VisualState x:Name="SelectedCurrentCell">
+									<Storyboard>
+										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_SelectionCellBorder" Storyboard.TargetProperty="(UIElement.Visibility)">
+											<DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
+										</ObjectAnimationUsingKeyFrames>
+										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_CurrentCellBorder" Storyboard.TargetProperty="(UIElement.Visibility)">
+											<DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
+										</ObjectAnimationUsingKeyFrames>
+									</Storyboard>
+								</VisualState>
+							</VisualStateGroup>
+						</VisualStateManager.VisualStateGroups>
+						<Border x:Name="PART_SelectionCellBorder" Background="{TemplateBinding SelectionBackground}" Visibility="Collapsed" />
+						<Border x:Name="PART_FooterCellBorder"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"/>
+						<Border x:Name="PART_FrozenCellBorder"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"/>
+						<Border x:Name="PART_GridCellBorder"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding GridCellBorderThickness}">
+
+							<ContentPresenter Margin="{TemplateBinding Padding}"
+                                              FontFamily="{TemplateBinding FontFamily}"
+                                              FontWeight="{TemplateBinding FontWeight}"
+                                              FontSize="{TemplateBinding FontSize}" />
+
+						</Border>
+						<Border x:Name="PART_CurrentCellBorder" 
+                                Margin="0,0,1,1"
+                                Background="Transparent"
+                                BorderBrush="{TemplateBinding CurrentCellBorderBrush}"
+                                BorderThickness="{TemplateBinding CurrentCellBorderThickness}"
+                                IsHitTestVisible="False"
+                                Visibility="Collapsed"/>
+						<Border x:Name="PART_InValidCellBorder"
+                                Width="10"
+                                Height="10"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Top"
+                                Visibility="Collapsed">
+							<ToolTipService.ToolTip>
+
+								<ToolTip Placement="Right"
+                                         Tag="{TemplateBinding ErrorMessage}"
+                                         Template="{StaticResource DataGridCellValidationToolTipTemplate}" />
+
+							</ToolTipService.ToolTip>
+							<Path Data="M0.5,0.5 L12.652698,0.5 12.652698,12.068006 z"
+                                  Fill="{ThemeResource SystemFillColorCritical}"
+                                  Stretch="Fill" />
+						</Border>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+
 	</Style>
-	
+	<Style BasedOn="{StaticResource GridCellStyle}" TargetType="sf:GridCell" />
+
+	<Style x:Key="SfDataGridStyle" TargetType="sf:SfDataGrid">
+		<Setter Property="AllowRowHoverHighlighting" Value="True" />
+		<Setter Property="AllowSelectionOnPointerPressed" Value="False" />
+		<Setter Property="AllowFrozenGroupHeaders" Value="False" />
+
+		<Setter Property="FontStretch" Value="Condensed" />	<Setter Property="Background" Value="{ThemeResource SyncfusionDataGridBackground}" />
+		<Setter Property="BorderBrush" Value="{ThemeResource SyncfusionDataGridLineStroke}" />
+		<Setter Property="BorderThickness" Value="0.5" />
+		<Setter Property="RowHeight" Value="{StaticResource MediumGridRowHeight}"/>
+		<Setter Property="HeaderRowHeight" Value="{StaticResource MediumGridRowHeight}"/>
+		<Setter Property="CurrentCellBorderBrush" Value="{ThemeResource SyncfusionDataGridLineStroke}" />
+		<Setter Property="CurrentCellBorderThickness" Value="0.5"/>
+		<Setter Property="SelectionForeground" Value="Violet"/>
+		<Setter Property="HighContrastAdjustment" Value="None"/>
+		<Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+		<Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+		<Setter Property="ScrollViewer.HorizontalScrollMode" Value="Enabled" />
+		<Setter Property="ScrollViewer.IsHorizontalRailEnabled" Value="True" />
+		<Setter Property="ScrollViewer.VerticalScrollMode" Value="Enabled" />
+		<Setter Property="ScrollViewer.IsVerticalRailEnabled" Value="True" />
+		<Setter Property="ScrollViewer.BringIntoViewOnFocusChange" Value="True" />
+		<Setter Property="ScrollViewer.IsVerticalScrollChainingEnabled" Value="False" />
+		<Setter Property="ScrollViewer.IsHorizontalScrollChainingEnabled" Value="False" />
+		<Setter Property="SelectionBackground" Value="Maroon" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="sf:SfDataGrid">
+					<Grid>
+						<VisualStateManager.VisualStateGroups>
+							<VisualStateGroup x:Name="CommonStates">
+								<VisualState x:Name="Normal" />
+								<VisualState x:Name="Busy">
+								</VisualState>
+							</VisualStateGroup>
+						</VisualStateManager.VisualStateGroups>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="Auto" />
+							<RowDefinition Height="*" />
+						</Grid.RowDefinitions>
+						<Border Grid.Row="0" Visibility="{Binding Path=ShowGroupDropArea, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibilityConverter}}">
+							<sf:GroupDropArea x:Name="PART_GroupDropArea" />
+						</Border>
+
+						<Border Grid.Row="1"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+							<ScrollViewer x:Name="PART_ScrollViewer"
+                                          BringIntoViewOnFocusChange="{TemplateBinding ScrollViewer.BringIntoViewOnFocusChange}"
+                                          HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
+                                          HorizontalScrollMode="{TemplateBinding ScrollViewer.HorizontalScrollMode}"
+                                          IsDeferredScrollingEnabled="False"
+                                          IsHorizontalRailEnabled="{TemplateBinding ScrollViewer.IsHorizontalRailEnabled}"
+                                          IsHorizontalScrollChainingEnabled="{TemplateBinding ScrollViewer.IsHorizontalScrollChainingEnabled}"
+                                          IsVerticalRailEnabled="{TemplateBinding ScrollViewer.IsVerticalRailEnabled}"
+                                          IsVerticalScrollChainingEnabled="{TemplateBinding ScrollViewer.IsVerticalScrollChainingEnabled}"
+                                          VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"
+                                          VerticalScrollMode="{TemplateBinding ScrollViewer.VerticalScrollMode}"
+                                          ZoomMode="Disabled">
+								--><!--<ScrollViewer.Resources>
+                                    <ResourceDictionary>
+                                        <ResourceDictionary.MergedDictionaries>
+                                            <ResourceDictionary Source="ms-appx:///Syncfusion.SfGrid.UWP/Styles/ControlStyles.xaml" />
+                                        </ResourceDictionary.MergedDictionaries>
+                                    </ResourceDictionary>
+                                </ScrollViewer.Resources>--><!--
+								<sf:VisualContainer x:Name="PART_VisualContainer"
+                                                       Background="Transparent"
+                                                       HortizontalScrollBarOffset="{Binding Path=HorizontalOffset,
+                                                                                            ElementName=PART_ScrollViewer,
+                                                                                            Mode=OneWay}"
+                                                       ManipulationMode="{TemplateBinding ManipulationMode}"
+                                                       VerticalScrollBarOffset="{Binding Path=VerticalOffset,
+                                                                                         ElementName=PART_ScrollViewer,
+                                                                                         Mode=OneWay}" >
+									<Line x:Name="PART_HorizontalLine"/>
+									<Line x:Name="PART_VerticalLine"/>
+								</sf:VisualContainer>
+							</ScrollViewer>
+						</Border>
+						<Border x:Name="PART_BusyIndicatorBorder"
+                                Grid.Row="1"
+                                Width="200"
+                                Height="100"                                   
+                                BorderThickness="0"
+                                CornerRadius="5"
+                                Padding="10"                                
+                                Background="Transparent"
+                                Visibility="Collapsed">
+
+							<ProgressRing Width="32"
+                                          Height="32"
+                                          IsActive="True" />
+						</Border>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style BasedOn="{StaticResource SfDataGridStyle}" TargetType="sf:SfDataGrid" />-->
+
 </ResourceDictionary>

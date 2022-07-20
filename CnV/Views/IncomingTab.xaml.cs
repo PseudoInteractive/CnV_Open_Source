@@ -183,7 +183,7 @@ namespace CnV.Views
 
 							}
 
-							var sel = instance.defenderGrid.SelectedItem;
+							var sel = instance.defenderGrid.CurrentItem;
 							if(sel is not null && newItems.Contains(sel)) {
 
 								instance.defenderGrid.ScrollItemIntoView(sel,true);
@@ -223,17 +223,9 @@ namespace CnV.Views
 
 
 
-		private void defenderGrid_SelectionChanged(object sender,GridSelectionChangedEventArgs e) {
-			if(!isFocused)
-				return;
-			if(SpotTab.silenceSelectionChanges == 0) {
-				UpdateArmyGrid(false,true);
-				//	SpotSelectionChanged(sender, e);
-			}
-		}
 
 		internal void UpdateArmyGrid(bool force,bool updatehistoryTab) {
-			var sel = defenderGrid.SelectedItem as Spot;;
+			var sel = defenderGrid.CurrentItem as Spot;;
 			var changed = sel != lastSelected;
 			if(changed || force) {
 				lastSelected = sel;
@@ -273,7 +265,20 @@ namespace CnV.Views
 			Spot.ExportToDefenseSheet(cids);
 		}
 
+		private void defenderGrid_SelectionChanged(object sender,Syncfusion.UI.Xaml.DataGrid.CurrentCellActivatedEventArgs e) {
+			if(e.ActivationTrigger != ActivationTrigger.Program) {
+				if(!isOpen)
+					return;
+					if(SpotTab.silenceSelectionChanges == 0) {
+						UpdateArmyGrid(false,true);
+						//	SpotSelectionChanged(sender, e);
+					}
 
+				}
+
+			
+
+		}
 	}
 
 

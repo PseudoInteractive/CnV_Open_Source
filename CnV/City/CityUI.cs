@@ -889,14 +889,6 @@ public partial class City
 
 	public bool IsNearFocus() => c.IsNearFocus();
 	public bool IsOnScreen() => c.IsOnScreen();	
-	public static WorldC GetFocusOrWhatever() {
-		if(focus.IsOnScreen())
-			return focus;
-		if(build.IsOnScreen())
-			return build;
-		if(hasViewHover)
-			return viewHover;
-		return new WorldC(View.viewTargetW2);
-	}
+	
 
 	}

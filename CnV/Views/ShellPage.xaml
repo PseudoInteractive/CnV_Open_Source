@@ -246,7 +246,7 @@ VerticalAlignment="Center"
 			</Grid.ColumnDefinitions>
 			<!-- Overlay grid for sizing -->
 
-			<cnv:ToolTipWindow x:Name="toolTipWindow" Grid.Column="2"  IsHitTestVisible="False" IsTabStop="False" Background="{x:Null}" 
+			<cnv:ToolTipWindow x:Name="toolTipWindow" Grid.Column="2"  IsHitTestVisible="False" IsTabStop="False" Background="{x:Null}" Canvas.ZIndex="15"
 		HorizontalAlignment="Right" x:FieldModifier="public" VerticalAlignment="Top" Visibility="Collapsed" />
 
 
@@ -264,7 +264,7 @@ VerticalAlignment="Center"
 				/>
 			
 			<tk:GridSplitter
-				
+				Background="Transparent"
 				IsTabStop="True"
 				VerticalAlignment="Stretch"
 				HorizontalAlignment="Center"
@@ -310,7 +310,7 @@ VerticalAlignment="Center"
 				<views:TabPage x:Name="spotTabs"  Grid.Row="2"  x:FieldModifier="public" />
 				<!-- Controls the relative size of main tabs vs the mru tabs -->
 				<tk:GridSplitter 
-					Grid.Row="1"
+			Background="Transparent"		Grid.Row="1"
 				IsTabStop="True"
 					ManipulationCompleted="GridSplitter_ManipulationCompleted"
                         VerticalAlignment="Center"
@@ -331,16 +331,18 @@ VerticalAlignment="Center"
 					<ColumnDefinition Width="2*"/>
 					<ColumnDefinition Width="*"  x:Name="columnChat"  />
 				</Grid.ColumnDefinitions>
-				<views:TabPage x:Name="chatTabs" x:FieldModifier="public" Grid.Column ="1" Grid.Row="1"  Margin="12,12,16,0"  MinHeight="40" MaxHeight="320" PointerPressed="ChatGotFocus"  PointerCaptureLost="ChatLostFocus" 
-							   VerticalAlignment="Bottom" Height="40" />
+				<views:TabPage 
+					Background="{x:Null}" HorizontalAlignment="Stretch"
+					x:Name="chatTabs" x:FieldModifier="public" Grid.Column ="1" Grid.Row="1"  Margin="12,12,16,0"   
+							   VerticalAlignment="Stretch"  />
 				<!--Chat Width resizer-->
 				<tk:GridSplitter
 					x:Name="chatGridSpliterX"
-                    
+                    Background="Transparent"
                     Grid.Row="1" ManipulationCompleted="GridSplitter_ManipulationCompleted"
 											IsTabStop="True"
 			 				
-			Visibility="Collapsed"
+			Visibility="Visible"
                         Grid.Column="1"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Stretch"
@@ -349,7 +351,8 @@ VerticalAlignment="Center"
 				</tk:GridSplitter>
 				<!--Chat Height resizer-->
 				<tk:GridSplitter
-					Visibility="Collapsed"
+					Background="Transparent"
+					Visibility="Visible"
 					x:Name="chatGridSpliterY"
                     Grid.Row="1"
                      Tapped="chatResizeTapped"
@@ -365,38 +368,39 @@ VerticalAlignment="Center"
 				</tk:GridSplitter>
 			</Grid>
 
-			<ListView  
+			<Expander IsExpanded="True"  
 					  
 					  Grid.Column="2" 
 					  VerticalAlignment="Bottom"
 					  HorizontalAlignment="Left"
+					  FontSize="{StaticResource SmallFontSize}"
+		              
 					  Grid.Row="{x:Bind GridRowIndex(rowFooter,-1)}"
 					  Grid.RowSpan="2" 
 					  Margin="0"
 					  Padding="0"
 					  Width="300"
-					Height="40"
-					 
-				Canvas.ZIndex="35"   
-			
-				 x:Name="InAppNote" x:FieldModifier="public" 
-					MinHeight="40"
-						  
-						  Background="#aa140030"
-                 MaxHeight="250"
-				PointerEntered="InfoGotFocus"
-				PointerExited="InfoLostFocus"
-				>
+						MinHeight="20"
+					  ExpandDirection="Up"
+					  Background="{x:Null}"
+					  Canvas.ZIndex="35"   >
+				<Expander.Header   >
+					<TextBlock Text="Info" FontSize="{StaticResource SmallFontSize}"  Margin="0" Padding="0"
+		               HorizontalAlignment="Right" />
+				</Expander.Header>
+				<ListView x:Name="InAppNote" x:FieldModifier="public"  Margin="0" Padding="0"
+						  Background="{StaticResource SystemAccentColorDarkTransparent}" IsHitTestVisible="False"
+                 MaxHeight="250"  >
 					<ListView.Items>
 						<x:String>"🙃"</x:String>
 					</ListView.Items>
 					<ListView.ItemTemplate>
 						<DataTemplate  x:DataType="x:String"  >
 							<TextBlock  x:Name="message" Text="{x:Bind }"  Margin="1"  Padding="0,0,0,0"    
-                                               IsTextSelectionEnabled="True"
-												  
+                                               IsTextSelectionEnabled="False"
+												 
 											  FontSize="{StaticResource SmallFontSize}"
-											
+											IsHitTestVisible="False"
 												   FontStretch="Condensed"
                                               TextWrapping="Wrap"  />
 
@@ -407,8 +411,10 @@ VerticalAlignment="Center"
 					<ListView.ItemsPanel>
 						<ItemsPanelTemplate>
 							<ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView" 
-									
+									Background="{x:Null}"
+											 IsHitTestVisible ="False"
                             VerticalAlignment="Center"/>
+						
 						</ItemsPanelTemplate>
 					</ListView.ItemsPanel>
 					<!-- This setter property is created so ListViewItems correctly align to the left or right. -->
@@ -422,6 +428,8 @@ VerticalAlignment="Center"
 						</Style>
 					</ListView.ItemContainerStyle>-->
 				</ListView>
+			</Expander>
+			
 			<Expander  Grid.Row="{x:Bind GridRowIndex(rowFooter,-1)}"
 					    Canvas.ZIndex="35"
 					   BorderThickness="0"
@@ -513,7 +521,7 @@ VerticalAlignment="Center"
 					Minimum="0.5"
 					Canvas.ZIndex="14"
 					/>
-			<PipsPager x:Name="verticalPips"
+			<!--<PipsPager x:Name="verticalPips"
 					   Grid.Column="{x:Bind grid.ColumnDefinitions.IndexOf(columnRender)}"
 					    Grid.RowSpan="1"
 					Grid.Row="1"
@@ -539,10 +547,11 @@ VerticalAlignment="Center"
 					   Background="{x:Null}"
 		 SelectedPageIndex="{x:Bind viewX, Mode=TwoWay}" 
 					      Canvas.ZIndex="14"
-					   />
+					   />-->
 
 <!-- Splitter between Tabs and canvas -->
 			<tk:GridSplitter
+				Background="Transparent"
              
                     Grid.RowSpan="2"
 				Grid.Row="0"
